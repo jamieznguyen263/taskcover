@@ -12,11 +12,9 @@ import { cn } from "@/lib/utils";
  * Markets — regional comparison panels with a mini map accent.
  *
  * Layout: three side-by-side country panels, each with a distinct map-region
- * accent stripe at the top, context copy, and highlight checks. The visual
- * treatment (accent header + map dots) is intentionally different from the
+ * accent stripe at the top, context copy, a differentiator badge, and
+ * highlight checks. The visual treatment is intentionally different from the
  * Industries rail and Services bento.
- *
- * On mobile, panels stack vertically with full-width accent headers.
  */
 
 type Market = {
@@ -25,6 +23,7 @@ type Market = {
   context: string;
   href: string;
   highlights: readonly string[];
+  differentiator?: string;
   /** Map dot positions (percent) for the region accent */
   mapDots: readonly { x: number; y: number }[];
 };
@@ -122,7 +121,14 @@ export function MarketsPanels({
 
               {/* Body */}
               <div className="flex flex-1 flex-col gap-3 p-5">
-                <p className="text-base font-semibold text-graphite">{m.title}</p>
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-base font-semibold text-graphite">{m.title}</p>
+                  {m.differentiator && (
+                    <span className="inline-flex shrink-0 items-center rounded-full border border-brand-teal/30 bg-brand-teal/[0.06] px-2 py-0.5 text-[10px] font-semibold text-brand-teal">
+                      {m.differentiator}
+                    </span>
+                  )}
+                </div>
                 <p className="text-sm leading-relaxed text-secondary">{m.context}</p>
                 <ul className="flex flex-col gap-1.5 pt-1">
                   {m.highlights.map((h) => (

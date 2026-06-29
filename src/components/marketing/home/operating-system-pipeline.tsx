@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, RotateCw } from "lucide-react";
 import { Container } from "@/components/marketing/shared/container";
 import { Eyebrow } from "@/components/marketing/shared/section-header";
 import { cn } from "@/lib/utils";
@@ -12,15 +12,16 @@ import { cn } from "@/lib/utils";
  *
  * Renders the 8-stage system as a connected horizontal pipeline on desktop
  * (with animated flow lines between stages) and a vertical connected stack
- * on mobile. Each stage reveals its description on hover/focus.
- *
- * This replaces the flat numbered card grid and makes the "connected system"
- * promise visual.
+ * on mobile. Each stage reveals input/action/output logic in a detail panel.
+ * A loop indicator shows Reporting feeding back into Strategy.
  */
 
 type Step = {
   label: string;
   description: string;
+  input?: string;
+  action?: string;
+  output?: string;
 };
 
 export function OperatingSystemPipeline({
@@ -40,6 +41,7 @@ export function OperatingSystemPipeline({
 }) {
   const reduceMotion = useReducedMotion();
   const [active, setActive] = React.useState(0);
+  const current = steps[active];
 
   return (
     <Container className={cn("flex flex-col gap-12", className)}>
@@ -108,24 +110,55 @@ export function OperatingSystemPipeline({
           </ol>
         </div>
 
+        {/* Loop indicator: Reporting -> Strategy */}
+        <div className="mt-2 flex items-center justify-center gap-2 text-[11px] font-medium text-muted">
+          <RotateCw className="h-3 w-3 text-brand-teal" aria-hidden="true" />
+          <span>Reporting loops insight back into Strategy</span>
+        </div>
+
         {/* Active stage detail panel */}
         <motion.div
           key={active}
           initial={{ opacity: 0, y: reduceMotion ? 0 : 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="mx-auto mt-8 max-w-xl rounded-2xl border border-line bg-surface-tint p-6 text-center"
+          className="mx-auto mt-6 grid max-w-3xl gap-4 rounded-2xl border border-line bg-surface-tint p-6 sm:grid-cols-[auto_1fr]"
         >
-          <p className="text-sm font-semibold text-brand-teal">
-            Stage {active + 1}: {steps[active].label}
-          </p>
-          <p className="mt-2 text-base leading-relaxed text-secondary">
-            {steps[active].description}
-          </p>
+          <div className="flex flex-col gap-1">
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-brand-teal">
+              Stage {active + 1}
+            </p>
+            <p className="text-lg font-semibold text-graphite">{current.label}</p>
+            <p className="text-sm leading-relaxed text-secondary">
+              {current.description}
+            </p>
+          </div>
+          {(current.input || current.action || current.output) && (
+            <div className="grid gap-2 sm:grid-cols-3">
+              {current.input && (
+                <div className="rounded-lg border border-line bg-white p-3">
+                  <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">Input</p>
+                  <p className="mt-1 text-xs text-secondary">{current.input}</p>
+                </div>
+              )}
+              {current.action && (
+                <div className="rounded-lg border border-line bg-white p-3">
+                  <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">Action</p>
+                  <p className="mt-1 text-xs text-secondary">{current.action}</p>
+                </div>
+              )}
+              {current.output && (
+                <div className="rounded-lg border border-brand-teal/30 bg-white p-3">
+                  <p className="text-[10px] font-semibold uppercase tracking-wide text-brand-teal">Output</p>
+                  <p className="mt-1 text-xs text-secondary">{current.output}</p>
+                </div>
+              )}
+            </div>
+          )}
         </motion.div>
       </div>
 
-      {/* Mobile: vertical connected stack */}
+      {/* Mobile: vertical connected stack with I/O */}
       <ol className="flex flex-col gap-0 lg:hidden">
         {steps.map((step, i) => (
           <li key={step.label} className="relative flex gap-4 pb-6 last:pb-0">
@@ -143,6 +176,11 @@ export function OperatingSystemPipeline({
               <p className="mt-0.5 text-xs leading-relaxed text-secondary">
                 {step.description}
               </p>
+              {step.output && (
+                <p className="mt-1.5 text-[11px] font-medium text-brand-teal">
+                  → {step.output}
+                </p>
+              )}
             </div>
           </li>
         ))}

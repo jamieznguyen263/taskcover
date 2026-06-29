@@ -3,7 +3,7 @@
 import * as React from "react";
 import { motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Container } from "@/components/marketing/shared/container";
 import { Eyebrow } from "@/components/marketing/shared/section-header";
 import { cn } from "@/lib/utils";
@@ -11,27 +11,17 @@ import { cn } from "@/lib/utils";
 /**
  * Services — asymmetric bento grid with unique micro-visuals.
  *
- * Each service card uses a different layout slot (wide/tall/feature) and a
- * distinct inline SVG micro-visual so no two cards feel the same:
- *  - Strategy: roadmap with milestones
- *  - Technical SEO: crawl/index node map
- *  - AI Search: answer + citation visual
- *  - Content: topic cluster map
- *  - Digital PR: authority/mention graph
- *  - Local SEO: map pin stack
- *  - eCommerce: product grid
- *  - Analytics: dashboard/report visual
- *
- * This replaces the uniform 4-column icon+title+paragraph card grid.
+ * The large SEO Strategy feature card is content-rich: it includes a mini
+ * roadmap, capability chips, and a business outcome preview. The remaining
+ * cards each have a distinct inline SVG micro-visual.
  */
 
 type ServiceCard = {
   title: string;
   outcome: string;
   href: string;
-  span: "feature" | "wide" | "tall" | "default";
+  span: "wide" | "tall" | "default";
   visual:
-    | "roadmap"
     | "crawl"
     | "citation"
     | "cluster"
@@ -41,31 +31,21 @@ type ServiceCard = {
     | "dashboard";
 };
 
-/* --- Micro-visuals (inline SVG, illustrative only) --- */
+type FeatureCard = {
+  title: string;
+  outcome: string;
+  href: string;
+  roadmap: readonly { phase: string; detail: string }[];
+  chips: readonly string[];
+  outcomePreview: string;
+};
 
-function RoadmapVisual({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 200 80" className={className} role="img" aria-label="Strategy roadmap">
-      <line x1="10" y1="40" x2="190" y2="40" stroke="#DDEAF0" strokeWidth="2" />
-      <line x1="10" y1="40" x2="130" y2="40" stroke="#188AAC" strokeWidth="2.5" className="flow-line" />
-      {[10, 50, 90, 130, 170].map((x, i) => (
-        <g key={x}>
-          <circle cx={x} cy="40" r={i === 2 ? 6 : 4} fill={i <= 2 ? "#10E66A" : "#FFFFFF"} stroke="#188AAC" strokeWidth="1.5" />
-          <text x={x} y="64" textAnchor="middle" className="fill-muted" style={{ fontSize: "8px" }}>
-            {["Q1", "Q2", "Q3", "Q4", "Q5"][i]}
-          </text>
-        </g>
-      ))}
-    </svg>
-  );
-}
+/* --- Micro-visuals (inline SVG, illustrative only) --- */
 
 function CrawlVisual({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 200 80" className={className} role="img" aria-label="Crawl and index map">
-      {/* Central site node */}
       <circle cx="100" cy="40" r="14" fill="url(#crawlGrad)" stroke="#188AAC" strokeWidth="1.5" />
-      {/* Connected pages */}
       {[
         { x: 30, y: 20 },
         { x: 30, y: 60 },
@@ -91,12 +71,10 @@ function CrawlVisual({ className }: { className?: string }) {
 function CitationVisual({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 200 80" className={className} role="img" aria-label="AI answer citation">
-      {/* AI answer box */}
       <rect x="10" y="10" width="120" height="60" rx="8" fill="#F4F8FB" stroke="#DDEAF0" strokeWidth="1" />
       <rect x="20" y="20" width="80" height="4" rx="2" fill="#188AAC" />
       <rect x="20" y="30" width="100" height="3" rx="1.5" fill="#DDEAF0" />
       <rect x="20" y="38" width="70" height="3" rx="1.5" fill="#DDEAF0" />
-      {/* Citation chips */}
       <rect x="140" y="20" width="50" height="12" rx="6" fill="#10E66A" opacity="0.2" />
       <text x="165" y="29" textAnchor="middle" className="fill-graphite" style={{ fontSize: "7px", fontWeight: "600" }}>Source</text>
       <rect x="140" y="40" width="50" height="12" rx="6" fill="#10E66A" opacity="0.2" />
@@ -108,10 +86,8 @@ function CitationVisual({ className }: { className?: string }) {
 function ClusterVisual({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 200 80" className={className} role="img" aria-label="Topic cluster map">
-      {/* Pillar */}
       <circle cx="100" cy="40" r="12" fill="#188AAC" />
       <text x="100" y="43" textAnchor="middle" className="fill-white" style={{ fontSize: "7px", fontWeight: "700" }}>Hub</text>
-      {/* Cluster nodes */}
       {[
         { x: 40, y: 20 },
         { x: 40, y: 55 },
@@ -220,7 +196,6 @@ function DashboardVisual({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 200 80" className={className} role="img" aria-label="Analytics dashboard">
       <rect x="5" y="10" width="190" height="60" rx="6" fill="#FFFFFF" stroke="#DDEAF0" strokeWidth="1" />
-      {/* Bars */}
       {[20, 35, 28, 45, 38, 52].map((h, i) => (
         <rect
           key={i}
@@ -233,7 +208,6 @@ function DashboardVisual({ className }: { className?: string }) {
           opacity={i === 5 ? 1 : 0.4 + i * 0.1}
         />
       ))}
-      {/* Trend line */}
       <polyline
         points="28,44 56,38 84,42 112,30 140,34 168,20"
         fill="none"
@@ -245,7 +219,6 @@ function DashboardVisual({ className }: { className?: string }) {
 }
 
 const visualMap = {
-  roadmap: RoadmapVisual,
   crawl: CrawlVisual,
   citation: CitationVisual,
   cluster: ClusterVisual,
@@ -260,6 +233,7 @@ export function ServicesBento({
   title,
   titleId,
   description,
+  featureCard,
   cards,
   className,
 }: {
@@ -267,6 +241,7 @@ export function ServicesBento({
   title: React.ReactNode;
   titleId: string;
   description: React.ReactNode;
+  featureCard: FeatureCard;
   cards: readonly ServiceCard[];
   className?: string;
 }) {
@@ -287,11 +262,81 @@ export function ServicesBento({
         </p>
       </div>
 
-      <div className="grid auto-rows-[minmax(0,1fr)] grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Feature card — SEO Strategy */}
+        <motion.div
+          initial={{ opacity: 0, y: reduceMotion ? 0 : 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.4 }}
+          className="sm:col-span-2 sm:row-span-2"
+        >
+          <Link
+            href={featureCard.href}
+            className="card-lift group relative flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-white p-6 hover:border-brand-teal/40"
+          >
+            <div className="flex items-center justify-between">
+              <p className="text-lg font-semibold text-graphite">{featureCard.title}</p>
+              <span className="inline-flex items-center gap-1 rounded-full bg-brand-gradient px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
+                Core module
+              </span>
+            </div>
+            <p className="mt-1.5 text-sm leading-relaxed text-secondary">
+              {featureCard.outcome}
+            </p>
+
+            {/* Mini roadmap */}
+            <div className="mt-5">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">
+                Roadmap
+              </p>
+              <ol className="mt-2 flex flex-col gap-2">
+                {featureCard.roadmap.map((step, i) => (
+                  <li key={step.phase} className="flex items-start gap-3">
+                    <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-gradient text-[10px] font-semibold text-white">
+                      {i + 1}
+                    </span>
+                    <div>
+                      <p className="text-xs font-semibold text-graphite">{step.phase}</p>
+                      <p className="text-[11px] text-secondary">{step.detail}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            {/* Capability chips */}
+            <div className="mt-5 flex flex-wrap gap-1.5">
+              {featureCard.chips.map((chip) => (
+                <span
+                  key={chip}
+                  className="inline-flex items-center gap-1 rounded-md border border-line bg-surface-tint px-2 py-1 text-[11px] font-medium text-graphite"
+                >
+                  <CheckCircle2 className="h-3 w-3 text-brand-teal" aria-hidden="true" />
+                  {chip}
+                </span>
+              ))}
+            </div>
+
+            {/* Outcome preview */}
+            <div className="mt-5 rounded-xl border border-brand-teal/20 bg-surface-tint/50 p-3">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-brand-teal">
+                Business outcome
+              </p>
+              <p className="mt-1 text-xs text-secondary">{featureCard.outcomePreview}</p>
+            </div>
+
+            <span className="mt-auto inline-flex items-center gap-1 pt-4 text-sm font-semibold text-brand-teal">
+              Explore
+              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+            </span>
+          </Link>
+        </motion.div>
+
+        {/* Remaining service cards */}
         {cards.map((card, i) => {
           const Visual = visualMap[card.visual];
           const spanClass = {
-            feature: "sm:col-span-2 sm:row-span-2",
             wide: "sm:col-span-2",
             tall: "sm:row-span-2",
             default: "",
@@ -314,18 +359,18 @@ export function ServicesBento({
                 )}
               >
                 {/* Micro-visual */}
-                <div className="mb-4 rounded-xl border border-line-soft bg-surface-tint/50 p-3">
-                  <Visual className="h-16 w-full transition-transform duration-500 group-hover:scale-[1.03]" />
+                <div className="mb-3 rounded-xl border border-line-soft bg-surface-tint/50 p-3">
+                  <Visual className="h-14 w-full transition-transform duration-500 group-hover:scale-[1.03]" />
                 </div>
 
-                <p className="text-base font-semibold text-graphite">{card.title}</p>
-                <p className="mt-1.5 text-sm leading-relaxed text-secondary">
+                <p className="text-sm font-semibold text-graphite">{card.title}</p>
+                <p className="mt-1 text-xs leading-relaxed text-secondary">
                   {card.outcome}
                 </p>
 
-                <span className="mt-auto inline-flex items-center gap-1 pt-3 text-sm font-semibold text-brand-teal">
+                <span className="mt-auto inline-flex items-center gap-1 pt-3 text-xs font-semibold text-brand-teal">
                   Explore
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                  <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                 </span>
               </Link>
             </motion.div>

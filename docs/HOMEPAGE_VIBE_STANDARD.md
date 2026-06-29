@@ -1,6 +1,7 @@
 # Taskcover Agency — Homepage Vibe Standard
 
 > **Status:** Approved master standard for all future pages.
+> Updated for the public-ready homepage pass (Task 2B).
 > Once a page is built, it must match this document's tone, structure, motion,
 > spacing, CTA style, proof rules, and conversion rhythm.
 
@@ -51,6 +52,11 @@ conversion rules, and what future pages must avoid.
   surfaces stay white and clean.
 - Text: graphite `#0F172A` for headings, secondary `#475569` for body, muted
   `#64748B` for captions.
+- Tinted treatments are allowed for semantic meaning:
+  - Pain points: subtle warm amber tint (`amber-50/60`, `border-amber-200/60`)
+  - Opportunity: subtle teal tint (`brand-teal/[0.04]`)
+  - Solution: subtle emerald tint (`brand-emerald/[0.05]`)
+  - Traditional/vendor comparison: muted slate (`surface-soft`)
 
 ---
 
@@ -71,7 +77,7 @@ conversion rules, and what future pages must avoid.
   `tint` (`#F4F8FB`) to create visual cadence.
 - Hero starts on `tint` with a subtle grid + gradient halo.
 - Consistent vertical padding via `Section` (`py-20 sm:py-24 lg:py-28`), with
-  intentional tighter sections (e.g. brand strip `py-14`).
+  intentional tighter sections (e.g. brand marquee `py-14`).
 
 ---
 
@@ -85,19 +91,19 @@ Homepage section delivery methods (all different):
 
 | # | Section | Delivery method |
 |---|---------|-----------------|
-| 1 | Hero | Split layout + floating layered dashboard |
-| 2 | Brand experience | Text-only pill strip |
-| 3 | Search has changed | Interactive ecosystem network map (SVG) |
-| 4 | Operating system | Connected horizontal pipeline diagram |
-| 5 | Growth plays | Challenge/strategy/output editorial cards |
-| 6 | Services | Asymmetric bento with unique SVG micro-visuals |
-| 7 | Industries | Tabbed sector rail + detail preview |
-| 8 | Markets | Regional panels with map-dot accent headers |
-| 9 | Video trust | Video-first featured layout (2:1 + sidebar) |
-| 10 | Press | Editorial list/clipping style |
-| 11 | Methodology | Vertical timeline |
-| 12 | Technology | Dashboard module grid with live indicators |
-| 13 | Comparison | Three-column contrast table |
+| 1 | Hero | Split layout + floating SEO-tool-like dashboard |
+| 2 | Brand experience | Moving brand/partner marquee with fade masks |
+| 3 | Search has changed | Interactive ecosystem network map (labeled nodes + particle flow) |
+| 4 | Operating system | Connected horizontal pipeline with input/action/output logic + loop |
+| 5 | Growth plays | Playbook system (featured panel + rail selector + system mapping) |
+| 6 | Services | Asymmetric bento with content-rich feature card |
+| 7 | Industries | Tabbed sector rail + tinted detail panel with chips |
+| 8 | Markets | Regional panels with map-dot accent headers + differentiator |
+| 9 | Video trust | Compact premium proof framework |
+| 10 | Media | Editorial commentary rows (no placeholder publications) |
+| 11 | Methodology | 30/60/90 phased timeline |
+| 12 | Technology | Tabbed Search Intelligence control-room |
+| 13 | Comparison | Premium two-column contrast (not a flat table) |
 | 14 | Free audit CTA | Audit report preview with scorecards |
 | 15 | FAQ | Two-column header + accordion |
 | 16 | Final CTA | Full-width gradient-halo panel |
@@ -109,6 +115,7 @@ Homepage section delivery methods (all different):
 - Identical "section header + card grid" pattern across multiple sections
 - Every card using the same icon + title + paragraph pattern
 - Generic agency landing page repetition
+- Huge empty card surfaces with too little content
 
 ---
 
@@ -121,6 +128,8 @@ Homepage section delivery methods (all different):
 - Icon tiles use `bg-brand-gradient text-white` in compact rounded squares.
 - Link affordances use `text-brand-teal` with arrow icons that translate on
   hover.
+- Feature cards must be **content-rich**, not empty surfaces. Large cards
+  include mini roadmaps, chips, or outcome previews.
 
 ---
 
@@ -137,19 +146,28 @@ Homepage section delivery methods (all different):
 
 ---
 
-## 9. Proof wording rules
+## 9. Proof wording rules (public-ready)
 
 - **Never fake proof.** No invented testimonials, metrics, or case-study
   numbers.
 - Brand names (Agoda, Skyscanner, British Council, Avis) are referenced as
   **"selected team and partner experience"** only — they do not imply
   endorsement.
-- Where real data is unavailable, use clearly-labeled placeholders (`—`,
-  `Coming soon`, `Placeholder`, `Demo visualization only`).
-- No fake review schema. No aggregate rating schema. No fabricated
-  case-study metrics in schema or copy.
-- Video/press/written-quote slots render as neutral placeholders until real,
-  permissioned assets are provided.
+- **No public-facing internal wording.** The following must never appear on
+  the public homepage:
+  - "placeholder"
+  - "coming soon"
+  - "ready for real links"
+  - "demo score"
+  - "replace with"
+  - "until verified data is connected"
+  - "Publication — Article title placeholder"
+- A single subtle illustrative disclaimer is allowed where necessary:
+  > "Illustrative dashboard preview — verified client data is added only
+  > with permission."
+- Do not overuse disclaimers.
+- Video/press/proof sections present a **structured framework** ready for
+  permissioned assets — not empty placeholders.
 
 ---
 
@@ -162,25 +180,34 @@ Homepage section delivery methods (all different):
 - **Hover lift:** `card-lift` on interactive cards and dashboard tiles.
 - **Animated connection lines:** `flow-line` (dashed SVG stroke with
   `flow-dash` animation) for pipeline/network/authority visuals.
+- **Particle flow:** animated particles moving along SVG lines toward the hub
+  for the ecosystem map (knowledge-graph feel).
 - **Pulse indicators:** `pulse-dot` for "live"/"active" status dots.
 - **Gradient sheen:** `sheen` for premium card hover (sparingly — max 1–2 per
   page).
+- **Marquee:** slow, smooth horizontal brand strip that pauses on hover.
 - All effects are disabled under `prefers-reduced-motion`.
 - No heavy 3D libraries. Prefer CSS/SVG/motion-based effects.
 
 ---
 
-## 11. Dashboard / data visualization style
+## 11. Dashboard / data visualization style (SEO-tool-like)
 
-- The hero dashboard is the **Search Intelligence Command Center**: layered
-  cards, floating metrics, animated charts (Recharts), a live status bar with
-  pulse dot.
+- The hero dashboard is the **Search Intelligence Command Center** — it must
+  feel like a premium SEO intelligence platform (Semrush/Ahrefs logic), not a
+  random collection of cramped boxes.
+- **Required structure:**
+  - Top KPI row: Search Volume, Organic Visibility, AI Visibility, Site Health
+  - Main chart: organic visibility / search demand trend
+  - Score module: AI Search Score, Audit Score, Authority Score (ring gauges)
+  - Keyword opportunity / content gap list
+  - Search intent distribution
+- **Spacing:** more white space, larger/clearer modules, fewer cramped boxes.
 - Charts use brand gradient strokes/fills (green → teal → blue).
-- Metrics use placeholder values (`—`) with "Demo score" / "Illustrative
-  demo data" footnotes until verified data exists.
-- Mini-visuals in service cards are distinct per service (roadmap, crawl map,
-  citation, cluster, authority graph, map pins, product grid, dashboard bars).
+- Mini-visuals in service cards are distinct per service.
 - Data visuals must **communicate search intelligence**, not be decorative.
+- A single subtle disclaimer is used instead of scattered "demo"/"placeholder"
+  labels.
 
 ---
 
@@ -200,9 +227,10 @@ Homepage section delivery methods (all different):
 
 - Mobile-first responsive grids.
 - Complex desktop visuals degrade cleanly:
-  - Ecosystem map → 2-column radial list
-  - Pipeline → vertical connected stack
+  - Ecosystem map → horizontal node selector
+  - Pipeline → vertical connected stack with output bullets
   - Industries rail → stacked tabs + detail panel
+  - Comparison → stacked comparison cards
 - Mobile menu: full-width links + full-width primary CTA.
 - No layout shift. No horizontal overflow.
 - Touch targets ≥ 40px.
@@ -248,6 +276,9 @@ Homepage section delivery methods (all different):
 - ❌ Layout shift, horizontal overflow, inaccessible motion.
 - ❌ Skipping heading levels or using more than one H1.
 - ❌ Generic agency landing-page repetition.
+- ❌ Public-facing placeholder/coming-soon/internal wording.
+- ❌ Huge empty card surfaces with too little content.
+- ❌ Flat plain tables for comparison (use a visual contrast system).
 
 ---
 

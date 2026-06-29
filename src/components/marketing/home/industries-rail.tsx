@@ -3,7 +3,7 @@
 import * as React from "react";
 import { motion, useReducedMotion, AnimatePresence } from "motion/react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, AlertTriangle, Sparkles, CheckCircle2 } from "lucide-react";
 import { Container } from "@/components/marketing/shared/container";
 import { Eyebrow } from "@/components/marketing/shared/section-header";
 import { cn } from "@/lib/utils";
@@ -11,12 +11,13 @@ import { cn } from "@/lib/utils";
 /**
  * Industries — vertical sector rail with detail preview.
  *
- * Layout: a left rail of industry tabs (click/hover to select) and a right
- * detail panel showing the pain/opportunity/solution for the active industry.
- * This is intentionally different from the Services bento grid and the Markets
- * panels — no repeated card grid.
+ * Layout: a left rail of industry tabs and a right detail panel showing the
+ * pain/opportunity/solution for the active industry. The three cards use
+ * tinted color treatments (warm amber for pain, blue/teal for opportunity,
+ * green/emerald for solution) with distinct icons. Extra compact rows show
+ * intent pattern, trust signals, and recommended services.
  *
- * On mobile, collapses to a vertical accordion-style list.
+ * Default active industry is Travel (strongest team/partner experience).
  */
 
 type Industry = {
@@ -25,6 +26,9 @@ type Industry = {
   pain: string;
   opportunity: string;
   solution: string;
+  intentPattern?: string;
+  trustSignals?: string;
+  recommendedServices?: readonly string[];
   href: string;
 };
 
@@ -45,6 +49,7 @@ export function IndustriesRail({
 }) {
   const reduceMotion = useReducedMotion();
   const [active, setActive] = React.useState(0);
+  const current = industries[active];
 
   return (
     <Container className={cn("flex flex-col gap-10", className)}>
@@ -99,7 +104,7 @@ export function IndustriesRail({
         </div>
 
         {/* Detail panel */}
-        <div className="relative min-h-[320px] overflow-hidden rounded-2xl border border-line bg-surface-tint p-6 sm:p-8">
+        <div className="relative min-h-[360px] overflow-hidden rounded-2xl border border-line bg-surface-tint p-6 sm:p-8">
           <AnimatePresence mode="wait">
             <motion.div
               key={active}
@@ -114,43 +119,75 @@ export function IndustriesRail({
                   Active vertical
                 </p>
                 <h3 className="mt-1 text-xl font-semibold text-graphite">
-                  {industries[active].title}
+                  {current.title}
                 </h3>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-3">
-                <div className="rounded-xl border border-line bg-white p-4">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+              {/* Tinted cards: pain / opportunity / solution */}
+              <div className="grid gap-3 sm:grid-cols-3">
+                <div className="rounded-xl border border-amber-200/60 bg-amber-50/60 p-4 shadow-[0_2px_8px_-4px_rgba(217,119,6,0.18)]">
+                  <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700">
+                    <AlertTriangle className="h-3 w-3" aria-hidden="true" />
                     Pain point
                   </p>
                   <p className="mt-1.5 text-sm text-secondary">
-                    {industries[active].pain}
+                    {current.pain}
                   </p>
                 </div>
-                <div className="rounded-xl border border-line bg-white p-4">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+                <div className="rounded-xl border border-brand-teal/20 bg-brand-teal/[0.04] p-4 shadow-[0_2px_8px_-4px_rgba(24,138,172,0.18)]">
+                  <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide text-brand-teal">
+                    <Sparkles className="h-3 w-3" aria-hidden="true" />
                     Opportunity
                   </p>
                   <p className="mt-1.5 text-sm text-secondary">
-                    {industries[active].opportunity}
+                    {current.opportunity}
                   </p>
                 </div>
-                <div className="rounded-xl border border-line bg-white p-4">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+                <div className="rounded-xl border border-brand-emerald/20 bg-brand-emerald/[0.05] p-4 shadow-[0_2px_8px_-4px_rgba(18,198,121,0.18)]">
+                  <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide text-brand-emerald">
+                    <CheckCircle2 className="h-3 w-3" aria-hidden="true" />
                     Taskcover solution
                   </p>
                   <p className="mt-1.5 text-sm text-secondary">
-                    {industries[active].solution}
+                    {current.solution}
                   </p>
                 </div>
+              </div>
+
+              {/* Extra compact rows */}
+              <div className="grid gap-2 sm:grid-cols-3">
+                {current.intentPattern && (
+                  <div className="rounded-lg border border-line-soft bg-white p-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">Intent pattern</p>
+                    <p className="mt-1 text-xs text-secondary">{current.intentPattern}</p>
+                  </div>
+                )}
+                {current.trustSignals && (
+                  <div className="rounded-lg border border-line-soft bg-white p-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">Trust signals</p>
+                    <p className="mt-1 text-xs text-secondary">{current.trustSignals}</p>
+                  </div>
+                )}
+                {current.recommendedServices && current.recommendedServices.length > 0 && (
+                  <div className="rounded-lg border border-line-soft bg-white p-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">Recommended services</p>
+                    <div className="mt-1 flex flex-wrap gap-1">
+                      {current.recommendedServices.map((s) => (
+                        <span key={s} className="inline-flex items-center rounded-md bg-surface-tint px-1.5 py-0.5 text-[10px] font-medium text-graphite">
+                          {s}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="mt-auto pt-2">
                 <Link
-                  href={industries[active].href}
+                  href={current.href}
                   className="inline-flex items-center gap-1 text-sm font-semibold text-brand-teal hover:underline"
                 >
-                  View {industries[active].short}
+                  View {current.short}
                   <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                 </Link>
               </div>
