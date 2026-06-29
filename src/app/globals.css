@@ -148,6 +148,137 @@
       linear-gradient(to bottom, rgba(24, 138, 172, 0.06) 1px, transparent 1px);
     background-size: 48px 48px;
   }
+
+  /*
+   * Premium tactile / 3D-depth utilities.
+   * Bright-only. No dark surfaces. Controlled shadows only.
+   * All lift/float effects are disabled under prefers-reduced-motion.
+   */
+
+  /* Tactile card lift on hover (desktop only) */
+  .card-lift {
+    transition:
+      transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.35s ease;
+    will-change: transform;
+  }
+  .card-lift:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 1px 0 0 rgba(15, 23, 42, 0.02),
+      0 24px 48px -28px rgba(24, 138, 172, 0.4);
+  }
+
+  /* Layered floating surface — for dashboard modules that sit above the base */
+  .depth-layered {
+    box-shadow:
+      0 1px 0 0 rgba(15, 23, 42, 0.03),
+      0 8px 24px -12px rgba(24, 138, 172, 0.18),
+      0 28px 60px -32px rgba(25, 125, 180, 0.22);
+  }
+
+  /* Soft gradient halo behind floating modules */
+  .halo-soft {
+    box-shadow:
+      0 0 0 1px rgba(24, 138, 172, 0.06),
+      0 20px 50px -24px rgba(16, 230, 106, 0.18),
+      0 30px 70px -30px rgba(25, 125, 180, 0.2);
+  }
+
+  /* Subtle perspective wrapper for dashboard / 3D-feel modules */
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  .tilt-left {
+    transform: rotateY(-6deg) rotateX(2deg);
+    transform-style: preserve-3d;
+  }
+  .tilt-right {
+    transform: rotateY(6deg) rotateX(2deg);
+    transform-style: preserve-3d;
+  }
+
+  /* Animated dashed connection line for pipeline / network visuals */
+  .flow-line {
+    stroke-dasharray: 6 6;
+    animation: flow-dash 1.6s linear infinite;
+  }
+
+  /* Soft pulse for live / active status dots */
+  .pulse-dot {
+    position: relative;
+  }
+  .pulse-dot::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 9999px;
+    border: 2px solid rgba(16, 230, 106, 0.5);
+    animation: pulse-ring 2s ease-out infinite;
+  }
+
+  /* Gradient sheen on hover for premium cards (sparingly) */
+  .sheen {
+    position: relative;
+    overflow: hidden;
+  }
+  .sheen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      115deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.5) 50%,
+      transparent 70%
+    );
+    transform: translateX(-120%);
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+  }
+  .sheen:hover::after {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes flow-dash {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+/* Respect reduced motion: disable all decorative animation/transforms */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .card-lift:hover,
+  .tilt-left,
+  .tilt-right {
+    transform: none !important;
+  }
+  .flow-line,
+  .pulse-dot::after,
+  .sheen::after {
+    animation: none !important;
+  }
 }
 
 @keyframes accordion-down {

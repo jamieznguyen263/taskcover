@@ -162,48 +162,64 @@ export const servicesBento = {
       outcome: "A prioritized roadmap tied to revenue, not vanity rankings.",
       href: "/services/seo-agency",
       icon: "strategy",
+      span: "feature",
+      visual: "roadmap",
     },
     {
       title: "Technical SEO",
       outcome: "A fast, crawlable, indexable site Google and AI can trust.",
       href: "/services/technical-seo",
       icon: "technical",
+      span: "default",
+      visual: "crawl",
     },
     {
       title: "AI Search Optimization",
       outcome: "Visibility in AI Overviews, ChatGPT, and LLM answers.",
       href: "/services/ai-search-optimization",
       icon: "ai",
+      span: "default",
+      visual: "citation",
     },
     {
       title: "Content Marketing",
       outcome: "Expert-led content clusters that capture and convert intent.",
       href: "/services/content-marketing",
       icon: "content",
+      span: "wide",
+      visual: "cluster",
     },
     {
       title: "Digital PR & Link Building",
       outcome: "Authority signals from real publications and partners.",
       href: "/services/digital-pr-link-building",
       icon: "pr",
+      span: "default",
+      visual: "authority",
     },
     {
       title: "Local SEO",
       outcome: "Win the local pack, maps, and review surfaces.",
       href: "/services/local-seo",
       icon: "local",
+      span: "default",
+      visual: "pins",
     },
     {
       title: "eCommerce SEO",
       outcome: "Category and product visibility that drives revenue.",
       href: "/services/ecommerce-seo",
       icon: "ecommerce",
+      span: "default",
+      visual: "products",
     },
     {
       title: "Analytics & Reporting",
       outcome: "Business-impact dashboards, not just traffic reports.",
       href: "/services/seo-audit",
       icon: "analytics",
+      span: "wide",
+      visual: "dashboard",
     },
   ],
 } as const;
@@ -216,6 +232,7 @@ export const industries = {
   cards: [
     {
       title: "Travel & Hospitality SEO",
+      short: "Travel",
       pain: "High funnel leakage to OTAs and aggregators.",
       opportunity: "Capture direct-booking demand and destination authority.",
       solution: "Intent-led destination and property content systems.",
@@ -223,6 +240,7 @@ export const industries = {
     },
     {
       title: "Education & Institutional SEO",
+      short: "Education",
       pain: "Long consideration cycles and trust-heavy decisions.",
       opportunity: "Own program, outcome, and comparison intent.",
       solution: "Expert-led content clusters and structured program data.",
@@ -230,6 +248,7 @@ export const industries = {
     },
     {
       title: "Healthcare & Wellness SEO",
+      short: "Healthcare",
       pain: "Strict trust and compliance requirements.",
       opportunity: "Earn visibility on condition, treatment, and provider intent.",
       solution: "E-E-A-T-led content and authoritative citations.",
@@ -237,6 +256,7 @@ export const industries = {
     },
     {
       title: "Legal & Immigration SEO",
+      short: "Legal",
       pain: "High-stakes, high-intent, reputation-driven demand.",
       opportunity: "Convert case-type and jurisdictional intent.",
       solution: "Trust-first content, reviews, and local authority.",
@@ -244,6 +264,7 @@ export const industries = {
     },
     {
       title: "SaaS & Technology SEO",
+      short: "SaaS",
       pain: "Crowded category terms and comparison buyers.",
       opportunity: "Own category, alternative, and integration intent.",
       solution: "Comparison content, integrations SEO, and product-led pages.",
@@ -251,6 +272,7 @@ export const industries = {
     },
     {
       title: "eCommerce SEO",
+      short: "eCommerce",
       pain: "Category and product page competition.",
       opportunity: "Revenue-focused category and product visibility.",
       solution: "Technical commerce SEO and structured product data.",
@@ -258,6 +280,7 @@ export const industries = {
     },
     {
       title: "Franchise & Multi-location SEO",
+      short: "Franchise",
       pain: "Inconsistent local visibility across locations.",
       opportunity: "Win each location's local pack and maps.",
       solution: "Scaled local SEO with location authority architecture.",
@@ -274,6 +297,7 @@ export const markets = {
   cards: [
     {
       title: "USA SEO Agency",
+      region: "United States",
       context:
         "Hyper-competitive national and local SERPs across 50 states, with strong AI answer adoption and review-driven trust signals.",
       href: "/markets/usa-seo-agency",
@@ -282,9 +306,15 @@ export const markets = {
         "AI answer and review surface strategy",
         "Multi-state compliance considerations",
       ],
+      mapDots: [
+        { x: 25, y: 40 },
+        { x: 50, y: 55 },
+        { x: 75, y: 35 },
+      ],
     },
     {
       title: "Canada SEO Agency",
+      region: "Canada",
       context:
         "Bilingual and regional demand patterns, with strong local pack behavior and distinct provincial market dynamics.",
       href: "/markets/canada-seo-agency",
@@ -293,9 +323,15 @@ export const markets = {
         "Provincial and metro-level prioritization",
         "Local pack and maps optimization",
       ],
+      mapDots: [
+        { x: 30, y: 30 },
+        { x: 55, y: 45 },
+        { x: 70, y: 25 },
+      ],
     },
     {
       title: "Australia SEO Agency",
+      region: "Australia",
       context:
         "Concentrated metro demand, strong local intent, and high review sensitivity across capital cities and regional hubs.",
       href: "/markets/australia-seo-agency",
@@ -303,6 +339,11 @@ export const markets = {
         "Capital city and regional market mapping",
         "Local pack and review reputation focus",
         "Cross-Tasman and APAC expansion readiness",
+      ],
+      mapDots: [
+        { x: 40, y: 55 },
+        { x: 60, y: 40 },
+        { x: 75, y: 65 },
       ],
     },
   ],
