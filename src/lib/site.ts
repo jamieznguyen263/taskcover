@@ -33,9 +33,9 @@ export const siteConfig = {
   },
   ogImage: "/brand/og-default.svg",
   logo: {
-    // TODO: drop official assets into /public/brand and update these paths
-    horizontal: "/brand/taskcover-horizontal.svg",
-    icon: "/brand/taskcover-icon.svg",
+    // Official white-background variants from brand-source/Taskcover Logo.zip
+    horizontal: "/brand/taskcover-horizontal.png",
+    icon: "/brand/taskcover-icon.png",
   },
   navigation: [
     { label: "Services", href: "/services" },

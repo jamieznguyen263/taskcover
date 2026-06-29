@@ -110,6 +110,25 @@ export function breadcrumbSchema(items: BreadcrumbItem[]) {
 }
 
 /**
+ * FAQPage schema builder.
+ * Only call this on pages where the FAQs are genuinely visible in the DOM.
+ */
+export function faqSchema(faqs: { q: string; a: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.a,
+      },
+    })),
+  };
+}
+
+/**
  * Serialize a JSON-LD object for safe inline rendering.
  * Escapes "<" to mitigate XSS injection per Next.js docs guidance.
  */
