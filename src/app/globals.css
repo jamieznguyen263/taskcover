@@ -1,0 +1,173 @@
+@import "tailwindcss";
+
+/*
+ * Taskcover Agency — Design Tokens
+ * Bright-only theme. No dark mode.
+ * See docs/DESIGN_SYSTEM.md for full guidelines.
+ */
+:root {
+  /* Brand gradient stops (green -> emerald -> teal -> blue) */
+  --taskcover-green: #10e66a;
+  --taskcover-emerald: #12c679;
+  --taskcover-teal: #188aac;
+  --taskcover-blue: #197db4;
+
+  /* Text */
+  --taskcover-graphite: #0f172a;
+  --taskcover-ink: #111827;
+  --taskcover-secondary: #475569;
+  --taskcover-muted: #64748b;
+
+  /* Surfaces */
+  --taskcover-bg: #ffffff;
+  --taskcover-bg-soft: #f8fafc;
+  --taskcover-bg-tint: #f4f8fb;
+
+  /* Borders */
+  --taskcover-border: #ddeaf0;
+  --taskcover-border-soft: #e5eef3;
+
+  /* Gradients */
+  --taskcover-gradient: linear-gradient(
+    135deg,
+    #10e66a 0%,
+    #12c679 28%,
+    #188aac 66%,
+    #197db4 100%
+  );
+  --taskcover-gradient-soft: linear-gradient(
+    135deg,
+    rgba(16, 230, 106, 0.12) 0%,
+    rgba(18, 198, 121, 0.1) 30%,
+    rgba(24, 138, 172, 0.1) 70%,
+    rgba(25, 125, 180, 0.12) 100%
+  );
+
+  /* Baseline */
+  --background: var(--taskcover-bg);
+  --foreground: var(--taskcover-graphite);
+}
+
+@theme inline {
+  /* Brand colors mapped to Tailwind tokens */
+  --color-background: var(--taskcover-bg);
+  --color-foreground: var(--taskcover-graphite);
+
+  --color-brand-green: #10e66a;
+  --color-brand-emerald: #12c679;
+  --color-brand-teal: #188aac;
+  --color-brand-blue: #197db4;
+
+  --color-graphite: #0f172a;
+  --color-ink: #111827;
+  --color-secondary: #475569;
+  --color-muted: #64748b;
+
+  --color-surface: #ffffff;
+  --color-surface-soft: #f8fafc;
+  --color-surface-tint: #f4f8fb;
+
+  --color-line: #ddeaf0;
+  --color-line-soft: #e5eef3;
+
+  /* Fonts */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@layer base {
+  * {
+    border-color: var(--taskcover-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    color-scheme: light;
+  }
+
+  body {
+    background: var(--taskcover-bg);
+    color: var(--taskcover-graphite);
+    font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: rgba(16, 230, 106, 0.22);
+    color: var(--taskcover-graphite);
+  }
+
+  /* Accessible focus ring using brand color */
+  :focus-visible {
+    outline: 2px solid var(--taskcover-teal);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@layer utilities {
+  /* Controlled brand gradient surfaces */
+  .bg-brand-gradient {
+    background-image: var(--taskcover-gradient);
+  }
+  .bg-brand-gradient-soft {
+    background-image: var(--taskcover-gradient-soft);
+  }
+  .text-brand-gradient {
+    background-image: var(--taskcover-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  .border-brand-gradient {
+    border-image: var(--taskcover-gradient) 1;
+  }
+
+  /* Premium ring used on hero glow + dashboard mockups */
+  .ring-brand-glow {
+    box-shadow:
+      0 0 0 1px rgba(24, 138, 172, 0.08),
+      0 24px 60px -24px rgba(25, 125, 180, 0.25);
+  }
+
+  /* Subtle dotted grid for command-center feel */
+  .bg-dot-grid {
+    background-image: radial-gradient(
+      rgba(24, 138, 172, 0.12) 1px,
+      transparent 1px
+    );
+    background-size: 22px 22px;
+  }
+
+  .bg-line-grid {
+    background-image:
+      linear-gradient(to right, rgba(24, 138, 172, 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(24, 138, 172, 0.06) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+  to {
+    height: 0;
+    opacity: 0;
+  }
+}

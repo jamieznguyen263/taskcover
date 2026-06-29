@@ -1,0 +1,99 @@
+"use client";
+
+import * as React from "react";
+import Link from "next/link";
+import { Menu, X } from "lucide-react";
+import { siteConfig } from "@/lib/site";
+import { cn } from "@/lib/utils";
+import { Container } from "@/components/marketing/shared/container";
+import { CTAButton } from "@/components/marketing/shared/cta-button";
+
+/**
+ * Sticky site header. White/light surface only — no dark theme.
+ * Logo left, primary nav center/right, primary CTA right, mobile menu.
+ */
+export function SiteHeader() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <header className="sticky top-0 z-50 border-b border-line bg-white/85 backdrop-blur supports-[backdrop-filter]:bg-white/70">
+      <Container className="flex h-16 items-center justify-between gap-4">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2"
+          aria-label={`${siteConfig.name} home`}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={siteConfig.logo.horizontal}
+            alt={`${siteConfig.name} logo`}
+            className="h-8 w-auto"
+          />
+        </Link>
+
+        <nav aria-label="Primary" className="hidden lg:block">
+          <ul className="flex items-center gap-1">
+            {siteConfig.navigation.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className="rounded-full px-3 py-2 text-sm font-medium text-secondary transition-colors hover:bg-surface-tint hover:text-graphite"
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <div className="hidden items-center gap-3 lg:flex">
+          <CTAButton size="md" href={siteConfig.primaryCta.href}>
+            {siteConfig.primaryCta.label}
+          </CTAButton>
+        </div>
+
+        <button
+          type="button"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-graphite lg:hidden"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
+        >
+          {open ? (
+            <X className="h-5 w-5" aria-hidden="true" />
+          ) : (
+            <Menu className="h-5 w-5" aria-hidden="true" />
+          )}
+        </button>
+      </Container>
+
+      {/* Mobile menu */}
+      <div className={cn("lg:hidden", open ? "block" : "hidden")}>
+        <Container className="pb-6 pt-2">
+          <ul className="flex flex-col gap-1">
+            {siteConfig.navigation.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className="block rounded-xl px-4 py-3 text-base font-medium text-graphite hover:bg-surface-tint"
+                  onClick={() => setOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-4">
+            <CTAButton
+              size="lg"
+              href={siteConfig.primaryCta.href}
+              className="w-full"
+            >
+              {siteConfig.primaryCta.label}
+            </CTAButton>
+          </div>
+        </Container>
+      </div>
+    </header>
+  );
+}

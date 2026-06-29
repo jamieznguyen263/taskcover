@@ -1,0 +1,122 @@
+# Taskcover Agency — Design System
+
+This document is the source of truth for visual design. All components and
+pages must conform to it.
+
+## 1. Bright-only design direction
+
+- **Light theme only.** No dark website theme.
+- Main backgrounds must be white, off-white, or light blue-tinted.
+- Dark text is allowed; dark surfaces are not.
+- No black or dark navy hero sections.
+- Feel: premium **“Search Intelligence Command Center”**, not a generic SEO
+  agency template.
+
+## 2. Official Taskcover color palette
+
+| Token                   | Hex       | Usage                                  |
+| ----------------------- | --------- | -------------------------------------- |
+| `--taskcover-green`     | `#10E66A` | Brand gradient start                   |
+| `--taskcover-emerald`   | `#12C679` | Brand gradient second stop             |
+| `--taskcover-teal`      | `#188AAC` | Brand gradient third stop / accents    |
+| `--taskcover-blue`      | `#197DB4` | Brand gradient end                     |
+| `--taskcover-graphite`  | `#0F172A` | Main text                              |
+| `--taskcover-ink`       | `#111827` | Alt main text                          |
+| `--taskcover-secondary` | `#475569` | Secondary text                         |
+| `--taskcover-muted`     | `#64748B` | Muted text / captions                  |
+| `--taskcover-bg`        | `#FFFFFF` | Page background                        |
+| `--taskcover-bg-soft`   | `#F8FAFC` | Soft section background                |
+| `--taskcover-bg-tint`   | `#F4F8FB` | Light blue-tinted background           |
+| `--taskcover-border`    | `#DDEAF0` | Default border                         |
+| `--taskcover-border-soft` | `#E5EEF3`| Soft border                            |
+
+The brand gradient is:
+
+```
+linear-gradient(135deg, #10E66A 0%, #12C679 28%, #188AAC 66%, #197DB4 100%)
+```
+
+These are mapped to Tailwind tokens in `src/app/globals.css` via the
+`@theme inline` block (e.g. `bg-brand-gradient`, `text-brand-teal`,
+`bg-surface-tint`, `border-line`).
+
+## 3. No dark theme rule
+
+- The site must never switch to a dark theme.
+- `color-scheme: light` is set on `:root` in `globals.css`.
+- Do not introduce `dark:` Tailwind variants.
+
+## 4. Logo usage rules
+
+Official assets belong in `public/brand/` (see
+[`public/brand/README.md`](../public/brand/README.md)).
+
+- Use the **horizontal** logo in the header and footer.
+- Use the **icon/avatar** version for favicon, small badges, social preview,
+  and compact UI.
+- Prefer transparent / white-background variants.
+- **Do not** use the black-background logo variant in the main UI.
+- **Do not** distort, recolor, stretch, or crop the logo.
+
+Placeholder on-brand SVGs are checked in at:
+
+- `public/brand/taskcover-horizontal.svg`
+- `public/brand/taskcover-icon.svg`
+- `public/brand/og-default.svg`
+
+Replace each file with the official asset (same filename) when provided.
+
+## 5. Gradient usage rules
+
+Use the Taskcover gradient in a **controlled, premium** way:
+
+- CTA fills and borders
+- Hero dashboard glow
+- Small section accents (eyebrow dot, timeline line)
+- Data visualization highlights
+- Card emphasis (sparingly)
+- Badges and icon tiles
+- Charts (Recharts strokes / fills)
+
+Do **not** overuse the gradient:
+
+- No rainbow gradients.
+- No neon-heavy design.
+- No colorful clutter.
+- Most surfaces remain white and clean.
+
+Helper utilities live in `globals.css`:
+
+- `.bg-brand-gradient`
+- `.bg-brand-gradient-soft`
+- `.text-brand-gradient`
+- `.ring-brand-glow`
+- `.bg-dot-grid`
+- `.bg-line-grid`
+
+## 6. UI component style
+
+- Rounded surfaces (`rounded-xl`, `rounded-2xl`, `rounded-3xl`).
+- Subtle borders (`border-line`, `border-line-soft`).
+- Soft shadows, never heavy drop shadows.
+- Generous whitespace; consistent section rhythm (`Section` component).
+- Mobile-first responsive grids.
+- One clear H1 per page; subsequent sections use `SectionHeader` (H2).
+
+## 7. Motion rules
+
+- Motion must support comprehension, not distract.
+- Prefer subtle transitions (`duration-200`, `duration-300`).
+- Accordion open/close uses CSS keyframes defined in `globals.css`.
+- Respect `prefers-reduced-motion` where animations are added later.
+- No parallax-for-parallax-sake; no flashing or strobing.
+
+## 8. Accessibility rules
+
+- WCAG AA contrast minimums for text on backgrounds.
+- Visible focus rings using brand teal (`:focus-visible` rule in `globals.css`).
+- All interactive elements are keyboard reachable.
+- Icons paired with text labels or `aria-label`s; decorative icons use
+  `aria-hidden="true"`.
+- Semantic landmarks: `header`, `main`, `nav` (with `aria-label`), `footer`.
+- Section headings linked via `aria-labelledby` where appropriate.

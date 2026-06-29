@@ -1,0 +1,33 @@
+# Brand assets — Taskcover Agency
+
+## Official assets
+
+Drop the official Taskcover logo package here. The files below are expected by
+the site (`src/lib/site.ts`):
+
+| Expected file               | Purpose                                  |
+| --------------------------- | ---------------------------------------- |
+| `taskcover-horizontal.svg`  | Header / footer wordmark                 |
+| `taskcover-icon.svg`        | Favicon, social avatar, small UI badges  |
+| `og-default.svg`            | Default Open Graph / Twitter share image |
+
+These paths are currently filled with **on-brand placeholder SVGs** using the
+official Taskcover gradient (green → emerald → teal → blue). Replace each file
+with the official asset when provided.
+
+## Logo usage rules
+
+See [`docs/DESIGN_SYSTEM.md`](../../docs/DESIGN_SYSTEM.md) for the full guide.
+
+- Prefer transparent / white-background variants. **Do not** use the
+  black-background logo variant in the main UI.
+- Do not distort, recolor, stretch, or crop the logo.
+- Use the horizontal logo in the header.
+- Use the icon/avatar version for favicon, small badges, social preview, and
+  compact UI.
+
+## Replacing placeholders
+
+1. Replace each file in this folder with the official asset (same filename).
+2. If official assets use different filenames, update `src/lib/site.ts`
+   (`siteConfig.logo` and `siteConfig.ogImage`).
