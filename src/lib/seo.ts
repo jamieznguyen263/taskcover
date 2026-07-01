@@ -1,6 +1,3 @@
-import type { Metadata } from "next";
-import { siteConfig } from "./site";
-
 /**
  * SEO helpers for Taskcover Agency.
  *
@@ -9,13 +6,33 @@ import { siteConfig } from "./site";
  *  - No spammy aggregate ratings.
  *  - Only emit schema types we can back with real data.
  *  - Safe placeholders for Organization fields (omit phone/address until verified).
+ *
+ * i18n (Task 4A):
+ *  - buildMetadata() now accepts an optional locale + base path and emits
+ *    canonical, hreflang alternates, and a localized OG locale.
+ *  - English stays unprefixed; fr/es are prefixed.
  */
+
+import type { Metadata } from "next";
+import { siteConfig } from "./site";
+import {
+  type Locale,
+  defaultLocale,
+  localizePath,
+  getAlternateHreflangs,
+  localeOgLocale,
+} from "./i18n";
 
 type BuildMetadataInput = {
   title: string;
   description: string;
-  /** Canonical path, e.g. "/services/technical-seo". */
+  /**
+   * Base path WITHOUT locale prefix, e.g. "/" or "/services/technical-seo".
+   * The helper localizes it for the current locale (canonical) and all alts.
+   */
   path?: string;
+  /** Active locale for this page. Defaults to English. */
+  locale?: Locale;
   ogImage?: string;
   noIndex?: boolean;
   keywords?: string[];
@@ -25,28 +42,41 @@ export function buildMetadata({
   title,
   description,
   path = "/",
+  locale = defaultLocale,
   ogImage,
   noIndex = false,
   keywords = [],
 }: BuildMetadataInput): Metadata {
-  const url = `${siteConfig.url}${path}`;
+  const localizedPath = localizePath(path, locale);
+  const canonicalUrl = `${siteConfig.url}${localizedPath}`;
   const image = ogImage ?? siteConfig.ogImage;
+
+  // Build hreflang alternates as absolute URLs.
+  const alternates = getAlternateHreflangs(path).map((alt) => ({
+    hreflang: alt.hreflang,
+    href: `${siteConfig.url}${alt.href}`,
+  }));
 
   return {
     title,
     description,
     keywords,
-    alternates: { canonical: url },
+    alternates: {
+      canonical: canonicalUrl,
+      languages: Object.fromEntries(
+        alternates.map((a) => [a.hreflang, a.href])
+      ),
+    },
     robots: noIndex
       ? { index: false, follow: false }
       : { index: true, follow: true },
     openGraph: {
       type: "website",
-      url,
+      url: canonicalUrl,
       title: `${title} | ${siteConfig.name}`,
       siteName: siteConfig.name,
       description,
-      locale: siteConfig.locale,
+      locale: localeOgLocale[locale],
       images: [{ url: image, width: 1200, height: 630, alt: title }],
     },
     twitter: {
@@ -93,10 +123,14 @@ export function organizationSchema() {
 
 /**
  * BreadcrumbList schema builder.
+ * Items use the UNPREFIXED base path + a locale; the builder localizes the path.
  */
 export type BreadcrumbItem = { name: string; path: string };
 
-export function breadcrumbSchema(items: BreadcrumbItem[]) {
+export function breadcrumbSchema(
+  items: BreadcrumbItem[],
+  locale: Locale = defaultLocale
+) {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -104,7 +138,7 @@ export function breadcrumbSchema(items: BreadcrumbItem[]) {
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: `${siteConfig.url}${item.path}`,
+      item: `${siteConfig.url}${localizePath(item.path, locale)}`,
     })),
   };
 }

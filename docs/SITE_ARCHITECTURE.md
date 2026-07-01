@@ -4,9 +4,30 @@ This is the planned sitemap. Not all routes are built yet — Phase 1 (this
 commit) ships the homepage and the foundation. Routes marked **(planned)** do
 not yet have pages and currently rely on the global layout (header/footer).
 
+## i18n (Task 4A) ✅
+
+The site supports three locales with English as the default (unprefixed):
+
+- `en` — English (default) — `/`, `/services`, `/services/[slug]`
+- `fr` — French — `/fr`, `/fr/services`, `/fr/services/[slug]`
+- `es` — Spanish — `/es`, `/es/services`, `/es/services/[slug]`
+
+Route prefix is the source of truth for the active locale. See
+`docs/I18N_STRATEGY.md`.
+
+- `app/page.tsx` — English homepage
+- `app/[locale]/page.tsx` — French/Spanish homepage (generates `fr`, `es`)
+- `app/services/page.tsx` — English services hub
+- `app/[locale]/services/page.tsx` — French/Spanish services hub
+- `app/services/[slug]/page.tsx` — English service detail
+- `app/[locale]/services/[slug]/page.tsx` — French/Spanish service detail
+- `app/sitemap.ts` — emits all localized routes with hreflang alternates
+
 ## Top-level
 
 - `/` — Homepage ✅ (built)
+- `/fr` — French homepage ✅ (built)
+- `/es` — Spanish homepage ✅ (built)
 
 ## Services ✅ (built)
 
@@ -22,6 +43,10 @@ not yet have pages and currently rely on the global layout (header/footer).
 - `/services/ppc-management` ✅
 - `/services/seo-mentor-service` ✅
 - `/services/seo-audit` ✅
+
+Localized equivalents (`/fr/services/*`, `/es/services/*`) are also built for
+all 11 services. Slugs are shared (English) for now; localized slugs are a
+future enhancement (see `I18N_STRATEGY.md` §11).
 
 > The hub (`/services`) uses a service constellation + layered capability
 > stack + decision guide. Each detail page uses the shared
@@ -87,7 +112,15 @@ not yet have pages and currently rely on the global layout (header/footer).
 ## Notes
 
 - Use Next.js App Router conventions: `app/<route>/page.tsx`.
-- Use `buildMetadata()` from `src/lib/seo.ts` for canonical + OG metadata.
-- Add `BreadcrumbList` schema via `breadcrumbSchema()` where appropriate.
+- Use `buildMetadata({ path, locale })` from `src/lib/seo.ts` for canonical,
+  OG, Twitter, and hreflang alternates. The helper localizes the path.
+- Add `BreadcrumbList` schema via `breadcrumbSchema(items, locale)` where
+  appropriate — it localizes both labels' paths.
+- Content is accessed via `src/lib/content.ts` accessors
+  (`getHomeContent`, `getServicesContent`, `getServiceBySlug`, etc.), never
+  via raw imports of locale files.
+- The header/footer derive locale from the route prefix via `useLocale()`.
+- The language switcher preserves the equivalent page path across locales.
 - Internal links from the footer (`src/components/marketing/layout/site-footer.tsx`)
-  point to the planned routes above so navigation is consistent from day one.
+  are localized automatically for the active locale.
+- See `docs/I18N_STRATEGY.md` for the full multilingual strategy.

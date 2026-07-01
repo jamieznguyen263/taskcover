@@ -52,10 +52,14 @@ serializer in `src/lib/seo.ts` (`serializeJsonLd`).
 
 `src/lib/seo.ts` provides:
 
-- `buildMetadata({ title, description, path, ogImage, noIndex, keywords })`
-  → returns a `Metadata` object with canonical, OG, and Twitter fields.
-- `organizationSchema()` → safe Organization JSON-LD.
-- `breadcrumbSchema(items)` → BreadcrumbList JSON-LD.
+- `buildMetadata({ title, description, path, locale, ogImage, noIndex, keywords })`
+  → returns a `Metadata` object with localized canonical, OG, Twitter fields,
+  and hreflang `alternates.languages` (en/fr/es/x-default). `path` is the
+  UNPREFIXED base path; the helper localizes it for the given `locale`.
+- `organizationSchema()` → safe Organization JSON-LD (locale-neutral).
+- `breadcrumbSchema(items, locale)` → BreadcrumbList JSON-LD with localized
+  paths (and localized labels you pass in).
+- `faqSchema(faqs)` → FAQPage JSON-LD (pass localized FAQs where translated).
 - `serializeJsonLd(data)` → XSS-safe string for `dangerouslySetInnerHTML`.
 
 ## 5. Open Graph & Twitter
@@ -98,7 +102,26 @@ content used by `ServicePageTemplate`.
 
 ---
 
-## 7. Local market context (USA / Canada / Australia)
+## 7. Internationalization (i18n) — Task 4A
+
+The site supports English (default, unprefixed), French (`/fr`), and Spanish
+(`/es`). Full details in `docs/I18N_STRATEGY.md`.
+
+- Each page emits `<link rel="alternate" hreflang="...">` for `en`, `fr`,
+  `es`, and `x-default` via `buildMetadata({ path, locale })`.
+- The canonical URL matches the current locale path.
+- Open Graph `locale` is localized (`en_US`, `fr_FR`, `es_ES`).
+- BreadcrumbList JSON-LD uses localized paths and labels.
+- FAQPage JSON-LD uses localized FAQ content where translated.
+- The sitemap (`src/app/sitemap.ts`) includes all localized routes with
+  hreflang alternates.
+
+Hard rules:
+- No locale may be served under the wrong prefix (e.g. French content under
+  an unprefixed URL). The route prefix is the source of truth.
+- Slugs are English (shared) for now; localized slugs are a future task.
+
+## 8. Local market context (USA / Canada / Australia)
 
 Each market page must include:
 

@@ -7,37 +7,52 @@ import {
   serializeJsonLd,
 } from "@/lib/seo";
 import { ServicePageTemplate } from "@/components/marketing/services/service-template";
-import { getServiceBySlug, getServiceSlugs, getSiteContent } from "@/lib/content";
+import {
+  getServiceBySlug,
+  getServiceSlugs,
+  getSiteContent,
+} from "@/lib/content";
+import { locales, isLocale, type Locale } from "@/lib/i18n";
 
-type Params = { params: Promise<{ slug: string }> };
+type Params = {
+  params: Promise<{ locale: string; slug: string }>;
+};
 
-/** Pre-render every service page at build time. */
+/** Pre-render fr/es × all service slugs. */
 export function generateStaticParams() {
-  return getServiceSlugs().map((slug) => ({ slug }));
+  const slugs = getServiceSlugs();
+  return locales
+    .filter((l) => l !== "en")
+    .flatMap((locale) => slugs.map((slug) => ({ locale, slug })));
 }
 
-/** Unique metadata per service page. */
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const { slug } = await params;
-  const service = getServiceBySlug(slug, "en");
+  const { locale: localeParam, slug } = await params;
+  if (!isLocale(localeParam)) return {};
+  const locale = localeParam as Locale;
+  const service = getServiceBySlug(slug, locale);
   if (!service) return {};
 
   return buildMetadata({
     title: service.metaTitle,
     description: service.metaDescription,
     path: `/services/${service.slug}`,
-    locale: "en",
+    locale,
   });
 }
 
-export default async function ServiceDetailPage({ params }: Params) {
-  const { slug } = await params;
-  const service = getServiceBySlug(slug, "en");
+export default async function LocalizedServiceDetailPage({ params }: Params) {
+  const { locale: localeParam, slug } = await params;
+  if (!isLocale(localeParam) || localeParam === "en") {
+    notFound();
+  }
+  const locale = localeParam as Locale;
+  const service = getServiceBySlug(slug, locale);
   if (!service) {
     notFound();
   }
 
-  const site = getSiteContent("en");
+  const site = getSiteContent(locale);
 
   const breadcrumb = breadcrumbSchema(
     [
@@ -45,7 +60,7 @@ export default async function ServiceDetailPage({ params }: Params) {
       { name: site.ui.services, path: "/services" },
       { name: service.shortLabel, path: `/services/${service.slug}` },
     ],
-    "en"
+    locale
   );
 
   const faq = faqSchema(service.faqs);
