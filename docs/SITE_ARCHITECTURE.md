@@ -27,6 +27,12 @@ not yet have pages and currently rely on the global layout (header/footer).
 > stack + decision guide. Each detail page uses the shared
 > `ServicePageTemplate` with 10 distinct sections and a service-specific
 > visual. See `docs/HOMEPAGE_VIBE_STANDARD.md` §18.
+>
+> **Data depth (Task 3C):** All 11 service pages now carry enriched,
+> service-specific data across problem, approach, deliverables (with `tag`
+> chips), use cases (with `signal` triggers), process (with `timing`), and
+> outcomes. Every page also has a service-specific CTA preview panel.
+> Pages are ready for i18n.
 
 ## Industries `(planned)`
 

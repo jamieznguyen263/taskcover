@@ -81,6 +81,21 @@ Rules:
 - Internal links to related services are rendered as visible anchors (the
   "next best modules" rail), satisfying internal-linking best practices.
 
+### Enriched service data fields (Task 3C)
+
+Each service in `src/data/services.ts` carries the following optional-but-preferred
+fields. They are **display-only** (not emitted into JSON-LD) and exist to give
+every page consistent, buyer-oriented depth before i18n:
+
+| Field | Where it renders | Notes |
+|-------|------------------|-------|
+| `deliverables[].tag` | Deliverable ledger tier chip | One of the allowed tag strings; falls back to an em-dash if omitted. |
+| `useCases[].signal` | "Trigger" column in the decision-path layout | Answers "what situation tells a buyer this is right for them?" |
+| `process[].timing` | Badge on each process timeline node | Use concrete labels (`Week 1`, `Weeks 1–2`, `Month 1`, `Monthly`, `Quarterly`, `Ongoing`). |
+
+No field in this list is added to structured data. They are purely on-page
+content used by `ServicePageTemplate`.
+
 ---
 
 ## 7. Local market context (USA / Canada / Australia)

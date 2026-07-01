@@ -269,6 +269,16 @@ const deliverableTagStyles: Record<NonNullable<ServiceDeliverable["tag"]>, strin
   Priority: "bg-amber-50 text-amber-700 border-amber-200/60",
   Foundation: "bg-surface-tint text-secondary border-line",
   Ongoing: "bg-brand-green/10 text-brand-emerald border-brand-green/20",
+  Strategy: "bg-brand-teal/10 text-brand-teal border-brand-teal/20",
+  Technical: "bg-blue-50 text-blue-700 border-blue-200/60",
+  Content: "bg-emerald-50 text-emerald-700 border-emerald-200/60",
+  Authority: "bg-violet-50 text-violet-700 border-violet-200/60",
+  Local: "bg-amber-50 text-amber-700 border-amber-200/60",
+  Analytics: "bg-surface-tint text-secondary border-line",
+  Conversion: "bg-brand-green/10 text-brand-emerald border-brand-green/20",
+  Advisory: "bg-brand-teal/10 text-brand-teal border-brand-teal/20",
+  "AI Search": "bg-blue-50 text-blue-700 border-blue-200/60",
+  Execution: "bg-brand-green/10 text-brand-emerald border-brand-green/20",
 };
 
 function DeliverableTag({ tag }: { tag: NonNullable<ServiceDeliverable["tag"]> }) {
@@ -619,12 +629,83 @@ export function ServiceFAQ({ service }: { service: Service }) {
 
 /** Service-specific audit preview rows — keyed by service slug for tailored depth. */
 const ctaPreviewBySlug: Partial<Record<string, { label: string; icon: React.ElementType }[]>> = {
+  "seo-agency": [
+    { label: "Search growth roadmap", icon: GitBranch },
+    { label: "Technical / content / authority prioritization", icon: ListChecks },
+    { label: "Reporting and KPI alignment", icon: Gauge },
+    { label: "Opportunity map", icon: Target },
+    { label: "90-day sprint plan", icon: Zap },
+  ],
+  "technical-seo": [
+    { label: "Crawl / indexation review", icon: Search },
+    { label: "Core Web Vitals snapshot", icon: Gauge },
+    { label: "Schema and architecture check", icon: ListChecks },
+    { label: "Migration / release risk review", icon: AlertTriangle },
+    { label: "Technical priority roadmap", icon: GitBranch },
+  ],
+  "ai-search-optimization": [
+    { label: "Entity clarity check", icon: Sparkles },
+    { label: "AI answer surface review", icon: Search },
+    { label: "Citation asset gap", icon: Target },
+    { label: "Structured content review", icon: ListChecks },
+    { label: "AI readiness roadmap", icon: GitBranch },
+  ],
+  "content-marketing": [
+    { label: "Topic cluster gap", icon: ListChecks },
+    { label: "Content quality review", icon: Check },
+    { label: "Internal linking map", icon: GitBranch },
+    { label: "Editorial brief sample", icon: Target },
+    { label: "Conversion content priorities", icon: Zap },
+  ],
+  "digital-pr-link-building": [
+    { label: "Authority signal review", icon: Gauge },
+    { label: "Relevant publication gap", icon: Target },
+    { label: "Expert commentary opportunities", icon: Sparkles },
+    { label: "Link quality risk check", icon: AlertTriangle },
+    { label: "Digital PR roadmap", icon: GitBranch },
+  ],
+  "local-seo": [
+    { label: "Google Business Profile review", icon: ListChecks },
+    { label: "Local pack visibility snapshot", icon: Search },
+    { label: "Location / service-area page review", icon: Target },
+    { label: "Review signal analysis", icon: Check },
+    { label: "Local conversion path roadmap", icon: GitBranch },
+  ],
+  "ecommerce-seo": [
+    { label: "Category architecture review", icon: GitBranch },
+    { label: "Product page visibility check", icon: Search },
+    { label: "Faceted navigation risk", icon: AlertTriangle },
+    { label: "Buying-intent content gap", icon: Target },
+    { label: "Internal link opportunity map", icon: ListChecks },
+  ],
+  "international-seo": [
+    { label: "Market architecture review", icon: GitBranch },
+    { label: "Hreflang / localization check", icon: Check },
+    { label: "Regional keyword map", icon: Search },
+    { label: "Country-specific SERP gap", icon: Target },
+    { label: "International rollout roadmap", icon: Zap },
+  ],
+  "seo-audit": [
+    { label: "Technical SEO snapshot", icon: ListChecks },
+    { label: "Keyword opportunity map", icon: Target },
+    { label: "Competitor visibility gap", icon: Search },
+    { label: "Content authority gap", icon: Gauge },
+    { label: "AI search readiness check", icon: Sparkles },
+    { label: "90-day roadmap", icon: GitBranch },
+  ],
   "ppc-management": [
     { label: "Campaign structure review", icon: GitBranch },
     { label: "Search term waste review", icon: Search },
     { label: "Landing page alignment review", icon: Target },
     { label: "Conversion tracking check", icon: Check },
     { label: "Paid + organic opportunity map", icon: Zap },
+  ],
+  "seo-mentor-service": [
+    { label: "Team capability assessment", icon: ListChecks },
+    { label: "SEO roadmap review", icon: GitBranch },
+    { label: "AI search readiness coaching plan", icon: Sparkles },
+    { label: "Priority decision framework", icon: Target },
+    { label: "Mentorship curriculum outline", icon: Gauge },
   ],
 };
 
