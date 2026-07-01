@@ -126,5 +126,9 @@ export type ServicesContent = {
     ctaIllustrative: string;
     breadcrumbHome: string;
     breadcrumbServices: string;
+    /** Localized CTA audit-preview row labels, keyed by service slug. */
+    ctaPreviewLabels: Record<string, string[]>;
+    /** Default preview labels used when a slug isn't in ctaPreviewLabels. */
+    ctaPreviewDefault: string[];
   };
 };

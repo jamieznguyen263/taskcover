@@ -653,99 +653,38 @@ export function ServiceFAQ({ service }: { service: Service }) {
 /* 10. Final CTA — service-specific audit preview panel                        */
 /* -------------------------------------------------------------------------- */
 
-/** Service-specific audit preview rows — keyed by service slug for tailored depth. */
-const ctaPreviewBySlug: Partial<Record<string, { label: string; icon: React.ElementType }[]>> = {
-  "seo-agency": [
-    { label: "Search growth roadmap", icon: GitBranch },
-    { label: "Technical / content / authority prioritization", icon: ListChecks },
-    { label: "Reporting and KPI alignment", icon: Gauge },
-    { label: "Opportunity map", icon: Target },
-    { label: "90-day sprint plan", icon: Zap },
-  ],
-  "technical-seo": [
-    { label: "Crawl / indexation review", icon: Search },
-    { label: "Core Web Vitals snapshot", icon: Gauge },
-    { label: "Schema and architecture check", icon: ListChecks },
-    { label: "Migration / release risk review", icon: AlertTriangle },
-    { label: "Technical priority roadmap", icon: GitBranch },
-  ],
-  "ai-search-optimization": [
-    { label: "Entity clarity check", icon: Sparkles },
-    { label: "AI answer surface review", icon: Search },
-    { label: "Citation asset gap", icon: Target },
-    { label: "Structured content review", icon: ListChecks },
-    { label: "AI readiness roadmap", icon: GitBranch },
-  ],
-  "content-marketing": [
-    { label: "Topic cluster gap", icon: ListChecks },
-    { label: "Content quality review", icon: Check },
-    { label: "Internal linking map", icon: GitBranch },
-    { label: "Editorial brief sample", icon: Target },
-    { label: "Conversion content priorities", icon: Zap },
-  ],
-  "digital-pr-link-building": [
-    { label: "Authority signal review", icon: Gauge },
-    { label: "Relevant publication gap", icon: Target },
-    { label: "Expert commentary opportunities", icon: Sparkles },
-    { label: "Link quality risk check", icon: AlertTriangle },
-    { label: "Digital PR roadmap", icon: GitBranch },
-  ],
-  "local-seo": [
-    { label: "Google Business Profile review", icon: ListChecks },
-    { label: "Local pack visibility snapshot", icon: Search },
-    { label: "Location / service-area page review", icon: Target },
-    { label: "Review signal analysis", icon: Check },
-    { label: "Local conversion path roadmap", icon: GitBranch },
-  ],
-  "ecommerce-seo": [
-    { label: "Category architecture review", icon: GitBranch },
-    { label: "Product page visibility check", icon: Search },
-    { label: "Faceted navigation risk", icon: AlertTriangle },
-    { label: "Buying-intent content gap", icon: Target },
-    { label: "Internal link opportunity map", icon: ListChecks },
-  ],
-  "international-seo": [
-    { label: "Market architecture review", icon: GitBranch },
-    { label: "Hreflang / localization check", icon: Check },
-    { label: "Regional keyword map", icon: Search },
-    { label: "Country-specific SERP gap", icon: Target },
-    { label: "International rollout roadmap", icon: Zap },
-  ],
-  "seo-audit": [
-    { label: "Technical SEO snapshot", icon: ListChecks },
-    { label: "Keyword opportunity map", icon: Target },
-    { label: "Competitor visibility gap", icon: Search },
-    { label: "Content authority gap", icon: Gauge },
-    { label: "AI search readiness check", icon: Sparkles },
-    { label: "90-day roadmap", icon: GitBranch },
-  ],
-  "ppc-management": [
-    { label: "Campaign structure review", icon: GitBranch },
-    { label: "Search term waste review", icon: Search },
-    { label: "Landing page alignment review", icon: Target },
-    { label: "Conversion tracking check", icon: Check },
-    { label: "Paid + organic opportunity map", icon: Zap },
-  ],
-  "seo-mentor-service": [
-    { label: "Team capability assessment", icon: ListChecks },
-    { label: "SEO roadmap review", icon: GitBranch },
-    { label: "AI search readiness coaching plan", icon: Sparkles },
-    { label: "Priority decision framework", icon: Target },
-    { label: "Mentorship curriculum outline", icon: Gauge },
-  ],
+/**
+ * Service-specific audit preview icon sets — keyed by service slug.
+ *
+ * Icons are visual (locale-independent), so they stay here. The localized
+ * text labels live in the ServicesContent ui.ctaPreviewLabels /
+ * ui.ctaPreviewDefault strings and are zipped together with these icons
+ * by index at render time.
+ */
+const ctaPreviewIconsBySlug: Partial<Record<string, React.ElementType[]>> = {
+  "seo-agency": [GitBranch, ListChecks, Gauge, Target, Zap],
+  "technical-seo": [Search, Gauge, ListChecks, AlertTriangle, GitBranch],
+  "ai-search-optimization": [Sparkles, Search, Target, ListChecks, GitBranch],
+  "content-marketing": [ListChecks, Check, GitBranch, Target, Zap],
+  "digital-pr-link-building": [Gauge, Target, Sparkles, AlertTriangle, GitBranch],
+  "local-seo": [ListChecks, Search, Target, Check, GitBranch],
+  "ecommerce-seo": [GitBranch, Search, AlertTriangle, Target, ListChecks],
+  "international-seo": [GitBranch, Check, Search, Target, Zap],
+  "seo-audit": [ListChecks, Target, Search, Gauge, Sparkles, GitBranch],
+  "ppc-management": [GitBranch, Search, Target, Check, Zap],
+  "seo-mentor-service": [ListChecks, GitBranch, Sparkles, Target, Gauge],
 };
 
-function getDefaultPreview() {
-  return [
-    { label: "Technical health", icon: ListChecks },
-    { label: "Keyword opportunity", icon: Target },
-    { label: "AI search readiness", icon: Sparkles },
-  ];
-}
+const ctaPreviewIconsDefault: React.ElementType[] = [ListChecks, Target, Sparkles];
 
 export function ServiceCTA({ service }: { service: Service }) {
   const ui = useUI();
-  const previewRows = ctaPreviewBySlug[service.slug] ?? getDefaultPreview();
+  const labels = ui.ctaPreviewLabels[service.slug] ?? ui.ctaPreviewDefault;
+  const icons = ctaPreviewIconsBySlug[service.slug] ?? ctaPreviewIconsDefault;
+  const previewRows = labels.map((label, i) => ({
+    label,
+    icon: icons[i % icons.length] ?? ListChecks,
+  }));
 
   return (
     <Section background="default">
