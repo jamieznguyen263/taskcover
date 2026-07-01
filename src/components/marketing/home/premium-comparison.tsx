@@ -24,14 +24,24 @@ export function PremiumComparison({
   title,
   description,
   rows,
+  labels,
   className,
 }: {
   eyebrow: string;
   title: React.ReactNode;
   description: React.ReactNode;
   rows: readonly Row[];
+  labels?: {
+    traditional: string;
+    taskcover: string;
+  };
   className?: string;
 }) {
+  const L = labels ?? {
+    traditional: "Traditional SEO vendor",
+    taskcover: "Taskcover Agency",
+  };
+
   return (
     <Container className={cn("flex flex-col gap-10", className)}>
       <div className="flex max-w-2xl flex-col gap-4">
@@ -52,13 +62,13 @@ export function PremiumComparison({
         <div className="hidden sm:block" />
         <div className="hidden text-center sm:block">
           <span className="inline-flex items-center rounded-full border border-line bg-surface-tint px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-muted">
-            Dimension
+            {L.traditional}
           </span>
         </div>
         <div className="hidden text-center sm:block">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-gradient px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white">
             <span className="h-1.5 w-1.5 rounded-full bg-white" aria-hidden="true" />
-            Connected search system
+            {L.taskcover}
           </span>
         </div>
       </div>
@@ -71,8 +81,7 @@ export function PremiumComparison({
           >
             {/* Dimension label */}
             <div className="hidden flex-col justify-center rounded-2xl border border-line bg-white px-5 py-4 sm:flex">
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted">Dimension</p>
-              <p className="text-sm font-semibold text-graphite">{row.dimension}</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted">{row.dimension}</p>
             </div>
 
             {/* Traditional */}
@@ -82,7 +91,7 @@ export function PremiumComparison({
                   <X className="h-3.5 w-3.5" aria-hidden="true" />
                 </span>
                 <span className="text-[10px] font-semibold uppercase tracking-wide text-muted">
-                  Traditional · {row.dimension}
+                  {L.traditional} · {row.dimension}
                 </span>
               </div>
               <div className="flex items-start gap-2.5">
@@ -104,7 +113,7 @@ export function PremiumComparison({
                   <Check className="h-3.5 w-3.5" aria-hidden="true" />
                 </span>
                 <span className="text-[10px] font-semibold uppercase tracking-wide text-brand-teal">
-                  Taskcover · {row.dimension}
+                  {L.taskcover} · {row.dimension}
                 </span>
               </div>
               <div className="relative flex items-start gap-2.5">

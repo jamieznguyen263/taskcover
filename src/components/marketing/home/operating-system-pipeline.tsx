@@ -30,6 +30,7 @@ export function OperatingSystemPipeline({
   titleId,
   description,
   steps,
+  labels,
   className,
 }: {
   eyebrow: string;
@@ -37,11 +38,27 @@ export function OperatingSystemPipeline({
   titleId: string;
   description: React.ReactNode;
   steps: readonly Step[];
+  labels?: {
+    stage: string;
+    input: string;
+    action: string;
+    output: string;
+    loop: string;
+    compound: string;
+  };
   className?: string;
 }) {
   const reduceMotion = useReducedMotion();
   const [active, setActive] = React.useState(0);
   const current = steps[active];
+  const L = labels ?? {
+    stage: "Stage",
+    input: "Input",
+    action: "Action",
+    output: "Output",
+    loop: "Reporting loops insight back into Strategy",
+    compound: "Each stage compounds into the next",
+  };
 
   return (
     <Container className={cn("flex flex-col gap-12", className)}>
@@ -113,7 +130,7 @@ export function OperatingSystemPipeline({
         {/* Loop indicator: Reporting -> Strategy */}
         <div className="mt-2 flex items-center justify-center gap-2 text-[11px] font-medium text-muted">
           <RotateCw className="h-3 w-3 text-brand-teal" aria-hidden="true" />
-          <span>Reporting loops insight back into Strategy</span>
+          <span>{L.loop}</span>
         </div>
 
         {/* Active stage detail panel */}
@@ -126,7 +143,7 @@ export function OperatingSystemPipeline({
         >
           <div className="flex flex-col gap-1">
             <p className="text-[11px] font-semibold uppercase tracking-wide text-brand-teal">
-              Stage {active + 1}
+              {L.stage} {active + 1}
             </p>
             <p className="text-lg font-semibold text-graphite">{current.label}</p>
             <p className="text-sm leading-relaxed text-secondary">
@@ -139,7 +156,7 @@ export function OperatingSystemPipeline({
                 <div className="rounded-lg border border-brand-blue/20 bg-brand-blue/[0.04] p-3">
                   <p className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-brand-blue">
                     <Database className="h-3 w-3" aria-hidden="true" />
-                    Input
+                    {L.input}
                   </p>
                   <p className="mt-1 text-xs text-secondary">{current.input}</p>
                 </div>
@@ -148,7 +165,7 @@ export function OperatingSystemPipeline({
                 <div className="rounded-lg border border-brand-emerald/20 bg-brand-emerald/[0.05] p-3">
                   <p className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-brand-emerald">
                     <Zap className="h-3 w-3" aria-hidden="true" />
-                    Action
+                    {L.action}
                   </p>
                   <p className="mt-1 text-xs text-secondary">{current.action}</p>
                 </div>
@@ -157,7 +174,7 @@ export function OperatingSystemPipeline({
                 <div className="rounded-lg border border-brand-teal/30 bg-brand-teal/[0.05] p-3">
                   <p className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-brand-teal">
                     <CheckCircle2 className="h-3 w-3" aria-hidden="true" />
-                    Output
+                    {L.output}
                   </p>
                   <p className="mt-1 text-xs text-secondary">{current.output}</p>
                 </div>
@@ -196,7 +213,7 @@ export function OperatingSystemPipeline({
       </ol>
 
       <div className="flex items-center gap-2 text-sm font-medium text-brand-teal">
-        <span>Each stage compounds into the next</span>
+        <span>{L.compound}</span>
         <ArrowRight className="h-4 w-4" aria-hidden="true" />
       </div>
     </Container>

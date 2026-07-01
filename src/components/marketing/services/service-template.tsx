@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import {
   ArrowRight,
@@ -32,6 +34,21 @@ import {
   ServiceHeroVisual,
   ServiceDeliverableVisual,
 } from "@/components/marketing/services/service-visuals";
+import type { ServicesContent } from "@/content/services.types";
+
+/** UI labels passed from the route to all service template sub-components. */
+export type ServiceUI = ServicesContent["ui"];
+
+/** React context so sub-components can access UI labels without prop drilling. */
+const ServiceUIContext = React.createContext<ServiceUI | null>(null);
+
+function useUI(): ServiceUI {
+  const ctx = React.useContext(ServiceUIContext);
+  if (!ctx) {
+    throw new Error("Service template sub-components must be rendered inside ServicePageTemplate");
+  }
+  return ctx;
+}
 
 /* -------------------------------------------------------------------------- */
 /* Breadcrumb (visual, not schema — schema is emitted by the page route)       */
@@ -77,6 +94,7 @@ export function ServiceBreadcrumb({
 /* -------------------------------------------------------------------------- */
 
 export function ServicePageHero({ service }: { service: Service }) {
+  const ui = useUI();
   return (
     <Section
       background="tint"
@@ -89,8 +107,8 @@ export function ServicePageHero({ service }: { service: Service }) {
         <div className="flex flex-col gap-5">
           <ServiceBreadcrumb
             items={[
-              { label: "Home", href: "/" },
-              { label: "Services", href: "/services" },
+              { label: ui.breadcrumbHome, href: "/" },
+              { label: ui.breadcrumbServices, href: "/services" },
               { label: service.shortLabel },
             ]}
           />
@@ -106,11 +124,11 @@ export function ServicePageHero({ service }: { service: Service }) {
           </p>
           <div className="mt-1 flex flex-col gap-3 sm:flex-row">
             <CTAButton size="lg" href="/free-seo-audit">
-              Get Free SEO Audit
+              {ui.heroCtaPrimary}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </CTAButton>
             <CTAButton variant="secondary" size="lg" href="/book-a-call">
-              Book Strategy Call
+              {ui.heroCtaSecondary}
             </CTAButton>
           </div>
         </div>
@@ -123,7 +141,7 @@ export function ServicePageHero({ service }: { service: Service }) {
               className="h-auto w-full"
             />
             <figcaption className="px-3 pb-2 pt-1 text-center text-[11px] text-muted">
-              Illustrative preview — verified client data is added only with permission.
+              {ui.heroFigcaption}
             </figcaption>
           </figure>
         </div>
@@ -137,12 +155,13 @@ export function ServicePageHero({ service }: { service: Service }) {
 /* -------------------------------------------------------------------------- */
 
 export function ServiceProblemSection({ service }: { service: Service }) {
+  const ui = useUI();
   return (
     <Section background="default" aria-labelledby={`problem-${service.slug}`}>
       <Container className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr]">
         <SectionHeader
           align="left"
-          eyebrow="Why it matters"
+          eyebrow={ui.problemEyebrow}
           titleId={`problem-${service.slug}`}
           title={service.problem.title}
         />
@@ -155,12 +174,12 @@ export function ServiceProblemSection({ service }: { service: Service }) {
                 <AlertTriangle className="h-4 w-4" aria-hidden="true" />
               </span>
               <span className="text-xs font-semibold uppercase tracking-wide text-muted">
-                Issue scanner
+                {ui.problemScanner}
               </span>
             </div>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-200/60 bg-amber-50/60 px-2.5 py-0.5 text-[10px] font-semibold text-amber-700">
               <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
-              {service.problem.bullets.length} common gaps
+              {service.problem.bullets.length} {ui.problemGapCount}
             </span>
           </div>
           {/* paragraphs */}
@@ -194,12 +213,13 @@ export function ServiceProblemSection({ service }: { service: Service }) {
 /* -------------------------------------------------------------------------- */
 
 export function ServiceApproachSection({ service }: { service: Service }) {
+  const ui = useUI();
   return (
     <Section background="soft" aria-labelledby={`approach-${service.slug}`}>
       <Container className="flex flex-col gap-10">
         <SectionHeader
           align="left"
-          eyebrow="The Taskcover approach"
+          eyebrow={ui.approachEyebrow}
           titleId={`approach-${service.slug}`}
           title={service.approach.title}
           description={service.approach.paragraphs[0]}
@@ -216,7 +236,7 @@ export function ServiceApproachSection({ service }: { service: Service }) {
           <div className="flex items-center gap-2 border-b border-line bg-surface-tint px-5 py-2.5">
             <GitBranch className="h-4 w-4 text-brand-teal" aria-hidden="true" />
             <span className="text-xs font-semibold uppercase tracking-wide text-muted">
-              Operating model
+              {ui.approachModel}
             </span>
           </div>
           <ol className="flex flex-col">
@@ -253,7 +273,7 @@ export function ServiceApproachSection({ service }: { service: Service }) {
           </ol>
         </div>
         <p className="text-sm text-muted">
-          Every {service.shortLabel} engagement connects to the same search growth operating system — visibility, authority, and revenue measured together.
+          {ui.approachConnect.replace("{service}", service.shortLabel)}
         </p>
       </Container>
     </Section>
@@ -295,25 +315,26 @@ function DeliverableTag({ tag }: { tag: NonNullable<ServiceDeliverable["tag"]> }
 }
 
 export function ServiceDeliverables({ service }: { service: Service }) {
+  const ui = useUI();
   return (
     <Section background="default" aria-labelledby={`deliverables-${service.slug}`}>
       <Container className="flex flex-col gap-8">
         <SectionHeader
           align="left"
-          eyebrow="Deliverables"
+          eyebrow={ui.deliverablesEyebrow}
           titleId={`deliverables-${service.slug}`}
-          title="What you actually get."
-          description="Concrete, service-specific outputs — prioritized by impact, not activity."
+          title={ui.deliverablesTitle}
+          description={ui.deliverablesDesc}
         />
 
         {/* Implementation ledger — table-like board with alternating rows */}
         <div className="overflow-hidden rounded-2xl border border-line bg-white">
           {/* ledger header */}
           <div className="hidden grid-cols-[3rem_1fr_2fr_auto] items-center gap-4 border-b border-line bg-surface-tint px-4 py-2.5 sm:grid">
-            <span className="text-[10px] font-bold uppercase tracking-wide text-muted">#</span>
-            <span className="text-[10px] font-bold uppercase tracking-wide text-muted">Deliverable</span>
-            <span className="text-[10px] font-bold uppercase tracking-wide text-muted">Scope</span>
-            <span className="text-[10px] font-bold uppercase tracking-wide text-muted">Tier</span>
+            <span className="text-[10px] font-bold uppercase tracking-wide text-muted">{ui.deliverablesNumber}</span>
+            <span className="text-[10px] font-bold uppercase tracking-wide text-muted">{ui.deliverablesDeliverable}</span>
+            <span className="text-[10px] font-bold uppercase tracking-wide text-muted">{ui.deliverablesScope}</span>
+            <span className="text-[10px] font-bold uppercase tracking-wide text-muted">{ui.deliverablesTier}</span>
           </div>
           <ol>
             {service.deliverables.map((d, i) => (
@@ -351,7 +372,7 @@ export function ServiceDeliverables({ service }: { service: Service }) {
             />
           </div>
           <p className="text-xs text-muted">
-            {service.shortLabel} delivery preview — each output is scoped to your market, goals, and current search position.
+            {ui.deliverablesPreview.replace("{service}", service.shortLabel)}
           </p>
         </div>
       </Container>
@@ -364,15 +385,16 @@ export function ServiceDeliverables({ service }: { service: Service }) {
 /* -------------------------------------------------------------------------- */
 
 export function ServiceUseCases({ service }: { service: Service }) {
+  const ui = useUI();
   return (
     <Section background="soft" aria-labelledby={`usecases-${service.slug}`}>
       <Container className="flex flex-col gap-8">
         <SectionHeader
           align="left"
-          eyebrow="Who this is for"
+          eyebrow={ui.useCasesEyebrow}
           titleId={`usecases-${service.slug}`}
-          title="Find the situation that matches yours."
-          description="Scenario-based fit — if you recognize the trigger, this service maps to your gap."
+          title={ui.useCasesTitle}
+          description={ui.useCasesDesc}
         />
 
         {/* Decision paths — stacked rows with trigger → fit flow */}
@@ -390,7 +412,7 @@ export function ServiceUseCases({ service }: { service: Service }) {
                   </span>
                   <div className="flex flex-col gap-1">
                     <span className="text-[10px] font-bold uppercase tracking-wide text-muted">
-                      Trigger
+                      {ui.useCasesTrigger}
                     </span>
                     <p className="text-sm leading-snug text-secondary">{u.signal}</p>
                   </div>
@@ -424,7 +446,7 @@ export function ServiceUseCases({ service }: { service: Service }) {
         </div>
 
         <p className="max-w-2xl text-sm text-muted">
-          Engagements are tailored to USA, Canada, and Australia market context where relevant.
+          {ui.useCasesNote}
         </p>
       </Container>
     </Section>
@@ -436,15 +458,16 @@ export function ServiceUseCases({ service }: { service: Service }) {
 /* -------------------------------------------------------------------------- */
 
 export function ServiceProcess({ service }: { service: Service }) {
+  const ui = useUI();
   return (
     <Section background="default" aria-labelledby={`process-${service.slug}`}>
       <Container className="flex flex-col gap-10">
         <SectionHeader
           align="left"
-          eyebrow="How we work"
+          eyebrow={ui.processEyebrow}
           titleId={`process-${service.slug}`}
-          title="Phased, prioritized, and validated."
-          description="Each phase compounds — no busywork, no black boxes."
+          title={ui.processTitle}
+          description={ui.processDesc}
         />
 
         {/* Vertical timeline with left rail */}
@@ -491,15 +514,16 @@ export function ServiceProcess({ service }: { service: Service }) {
 /* -------------------------------------------------------------------------- */
 
 export function ServiceOutcomes({ service }: { service: Service }) {
+  const ui = useUI();
   return (
     <Section background="soft" aria-labelledby={`outcomes-${service.slug}`}>
       <Container className="flex flex-col gap-10">
         <SectionHeader
           align="left"
-          eyebrow="Business outcomes"
+          eyebrow={ui.outcomesEyebrow}
           titleId={`outcomes-${service.slug}`}
           title={service.outcomePromise}
-          description="Outcome categories — no fabricated metrics. Verified results are added only with attributable data."
+          description={ui.outcomesDesc}
         />
 
         {/* Ascending staircase — each step is wider/higher than the last */}
@@ -564,6 +588,7 @@ export function ServiceOutcomes({ service }: { service: Service }) {
 /* -------------------------------------------------------------------------- */
 
 export function RelatedServices({ service }: { service: Service }) {
+  const ui = useUI();
   const related = getRelatedServices(service);
   if (related.length === 0) return null;
 
@@ -571,12 +596,12 @@ export function RelatedServices({ service }: { service: Service }) {
     <Section background="default" aria-labelledby={`related-${service.slug}`}>
       <Container className="flex flex-col gap-8">
         <div className="flex flex-col gap-3">
-          <Eyebrow>Next best modules</Eyebrow>
+          <Eyebrow>{ui.relatedEyebrow}</Eyebrow>
           <h2
             id={`related-${service.slug}`}
             className="max-w-2xl text-balance text-3xl font-semibold tracking-tight text-graphite sm:text-4xl"
           >
-            Connect {service.shortLabel} to the rest of the system.
+            {ui.relatedTitle.replace("{service}", service.shortLabel)}
           </h2>
         </div>
         {/* horizontal rail of module chips — not cards */}
@@ -592,7 +617,7 @@ export function RelatedServices({ service }: { service: Service }) {
               </span>
               <span className="flex flex-col">
                 <span className="text-sm font-semibold text-graphite">{s.title}</span>
-                <span className="text-[11px] text-muted">Related module</span>
+                <span className="text-[11px] text-muted">{ui.relatedModule}</span>
               </span>
               <ArrowUpRight className="h-4 w-4 text-brand-teal transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
             </Link>
@@ -608,14 +633,15 @@ export function RelatedServices({ service }: { service: Service }) {
 /* -------------------------------------------------------------------------- */
 
 export function ServiceFAQ({ service }: { service: Service }) {
+  const ui = useUI();
   return (
     <Section background="soft" aria-labelledby={`faq-${service.slug}`}>
       <Container className="grid gap-10 lg:grid-cols-[0.9fr_1.3fr]">
         <SectionHeader
           align="left"
-          eyebrow="FAQ"
+          eyebrow={ui.faqEyebrow}
           titleId={`faq-${service.slug}`}
-          title={`${service.shortLabel} questions, answered.`}
+          title={ui.faqTitle.replace("{service}", service.shortLabel)}
         />
         <FAQAccordion items={service.faqs} />
       </Container>
@@ -718,6 +744,7 @@ function getDefaultPreview() {
 }
 
 export function ServiceCTA({ service }: { service: Service }) {
+  const ui = useUI();
   const previewRows = ctaPreviewBySlug[service.slug] ?? getDefaultPreview();
 
   return (
@@ -730,20 +757,20 @@ export function ServiceCTA({ service }: { service: Service }) {
           <div className="relative grid gap-8 p-8 sm:p-12 lg:grid-cols-[1.1fr_0.9fr]">
             {/* left: copy + CTA */}
             <div className="flex flex-col items-start gap-5">
-              <Eyebrow>Start your search growth system</Eyebrow>
+              <Eyebrow>{ui.ctaEyebrow}</Eyebrow>
               <h2 className="max-w-xl text-balance text-3xl font-semibold tracking-tight text-graphite sm:text-4xl lg:text-[2.5rem] lg:leading-[1.1]">
-                See exactly where {service.shortLabel.toLowerCase()} can move your numbers.
+                {ui.ctaTitle.replace("{service}", service.shortLabel.toLowerCase())}
               </h2>
               <p className="max-w-lg text-secondary">
-                Get a free SEO Growth Audit with a prioritized 90-day roadmap across technical, content, authority, and AI search readiness.
+                {ui.ctaDesc}
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <CTAButton size="lg" href="/free-seo-audit">
-                  Get Free SEO Audit
+                  {ui.heroCtaPrimary}
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </CTAButton>
                 <CTAButton variant="secondary" size="lg" href="/book-a-call">
-                  Book Strategy Call
+                  {ui.heroCtaSecondary}
                 </CTAButton>
               </div>
             </div>
@@ -752,10 +779,10 @@ export function ServiceCTA({ service }: { service: Service }) {
               <div className="flex items-center justify-between">
                 <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide text-brand-teal">
                   <Gauge className="h-3.5 w-3.5" aria-hidden="true" />
-                  Audit preview
+                  {ui.ctaAuditPreview}
                 </span>
                 <span className="rounded-full bg-brand-gradient px-2 py-0.5 text-[10px] font-semibold text-white">
-                  90-day plan
+                  {ui.ninetyDayPlan}
                 </span>
               </div>
               {previewRows.map((row) => (
@@ -768,7 +795,7 @@ export function ServiceCTA({ service }: { service: Service }) {
                 </div>
               ))}
               <p className="text-center text-[10px] text-muted">
-                Illustrative — each audit is scoped to your market and goals.
+                {ui.ctaIllustrative}
               </p>
             </div>
           </div>
@@ -782,9 +809,9 @@ export function ServiceCTA({ service }: { service: Service }) {
 /* Full service page template                                                  */
 /* -------------------------------------------------------------------------- */
 
-export function ServicePageTemplate({ service }: { service: Service }) {
+export function ServicePageTemplate({ service, ui }: { service: Service; ui: ServiceUI }) {
   return (
-    <>
+    <ServiceUIContext.Provider value={ui}>
       <ServicePageHero service={service} />
       <ServiceProblemSection service={service} />
       <ServiceApproachSection service={service} />
@@ -795,6 +822,6 @@ export function ServicePageTemplate({ service }: { service: Service }) {
       <RelatedServices service={service} />
       <ServiceFAQ service={service} />
       <ServiceCTA service={service} />
-    </>
+    </ServiceUIContext.Provider>
   );
 }

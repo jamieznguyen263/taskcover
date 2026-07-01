@@ -5,15 +5,10 @@
  *  - app/page.tsx               (English, unprefixed)
  *  - app/[locale]/page.tsx       (fr / es)
  *
- * Localization policy (Task 4A):
- *  - Hero, section eyebrows/titles/descriptions, FAQ, final CTA, and the audit
- *    block are fully localized via the `home` prop.
- *  - Deep arrays (operating-system steps, growth plays, services bento cards,
- *    industries, markets, methodology phases, technology modules, media
- *    commentary, video proof, comparison rows, brand strip) are sourced from
- *    the English canonical data file and fall back to English. This is the
- *    documented fallback policy in docs/I18N_STRATEGY.md and will be addressed
- *    in Task 4B.
+ * Task 4B: all homepage sections are fully localized via the `home` prop,
+ * including deep arrays (operating-system steps, growth plays, services
+ * bento, industries, markets, methodology, technology, media, video proof,
+ * comparison rows, brand strip) and component-level UI labels.
  */
 
 import { ArrowRight, CheckCircle2, ClipboardCheck, FileSearch, Globe2, Sparkles } from "lucide-react";
@@ -37,19 +32,6 @@ import { MethodologyPhases } from "@/components/marketing/home/methodology-phase
 import { TechnologyControlRoom } from "@/components/marketing/home/technology-control-room";
 import { PremiumComparison } from "@/components/marketing/home/premium-comparison";
 import type { HomeContent } from "@/content/home.types";
-import {
-  brandExperienceStrip,
-  comparisonRows,
-  growthPlays,
-  industries,
-  markets,
-  mediaCommentary,
-  methodologyPhases,
-  operatingSystem,
-  servicesBento as servicesBentoData,
-  technologyCapabilities,
-  videoProofFramework,
-} from "@/data/home";
 
 export function HomeView({ home }: { home: HomeContent }) {
   return (
@@ -87,9 +69,9 @@ export function HomeView({ home }: { home: HomeContent }) {
       {/* 2. Brand experience — moving brand/partner marquee */}
       <Section background="default" className="py-14 sm:py-16">
         <BrandMarquee
-          caption={brandExperienceStrip.caption}
-          rowBrands={[...brandExperienceStrip.rowBrands]}
-          rowCapabilities={[...brandExperienceStrip.rowCapabilities]}
+          caption={home.brandExperience.caption}
+          rowBrands={[...home.brandExperience.rowBrands]}
+          rowCapabilities={[...home.brandExperience.rowCapabilities]}
         />
       </Section>
 
@@ -111,7 +93,15 @@ export function HomeView({ home }: { home: HomeContent }) {
           title={home.operatingSystem.title}
           titleId="os-title"
           description={home.operatingSystem.description}
-          steps={[...operatingSystem.steps]}
+          steps={[...home.operatingSystem.steps]}
+          labels={{
+            stage: home.ui.osStageLabel,
+            input: home.ui.osInputLabel,
+            action: home.ui.osActionLabel,
+            output: home.ui.osOutputLabel,
+            loop: home.ui.osLoopLabel,
+            compound: home.ui.osCompoundLabel,
+          }}
         />
       </Section>
 
@@ -122,8 +112,15 @@ export function HomeView({ home }: { home: HomeContent }) {
           title={home.growthPlays.title}
           titleId="plays-title"
           description={home.growthPlays.description}
-          featured={growthPlays.featured}
-          plays={[...growthPlays.plays]}
+          featured={home.growthPlays.featured}
+          plays={[...home.growthPlays.plays]}
+          labels={{
+            featuredPlay: home.ui.featuredPlay,
+            challenge: home.ui.challengeLabel,
+            strategy: home.ui.strategyLabel,
+            output: home.ui.outputLabel,
+            connectedToSystem: home.ui.connectedToSystem,
+          }}
         />
       </Section>
 
@@ -134,50 +131,66 @@ export function HomeView({ home }: { home: HomeContent }) {
           title={home.servicesBento.title}
           titleId="services-title"
           description={home.servicesBento.description}
-          featureCard={servicesBentoData.featureCard}
-          cards={[...servicesBentoData.cards]}
+          featureCard={home.servicesBento.featureCard}
+          cards={[...home.servicesBento.cards]}
+          labels={{
+            coreModule: home.ui.coreModule,
+            roadmap: home.ui.roadmapLabel,
+            businessOutcome: home.ui.businessOutcome,
+            explore: home.ui.explore,
+          }}
         />
       </Section>
 
       {/* 7. Industries — tabbed sector rail with detail preview */}
       <Section background="soft" aria-labelledby="industries-title">
         <IndustriesRail
-          eyebrow={industries.eyebrow}
-          title={industries.title}
+          eyebrow={home.industries.eyebrow}
+          title={home.industries.title}
           titleId="industries-title"
-          description={industries.description}
-          industries={[...industries.cards]}
+          description={home.industries.description}
+          industries={[...home.industries.cards]}
+          labels={{
+            activeVertical: home.ui.activeVertical,
+            painPoint: home.ui.painPoint,
+            opportunity: home.ui.opportunityLabel,
+            taskcoverSolution: home.ui.taskcoverSolution,
+            intentPattern: home.ui.intentPattern,
+            trustSignals: home.ui.trustSignals,
+            recommendedServices: home.ui.recommendedServices,
+            view: home.ui.viewIndustry,
+          }}
         />
       </Section>
 
       {/* 8. Markets — regional panels with map-dot accent headers */}
       <Section background="default" aria-labelledby="markets-title">
         <MarketsPanels
-          eyebrow={markets.eyebrow}
-          title={markets.title}
+          eyebrow={home.markets.eyebrow}
+          title={home.markets.title}
           titleId="markets-title"
-          description={markets.description}
-          markets={[...markets.cards]}
+          description={home.markets.description}
+          markets={[...home.markets.cards]}
         />
       </Section>
 
       {/* 9. Video proof — compact premium proof framework */}
       <Section background="soft" aria-labelledby="video-proof-title">
         <VideoProofFramework
-          eyebrow={videoProofFramework.eyebrow}
-          title={videoProofFramework.title}
-          description={videoProofFramework.description}
-          slots={[...videoProofFramework.slots]}
+          eyebrow={home.videoProof.eyebrow}
+          title={home.videoProof.title}
+          description={home.videoProof.description}
+          slots={[...home.videoProof.slots]}
         />
       </Section>
 
       {/* 10. Media & expert commentary — editorial rows */}
       <Section background="default" aria-labelledby="media-title">
         <MediaCommentary
-          eyebrow={mediaCommentary.eyebrow}
-          title={mediaCommentary.title}
-          description={mediaCommentary.description}
-          categories={[...mediaCommentary.categories]}
+          eyebrow={home.mediaCommentary.eyebrow}
+          title={home.mediaCommentary.title}
+          description={home.mediaCommentary.description}
+          categories={[...home.mediaCommentary.categories]}
         />
       </Section>
 
@@ -187,17 +200,17 @@ export function HomeView({ home }: { home: HomeContent }) {
           eyebrow={home.methodology.eyebrow}
           title={home.methodology.title}
           description={home.methodology.description}
-          phases={[...methodologyPhases.phases]}
+          phases={[...home.methodology.phases]}
         />
       </Section>
 
       {/* 12. Technology — Search Intelligence control-room (tabbed) */}
       <Section background="default" aria-labelledby="tech-title">
         <TechnologyControlRoom
-          eyebrow={technologyCapabilities.eyebrow}
-          title={technologyCapabilities.title}
-          description={technologyCapabilities.description}
-          modules={[...technologyCapabilities.modules]}
+          eyebrow={home.technology.eyebrow}
+          title={home.technology.title}
+          description={home.technology.description}
+          modules={[...home.technology.modules]}
         />
       </Section>
 
@@ -207,7 +220,11 @@ export function HomeView({ home }: { home: HomeContent }) {
           eyebrow={home.comparison.eyebrow}
           title={home.comparison.title}
           description={home.comparison.description}
-          rows={[...comparisonRows]}
+          rows={[...home.comparison.rows]}
+          labels={{
+            traditional: home.ui.traditionalLabel,
+            taskcover: home.ui.taskcoverLabel,
+          }}
         />
       </Section>
 
@@ -249,10 +266,10 @@ export function HomeView({ home }: { home: HomeContent }) {
                 {/* Mini scorecards */}
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { label: "Technical", icon: ClipboardCheck },
-                    { label: "AI Ready", icon: Sparkles },
-                    { label: "Content", icon: FileSearch },
-                    { label: "Authority", icon: Globe2 },
+                    { label: home.ui.auditTechnical, icon: ClipboardCheck },
+                    { label: home.ui.auditAiReady, icon: Sparkles },
+                    { label: home.ui.auditContent, icon: FileSearch },
+                    { label: home.ui.auditAuthority, icon: Globe2 },
                   ].map((s) => (
                     <div
                       key={s.label}
@@ -263,7 +280,7 @@ export function HomeView({ home }: { home: HomeContent }) {
                       </span>
                       <div className="flex flex-col">
                         <span className="text-[10px] uppercase tracking-wide text-muted">{s.label}</span>
-                        <span className="text-sm font-semibold text-graphite">Scored</span>
+                        <span className="text-sm font-semibold text-graphite">{home.ui.auditScored}</span>
                       </div>
                     </div>
                   ))}

@@ -10,14 +10,6 @@ import { cn } from "@/lib/utils";
 
 /**
  * Industries — vertical sector rail with detail preview.
- *
- * Layout: a left rail of industry tabs and a right detail panel showing the
- * pain/opportunity/solution for the active industry. The three cards use
- * tinted color treatments (warm amber for pain, blue/teal for opportunity,
- * green/emerald for solution) with distinct icons. Extra compact rows show
- * intent pattern, trust signals, and recommended services.
- *
- * Default active industry is Travel (strongest team/partner experience).
  */
 
 type Industry = {
@@ -38,6 +30,7 @@ export function IndustriesRail({
   titleId,
   description,
   industries,
+  labels,
   className,
 }: {
   eyebrow: string;
@@ -45,11 +38,31 @@ export function IndustriesRail({
   titleId: string;
   description: React.ReactNode;
   industries: readonly Industry[];
+  labels?: {
+    activeVertical: string;
+    painPoint: string;
+    opportunity: string;
+    taskcoverSolution: string;
+    intentPattern: string;
+    trustSignals: string;
+    recommendedServices: string;
+    view: string;
+  };
   className?: string;
 }) {
   const reduceMotion = useReducedMotion();
   const [active, setActive] = React.useState(0);
   const current = industries[active];
+  const L = labels ?? {
+    activeVertical: "Active vertical",
+    painPoint: "Pain point",
+    opportunity: "Opportunity",
+    taskcoverSolution: "Taskcover solution",
+    intentPattern: "Intent pattern",
+    trustSignals: "Trust signals",
+    recommendedServices: "Recommended services",
+    view: "View",
+  };
 
   return (
     <Container className={cn("flex flex-col gap-10", className)}>
@@ -116,7 +129,7 @@ export function IndustriesRail({
             >
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide text-brand-teal">
-                  Active vertical
+                  {L.activeVertical}
                 </p>
                 <h3 className="mt-1 text-xl font-semibold text-graphite">
                   {current.title}
@@ -128,7 +141,7 @@ export function IndustriesRail({
                 <div className="rounded-xl border border-amber-200/60 bg-amber-50/60 p-4 shadow-[0_2px_8px_-4px_rgba(217,119,6,0.18)]">
                   <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700">
                     <AlertTriangle className="h-3 w-3" aria-hidden="true" />
-                    Pain point
+                    {L.painPoint}
                   </p>
                   <p className="mt-1.5 text-sm text-secondary">
                     {current.pain}
@@ -137,7 +150,7 @@ export function IndustriesRail({
                 <div className="rounded-xl border border-brand-teal/20 bg-brand-teal/[0.04] p-4 shadow-[0_2px_8px_-4px_rgba(24,138,172,0.18)]">
                   <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide text-brand-teal">
                     <Sparkles className="h-3 w-3" aria-hidden="true" />
-                    Opportunity
+                    {L.opportunity}
                   </p>
                   <p className="mt-1.5 text-sm text-secondary">
                     {current.opportunity}
@@ -146,7 +159,7 @@ export function IndustriesRail({
                 <div className="rounded-xl border border-brand-emerald/20 bg-brand-emerald/[0.05] p-4 shadow-[0_2px_8px_-4px_rgba(18,198,121,0.18)]">
                   <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide text-brand-emerald">
                     <CheckCircle2 className="h-3 w-3" aria-hidden="true" />
-                    Taskcover solution
+                    {L.taskcoverSolution}
                   </p>
                   <p className="mt-1.5 text-sm text-secondary">
                     {current.solution}
@@ -158,19 +171,19 @@ export function IndustriesRail({
               <div className="grid gap-2 sm:grid-cols-3">
                 {current.intentPattern && (
                   <div className="rounded-lg border border-line-soft bg-white p-3">
-                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">Intent pattern</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">{L.intentPattern}</p>
                     <p className="mt-1 text-xs text-secondary">{current.intentPattern}</p>
                   </div>
                 )}
                 {current.trustSignals && (
                   <div className="rounded-lg border border-line-soft bg-white p-3">
-                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">Trust signals</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">{L.trustSignals}</p>
                     <p className="mt-1 text-xs text-secondary">{current.trustSignals}</p>
                   </div>
                 )}
                 {current.recommendedServices && current.recommendedServices.length > 0 && (
                   <div className="rounded-lg border border-line-soft bg-white p-3">
-                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">Recommended services</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">{L.recommendedServices}</p>
                     <div className="mt-1 flex flex-wrap gap-1">
                       {current.recommendedServices.map((s) => (
                         <span key={s} className="inline-flex items-center rounded-md bg-surface-tint px-1.5 py-0.5 text-[10px] font-medium text-graphite">
@@ -187,7 +200,7 @@ export function IndustriesRail({
                   href={current.href}
                   className="inline-flex items-center gap-1 text-sm font-semibold text-brand-teal hover:underline"
                 >
-                  View {current.short}
+                  {L.view} {current.short}
                   <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                 </Link>
               </div>

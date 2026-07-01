@@ -37,6 +37,7 @@ export function GrowthPlaybook({
   description,
   featured,
   plays,
+  labels,
   className,
 }: {
   eyebrow: string;
@@ -45,12 +46,26 @@ export function GrowthPlaybook({
   description: React.ReactNode;
   featured: Play;
   plays: readonly Play[];
+  labels?: {
+    featuredPlay: string;
+    challenge: string;
+    strategy: string;
+    output: string;
+    connectedToSystem: string;
+  };
   className?: string;
 }) {
   const reduceMotion = useReducedMotion();
   const all = [featured, ...plays];
   const [active, setActive] = React.useState(0);
   const current = all[active];
+  const L = labels ?? {
+    featuredPlay: "Featured play",
+    challenge: "Challenge",
+    strategy: "Strategy",
+    output: "Output",
+    connectedToSystem: "Connected to the Search Operating System",
+  };
 
   return (
     <Container className={cn("flex flex-col gap-10", className)}>
@@ -121,7 +136,7 @@ export function GrowthPlaybook({
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-wide text-brand-teal">
-                      Featured play
+                      {L.featuredPlay}
                     </p>
                     <h3 className="mt-1 text-xl font-semibold text-graphite">
                       {current.title}
@@ -139,7 +154,7 @@ export function GrowthPlaybook({
                     <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1 bg-amber-400/70" />
                     <p className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-amber-700">
                       <AlertTriangle className="h-3 w-3" aria-hidden="true" />
-                      Challenge
+                      {L.challenge}
                     </p>
                     <p className="mt-1.5 text-sm text-secondary">{current.challenge}</p>
                   </div>
@@ -147,7 +162,7 @@ export function GrowthPlaybook({
                     <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1 bg-brand-teal/70" />
                     <p className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-brand-teal">
                       <Target className="h-3 w-3" aria-hidden="true" />
-                      Strategy
+                      {L.strategy}
                     </p>
                     <p className="mt-1.5 text-sm text-secondary">{current.strategy}</p>
                   </div>
@@ -155,7 +170,7 @@ export function GrowthPlaybook({
                     <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1 bg-brand-emerald/70" />
                     <p className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-brand-emerald">
                       <CheckCircle2 className="h-3 w-3" aria-hidden="true" />
-                      Output
+                      {L.output}
                     </p>
                     <p className="mt-1.5 text-sm text-secondary">{current.output}</p>
                   </div>
@@ -165,7 +180,7 @@ export function GrowthPlaybook({
                 <div className="flex flex-col gap-2 rounded-xl border border-line-soft bg-surface-tint/30 p-4">
                   <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted">
                     <Workflow className="h-3 w-3 text-brand-teal" aria-hidden="true" />
-                    Connected to the Search Operating System
+                    {L.connectedToSystem}
                   </p>
                   <div className="flex flex-wrap gap-1.5">
                     {current.systemStages.map((stage, i) => (

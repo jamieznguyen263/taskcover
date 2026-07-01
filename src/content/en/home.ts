@@ -3,11 +3,23 @@
  * Canonical source of truth for the HomeContent shape.
  *
  * French/Spanish files import `HomeContent` and must keep the same keys.
- * For Task 4A, long descriptive copy may be translated in full (preferred)
- * or safely fall back to English where documented in docs/I18N_STRATEGY.md.
+ * Task 4B: all deep homepage arrays are localized for fr/es.
  */
 
 import type { HomeContent } from "../home.types";
+import {
+  brandExperienceStrip,
+  comparisonRows,
+  growthPlays,
+  industries,
+  markets,
+  mediaCommentary,
+  methodologyPhases,
+  operatingSystem,
+  servicesBento as servicesBentoData,
+  technologyCapabilities,
+  videoProofFramework,
+} from "@/data/home";
 
 export const home: HomeContent = {
   hero: {
@@ -29,33 +41,71 @@ export const home: HomeContent = {
       "We do not separate SEO, GEO, AEO, content, and authority. We connect them into one search growth system.",
   },
   operatingSystem: {
-    eyebrow: "Taskcover Search Operating System",
-    title: "One connected system across the full search journey.",
-    description:
-      "Each stage feeds the next, so visibility, authority, and conversion compound instead of sitting in disconnected deliverables. Reporting loops back into Strategy so the system keeps improving.",
+    eyebrow: operatingSystem.eyebrow,
+    title: operatingSystem.title,
+    description: operatingSystem.description,
+    steps: [...operatingSystem.steps],
   },
   growthPlays: {
-    eyebrow: "Search Growth Playbook",
-    title: "Repeatable plays, not one-off campaigns.",
-    description:
-      "Each play describes the challenge we address, the strategy we apply, and the output we produce — mapped to the Taskcover Search Operating System.",
+    eyebrow: growthPlays.eyebrow,
+    title: growthPlays.title,
+    description: growthPlays.description,
+    featured: growthPlays.featured,
+    plays: [...growthPlays.plays],
   },
   servicesBento: {
-    eyebrow: "Services",
-    title: "Every service tied to a business outcome.",
-    description:
-      "No standalone deliverables. Each capability plugs into the search growth system and is measured against revenue and pipeline impact.",
+    eyebrow: servicesBentoData.eyebrow,
+    title: servicesBentoData.title,
+    description: servicesBentoData.description,
+    featureCard: servicesBentoData.featureCard,
+    cards: [...servicesBentoData.cards],
+  },
+  industries: {
+    eyebrow: industries.eyebrow,
+    title: industries.title,
+    description: industries.description,
+    cards: [...industries.cards],
+  },
+  markets: {
+    eyebrow: markets.eyebrow,
+    title: markets.title,
+    description: markets.description,
+    cards: [...markets.cards],
   },
   methodology: {
-    eyebrow: "Methodology",
-    title: "The Taskcover 90-day SEO growth process.",
-    description:
-      "A repeatable rhythm that compounds visibility, authority, and conversion without becoming a black box.",
+    eyebrow: methodologyPhases.eyebrow,
+    title: methodologyPhases.title,
+    description: methodologyPhases.description,
+    phases: [...methodologyPhases.phases],
+  },
+  technology: {
+    eyebrow: technologyCapabilities.eyebrow,
+    title: technologyCapabilities.title,
+    description: technologyCapabilities.description,
+    modules: [...technologyCapabilities.modules],
+  },
+  mediaCommentary: {
+    eyebrow: mediaCommentary.eyebrow,
+    title: mediaCommentary.title,
+    description: mediaCommentary.description,
+    categories: [...mediaCommentary.categories],
+  },
+  videoProof: {
+    eyebrow: videoProofFramework.eyebrow,
+    title: videoProofFramework.title,
+    description: videoProofFramework.description,
+    slots: [...videoProofFramework.slots],
   },
   comparison: {
     eyebrow: "Why Taskcover",
     title: "Traditional SEO vendor vs Taskcover Agency.",
     description: "Same budget, very different system. Here is where the approaches diverge.",
+    rows: [...comparisonRows],
+  },
+  brandExperience: {
+    caption: brandExperienceStrip.caption,
+    rowBrands: [...brandExperienceStrip.rowBrands],
+    rowCapabilities: [...brandExperienceStrip.rowCapabilities],
   },
   audit: {
     eyebrow: "Free SEO Growth Audit",
@@ -117,5 +167,39 @@ export const home: HomeContent = {
       "Get a clear, prioritized picture of where your visibility, authority, and conversion gaps are — and a 90-day plan to close them.",
     primaryCta: { label: "Get Free SEO Audit", href: "/free-seo-audit" },
     secondaryCta: { label: "Book Strategy Call", href: "/book-a-call" },
+  },
+  ui: {
+    osLoopLabel: "Reporting loops insight back into Strategy",
+    osStageLabel: "Stage",
+    osInputLabel: "Input",
+    osActionLabel: "Action",
+    osOutputLabel: "Output",
+    osCompoundLabel: "Each stage compounds into the next",
+    featuredPlay: "Featured play",
+    challengeLabel: "Challenge",
+    strategyLabel: "Strategy",
+    outputLabel: "Output",
+    connectedToSystem: "Connected to the Search Operating System",
+    coreModule: "Core module",
+    roadmapLabel: "Roadmap",
+    businessOutcome: "Business outcome",
+    explore: "Explore",
+    activeVertical: "Active vertical",
+    painPoint: "Pain point",
+    opportunityLabel: "Opportunity",
+    taskcoverSolution: "Taskcover solution",
+    intentPattern: "Intent pattern",
+    trustSignals: "Trust signals",
+    recommendedServices: "Recommended services",
+    viewIndustry: "View",
+    differentiator: "Differentiator",
+    phasesLabel: "Phases",
+    traditionalLabel: "Traditional SEO vendor",
+    taskcoverLabel: "Taskcover Agency",
+    auditTechnical: "Technical",
+    auditAiReady: "AI Ready",
+    auditContent: "Content",
+    auditAuthority: "Authority",
+    auditScored: "Scored",
   },
 };

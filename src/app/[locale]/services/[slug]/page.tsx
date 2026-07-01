@@ -10,6 +10,7 @@ import { ServicePageTemplate } from "@/components/marketing/services/service-tem
 import {
   getServiceBySlug,
   getServiceSlugs,
+  getServicesContent,
   getSiteContent,
 } from "@/lib/content";
 import { locales, isLocale, type Locale } from "@/lib/i18n";
@@ -64,6 +65,7 @@ export default async function LocalizedServiceDetailPage({ params }: Params) {
   );
 
   const faq = faqSchema(service.faqs);
+  const content = getServicesContent(locale);
 
   return (
     <>
@@ -75,7 +77,7 @@ export default async function LocalizedServiceDetailPage({ params }: Params) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(faq) }}
       />
-      <ServicePageTemplate service={service} />
+      <ServicePageTemplate service={service} ui={content.ui} />
     </>
   );
 }

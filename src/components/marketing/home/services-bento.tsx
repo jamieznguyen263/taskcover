@@ -21,17 +21,7 @@ type ServiceCard = {
   outcome: string;
   href: string;
   span: "wide" | "tall" | "default";
-  visual:
-    | "crawl"
-    | "citation"
-    | "cluster"
-    | "authority"
-    | "pins"
-    | "products"
-    | "dashboard"
-    | "globe"
-    | "ppc"
-    | "mentor";
+  visual: string;
 };
 
 type FeatureCard = {
@@ -268,7 +258,7 @@ function MentorVisual({ className }: { className?: string }) {
   );
 }
 
-const visualMap = {
+const visualMap: Record<string, ({ className }: { className?: string }) => React.ReactElement> = {
   crawl: CrawlVisual,
   citation: CitationVisual,
   cluster: ClusterVisual,
@@ -288,6 +278,7 @@ export function ServicesBento({
   description,
   featureCard,
   cards,
+  labels,
   className,
 }: {
   eyebrow: string;
@@ -296,9 +287,21 @@ export function ServicesBento({
   description: React.ReactNode;
   featureCard: FeatureCard;
   cards: readonly ServiceCard[];
+  labels?: {
+    coreModule: string;
+    roadmap: string;
+    businessOutcome: string;
+    explore: string;
+  };
   className?: string;
 }) {
   const reduceMotion = useReducedMotion();
+  const L = labels ?? {
+    coreModule: "Core module",
+    roadmap: "Roadmap",
+    businessOutcome: "Business outcome",
+    explore: "Explore",
+  };
 
   return (
     <Container className={cn("flex flex-col gap-10", className)}>
@@ -331,7 +334,7 @@ export function ServicesBento({
             <div className="flex items-center justify-between">
               <p className="text-lg font-semibold text-graphite">{featureCard.title}</p>
               <span className="inline-flex items-center gap-1 rounded-full bg-brand-gradient px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
-                Core module
+                {L.coreModule}
               </span>
             </div>
             <p className="mt-1.5 text-sm leading-relaxed text-secondary">
@@ -341,7 +344,7 @@ export function ServicesBento({
             {/* Mini roadmap */}
             <div className="mt-5">
               <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">
-                Roadmap
+                {L.roadmap}
               </p>
               <ol className="mt-2 flex flex-col gap-2">
                 {featureCard.roadmap.map((step, i) => (
@@ -374,13 +377,13 @@ export function ServicesBento({
             {/* Outcome preview */}
             <div className="mt-5 rounded-xl border border-brand-teal/20 bg-surface-tint/50 p-3">
               <p className="text-[10px] font-semibold uppercase tracking-wide text-brand-teal">
-                Business outcome
+                {L.businessOutcome}
               </p>
               <p className="mt-1 text-xs text-secondary">{featureCard.outcomePreview}</p>
             </div>
 
             <span className="mt-auto inline-flex items-center gap-1 pt-4 text-sm font-semibold text-brand-teal">
-              Explore
+              {L.explore}
               <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
             </span>
           </Link>
@@ -422,7 +425,7 @@ export function ServicesBento({
                 </p>
 
                 <span className="mt-auto inline-flex items-center gap-1 pt-3 text-xs font-semibold text-brand-teal">
-                  Explore
+                  {L.explore}
                   <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                 </span>
               </Link>

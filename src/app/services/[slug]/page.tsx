@@ -7,7 +7,7 @@ import {
   serializeJsonLd,
 } from "@/lib/seo";
 import { ServicePageTemplate } from "@/components/marketing/services/service-template";
-import { getServiceBySlug, getServiceSlugs, getSiteContent } from "@/lib/content";
+import { getServiceBySlug, getServiceSlugs, getServicesContent, getSiteContent } from "@/lib/content";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -49,6 +49,7 @@ export default async function ServiceDetailPage({ params }: Params) {
   );
 
   const faq = faqSchema(service.faqs);
+  const content = getServicesContent("en");
 
   return (
     <>
@@ -60,7 +61,7 @@ export default async function ServiceDetailPage({ params }: Params) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(faq) }}
       />
-      <ServicePageTemplate service={service} />
+      <ServicePageTemplate service={service} ui={content.ui} />
     </>
   );
 }

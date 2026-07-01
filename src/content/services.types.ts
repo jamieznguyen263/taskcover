@@ -1,17 +1,25 @@
 /**
  * Shared services content types — used by en/fr/es services content files.
  *
- * Strategy for Task 4A:
- *  - The deep English body content (problem, approach, deliverables, etc.)
- *    stays the canonical source in src/data/services.ts.
- *  - Each locale provides localized versions of the high-visibility fields:
- *    hub content, hero h1, positioning, subheadline, summary, meta.
- *  - getServiceBySlug(slug, locale) merges the English base with localized
- *    overrides so the hero and hub visibly change language, while deep body
- *    copy can temporarily fall back to English (documented in I18N_STRATEGY.md).
+ * Task 4B: all deep service body fields (problem, approach, deliverables,
+ * use cases, process, outcomes, faqs) are fully localized for fr/es.
+ * getServiceBySlug(slug, locale) merges the English base with localized
+ * overrides for both high-visibility and deep body fields.
  */
 
 import type { Service } from "@/data/services";
+
+/** Deep body fields that each locale can localize per service. */
+export type ServiceDeepLocalized = Pick<
+  Service,
+  | "problem"
+  | "approach"
+  | "deliverables"
+  | "useCases"
+  | "process"
+  | "outcomes"
+  | "faqs"
+>;
 
 /** Fields that each locale localizes for every service. */
 export type ServiceLocalized = Pick<
@@ -25,7 +33,8 @@ export type ServiceLocalized = Pick<
   | "outcomePromise"
   | "metaTitle"
   | "metaDescription"
->;
+> &
+  Partial<ServiceDeepLocalized>;
 
 /** Localized services hub content. */
 export type ServicesHubLocalized = {
@@ -77,5 +86,45 @@ export type ServicesContent = {
     decisionAuthorityA: string;
     decisionCapabilityQ: string;
     decisionCapabilityA: string;
+    /** Service template component-level UI strings. */
+    heroCtaPrimary: string;
+    heroCtaSecondary: string;
+    heroFigcaption: string;
+    problemEyebrow: string;
+    problemScanner: string;
+    problemGapCount: string;
+    approachEyebrow: string;
+    approachModel: string;
+    approachConnect: string;
+    deliverablesEyebrow: string;
+    deliverablesTitle: string;
+    deliverablesDesc: string;
+    deliverablesNumber: string;
+    deliverablesDeliverable: string;
+    deliverablesScope: string;
+    deliverablesTier: string;
+    deliverablesPreview: string;
+    useCasesEyebrow: string;
+    useCasesTitle: string;
+    useCasesDesc: string;
+    useCasesTrigger: string;
+    useCasesNote: string;
+    processEyebrow: string;
+    processTitle: string;
+    processDesc: string;
+    outcomesEyebrow: string;
+    outcomesDesc: string;
+    relatedEyebrow: string;
+    relatedTitle: string;
+    relatedModule: string;
+    faqEyebrow: string;
+    faqTitle: string;
+    ctaEyebrow: string;
+    ctaTitle: string;
+    ctaDesc: string;
+    ctaAuditPreview: string;
+    ctaIllustrative: string;
+    breadcrumbHome: string;
+    breadcrumbServices: string;
   };
 };
