@@ -64,7 +64,26 @@ serializer in `src/lib/seo.ts` (`serializeJsonLd`).
 - Per-page OG images can be passed via `buildMetadata({ ogImage })`.
 - Replace the placeholder OG with a real branded 1200×630 asset before launch.
 
-## 6. Local market context (USA / Canada / Australia)
+## 6. Service page schema (Task 3)
+
+Service detail pages (`/services/[slug]`) emit two JSON-LD blocks:
+
+- **BreadcrumbList** — Home → Services → Service (via `breadcrumbSchema()`).
+- **FAQPage** — only because FAQs are **genuinely visible** on the page (via
+  `faqSchema()`).
+
+Rules:
+- **No `Service` schema type** with fake offers/prices — we don't publish
+  fabricated pricing or availability.
+- **No `Review` or `AggregateRating`** schema on service pages.
+- One H1 per service page (the `h1` field from `src/data/services.ts`).
+- Unique `metaTitle` + `metaDescription` per service (also from the data file).
+- Internal links to related services are rendered as visible anchors (the
+  "next best modules" rail), satisfying internal-linking best practices.
+
+---
+
+## 7. Local market context (USA / Canada / Australia)
 
 Each market page must include:
 

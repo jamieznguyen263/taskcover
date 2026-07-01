@@ -352,7 +352,49 @@ Homepage section delivery methods (all different):
 
 ---
 
-## 18. Customer journey (homepage reference)
+## 18. Service page adaptation rules (Task 3)
+
+Service pages (`/services` and `/services/[slug]`) must match the homepage
+vibe while using **distinct section structures per page**. Each service
+detail page uses the shared `ServicePageTemplate` from
+`src/components/marketing/services/service-template.tsx`, which enforces
+section variety.
+
+### Hub (`/services`)
+- Hero is a **split layout** with a floating **service constellation**
+  (services as nodes orbiting a "Search Growth System" core). Not a grid.
+- "How services connect" is a **layered capability stack** (Foundation →
+  Demand → Reach → Acceleration), not a repeated card grid.
+- Service cards include a **distinct outcome chip** per service, not just
+  title + paragraph.
+- "Which service is right for you?" is a **scenario decision guide** with
+  `DecisionPathAccent` visuals (Blind spots → Visible, etc.), not a flat
+  list.
+
+### Detail pages (`/services/[slug]`)
+Each page has **10 sections, each with a distinct UI treatment**:
+
+| # | Section | Delivery method |
+|---|---------|-----------------|
+| 1 | Hero | Split layout + service-specific floating visual |
+| 2 | Problem | Issue scanner panel (numbered rows, amber accents) |
+| 3 | Approach | Connected node system (horizontal stages with connectors) |
+| 4 | Deliverables | Split: numbered list + mini-visual preview |
+| 5 | Use cases | Scenario cards with offset accent corner |
+| 6 | Process | Sprint board (column cards with "Sprint N" badges) |
+| 7 | Outcomes | Ascending outcome ladder (Level 1→4, translateY depth) |
+| 8 | Related | Horizontal "next best modules" rail (chips, not cards) |
+| 9 | FAQ | Two-column header + compact accordion |
+| 10 | Final CTA | Audit report preview panel (scorecard rows) |
+
+### Service-specific visuals (Part C)
+Each service has a unique hero visual and deliverable micro-visual in
+`src/components/marketing/services/service-visuals.tsx`. See the file
+header for the full metaphor mapping.
+
+---
+
+## 19. Customer journey (homepage reference)
 
 The homepage guides users through:
 

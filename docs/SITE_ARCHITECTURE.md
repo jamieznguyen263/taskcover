@@ -8,20 +8,25 @@ not yet have pages and currently rely on the global layout (header/footer).
 
 - `/` — Homepage ✅ (built)
 
-## Services `(planned)`
+## Services ✅ (built)
 
-- `/services`
-- `/services/seo-agency`
-- `/services/technical-seo`
-- `/services/ai-search-optimization`
-- `/services/content-marketing`
-- `/services/digital-pr-link-building`
-- `/services/local-seo`
-- `/services/ecommerce-seo`
-- `/services/international-seo`
-- `/services/ppc-management`
-- `/services/seo-mentor-service`
-- `/services/seo-audit`
+- `/services` ✅
+- `/services/seo-agency` ✅
+- `/services/technical-seo` ✅
+- `/services/ai-search-optimization` ✅
+- `/services/content-marketing` ✅
+- `/services/digital-pr-link-building` ✅
+- `/services/local-seo` ✅
+- `/services/ecommerce-seo` ✅
+- `/services/international-seo` ✅
+- `/services/ppc-management` ✅
+- `/services/seo-mentor-service` ✅
+- `/services/seo-audit` ✅
+
+> The hub (`/services`) uses a service constellation + layered capability
+> stack + decision guide. Each detail page uses the shared
+> `ServicePageTemplate` with 10 distinct sections and a service-specific
+> visual. See `docs/HOMEPAGE_VIBE_STANDARD.md` §18.
 
 ## Industries `(planned)`
 
