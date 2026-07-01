@@ -377,15 +377,32 @@ Each page has **10 sections, each with a distinct UI treatment**:
 | # | Section | Delivery method |
 |---|---------|-----------------|
 | 1 | Hero | Split layout + service-specific floating visual |
-| 2 | Problem | Issue scanner panel (numbered rows, amber accents) |
-| 3 | Approach | Connected node system (horizontal stages with connectors) |
-| 4 | Deliverables | Split: numbered list + mini-visual preview |
-| 5 | Use cases | Scenario cards with offset accent corner |
-| 6 | Process | Sprint board (column cards with "Sprint N" badges) |
-| 7 | Outcomes | Ascending outcome ladder (Level 1→4, translateY depth) |
+| 2 | Problem | Diagnostic scanner panel (numbered issue rows, amber accents, severity radar) |
+| 3 | Approach | Layered operating model (vertical stack with gradient number rail, not cards) |
+| 4 | Deliverables | Implementation ledger (table-like board with alternating rows + priority/tier chips) |
+| 5 | Use cases | Decision paths (trigger → fit rows with arrow connectors, not identical cards) |
+| 6 | Process | Vertical timeline with rail connector (numbered nodes on a gradient rail + timing badges) |
+| 7 | Outcomes | Ascending staircase (indented steps with Trophy on final outcome, not a card grid) |
 | 8 | Related | Horizontal "next best modules" rail (chips, not cards) |
 | 9 | FAQ | Two-column header + compact accordion |
-| 10 | Final CTA | Audit report preview panel (scorecard rows) |
+| 10 | Final CTA | Service-specific audit preview panel (rows tailored by service slug) |
+
+**Critical rule — service detail pages must use distinct section delivery
+methods and cannot stack repeated card-row sections.** No two sections on a
+single service detail page may share the same structure, layout pattern, or
+UI logic. In particular, avoid repeating:
+- centered section header + card row
+- left text + right cards
+- same 3-column / 4-column card grids
+- same horizontal row cards
+- same list-card style
+- same CTA panel style
+- same rounded white boxes everywhere
+- generic icon + title + paragraph pattern
+
+The exact same section structure can be reused across different service
+pages, but within a single service page the sections must not visually
+repeat each other.
 
 ### Service-specific visuals (Part C)
 Each service has a unique hero visual and deliverable micro-visual in

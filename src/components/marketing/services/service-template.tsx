@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-  Check,
   ArrowRight,
   ArrowUpRight,
   AlertTriangle,
@@ -10,6 +9,12 @@ import {
   LayoutGrid,
   ListChecks,
   Gauge,
+  Check,
+  Zap,
+  GitBranch,
+  Trophy,
+  CircleDot,
+  Search,
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -20,6 +25,7 @@ import { CTAButton } from "@/components/marketing/shared/cta-button";
 import { FAQAccordion } from "@/components/marketing/shared/faq-accordion";
 import {
   type Service,
+  type ServiceDeliverable,
   getRelatedServices,
 } from "@/data/services";
 import {
@@ -67,7 +73,7 @@ export function ServiceBreadcrumb({
 }
 
 /* -------------------------------------------------------------------------- */
-/* 1. Service Hero — split layout + floating service-specific dashboard       */
+/* 1. Hero — split layout + floating service-specific dashboard                */
 /* -------------------------------------------------------------------------- */
 
 export function ServicePageHero({ service }: { service: Service }) {
@@ -127,7 +133,7 @@ export function ServicePageHero({ service }: { service: Service }) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* 2. Problem — diagnostic scanner panel (not a card grid)                    */
+/* 2. Problem — diagnostic scanner panel with severity radar                  */
 /* -------------------------------------------------------------------------- */
 
 export function ServiceProblemSection({ service }: { service: Service }) {
@@ -184,7 +190,7 @@ export function ServiceProblemSection({ service }: { service: Service }) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* 3. Approach — connected node system (operating-system stages)              */
+/* 3. Approach — layered operating model (vertical stack, not cards)          */
 /* -------------------------------------------------------------------------- */
 
 export function ServiceApproachSection({ service }: { service: Service }) {
@@ -204,34 +210,44 @@ export function ServiceApproachSection({ service }: { service: Service }) {
           </p>
         ) : null}
 
-        {/* Connected node system — horizontal on desktop, vertical on mobile */}
-        <div className="overflow-x-auto pb-2">
-          <ol className="flex min-w-[640px] flex-row items-stretch gap-0 lg:min-w-0">
+        {/* Layered vertical stack — each layer is a horizontal band, not a card */}
+        <div className="overflow-hidden rounded-2xl border border-line bg-white depth-layered">
+          {/* stack header */}
+          <div className="flex items-center gap-2 border-b border-line bg-surface-tint px-5 py-2.5">
+            <GitBranch className="h-4 w-4 text-brand-teal" aria-hidden="true" />
+            <span className="text-xs font-semibold uppercase tracking-wide text-muted">
+              Operating model
+            </span>
+          </div>
+          <ol className="flex flex-col">
             {service.approach.stages.map((stage, index) => (
               <li
                 key={stage.label}
-                className="relative flex flex-1 flex-col gap-2 rounded-2xl border border-line bg-white p-5 shadow-sm"
-                style={{ marginLeft: index === 0 ? 0 : undefined }}
-              >
-                {/* connector */}
-                {index > 0 && (
-                  <span
-                    aria-hidden="true"
-                    className="absolute -left-3 top-1/2 hidden h-px w-6 bg-gradient-to-r from-brand-teal/40 to-brand-teal lg:block"
-                  />
+                className={cn(
+                  "flex items-stretch gap-0 border-b border-line-soft last:border-b-0",
+                  index % 2 === 0 ? "bg-white" : "bg-surface-soft/60"
                 )}
-                <div className="flex items-center gap-2">
-                  <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand-gradient text-xs font-semibold text-white shadow-[0_4px_12px_-4px_rgba(24,138,172,0.6)]">
-                    {index + 1}
-                  </span>
-                  {index === service.approach.stages.length - 1 && (
-                    <Sparkles className="h-4 w-4 text-brand-teal" aria-hidden="true" />
+              >
+                {/* left number rail */}
+                <div className="relative flex w-14 shrink-0 items-center justify-center bg-brand-gradient">
+                  <span className="text-sm font-bold text-white">{String(index + 1).padStart(2, "0")}</span>
+                  {index < service.approach.stages.length - 1 && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute bottom-0 left-1/2 h-3 w-px -translate-x-1/2 translate-y-1/2 bg-white/40"
+                    />
                   )}
                 </div>
-                <p className="text-sm font-semibold text-graphite">{stage.label}</p>
-                <p className="text-xs leading-relaxed text-secondary">
-                  {stage.description}
-                </p>
+                {/* content */}
+                <div className="flex flex-1 flex-col gap-1 px-5 py-4 sm:flex-row sm:items-center sm:gap-4">
+                  <div className="flex items-center gap-2 sm:w-56 sm:shrink-0">
+                    {index === service.approach.stages.length - 1 && (
+                      <Sparkles className="h-4 w-4 shrink-0 text-brand-teal" aria-hidden="true" />
+                    )}
+                    <span className="text-sm font-semibold text-graphite">{stage.label}</span>
+                  </div>
+                  <p className="text-sm leading-relaxed text-secondary">{stage.description}</p>
+                </div>
               </li>
             ))}
           </ol>
@@ -245,91 +261,158 @@ export function ServiceApproachSection({ service }: { service: Service }) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* 4. Deliverables — split list + mini-visual panel (varied, not uniform)     */
+/* 4. Deliverables — implementation ledger with priority chips                */
 /* -------------------------------------------------------------------------- */
+
+const deliverableTagStyles: Record<NonNullable<ServiceDeliverable["tag"]>, string> = {
+  Core: "bg-brand-teal/10 text-brand-teal border-brand-teal/20",
+  Priority: "bg-amber-50 text-amber-700 border-amber-200/60",
+  Foundation: "bg-surface-tint text-secondary border-line",
+  Ongoing: "bg-brand-green/10 text-brand-emerald border-brand-green/20",
+};
+
+function DeliverableTag({ tag }: { tag: NonNullable<ServiceDeliverable["tag"]> }) {
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center rounded-md border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+        deliverableTagStyles[tag]
+      )}
+    >
+      {tag}
+    </span>
+  );
+}
 
 export function ServiceDeliverables({ service }: { service: Service }) {
   return (
     <Section background="default" aria-labelledby={`deliverables-${service.slug}`}>
-      <Container className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="flex flex-col gap-5">
-          <SectionHeader
-            align="left"
-            eyebrow="Deliverables"
-            titleId={`deliverables-${service.slug}`}
-            title="What you actually get."
-            description="Concrete, service-specific outputs — prioritized by impact, not activity."
-          />
-          {/* mini visual preview */}
-          <div className="rounded-2xl border border-line bg-surface-tint p-4">
+      <Container className="flex flex-col gap-8">
+        <SectionHeader
+          align="left"
+          eyebrow="Deliverables"
+          titleId={`deliverables-${service.slug}`}
+          title="What you actually get."
+          description="Concrete, service-specific outputs — prioritized by impact, not activity."
+        />
+
+        {/* Implementation ledger — table-like board with alternating rows */}
+        <div className="overflow-hidden rounded-2xl border border-line bg-white">
+          {/* ledger header */}
+          <div className="hidden grid-cols-[3rem_1fr_2fr_auto] items-center gap-4 border-b border-line bg-surface-tint px-4 py-2.5 sm:grid">
+            <span className="text-[10px] font-bold uppercase tracking-wide text-muted">#</span>
+            <span className="text-[10px] font-bold uppercase tracking-wide text-muted">Deliverable</span>
+            <span className="text-[10px] font-bold uppercase tracking-wide text-muted">Scope</span>
+            <span className="text-[10px] font-bold uppercase tracking-wide text-muted">Tier</span>
+          </div>
+          <ol>
+            {service.deliverables.map((d, i) => (
+              <li
+                key={d.title}
+                className={cn(
+                  "grid grid-cols-1 gap-2 border-b border-line-soft px-4 py-3.5 last:border-b-0 sm:grid-cols-[3rem_1fr_2fr_auto] sm:items-center sm:gap-4",
+                  i % 2 === 1 && "bg-surface-soft/40"
+                )}
+              >
+                <span className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-surface-tint text-[10px] font-bold text-brand-teal sm:h-7 sm:w-7">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div className="flex items-center gap-2">
+                  <Check className="h-3.5 w-3.5 shrink-0 text-brand-green" aria-hidden="true" />
+                  <span className="text-sm font-semibold text-graphite">{d.title}</span>
+                </div>
+                <p className="text-sm leading-relaxed text-secondary">{d.description}</p>
+                <div className="flex sm:justify-end">
+                  {d.tag ? <DeliverableTag tag={d.tag} /> : (
+                    <span className="text-[10px] text-muted">—</span>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        {/* mini visual preview strip */}
+        <div className="flex items-center gap-4 rounded-xl border border-line bg-surface-tint px-4 py-3">
+          <div className="h-12 w-24 shrink-0">
             <ServiceDeliverableVisual
               icon={service.icon}
-              className="h-20 w-full"
+              className="h-full w-full"
             />
-            <p className="mt-2 text-center text-[11px] text-muted">
-              {service.shortLabel} delivery preview
-            </p>
           </div>
+          <p className="text-xs text-muted">
+            {service.shortLabel} delivery preview — each output is scoped to your market, goals, and current search position.
+          </p>
         </div>
-        {/* numbered deliverable list with accent bars */}
-        <ol className="flex flex-col gap-3">
-          {service.deliverables.map((d, i) => (
-            <li
-              key={d.title}
-              className="card-lift group flex items-start gap-4 rounded-2xl border border-line bg-white p-5 hover:border-brand-teal/40"
-            >
-              <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-surface-tint text-sm font-bold text-brand-teal">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <div className="flex-1">
-                <p className="text-sm font-semibold text-graphite">{d.title}</p>
-                <p className="mt-0.5 text-sm leading-relaxed text-secondary">{d.description}</p>
-              </div>
-              <Check className="h-4 w-4 shrink-0 text-brand-green opacity-0 transition-opacity group-hover:opacity-100" aria-hidden="true" />
-            </li>
-          ))}
-        </ol>
       </Container>
     </Section>
   );
 }
 
 /* -------------------------------------------------------------------------- */
-/* 5. Use cases — scenario decision paths (business-focused)                  */
+/* 5. Use Cases — decision paths (trigger → fit), not identical cards        */
 /* -------------------------------------------------------------------------- */
 
 export function ServiceUseCases({ service }: { service: Service }) {
   return (
     <Section background="soft" aria-labelledby={`usecases-${service.slug}`}>
-      <Container className="flex flex-col gap-10">
+      <Container className="flex flex-col gap-8">
         <SectionHeader
+          align="left"
           eyebrow="Who this is for"
           titleId={`usecases-${service.slug}`}
-          title="Built for the teams that feel this gap most."
-          description="Scenario-based fit — find the situation that matches yours."
+          title="Find the situation that matches yours."
+          description="Scenario-based fit — if you recognize the trigger, this service maps to your gap."
         />
-        <div className="grid gap-4 md:grid-cols-3">
-          {service.useCases.map((u, i) => (
+
+        {/* Decision paths — stacked rows with trigger → fit flow */}
+        <div className="flex flex-col gap-3">
+          {service.useCases.map((u) => (
             <div
               key={u.audience}
-              className={cn(
-                "card-lift relative flex flex-col gap-3 overflow-hidden rounded-2xl border border-line bg-white p-6",
-                i === 1 && "md:-translate-y-2"
-              )}
+              className="card-lift group flex flex-col gap-4 rounded-2xl border border-line bg-white p-5 hover:border-brand-teal/40 sm:flex-row sm:items-center"
             >
-              {/* accent corner */}
-              <span
-                aria-hidden="true"
-                className="absolute right-0 top-0 h-16 w-16 rounded-bl-[2rem] bg-brand-gradient-soft opacity-50"
-              />
-              <span className="relative inline-flex h-9 w-9 items-center justify-center rounded-xl bg-brand-gradient text-white">
-                <Target className="h-4 w-4" aria-hidden="true" />
-              </span>
-              <p className="relative text-sm font-semibold text-graphite">{u.audience}</p>
-              <p className="relative text-sm leading-relaxed text-secondary">{u.detail}</p>
+              {/* trigger signal */}
+              {u.signal ? (
+                <div className="flex items-start gap-3 sm:w-2/5 sm:shrink-0">
+                  <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
+                    <Target className="h-4 w-4" aria-hidden="true" />
+                  </span>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[10px] font-bold uppercase tracking-wide text-muted">
+                      Trigger
+                    </span>
+                    <p className="text-sm leading-snug text-secondary">{u.signal}</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center gap-3 sm:w-2/5 sm:shrink-0">
+                  <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
+                    <Target className="h-4 w-4" aria-hidden="true" />
+                  </span>
+                  <span className="text-sm font-semibold text-graphite">{u.audience}</span>
+                </div>
+              )}
+
+              {/* arrow connector */}
+              <div className="flex items-center justify-center sm:px-2">
+                <ArrowRight className="h-5 w-5 rotate-90 text-brand-teal sm:rotate-0" aria-hidden="true" />
+              </div>
+
+              {/* fit / detail */}
+              <div className="flex flex-1 flex-col gap-1">
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-gradient text-white">
+                    <Check className="h-4 w-4" aria-hidden="true" />
+                  </span>
+                  <span className="text-sm font-semibold text-graphite">{u.audience}</span>
+                </div>
+                <p className="text-sm leading-relaxed text-secondary">{u.detail}</p>
+              </div>
             </div>
           ))}
         </div>
+
         <p className="max-w-2xl text-sm text-muted">
           Engagements are tailored to USA, Canada, and Australia market context where relevant.
         </p>
@@ -339,7 +422,7 @@ export function ServiceUseCases({ service }: { service: Service }) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* 6. Process — sprint board (distinct from homepage methodology phases)      */
+/* 6. Process — vertical timeline with rail connector                         */
 /* -------------------------------------------------------------------------- */
 
 export function ServiceProcess({ service }: { service: Service }) {
@@ -351,35 +434,50 @@ export function ServiceProcess({ service }: { service: Service }) {
           eyebrow="How we work"
           titleId={`process-${service.slug}`}
           title="Phased, prioritized, and validated."
-          description="Each sprint compounds — no busywork, no black boxes."
+          description="Each phase compounds — no busywork, no black boxes."
         />
-        {/* sprint board — columns with cards, not a vertical timeline */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+
+        {/* Vertical timeline with left rail */}
+        <ol className="relative flex flex-col gap-0">
+          {/* vertical rail */}
+          <span
+            aria-hidden="true"
+            className="absolute bottom-6 left-[19px] top-6 w-0.5 bg-gradient-to-b from-brand-teal/40 via-brand-teal/30 to-brand-teal/10 sm:left-[23px]"
+          />
           {service.process.map((phase, i) => (
-            <div
+            <li
               key={phase.title}
-              className="flex flex-col gap-2 rounded-2xl border border-line bg-surface-tint p-5"
+              className="relative flex gap-5 pb-6 last:pb-0 sm:gap-6"
             >
-              <div className="flex items-center justify-between">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-gradient px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
-                  Sprint {i + 1}
-                </span>
-                <span className="text-lg font-semibold text-brand-gradient">
-                  {String(i + 1).padStart(2, "0")}
+              {/* node on the rail */}
+              <div className="relative z-10 flex shrink-0 flex-col items-center">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-brand-gradient text-xs font-bold text-white shadow-[0_4px_12px_-4px_rgba(24,138,172,0.6)] sm:h-12 sm:w-12 sm:text-sm">
+                  {i + 1}
                 </span>
               </div>
-              <h3 className="text-sm font-semibold text-graphite">{phase.title}</h3>
-              <p className="text-xs leading-relaxed text-secondary">{phase.description}</p>
-            </div>
+              {/* content card */}
+              <div className="flex-1 rounded-2xl border border-line bg-surface-soft p-4 sm:p-5">
+                <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                  <h3 className="text-sm font-semibold text-graphite sm:text-base">{phase.title}</h3>
+                  {phase.timing && (
+                    <span className="inline-flex w-fit items-center gap-1 rounded-full bg-brand-gradient px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
+                      <CircleDot className="h-3 w-3" aria-hidden="true" />
+                      {phase.timing}
+                    </span>
+                  )}
+                </div>
+                <p className="mt-1.5 text-sm leading-relaxed text-secondary">{phase.description}</p>
+              </div>
+            </li>
           ))}
-        </div>
+        </ol>
       </Container>
     </Section>
   );
 }
 
 /* -------------------------------------------------------------------------- */
-/* 7. Outcomes — score ladder / outcome tiles (distinct from deliverables)    */
+/* 7. Outcomes — ascending staircase steps (distinct from timeline)           */
 /* -------------------------------------------------------------------------- */
 
 export function ServiceOutcomes({ service }: { service: Service }) {
@@ -387,31 +485,64 @@ export function ServiceOutcomes({ service }: { service: Service }) {
     <Section background="soft" aria-labelledby={`outcomes-${service.slug}`}>
       <Container className="flex flex-col gap-10">
         <SectionHeader
+          align="left"
           eyebrow="Business outcomes"
           titleId={`outcomes-${service.slug}`}
           title={service.outcomePromise}
           description="Outcome categories — no fabricated metrics. Verified results are added only with attributable data."
         />
-        {/* outcome ladder — ascending tiles */}
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {service.outcomes.map((o, i) => (
-            <div
-              key={o.label}
-              className="card-lift relative flex flex-col gap-2 rounded-2xl border border-line bg-white p-5"
-              style={{ transform: `translateY(${i * 6}px)` }}
-            >
-              <div className="flex items-center gap-2">
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-surface-tint text-brand-teal">
-                  <TrendingUp className="h-4 w-4" aria-hidden="true" />
-                </span>
-                <span className="text-[10px] font-bold uppercase tracking-wide text-brand-gradient">
-                  Level {i + 1}
-                </span>
+
+        {/* Ascending staircase — each step is wider/higher than the last */}
+        <div className="flex flex-col gap-0">
+          {service.outcomes.map((o, i) => {
+            const isLast = i === service.outcomes.length - 1;
+            return (
+              <div
+                key={o.label}
+                className="relative flex items-stretch gap-4"
+                style={{ paddingLeft: `${i * 1.5}rem` }}
+              >
+                {/* step indicator */}
+                <div className="flex w-10 shrink-0 flex-col items-center">
+                  <span
+                    className={cn(
+                      "flex h-10 w-10 items-center justify-center rounded-xl text-xs font-bold transition-colors",
+                      isLast
+                        ? "bg-brand-gradient text-white shadow-[0_4px_12px_-4px_rgba(24,138,172,0.6)]"
+                        : "bg-white text-brand-teal border border-line"
+                    )}
+                  >
+                    {isLast ? <Trophy className="h-4 w-4" aria-hidden="true" /> : i + 1}
+                  </span>
+                  {!isLast && (
+                    <span
+                      aria-hidden="true"
+                      className="mt-1 h-full w-0.5 flex-1 bg-line"
+                    />
+                  )}
+                </div>
+                {/* step content */}
+                <div
+                  className={cn(
+                    "card-lift mb-3 flex flex-1 items-center gap-4 rounded-2xl border bg-white p-4",
+                    isLast ? "border-brand-teal/40 ring-1 ring-brand-teal/10" : "border-line"
+                  )}
+                >
+                  <TrendingUp
+                    className={cn(
+                      "h-5 w-5 shrink-0",
+                      isLast ? "text-brand-teal" : "text-muted"
+                    )}
+                    aria-hidden="true"
+                  />
+                  <div className="flex flex-col gap-0.5">
+                    <p className="text-sm font-semibold text-graphite">{o.label}</p>
+                    <p className="text-xs leading-relaxed text-secondary sm:text-sm">{o.description}</p>
+                  </div>
+                </div>
               </div>
-              <p className="text-sm font-semibold text-graphite">{o.label}</p>
-              <p className="text-xs leading-relaxed text-secondary">{o.description}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </Container>
     </Section>
@@ -419,7 +550,7 @@ export function ServiceOutcomes({ service }: { service: Service }) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* 8. Related services — "next best modules" rail (distinct from deliverables)*/
+/* 8. Related services — "next best modules" rail (chips, not cards)         */
 /* -------------------------------------------------------------------------- */
 
 export function RelatedServices({ service }: { service: Service }) {
@@ -483,10 +614,31 @@ export function ServiceFAQ({ service }: { service: Service }) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* 10. Final CTA — audit report preview panel                                  */
+/* 10. Final CTA — service-specific audit preview panel                        */
 /* -------------------------------------------------------------------------- */
 
+/** Service-specific audit preview rows — keyed by service slug for tailored depth. */
+const ctaPreviewBySlug: Partial<Record<string, { label: string; icon: React.ElementType }[]>> = {
+  "ppc-management": [
+    { label: "Campaign structure review", icon: GitBranch },
+    { label: "Search term waste review", icon: Search },
+    { label: "Landing page alignment review", icon: Target },
+    { label: "Conversion tracking check", icon: Check },
+    { label: "Paid + organic opportunity map", icon: Zap },
+  ],
+};
+
+function getDefaultPreview() {
+  return [
+    { label: "Technical health", icon: ListChecks },
+    { label: "Keyword opportunity", icon: Target },
+    { label: "AI search readiness", icon: Sparkles },
+  ];
+}
+
 export function ServiceCTA({ service }: { service: Service }) {
+  const previewRows = ctaPreviewBySlug[service.slug] ?? getDefaultPreview();
+
   return (
     <Section background="default">
       <Container>
@@ -514,7 +666,7 @@ export function ServiceCTA({ service }: { service: Service }) {
                 </CTAButton>
               </div>
             </div>
-            {/* right: mini audit report preview */}
+            {/* right: service-specific audit report preview */}
             <div className="flex flex-col gap-3 rounded-2xl border border-line bg-surface-tint p-5">
               <div className="flex items-center justify-between">
                 <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide text-brand-teal">
@@ -525,13 +677,9 @@ export function ServiceCTA({ service }: { service: Service }) {
                   90-day plan
                 </span>
               </div>
-              {[
-                { label: "Technical health", icon: ListChecks },
-                { label: "Keyword opportunity", icon: Target },
-                { label: "AI search readiness", icon: Sparkles },
-              ].map((row) => (
+              {previewRows.map((row) => (
                 <div key={row.label} className="flex items-center gap-3 rounded-xl border border-line-soft bg-white px-4 py-3">
-                  <row.icon className="h-4 w-4 text-brand-teal" aria-hidden="true" />
+                  <row.icon className="h-4 w-4 shrink-0 text-brand-teal" aria-hidden="true" />
                   <span className="flex-1 text-xs font-medium text-secondary">{row.label}</span>
                   <span className="h-1.5 w-16 rounded-full bg-surface-tint">
                     <span className="block h-full w-3/4 rounded-full bg-brand-gradient" />

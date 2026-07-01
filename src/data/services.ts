@@ -14,16 +14,22 @@
 export type ServiceDeliverable = {
   title: string;
   description: string;
+  /** Priority/status chip shown in the deliverable ledger. */
+  tag?: "Core" | "Priority" | "Ongoing" | "Foundation";
 };
 
 export type ServiceUseCase = {
   audience: string;
   detail: string;
+  /** "You'll recognize this if..." trigger text for the decision path layout. */
+  signal?: string;
 };
 
 export type ServiceProcessPhase = {
   title: string;
   description: string;
+  /** Optional short timing label (e.g. "Weeks 1-2"). */
+  timing?: string;
 };
 
 export type ServiceOutcome = {
@@ -778,48 +784,58 @@ export const services: Service[] = [
         "When paid and organic are disconnected, you pay for demand you could own organically, and miss demand that only paid can capture quickly.",
       ],
       bullets: [
-        "PPC and SEO managed by separate teams with no shared strategy",
-        "Landing pages that do not match search intent",
-        "Conversion tracking gaps hiding true ROAS",
-        "No demand-capture logic between paid and organic",
+        "Wasted spend on search terms that do not convert",
+        "Fragmented SEO and PPC data across separate teams",
+        "Weak landing page alignment with ad intent",
+        "Poor conversion tracking hiding true ROAS",
+        "No demand-capture logic between local and global campaigns",
+        "Budget spread thin across the wrong intent tiers",
       ],
     },
     approach: {
       title: "PPC as part of your search growth system.",
       paragraphs: [
         "We position PPC as demand capture within your broader search system — not as random paid media. Search ads, landing page alignment, and conversion tracking are connected to organic intent data so every dollar works harder.",
-        "Local PPC and global PPC are structured around the same intent map that powers your organic strategy.",
+        "Local PPC and global PPC are structured around the same intent map that powers your organic strategy, so paid and organic reinforce each other instead of competing for the same click.",
       ],
       stages: [
-        { label: "Strategy", description: "Paid + organic intent map and budget logic." },
-        { label: "CRO", description: "Landing page alignment and conversion tracking." },
-        { label: "Reporting", description: "Unified paid + organic search performance." },
+        { label: "Intent Map", description: "Shared paid + organic demand map and budget logic." },
+        { label: "Campaign Structure", description: "Google Ads and Microsoft Ads built around buyer intent." },
+        { label: "Landing Page Alignment", description: "Pages matched to ad promises and search intent." },
+        { label: "Conversion Tracking", description: "End-to-end tracking from click to revenue." },
+        { label: "Paid + Organic Intelligence", description: "Shared intent data so PPC and SEO reinforce each other." },
       ],
     },
     deliverables: [
-      { title: "Search ads management", description: "Google Ads and Microsoft Ads structured around intent." },
-      { title: "Local PPC", description: "Geo-targeted campaigns for city and regional demand." },
-      { title: "Global PPC", description: "Multi-market paid search with regional nuance." },
-      { title: "Landing page alignment", description: "Pages matched to ad intent for higher conversion." },
-      { title: "Conversion tracking", description: "End-to-end tracking from click to revenue." },
-      { title: "Paid + organic intelligence", description: "Shared intent data so paid and SEO reinforce each other." },
+      { title: "Search ads management", description: "Google Ads and Microsoft Ads structured around intent.", tag: "Core" },
+      { title: "Local PPC", description: "Geo-targeted campaigns for city and regional demand.", tag: "Core" },
+      { title: "Global PPC", description: "Multi-market paid search with regional nuance.", tag: "Priority" },
+      { title: "Landing page alignment", description: "Pages matched to ad intent for higher conversion.", tag: "Priority" },
+      { title: "Conversion tracking", description: "End-to-end tracking from click to revenue.", tag: "Foundation" },
+      { title: "Paid + organic intelligence", description: "Shared intent data so paid and SEO reinforce each other.", tag: "Ongoing" },
+      { title: "Budget & bid structure", description: "Spend prioritized by intent tier and demand stage.", tag: "Foundation" },
+      { title: "Search term analysis", description: "Continuous query mining to cut waste and find new intent.", tag: "Ongoing" },
     ],
     useCases: [
-      { audience: "Brands needing fast demand capture", detail: "Organic takes time — PPC captures demand now." },
-      { audience: "Multi-market companies", detail: "Need local and global paid search across regions." },
-      { audience: "Teams with disconnected PPC and SEO", detail: "Want unified search intelligence, not siloed spend." },
+      { audience: "Need fast demand capture", detail: "Organic compounds over months — PPC captures qualified demand now while SEO ramps.", signal: "You are launching or scaling and cannot wait for organic to compound." },
+      { audience: "Need local city/regional campaigns", detail: "Geo-targeted local PPC for city, service-area, and regional demand.", signal: "You serve specific metros or regions and need to win local intent." },
+      { audience: "Need multi-market paid search", detail: "Global PPC structured for USA, Canada, and Australia with regional nuance.", signal: "You compete across multiple markets with different demand patterns." },
+      { audience: "Need PPC and SEO data unified", detail: "One shared intent map so paid and organic reinforce each other.", signal: "Your PPC and SEO teams work in silos and duplicate or compete." },
+      { audience: "Need conversion tracking fixed", detail: "End-to-end tracking from click to lead to revenue.", signal: "You cannot confidently tie ad spend to pipeline or revenue." },
     ],
     process: [
-      { title: "Intent mapping", description: "Shared paid + organic demand map." },
-      { title: "Campaign structure", description: "Google Ads and Microsoft Ads built around intent." },
-      { title: "Landing page alignment", description: "Match pages to ad promises and intent." },
-      { title: "Tracking & optimization", description: "Conversion tracking and continuous bid refinement." },
+      { title: "Intent Map", description: "Build a shared paid + organic demand map and budget logic.", timing: "Week 1" },
+      { title: "Campaign Architecture", description: "Structure Google Ads and Microsoft Ads around intent tiers.", timing: "Weeks 1-2" },
+      { title: "Landing Page Alignment", description: "Match landing pages to ad promises and search intent.", timing: "Weeks 2-3" },
+      { title: "Tracking & Optimization", description: "Deploy conversion tracking and begin continuous bid refinement.", timing: "Weeks 3-4" },
+      { title: "Search Intelligence Review", description: "Monthly search term, waste, and paid + organic opportunity review.", timing: "Monthly" },
     ],
     outcomes: [
-      { label: "Efficient demand capture", description: "Paid search aligned to where organic is not yet strong." },
-      { label: "Higher conversion rates", description: "Landing pages matched to search intent." },
-      { label: "Clear ROAS", description: "End-to-end conversion tracking from click to revenue." },
-      { label: "Unified search strategy", description: "Paid and organic working from the same intent map." },
+      { label: "Better demand capture", description: "Paid search aligned to where organic is not yet strong." },
+      { label: "Cleaner paid search structure", description: "Campaigns and ad groups organized by intent tier." },
+      { label: "Stronger conversion tracking", description: "End-to-end attribution from click to revenue." },
+      { label: "Shared SEO/PPC intelligence", description: "One intent map informing both paid and organic decisions." },
+      { label: "Better budget decisions", description: "Spend prioritized by demand stage and intent value." },
     ],
     faqs: [
       { q: "Is PPC separate from your SEO services?", a: "No. We position PPC as part of search growth. Paid and organic share the same intent data so they reinforce each other rather than competing." },
@@ -852,47 +868,53 @@ export const services: Service[] = [
     problem: {
       title: "Teams that need SEO expertise, not a full agency engagement.",
       paragraphs: [
-        "Many companies have in-house teams or ambitious founders who need senior SEO guidance — not a full outsourced engagement. Without expert mentorship, teams waste cycles on low-impact work and miss the strategic shifts that matter.",
-        "AI search has made this harder: most in-house teams were not trained for AI Overviews, LLM answers, or entity optimization.",
+        "Many companies have in-house teams or ambitious founders who need senior SEO guidance — not a full outsourced engagement. Without expert mentorship, teams waste cycles on low-impact work, execute random SEO tactics without a roadmap, and miss the strategic shifts that matter.",
+        "AI search has made this harder: most in-house teams were not trained for AI Overviews, LLM answers, or entity optimization. The result is scattered execution, unclear priorities, and a team that cannot confidently defend its SEO decisions to leadership.",
       ],
       bullets: [
         "In-house team lacks senior SEO strategy direction",
-        "Founders need advisory, not execution",
+        "Founders and CMOs need advisory, not full execution",
+        "Random SEO execution without a connected roadmap",
         "No clear framework for prioritizing SEO work",
         "AI search readiness is outside the team's expertise",
+        "No senior review before major technical or content decisions",
       ],
     },
     approach: {
       title: "Mentorship that builds your team's search capability.",
       paragraphs: [
-        "We provide structured 1:1 mentorship and advisory tailored to your team's level and goals. Sessions cover strategy, technical SEO, content, AI search, and prioritization — so your team gets stronger every month.",
-        "This is not a generic course. It is decision support for your specific search growth challenges.",
+        "We provide structured 1:1 mentorship and advisory tailored to your team's level and goals. Sessions cover strategy, technical SEO, content, AI search, and prioritization — so your team gets stronger every month and stops executing random SEO tactics.",
+        "This is not a generic course. It is decision support for your specific search growth challenges, with roadmap coaching that keeps work aligned to revenue.",
       ],
       stages: [
-        { label: "Strategy", description: "Roadmap coaching and priority-setting." },
-        { label: "Technical SEO", description: "Guidance on crawl, indexation, and structure." },
-        { label: "AI Search Readiness", description: "AI search coaching for your team." },
-        { label: "Reporting", description: "Monthly strategy review and accountability." },
+        { label: "Roadmap Coaching", description: "Priority-setting and avoiding random SEO execution." },
+        { label: "Technical Review", description: "Senior guidance on crawl, indexation, and architecture." },
+        { label: "Content Review", description: "Editorial and cluster guidance from a senior lens." },
+        { label: "AI Search Review", description: "AI Overviews, LLM, and entity coaching for your team." },
+        { label: "Monthly Strategy Review", description: "Accountability and re-prioritization each month." },
       ],
     },
     deliverables: [
-      { title: "1:1 SEO mentorship", description: "Regular sessions tailored to your goals and challenges." },
-      { title: "Founder / CMO advisory", description: "Strategic guidance for leadership decisions." },
-      { title: "In-house team training", description: "Up-skill your team across SEO disciplines." },
-      { title: "Technical SEO guidance", description: "Expert direction on technical priorities." },
-      { title: "Content strategy review", description: "Audit and improve your content approach." },
-      { title: "Monthly strategy review", description: "Accountability and re-prioritization each month." },
+      { title: "1:1 SEO advisory", description: "Regular 1:1 sessions tailored to your goals and challenges.", tag: "Core" },
+      { title: "Founder / CMO decision support", description: "Strategic guidance for leadership-level SEO decisions.", tag: "Core" },
+      { title: "In-house team training", description: "Up-skill your team across technical, content, and AI search.", tag: "Priority" },
+      { title: "Technical SEO review", description: "Senior review of crawl, indexation, and architecture decisions.", tag: "Priority" },
+      { title: "Content & AI search review", description: "Editorial and AI-readiness review from a senior lens.", tag: "Ongoing" },
+      { title: "Office hours", description: "Async + scheduled access for blocking questions.", tag: "Ongoing" },
+      { title: "Monthly strategy review", description: "Accountability and roadmap re-prioritization each month.", tag: "Foundation" },
+      { title: "Roadmap coaching", description: "Keep work aligned to revenue and away from random tactics.", tag: "Foundation" },
     ],
     useCases: [
-      { audience: "Founders & CEOs", detail: "Need senior SEO perspective for strategic decisions." },
-      { audience: "CMOs & marketing leaders", detail: "Want expert guidance without a full agency retainer." },
-      { audience: "In-house SEO teams", detail: "Need mentorship, training, and senior-level review." },
+      { audience: "Founders & CEOs", detail: "Need senior SEO perspective for strategic decisions without outsourcing execution.", signal: "You make SEO decisions but lack a senior SEO to pressure-test them." },
+      { audience: "CMOs & marketing leaders", detail: "Want expert guidance and roadmap coaching without a full agency retainer.", signal: "You lead marketing but need senior SEO decision support." },
+      { audience: "In-house SEO teams", detail: "Need mentorship, training, and senior-level review before major releases.", signal: "Your team executes SEO but has no senior reviewer." },
     ],
     process: [
-      { title: "Assessment", description: "Understand team capability, goals, and current challenges." },
-      { title: "Custom curriculum", description: "Tailor mentorship sessions to your priorities." },
-      { title: "Monthly sessions", description: "Regular 1:1 or team coaching with action items." },
-      { title: "Strategy review", description: "Monthly accountability and re-prioritization." },
+      { title: "Assessment", description: "Understand team capability, goals, and current challenges.", timing: "Week 1" },
+      { title: "Custom curriculum", description: "Tailor mentorship sessions to your priorities and gaps.", timing: "Week 1" },
+      { title: "Monthly sessions", description: "Regular 1:1 or team coaching with action items.", timing: "Monthly" },
+      { title: "Office hours", description: "Async + scheduled access for blocking questions.", timing: "Ongoing" },
+      { title: "Strategy review", description: "Monthly accountability and roadmap re-prioritization.", timing: "Monthly" },
     ],
     outcomes: [
       { label: "Stronger in-house capability", description: "Your team gets measurably better at SEO." },
