@@ -5,7 +5,9 @@ import {
   Bot,
   Compass,
   Gauge,
+  GraduationCap,
   MapPin,
+  Megaphone,
   Network,
   Search,
   ShoppingCart,
@@ -42,6 +44,8 @@ export const serviceIconMap: Record<
   ecommerce: ShoppingCart,
   international: Globe2,
   audit: ClipboardCheck,
+  ppc: Megaphone,
+  mentor: GraduationCap,
 };
 
 /* -------------------------------------------------------------------------- */

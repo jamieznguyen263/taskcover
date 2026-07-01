@@ -11,7 +11,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { Gauge, Search, Sparkles, TrendingUp } from "lucide-react";
+import { ArrowUp, Gauge, Search, Sparkles, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -20,10 +20,10 @@ import { cn } from "@/lib/utils";
  * Designed to feel like a premium SEO intelligence platform (Semrush/Ahrefs
  * logic) while staying on-brand: green → emerald → teal → blue.
  *
- * Layout (spacious, metrics-driven):
+ * Growth-oriented illustrative metrics (not real client results):
  *  - Top KPI row: Search Volume, Organic Visibility, AI Visibility, Site Health
- *  - Main chart: organic visibility / search demand trend
- *  - Score module: AI Search Score + Audit Score + Authority Score gauges
+ *  - Main chart: organic visibility / search demand trend (upward)
+ *  - Score module: AI Search, Audit, Authority as compact score rows
  *  - Keyword opportunity list + search intent distribution
  *
  * All metrics are illustrative for the product visual only. A single subtle
@@ -33,13 +33,13 @@ import { cn } from "@/lib/utils";
  */
 
 const visibilityTrend = [
-  { m: "Jan", v: 48, d: 120 },
-  { m: "Feb", v: 52, d: 132 },
-  { m: "Mar", v: 57, d: 141 },
-  { m: "Apr", v: 61, d: 158 },
-  { m: "May", v: 66, d: 172 },
-  { m: "Jun", v: 72, d: 189 },
-  { m: "Jul", v: 78, d: 204 },
+  { m: "Jan", v: 72, d: 150 },
+  { m: "Feb", v: 76, d: 166 },
+  { m: "Mar", v: 81, d: 178 },
+  { m: "Apr", v: 84, d: 191 },
+  { m: "May", v: 87, d: 204 },
+  { m: "Jun", v: 89, d: 218 },
+  { m: "Jul", v: 90, d: 240 },
 ];
 
 type TooltipPayloadItem = {
@@ -75,48 +75,51 @@ function ChartTooltip({
   );
 }
 
-/* Compact ring/gauge for score modules */
-function ScoreRing({
-  value,
+/* Compact score row — replaces rings to avoid overflow, stays inside the card */
+function ScoreRow({
   label,
+  value,
+  delta,
   tone,
 }: {
-  value: number;
   label: string;
+  value: number;
+  delta: string;
   tone: "brand" | "teal" | "blue";
 }) {
-  const r = 26;
-  const c = 2 * Math.PI * r;
-  const offset = c - (value / 100) * c;
-  const stroke =
-    tone === "brand" ? "#10E66A" : tone === "teal" ? "#188AAC" : "#197DB4";
+  const barFrom =
+    tone === "brand"
+      ? "from-brand-green"
+      : tone === "teal"
+        ? "from-brand-teal"
+        : "from-brand-blue";
+  const valueColor =
+    tone === "brand"
+      ? "text-brand-emerald"
+      : tone === "teal"
+        ? "text-brand-teal"
+        : "text-brand-blue";
   return (
-    <div className="flex flex-col items-center gap-1">
-      <div className="relative h-16 w-16">
-        <svg viewBox="0 0 64 64" className="h-full w-full -rotate-90">
-          <circle cx="32" cy="32" r={r} fill="none" stroke="#E5EEF3" strokeWidth="6" />
-          <motion.circle
-            cx="32"
-            cy="32"
-            r={r}
-            fill="none"
-            stroke={stroke}
-            strokeWidth="6"
-            strokeLinecap="round"
-            strokeDasharray={c}
-            initial={{ strokeDashoffset: c }}
-            whileInView={{ strokeDashoffset: offset }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, ease: "easeOut" }}
-          />
-        </svg>
-        <span className="absolute inset-0 flex items-center justify-center text-base font-semibold text-graphite">
-          {value}
+    <div className="flex flex-col gap-1.5">
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-[11px] font-medium text-secondary">{label}</span>
+        <span className="inline-flex items-center gap-1">
+          <span className={cn("text-sm font-semibold", valueColor)}>{value}%</span>
+          <span className="inline-flex items-center gap-0.5 rounded-full bg-brand-emerald/10 px-1.5 py-0.5 text-[9px] font-semibold text-brand-emerald">
+            <ArrowUp className="h-2.5 w-2.5" aria-hidden="true" />
+            {delta}
+          </span>
         </span>
       </div>
-      <span className="text-center text-[10px] font-medium uppercase tracking-wide text-muted">
-        {label}
-      </span>
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-line-soft">
+        <motion.span
+          className={cn("h-full rounded-full bg-gradient-to-r to-brand-teal", barFrom)}
+          initial={{ width: 0 }}
+          whileInView={{ width: `${value}%` }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.9, ease: "easeOut" }}
+        />
+      </div>
     </div>
   );
 }
@@ -157,8 +160,8 @@ export function SearchDashboardMockup({ className }: { className?: string }) {
         initial="hidden"
         animate="visible"
         className={cn(
-          "relative rounded-3xl border border-line bg-white/95 p-4 backdrop-blur-sm sm:p-5",
-          "depth-layered halo-soft"
+          "relative overflow-hidden rounded-3xl border border-line bg-white/95 p-4 backdrop-blur-sm sm:p-5",
+          "depth-layered halo-soft",
         )}
       >
         {/* Top status bar */}
@@ -184,10 +187,10 @@ export function SearchDashboardMockup({ className }: { className?: string }) {
           className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4"
         >
           {[
-            { label: "Search Volume", value: "204K", icon: Search, tone: "text-brand-teal" },
-            { label: "Organic Visibility", value: "78", icon: TrendingUp, tone: "text-brand-emerald", suffix: "%" },
-            { label: "AI Visibility", value: "64", icon: Sparkles, tone: "text-brand-blue", suffix: "%" },
-            { label: "Site Health", value: "92", icon: Gauge, tone: "text-brand-teal", suffix: "%" },
+            { label: "Search Volume", value: "240K", icon: Search, tone: "text-brand-teal", delta: "+18%" },
+            { label: "Organic Visibility", value: "90", icon: TrendingUp, tone: "text-brand-emerald", suffix: "%", delta: "+22 pts" },
+            { label: "AI Visibility", value: "95", icon: Sparkles, tone: "text-brand-blue", suffix: "%", delta: "+31 pts" },
+            { label: "Site Health", value: "98", icon: Gauge, tone: "text-brand-teal", suffix: "%", delta: "+6 pts" },
           ].map((kpi) => (
             <div
               key={kpi.label}
@@ -199,12 +202,18 @@ export function SearchDashboardMockup({ className }: { className?: string }) {
                 </span>
                 <kpi.icon className={cn("h-3.5 w-3.5", kpi.tone)} aria-hidden="true" />
               </div>
-              <p className="mt-1.5 text-2xl font-semibold tracking-tight text-graphite">
-                {kpi.value}
-                {kpi.suffix ? (
-                  <span className="text-sm font-medium text-muted">{kpi.suffix}</span>
-                ) : null}
-              </p>
+              <div className="mt-1.5 flex items-end justify-between gap-1">
+                <p className="text-2xl font-semibold tracking-tight text-graphite">
+                  {kpi.value}
+                  {kpi.suffix ? (
+                    <span className="text-sm font-medium text-muted">{kpi.suffix}</span>
+                  ) : null}
+                </p>
+                <span className="inline-flex items-center gap-0.5 rounded-full bg-brand-emerald/10 px-1.5 py-0.5 text-[9px] font-semibold text-brand-emerald">
+                  <ArrowUp className="h-2.5 w-2.5" aria-hidden="true" />
+                  {kpi.delta}
+                </span>
+              </div>
             </div>
           ))}
         </motion.div>
@@ -221,9 +230,9 @@ export function SearchDashboardMockup({ className }: { className?: string }) {
                   </p>
                   <p className="text-xs text-muted">Demand-weighted share of voice</p>
                 </div>
-                <span className="inline-flex items-center gap-1 rounded-full bg-surface-tint px-2.5 py-1 text-[11px] font-semibold text-brand-teal">
+                <span className="inline-flex items-center gap-1 rounded-full bg-brand-emerald/10 px-2.5 py-1 text-[11px] font-semibold text-brand-emerald">
                   <TrendingUp className="h-3 w-3" aria-hidden="true" />
-                  +30 pts
+                  +18 pts
                 </span>
               </div>
               <div className="h-44">
@@ -243,7 +252,7 @@ export function SearchDashboardMockup({ className }: { className?: string }) {
                       type="monotone"
                       dataKey="v"
                       name="Visibility"
-                      stroke="#188AAC"
+                      stroke="#10E66A"
                       strokeWidth={2.5}
                       fill="url(#visGrad)"
                     />
@@ -253,15 +262,15 @@ export function SearchDashboardMockup({ className }: { className?: string }) {
             </div>
           </motion.div>
 
-          {/* Score module */}
+          {/* Score module — compact rows instead of rings to prevent overflow */}
           <motion.div variants={moduleVariants}>
-            <div className="card-lift h-full rounded-2xl border border-line bg-white p-5 ring-brand-glow">
+            <div className="card-lift flex h-full flex-col rounded-2xl border border-line bg-white p-5 ring-brand-glow">
               <p className="text-sm font-semibold text-graphite">Search scores</p>
               <p className="text-xs text-muted">AI, audit, and authority signals</p>
-              <div className="mt-4 flex items-center justify-around">
-                <ScoreRing value={64} label="AI Search" tone="brand" />
-                <ScoreRing value={92} label="Audit" tone="teal" />
-                <ScoreRing value={71} label="Authority" tone="blue" />
+              <div className="mt-4 flex flex-col gap-4">
+                <ScoreRow label="AI Search Score" value={95} delta="12 pts" tone="brand" />
+                <ScoreRow label="Audit Score" value={98} delta="4 pts" tone="teal" />
+                <ScoreRow label="Authority Score" value={92} delta="9 pts" tone="blue" />
               </div>
             </div>
           </motion.div>
@@ -276,8 +285,8 @@ export function SearchDashboardMockup({ className }: { className?: string }) {
                 <p className="text-sm font-semibold text-graphite">
                   Keyword opportunities
                 </p>
-                <span className="rounded-full bg-surface-tint px-2 py-0.5 text-[10px] font-medium text-muted">
-                  Content gap
+                <span className="rounded-full bg-brand-emerald/10 px-2 py-0.5 text-[10px] font-medium text-brand-emerald">
+                  Growth
                 </span>
               </div>
               <ul className="flex flex-col gap-2">
@@ -297,7 +306,7 @@ export function SearchDashboardMockup({ className }: { className?: string }) {
                       <span className="text-[11px] text-muted">{row.vol}/mo</span>
                       <span
                         className={cn(
-                          "inline-flex h-1.5 w-10 overflow-hidden rounded-full bg-line-soft"
+                          "inline-flex h-1.5 w-10 overflow-hidden rounded-full bg-line-soft",
                         )}
                         aria-hidden="true"
                       >
@@ -322,9 +331,9 @@ export function SearchDashboardMockup({ className }: { className?: string }) {
               <p className="text-xs text-muted">Share of qualified demand</p>
               <ul className="mt-4 flex flex-col gap-3">
                 {[
-                  { label: "Commercial", pct: 43, tone: "bg-brand-green" },
-                  { label: "Informational", pct: 53, tone: "bg-brand-teal" },
-                  { label: "Transactional", pct: 29, tone: "bg-brand-blue" },
+                  { label: "Commercial", pct: 62, tone: "bg-brand-green" },
+                  { label: "Informational", pct: 71, tone: "bg-brand-teal" },
+                  { label: "Transactional", pct: 48, tone: "bg-brand-blue" },
                 ].map((row) => (
                   <li key={row.label}>
                     <div className="flex items-center justify-between text-xs">

@@ -257,6 +257,36 @@
   }
 }
 
+@keyframes marquee-reverse {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Floating DNA/knowledge-graph motion — gentle organic drift */
+@keyframes float-node {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(1.5px, -1.5px);
+  }
+}
+
+@keyframes breathe-glow {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.04);
+  }
+}
+
 @keyframes pulse-ring {
   0% {
     transform: scale(0.8);

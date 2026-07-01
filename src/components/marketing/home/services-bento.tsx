@@ -28,7 +28,10 @@ type ServiceCard = {
     | "authority"
     | "pins"
     | "products"
-    | "dashboard";
+    | "dashboard"
+    | "globe"
+    | "ppc"
+    | "mentor";
 };
 
 type FeatureCard = {
@@ -218,6 +221,53 @@ function DashboardVisual({ className }: { className?: string }) {
   );
 }
 
+function GlobeVisual({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 200 80" className={className} role="img" aria-label="International SEO globe">
+      <circle cx="100" cy="40" r="28" fill="none" stroke="#188AAC" strokeWidth="1.5" />
+      <ellipse cx="100" cy="40" rx="28" ry="12" fill="none" stroke="#188AAC" strokeWidth="1" opacity="0.5" />
+      <ellipse cx="100" cy="40" rx="12" ry="28" fill="none" stroke="#188AAC" strokeWidth="1" opacity="0.5" />
+      <line x1="72" y1="40" x2="128" y2="40" stroke="#188AAC" strokeWidth="1" opacity="0.5" />
+      <line x1="100" y1="12" x2="100" y2="68" stroke="#188AAC" strokeWidth="1" opacity="0.5" />
+      {[{ x: 60, y: 25 }, { x: 140, y: 55 }, { x: 115, y: 20 }].map((p, i) => (
+        <circle key={i} cx={p.x} cy={p.y} r="3" fill="#10E66A" stroke="#188AAC" strokeWidth="0.8" />
+      ))}
+    </svg>
+  );
+}
+
+function PpcVisual({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 200 80" className={className} role="img" aria-label="PPC search ads">
+      <rect x="10" y="14" width="180" height="52" rx="6" fill="#FFFFFF" stroke="#DDEAF0" strokeWidth="1" />
+      <text x="20" y="28" className="fill-muted" style={{ fontSize: "6px", fontWeight: "600" }}>AD</text>
+      <rect x="20" y="34" width="100" height="5" rx="2.5" fill="#188AAC" />
+      <rect x="20" y="44" width="80" height="3" rx="1.5" fill="#DDEAF0" />
+      {[1, 2, 3].map((p) => (
+        <rect key={p} x={130 + (p - 1) * 18} y="34" width="14" height="14" rx="3" fill="#10E66A" opacity={0.2 + p * 0.15} />
+      ))}
+      <path d="M 170 58 L 176 48 L 182 58 Z" fill="#10E66A" />
+    </svg>
+  );
+}
+
+function MentorVisual({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 200 80" className={className} role="img" aria-label="SEO mentor sessions">
+      <rect x="10" y="15" width="120" height="50" rx="8" fill="#F4F8FB" stroke="#DDEAF0" strokeWidth="1" />
+      <circle cx="35" cy="35" r="8" fill="#10E66A" opacity="0.3" stroke="#188AAC" strokeWidth="1" />
+      <rect x="28" y="46" width="14" height="3" rx="1.5" fill="#188AAC" />
+      <rect x="25" y="51" width="20" height="3" rx="1.5" fill="#DDEAF0" />
+      <rect x="55" y="28" width="60" height="4" rx="2" fill="#188AAC" />
+      <rect x="55" y="38" width="50" height="3" rx="1.5" fill="#DDEAF0" />
+      <rect x="55" y="45" width="55" height="3" rx="1.5" fill="#DDEAF0" />
+      {[1, 2, 3, 4].map((d) => (
+        <rect key={d} x={140 + (d - 1) * 13} y={55 - d * 8} width="9" height={d * 8} rx="2" fill="#10E66A" opacity={0.3 + d * 0.15} />
+      ))}
+    </svg>
+  );
+}
+
 const visualMap = {
   crawl: CrawlVisual,
   citation: CitationVisual,
@@ -226,6 +276,9 @@ const visualMap = {
   pins: PinsVisual,
   products: ProductsVisual,
   dashboard: DashboardVisual,
+  globe: GlobeVisual,
+  ppc: PpcVisual,
+  mentor: MentorVisual,
 };
 
 export function ServicesBento({

@@ -3,7 +3,7 @@
 import * as React from "react";
 import { motion, useReducedMotion, AnimatePresence } from "motion/react";
 import Link from "next/link";
-import { ArrowRight, Target, Workflow } from "lucide-react";
+import { ArrowRight, AlertTriangle, CheckCircle2, Target, Workflow } from "lucide-react";
 import { Container } from "@/components/marketing/shared/container";
 import { Eyebrow } from "@/components/marketing/shared/section-header";
 import { cn } from "@/lib/utils";
@@ -133,18 +133,30 @@ export function GrowthPlaybook({
                   </span>
                 </div>
 
-                {/* Challenge → Strategy → Output flow */}
+                {/* Challenge → Strategy → Output flow — color-coded with accent bars */}
                 <div className="grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-xl border border-line bg-surface-tint/50 p-4">
-                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">Challenge</p>
+                  <div className="relative overflow-hidden rounded-xl border border-amber-200/60 bg-amber-50/60 p-4">
+                    <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1 bg-amber-400/70" />
+                    <p className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-amber-700">
+                      <AlertTriangle className="h-3 w-3" aria-hidden="true" />
+                      Challenge
+                    </p>
                     <p className="mt-1.5 text-sm text-secondary">{current.challenge}</p>
                   </div>
-                  <div className="rounded-xl border border-line bg-surface-tint/50 p-4">
-                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">Strategy</p>
+                  <div className="relative overflow-hidden rounded-xl border border-brand-blue/20 bg-brand-blue/[0.04] p-4">
+                    <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1 bg-brand-teal/70" />
+                    <p className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-brand-teal">
+                      <Target className="h-3 w-3" aria-hidden="true" />
+                      Strategy
+                    </p>
                     <p className="mt-1.5 text-sm text-secondary">{current.strategy}</p>
                   </div>
-                  <div className="rounded-xl border border-brand-teal/30 bg-white p-4">
-                    <p className="text-[10px] font-semibold uppercase tracking-wide text-brand-teal">Output</p>
+                  <div className="relative overflow-hidden rounded-xl border border-brand-emerald/20 bg-brand-emerald/[0.05] p-4">
+                    <span aria-hidden="true" className="absolute inset-y-0 left-0 w-1 bg-brand-emerald/70" />
+                    <p className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-brand-emerald">
+                      <CheckCircle2 className="h-3 w-3" aria-hidden="true" />
+                      Output
+                    </p>
                     <p className="mt-1.5 text-sm text-secondary">{current.output}</p>
                   </div>
                 </div>

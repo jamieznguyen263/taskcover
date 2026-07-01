@@ -82,7 +82,8 @@ export default function HomePage() {
       <Section background="default" className="py-14 sm:py-16">
         <BrandMarquee
           caption={brandExperienceStrip.caption}
-          items={[...brandExperienceStrip.items]}
+          rowBrands={[...brandExperienceStrip.rowBrands]}
+          rowCapabilities={[...brandExperienceStrip.rowCapabilities]}
         />
       </Section>
 

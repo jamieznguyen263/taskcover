@@ -8,12 +8,17 @@ import { GradientBorderCard } from "@/components/marketing/shared/gradient-borde
 import { cn } from "@/lib/utils";
 
 /**
- * Search Ecosystem Map.
+ * Search Ecosystem Map — floating DNA / knowledge-graph feel.
  *
  * Renders the fragmented modern search landscape as an interactive network:
  * a central "Your brand" hub with satellite surfaces (Google, AI, Local, etc.)
- * connected by animated SVG lines. This replaces a flat card grid and makes
- * the "search has changed" message tangible.
+ * connected by gentle, breathing SVG lines.
+ *
+ * Motion philosophy:
+ *  - Nodes drift very slightly (organic, floating)
+ *  - Line connections breathe/sway gently (opacity, not stroke-dash blinking)
+ *  - Hub has subtle breathing glow, not flashing
+ *  - No strong blinking/pulsing toward the hub
  *
  * On mobile, falls back to a clean radial list so it stays legible.
  */
@@ -66,26 +71,6 @@ export function SearchEcosystemMap({
   const reduceMotion = useReducedMotion();
   const [activeId, setActiveId] = React.useState<string | null>(null);
 
-  const lineVariants = {
-    hidden: { pathLength: 0, opacity: 0 },
-    visible: (i: number) => ({
-      pathLength: 1,
-      opacity: 0.5,
-      transition: reduceMotion
-        ? { duration: 0 }
-        : { duration: 0.6, delay: 0.2 + i * 0.05, ease: "easeOut" as const },
-    }),
-  };
-
-  const nodeVariants = {
-    hidden: { opacity: 0, scale: reduceMotion ? 1 : 0.6 },
-    visible: (i: number) => ({
-      opacity: 1,
-      scale: 1,
-      transition: reduceMotion ? { duration: 0 } : { duration: 0.4, delay: 0.3 + i * 0.05 },
-    }),
-  };
-
   return (
     <Container className={cn("flex flex-col gap-12", className)}>
       <div className="flex max-w-2xl flex-col gap-4">
@@ -104,39 +89,66 @@ export function SearchEcosystemMap({
       <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.1fr]">
         {/* Network map (desktop) / list (mobile) */}
         <div className="order-2 lg:order-1">
-          {/* Desktop SVG network */}
+          {/* Desktop SVG network — floating DNA / knowledge-graph */}
           <div className="hidden lg:block">
             <svg viewBox="0 0 400 400" className="mx-auto w-full max-w-md" role="img" aria-labelledby="ecosystem-map-title">
               <title id="ecosystem-map-title">Search ecosystem network map</title>
-              {/* Connection lines */}
+
+              {/* Connection lines — gentle breathing opacity, no blinking dash */}
               {surfaces.map((s, i) => {
                 const pos = polarToCartesian(CX, CY, RING_RADIUS, s.angle);
                 const isActive = activeId === s.id;
                 return (
                   <motion.line
                     key={`line-${s.id}`}
-                    custom={i}
-                    variants={lineVariants}
-                    initial="hidden"
-                    animate="visible"
                     x1={CX}
                     y1={CY}
                     x2={pos.x}
                     y2={pos.y}
                     stroke={isActive ? "#10E66A" : "#188AAC"}
-                    strokeWidth={isActive ? 2 : 1}
-                    className="flow-line"
-                    style={{ opacity: isActive ? 0.8 : 0.4 }}
+                    strokeWidth={isActive ? 2 : 1.25}
+                    initial={{ opacity: 0 }}
+                    animate={
+                      reduceMotion
+                        ? { opacity: isActive ? 0.7 : 0.35 }
+                        : {
+                            opacity: isActive
+                              ? [0.65, 0.8, 0.65]
+                              : [0.3, 0.45, 0.3],
+                          }
+                    }
+                    transition={
+                      reduceMotion
+                        ? { duration: 0 }
+                        : {
+                            duration: 4 + (i % 3),
+                            repeat: Infinity,
+                            ease: "easeInOut" as const,
+                            delay: i * 0.3,
+                          }
+                    }
                   />
                 );
               })}
 
-              {/* Center hub */}
+              {/* Center hub — subtle breathing glow */}
               <motion.g
-                initial={{ opacity: 0, scale: reduceMotion ? 1 : 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
+                initial={reduceMotion ? false : { opacity: 0, scale: 0.5 }}
+                animate={reduceMotion ? { opacity: 1, scale: 1 } : { opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4 }}
               >
+                {/* Breathing halo */}
+                {!reduceMotion && (
+                  <motion.circle
+                    cx={CX}
+                    cy={CY}
+                    r="48"
+                    fill="url(#hubGrad)"
+                    animate={{ opacity: [0.4, 0.6, 0.4], scale: [1, 1.06, 1] }}
+                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" as const }}
+                    style={{ transformOrigin: `${CX}px ${CY}px` }}
+                  />
+                )}
                 <circle cx={CX} cy={CY} r="38" fill="url(#hubGrad)" />
                 <circle cx={CX} cy={CY} r="38" fill="none" stroke="#188AAC" strokeWidth="1" opacity="0.3" />
                 <text x={CX} y={CY - 4} textAnchor="middle" className="fill-graphite text-[10px] font-bold">
@@ -154,33 +166,50 @@ export function SearchEcosystemMap({
                 </radialGradient>
               </defs>
 
-              {/* Satellite nodes */}
+              {/* Satellite nodes — gentle floating drift */}
               {surfaces.map((s, i) => {
                 const pos = polarToCartesian(CX, CY, RING_RADIUS, s.angle);
                 const isActive = activeId === s.id;
                 return (
                   <motion.g
                     key={s.id}
-                    custom={i}
-                    variants={nodeVariants}
-                    initial="hidden"
-                    animate="visible"
+                    initial={reduceMotion ? false : { opacity: 0, scale: 0.6 }}
+                    animate={reduceMotion ? { opacity: 1, scale: 1 } : { opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4, delay: 0.2 + i * 0.05 }}
                     onMouseEnter={() => setActiveId(s.id)}
                     onMouseLeave={() => setActiveId(null)}
                     className="cursor-pointer"
                   >
-                    <circle
-                      cx={pos.x}
-                      cy={pos.y}
-                      r={isActive ? 8 : 6}
-                      fill={isActive ? "#10E66A" : "#FFFFFF"}
-                      stroke="#188AAC"
-                      strokeWidth="1.5"
-                      className="transition-all"
-                    />
-                    {isActive && (
-                      <circle cx={pos.x} cy={pos.y} r="12" fill="none" stroke="#10E66A" strokeWidth="1" opacity="0.4" />
-                    )}
+                    {/* Floating wrapper — gentle organic drift */}
+                    <motion.g
+                      animate={
+                        reduceMotion
+                          ? {}
+                          : {
+                              x: [0, 1.5, 0, -1.5, 0],
+                              y: [0, -1.5, 0, 1.5, 0],
+                            }
+                      }
+                      transition={{
+                        duration: 6 + (i % 4),
+                        repeat: Infinity,
+                        ease: "easeInOut" as const,
+                        delay: i * 0.4,
+                      }}
+                    >
+                      <circle
+                        cx={pos.x}
+                        cy={pos.y}
+                        r={isActive ? 8 : 6}
+                        fill={isActive ? "#10E66A" : "#FFFFFF"}
+                        stroke="#188AAC"
+                        strokeWidth="1.5"
+                        className="transition-all"
+                      />
+                      {isActive && (
+                        <circle cx={pos.x} cy={pos.y} r="12" fill="none" stroke="#10E66A" strokeWidth="1" opacity="0.4" />
+                      )}
+                    </motion.g>
                   </motion.g>
                 );
               })}

@@ -20,14 +20,15 @@ export function SiteHeader() {
       <Container className="flex h-16 items-center justify-between gap-4">
         <Link
           href="/"
-          className="inline-flex items-center gap-2"
+          className="inline-flex shrink-0 items-center gap-2"
           aria-label={`${siteConfig.name} home`}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={siteConfig.logo.horizontal}
             alt={`${siteConfig.name} logo`}
-            className="h-8 w-auto"
+            className="h-9 w-auto max-w-[200px] object-contain sm:h-11 sm:max-w-[240px]"
+            style={{ imageRendering: "auto" }}
           />
         </Link>
 

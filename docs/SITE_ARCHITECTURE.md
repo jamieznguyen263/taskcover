@@ -19,6 +19,8 @@ not yet have pages and currently rely on the global layout (header/footer).
 - `/services/local-seo`
 - `/services/ecommerce-seo`
 - `/services/international-seo`
+- `/services/ppc-management`
+- `/services/seo-mentor-service`
 - `/services/seo-audit`
 
 ## Industries `(planned)`

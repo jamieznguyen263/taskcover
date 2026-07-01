@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { ArrowRight, RotateCw } from "lucide-react";
+import { ArrowRight, CheckCircle2, Database, RotateCw, Zap } from "lucide-react";
 import { Container } from "@/components/marketing/shared/container";
 import { Eyebrow } from "@/components/marketing/shared/section-header";
 import { cn } from "@/lib/utils";
@@ -136,20 +136,29 @@ export function OperatingSystemPipeline({
           {(current.input || current.action || current.output) && (
             <div className="grid gap-2 sm:grid-cols-3">
               {current.input && (
-                <div className="rounded-lg border border-line bg-white p-3">
-                  <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">Input</p>
+                <div className="rounded-lg border border-brand-blue/20 bg-brand-blue/[0.04] p-3">
+                  <p className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-brand-blue">
+                    <Database className="h-3 w-3" aria-hidden="true" />
+                    Input
+                  </p>
                   <p className="mt-1 text-xs text-secondary">{current.input}</p>
                 </div>
               )}
               {current.action && (
-                <div className="rounded-lg border border-line bg-white p-3">
-                  <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">Action</p>
+                <div className="rounded-lg border border-brand-emerald/20 bg-brand-emerald/[0.05] p-3">
+                  <p className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-brand-emerald">
+                    <Zap className="h-3 w-3" aria-hidden="true" />
+                    Action
+                  </p>
                   <p className="mt-1 text-xs text-secondary">{current.action}</p>
                 </div>
               )}
               {current.output && (
-                <div className="rounded-lg border border-brand-teal/30 bg-white p-3">
-                  <p className="text-[10px] font-semibold uppercase tracking-wide text-brand-teal">Output</p>
+                <div className="rounded-lg border border-brand-teal/30 bg-brand-teal/[0.05] p-3">
+                  <p className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-brand-teal">
+                    <CheckCircle2 className="h-3 w-3" aria-hidden="true" />
+                    Output
+                  </p>
                   <p className="mt-1 text-xs text-secondary">{current.output}</p>
                 </div>
               )}

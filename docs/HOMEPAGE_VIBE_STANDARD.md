@@ -1,7 +1,7 @@
 # Taskcover Agency — Homepage Vibe Standard
 
 > **Status:** Approved master standard for all future pages.
-> Updated for the public-ready homepage pass (Task 2B).
+> Updated for the human-feedback polish pass (Task 2D).
 > Once a page is built, it must match this document's tone, structure, motion,
 > spacing, CTA style, proof rules, and conversion rhythm.
 
@@ -199,9 +199,25 @@ Homepage section delivery methods (all different):
 - **Required structure:**
   - Top KPI row: Search Volume, Organic Visibility, AI Visibility, Site Health
   - Main chart: organic visibility / search demand trend
-  - Score module: AI Search Score, Audit Score, Authority Score (ring gauges)
+  - Score module: AI Search, Audit, Authority (compact score **rows**, not rings)
   - Keyword opportunity / content gap list
   - Search intent distribution
+- **Growth-oriented illustrative metrics standard (Task 2D):**
+  - Use positive, upward-trending illustrative numbers:
+    Search Volume ~240K, Organic Visibility ~90%, AI Visibility ~95%,
+    Site Health ~98%, Audit Score ~98%, Authority Score ~92%.
+  - Use green/emerald/teal positive colors, arrow-up icons, positive deltas,
+    progress bars, and upward trend lines.
+  - The dashboard must feel like growth, improvement, and opportunity.
+  - Keep the professional disclaimer:
+    "Illustrative dashboard preview — verified client data is added only with
+    permission."
+  - Do NOT present the numbers as real client results.
+- **Overflow prevention (Task 2D):**
+  - Score rings must NOT spill outside cards. If circular rings do not fit,
+    use compact score rows with progress bars instead.
+  - Add `overflow-hidden` only where appropriate — do not simply hide broken
+    content. Fix spacing, card width, and responsive behavior at the source.
 - **Spacing:** more white space, larger/clearer modules, fewer cramped boxes.
 - Charts use brand gradient strokes/fills (green → teal → blue).
 - Mini-visuals in service cards are distinct per service.
@@ -282,7 +298,61 @@ Homepage section delivery methods (all different):
 
 ---
 
-## 17. Customer journey (homepage reference)
+## 17. Component-specific standards (Task 2D)
+
+### Header & footer logo visibility
+- Header logo must be **clearly visible and premium** — not extremely small.
+  Use `h-9 sm:h-11` with `max-w-[200px] sm:max-w-[240px]` and `object-contain`.
+  Logo must remain sharp (no blur).
+- Footer logo must sit in a **light logo card/pill** (`bg-white border shadow-sm`)
+  so it stays clear on the soft footer background. Use `h-9 sm:h-10`.
+- The CTA must not visually dominate the logo. Keep header balanced.
+
+### Premium brand marquee
+- Two-row marquee: Row 1 = brand names, Row 2 = capability tags.
+- Tiles must feel like **premium brand-proof tiles**, not simple filter tags:
+  - Stronger soft shadow, gradient halo on hover, better tile sizing and
+    typography, hover lift, clearer fade masks at edges.
+- Thin top/bottom gradient dividers.
+- Keep safe wording: "Selected team and partner experience across global
+  brands, campaigns, and search programs."
+- Never use "Trusted by".
+
+### Floating DNA / knowledge-graph motion
+- The search ecosystem map uses **floating DNA / knowledge-graph feel**:
+  - Nodes drift very slightly (organic, floating).
+  - Line connections breathe/sway gently (opacity oscillation, not blinking).
+  - Hub has subtle breathing glow, not flashing.
+  - No strong blinking/pulsing lines toward the hub.
+- Motion must feel premium, organic, floating, connected — bright and clean,
+  not cyber or neon.
+
+### Color-coded Input/Action/Output (Operating System)
+- Input: blue/teal tint with database/search icon.
+- Action: emerald/green tint with bolt/gear icon.
+- Output: teal-blue tint with check/result icon.
+
+### Color-coded Challenge/Strategy/Output (Growth Playbook)
+- Challenge: soft amber/red tint + alert icon + left accent bar.
+- Strategy: soft teal/blue tint + target icon + left accent bar.
+- Output: soft green/emerald tint + check icon + left accent bar.
+
+### Services bento — no layout holes
+- Use a clear 12-column or 4-column bento grid.
+- Every card span must be deliberate. No large blank gaps.
+- SEO Strategy is the larger feature card but must not create layout holes.
+- Include PPC Management and SEO Mentor Service to fill the grid.
+- Every card retains a distinct micro-visual.
+
+### Technology panels — no empty whitespace
+- Each active module panel includes: summary, 3–4 capability bullets, "What
+  we monitor", "Business decision it supports", and a mini visual.
+- Use a two-column internal panel: left = content, right = mini visual.
+- Mini visuals are illustrative UI labels only — no fake specific metrics.
+
+---
+
+## 18. Customer journey (homepage reference)
 
 The homepage guides users through:
 

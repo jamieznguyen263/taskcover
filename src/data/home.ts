@@ -40,6 +40,18 @@ export const brandExperienceStrip = {
     "Video Reviews",
     "Spokesperson",
   ],
+  /** Premium two-row split: brands row + capabilities row */
+  rowBrands: ["Agoda", "Skyscanner", "British Council", "Avis"],
+  rowCapabilities: [
+    "Travel SEO",
+    "Education SEO",
+    "SEO Campaigns",
+    "Digital PR",
+    "AI Search",
+    "Media Features",
+    "Video Reviews",
+    "Spokesperson",
+  ],
 } as const;
 
 export const searchHasChanged = {
@@ -252,12 +264,36 @@ export const servicesBento = {
       visual: "products",
     },
     {
+      title: "International SEO",
+      outcome: "One system tailored to each market without duplicate copy.",
+      href: "/services/international-seo",
+      icon: "international",
+      span: "default",
+      visual: "globe",
+    },
+    {
       title: "Analytics & Reporting",
       outcome: "Business-impact dashboards, not just traffic reports.",
       href: "/services/seo-audit",
       icon: "analytics",
       span: "wide",
       visual: "dashboard",
+    },
+    {
+      title: "PPC Management",
+      outcome: "Demand capture across paid search, aligned with organic growth.",
+      href: "/services/ppc-management",
+      icon: "ppc",
+      span: "default",
+      visual: "ppc",
+    },
+    {
+      title: "SEO Mentor Service",
+      outcome: "1:1 strategy coaching, founder advisory, and team enablement.",
+      href: "/services/seo-mentor-service",
+      icon: "mentor",
+      span: "default",
+      visual: "mentor",
     },
   ],
 } as const;
@@ -510,48 +546,112 @@ export const technologyCapabilities = {
       title: "Technical crawl analysis",
       detail:
         "Render-aware crawl audits, log analysis, and indexation monitoring surface structural issues before they cost visibility.",
+      capabilities: [
+        "Render-aware crawling across JS-heavy pages",
+        "Log file analysis for crawler budget waste",
+        "Indexation coverage and canonical health",
+      ],
+      monitors: "Crawl errors, orphaned URLs, redirect chains, and Core Web Vitals regressions.",
+      decision: "Prioritize engineering fixes that unlock visibility before content investment.",
+      visual: "crawl-health",
     },
     {
       id: "intent",
       title: "Keyword and intent mapping",
       detail:
         "Demand mapped by intent stage and tied to revenue so content targets qualified buyers, not vanity volume.",
+      capabilities: [
+        "Intent classification (commercial, informational, transactional)",
+        "Revenue-weighted demand scoring",
+        "Funnel-stage mapping per topic cluster",
+      ],
+      monitors: "Intent shifts, cannibalization signals, and keyword clustering health.",
+      decision: "Direct content production toward demand that converts, not vanity volume.",
+      visual: "intent-matrix",
     },
     {
       id: "ai",
       title: "AI visibility tracking",
       detail:
         "Monitoring across AI Overviews and LLM answers to see where your brand is cited — and where competitors are winning.",
+      capabilities: [
+        "AI Overview citation surface tracking",
+        "LLM answer mention monitoring",
+        "Competitor AI mention comparison",
+      ],
+      monitors: "Citation presence, answer coverage, and competitor AI share of voice.",
+      decision: "Allocate AI-readiness investment where citation gaps are highest.",
+      visual: "ai-coverage",
     },
     {
       id: "content",
       title: "Content gap modeling",
       detail:
         "Cluster and gap analysis against competitors to prioritize the content that compounds authority.",
+      capabilities: [
+        "Topic cluster coverage analysis",
+        "Competitor content gap identification",
+        "Authority potential scoring per topic",
+      ],
+      monitors: "Cluster health, content decay signals, and internal linking strength.",
+      decision: "Sequence content production by authority and revenue potential.",
+      visual: "cluster-coverage",
     },
     {
       id: "serp",
       title: "Competitor SERP analysis",
       detail:
         "SERP feature and competitor share tracking to understand the surfaces that actually drive demand.",
+      capabilities: [
+        "SERP feature share tracking",
+        "Competitor visibility benchmarking",
+        "Surface-level opportunity mapping",
+      ],
+      monitors: "Feature instability, competitor movement, and new surface adoption.",
+      decision: "Choose which SERP surfaces to target for maximum demand capture.",
+      visual: "serp-comparison",
     },
     {
       id: "reporting",
       title: "Reporting dashboards",
       detail:
         "Business-impact reporting that connects search performance to pipeline and revenue.",
+      capabilities: [
+        "Visibility, trust, and revenue KPI unification",
+        "Attribution modeling across search journey",
+        "Executive-ready monthly review format",
+      ],
+      monitors: "Trend direction, goal pacing, and leading indicators of growth.",
+      decision: "Translate search performance into board-level business decisions.",
+      visual: "kpi-dashboard",
     },
     {
       id: "conversion",
       title: "Conversion tracking",
       detail:
         "Funnel and conversion-path analysis to turn qualified search demand into leads and customers.",
+      capabilities: [
+        "Multi-touch conversion path analysis",
+        "Landing page friction detection",
+        "CRO opportunity prioritization",
+      ],
+      monitors: "Funnel drop-off points, form abandonment, and CTA effectiveness.",
+      decision: "Fix conversion leaks before investing in more traffic acquisition.",
+      visual: "funnel-chart",
     },
     {
       id: "authority",
       title: "Authority monitoring",
       detail:
         "Referral, citation, and authority-signal tracking to measure the compounding effect of digital PR.",
+      capabilities: [
+        "Referral and mention tracking",
+        "Domain authority trend monitoring",
+        "Citation presence across trusted sources",
+      ],
+      monitors: "Link velocity, mention quality, and authority signal momentum.",
+      decision: "Guide digital PR toward publications that move authority most.",
+      visual: "mention-graph",
     },
   ],
 } as const;
