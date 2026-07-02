@@ -35,9 +35,14 @@ import { services as servicesEn } from "@/content/en/services";
 import { services as servicesFr } from "@/content/fr/services";
 import { services as servicesEs } from "@/content/es/services";
 
+import { industries as industriesEn } from "@/content/en/industries";
+import { industries as industriesFr } from "@/content/fr/industries";
+import { industries as industriesEs } from "@/content/es/industries";
+
 import type { SiteContent } from "@/content/en/site";
 import type { HomeContent } from "@/content/home.types";
 import type { ServicesContent } from "@/content/services.types";
+import type { IndustriesContent } from "@/content/industries.types";
 
 const siteMap: Record<Locale, SiteContent> = {
   en: siteEn,
@@ -56,6 +61,26 @@ const servicesMap: Record<Locale, ServicesContent> = {
   fr: servicesFr,
   es: servicesEs,
 };
+
+const industriesMap: Record<Locale, IndustriesContent> = {
+  en: industriesEn,
+  fr: industriesFr,
+  es: industriesEs,
+};
+
+/** All industry slugs (shared across locales — English canonical). */
+export const industrySlugs = [
+  "travel-seo",
+  "education-seo",
+  "healthcare-seo",
+  "legal-immigration-seo",
+  "saas-seo",
+  "ecommerce-seo",
+  "franchise-local-seo",
+] as const;
+
+/** Priority industries highlighted on the hub. */
+export const priorityIndustrySlugs = ["travel-seo", "education-seo"] as const;
 
 export function getSiteContent(locale: Locale): SiteContent {
   return siteMap[locale] ?? siteEn;
@@ -124,4 +149,45 @@ export function getLocalizedSite(locale: Locale): SiteContent {
       ...base.ui,
     },
   };
+}
+
+/**
+ * Return industries content for a locale (hub + all 7 industries + UI strings).
+ * Falls back to English if the locale file is somehow missing.
+ */
+export function getIndustriesContent(locale: Locale): IndustriesContent {
+  return industriesMap[locale] ?? industriesEn;
+}
+
+/** Return all industry slugs (shared across locales). */
+export function getIndustrySlugs(): string[] {
+  return [...industrySlugs];
+}
+
+/**
+ * Return a localized industry object by slug, or undefined if not found.
+ */
+export function getIndustryBySlug(
+  slug: string,
+  locale: Locale
+): IndustriesContent["industries"][string] | undefined {
+  const content = getIndustriesContent(locale);
+  return content.industries[slug];
+}
+
+/**
+ * Return all industries for a locale as an ordered array (matching hub order).
+ */
+export function getIndustries(
+  locale: Locale
+): IndustriesContent["industries"][string][] {
+  const content = getIndustriesContent(locale);
+  return industrySlugs
+    .map((slug) => content.industries[slug])
+    .filter(Boolean);
+}
+
+/** Check whether a slug is a priority industry (highlighted on the hub). */
+export function isPriorityIndustry(slug: string): boolean {
+  return (priorityIndustrySlugs as readonly string[]).includes(slug);
 }

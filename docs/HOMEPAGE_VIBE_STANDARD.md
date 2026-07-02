@@ -411,7 +411,60 @@ header for the full metaphor mapping.
 
 ---
 
-## 19. Customer journey (homepage reference)
+## 19. Industry page adaptation rules (Task 5)
+
+Industry pages (`/industries` and `/industries/[slug]`) must match the homepage
+vibe while using **distinct section structures per page**. Each industry detail
+page uses the shared `IndustryPageTemplate` from
+`src/components/marketing/industries/industry-template.tsx`, which enforces
+section variety.
+
+### Hub (`/industries`)
+- Hero is a **split layout** with a floating **sector signal dashboard**
+  (industries as signal nodes around a "Search Intent" core). Not a grid.
+- "Sector map" is an **interactive vertical rail + detail preview panel**.
+  Travel and Education are flagged as **priority sectors** with a pulse dot.
+- "Search behavior matrix" is a **table-style comparison grid** with visual
+  level bars (not a card grid).
+- "Service bundles" is a **horizontal grouped rail** with chip-style links.
+
+### Detail pages (`/industries/[slug]`)
+Each page has **9 sections, each with a distinct UI treatment**:
+
+| # | Section | Delivery method |
+|---|---------|-----------------|
+| 1 | Hero | Split layout + industry-specific floating visual |
+| 2 | Search Behavior | Horizontal intent funnel flow (stage labels + connected content) |
+| 3 | Pain Points | Diagnostic scanner panel (numbered rows + severity radar + opportunities panel) |
+| 4 | Solution | Connected operating model (hexagonal grid with numbered nodes + connector arrows) |
+| 5 | Recommended Services | Vertical module stack rail (numbered rows linking to service pages) |
+| 6 | Content & Authority | Dual pipeline + ladder (content pillars list + authority ladder with shield capstone) |
+| 7 | Outcomes | Outcome ledger grid (category icons, no fake metrics) |
+| 8 | FAQ | Two-column header + compact accordion |
+| 9 | Final CTA | Industry-specific audit preview panel (rows tailored by industry slug) |
+
+**Critical rule — industry detail pages must use distinct section delivery
+methods and cannot stack repeated card-row sections.**
+
+### Industry-specific visuals (Part C)
+Each industry has a unique hero visual in
+`src/components/marketing/industries/industry-visuals.tsx`:
+- Travel: destination SERP + booking funnel
+- Education: program research + decision cycle loop
+- Healthcare: trust + local provider map
+- Legal: high-trust intake funnel
+- SaaS: category + comparison matrix
+- eCommerce: category architecture + product grid
+- Franchise: multi-location pack grid
+
+### Priority industries
+Travel and Education are flagged as priority sectors because Taskcover has
+relevant team/partner experience context (Agoda, Skyscanner, British Council).
+Brand names are referenced as experience context only — never as endorsement.
+
+---
+
+## 20. Customer journey (homepage reference)
 
 The homepage guides users through:
 

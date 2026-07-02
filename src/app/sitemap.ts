@@ -12,7 +12,7 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/site";
 import { locales, localizePath, type Locale } from "@/lib/i18n";
-import { getServiceSlugs } from "@/lib/content";
+import { getServiceSlugs, getIndustrySlugs } from "@/lib/content";
 
 export const dynamic = "force-static";
 
@@ -31,8 +31,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const entries: MetadataRoute.Sitemap = [];
 
-  // Homepage + services hub for each locale.
-  const staticBases = ["/", "/services"];
+  // Homepage + services hub + industries hub for each locale.
+  const staticBases = ["/", "/services", "/industries"];
   for (const base of staticBases) {
     for (const locale of locales) {
       entries.push({
@@ -49,6 +49,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const slugs = getServiceSlugs();
   for (const slug of slugs) {
     const base = `/services/${slug}`;
+    for (const locale of locales) {
+      entries.push({
+        url: `${siteConfig.url}${localizePath(base, locale as Locale)}`,
+        lastModified: now,
+        changeFrequency: "monthly",
+        priority: 0.8,
+        alternates: { languages: alts(base) },
+      });
+    }
+  }
+
+  // All 7 industry detail pages for each locale.
+  const industrySlugs = getIndustrySlugs();
+  for (const slug of industrySlugs) {
+    const base = `/industries/${slug}`;
     for (const locale of locales) {
       entries.push({
         url: `${siteConfig.url}${localizePath(base, locale as Locale)}`,

@@ -59,16 +59,32 @@ future enhancement (see `I18N_STRATEGY.md` §11).
 > outcomes. Every page also has a service-specific CTA preview panel.
 > Pages are ready for i18n.
 
-## Industries `(planned)`
+## Industries ✅ (built)
 
-- `/industries`
-- `/industries/travel-seo`
-- `/industries/education-seo`
-- `/industries/healthcare-seo`
-- `/industries/legal-immigration-seo`
-- `/industries/saas-seo`
-- `/industries/ecommerce-seo`
-- `/industries/franchise-local-seo`
+- `/industries` ✅
+- `/industries/travel-seo` ✅
+- `/industries/education-seo` ✅
+- `/industries/healthcare-seo` ✅
+- `/industries/legal-immigration-seo` ✅
+- `/industries/saas-seo` ✅
+- `/industries/ecommerce-seo` ✅
+- `/industries/franchise-local-seo` ✅
+
+Localized equivalents (`/fr/industries/*`, `/es/industries/*`) are also built for
+all 7 industries. Slugs are shared (English) for now; localized slugs are a
+future enhancement (see `I18N_STRATEGY.md` §11).
+
+> The hub (`/industries`) uses a sector signal dashboard + interactive sector
+> rail + comparison matrix + service bundle rails. Each detail page uses the
+> shared `IndustryPageTemplate` with 9 distinct sections and an
+> industry-specific visual. Travel and Education are flagged as priority
+> sectors with relevant team/partner experience context. See
+> `docs/HOMEPAGE_VIBE_STANDARD.md` §19.
+>
+> **Credibility rules:** No fabricated metrics, testimonials, case-study
+> numbers, or fake proof. Brand names (Agoda, Skyscanner, British Council) are
+> referenced only as selected team/partner experience context — never as
+> endorsement.
 
 ## Markets `(planned)`
 

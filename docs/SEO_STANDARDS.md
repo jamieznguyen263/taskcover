@@ -121,7 +121,24 @@ Hard rules:
   an unprefixed URL). The route prefix is the source of truth.
 - Slugs are English (shared) for now; localized slugs are a future task.
 
-## 8. Local market context (USA / Canada / Australia)
+## 8. Industry page schema (Task 5)
+
+Industry detail pages (`/industries/[slug]`) emit two JSON-LD blocks:
+
+- **BreadcrumbList** — Home → Industries → Industry (via `breadcrumbSchema()`).
+- **FAQPage** — only because FAQs are **genuinely visible** on the page (via
+  `faqSchema()`).
+
+Rules:
+- **No `Review` or `AggregateRating`** schema on industry pages.
+- **No fabricated metrics or case-study numbers** in schema or copy.
+- One H1 per industry page (the `h1` field from the industry content).
+- Unique `metaTitle` + `metaDescription` per industry (localized per locale).
+- Industry content uses outcome categories (clearer search coverage, stronger
+  trust signals, etc.) — never fake percentages or revenue numbers.
+- Brand names referenced as experience context only, never as endorsement.
+
+## 9. Local market context (USA / Canada / Australia)
 
 Each market page must include:
 
