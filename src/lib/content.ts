@@ -39,10 +39,15 @@ import { industries as industriesEn } from "@/content/en/industries";
 import { industries as industriesFr } from "@/content/fr/industries";
 import { industries as industriesEs } from "@/content/es/industries";
 
+import { markets as marketsEn } from "@/content/en/markets";
+import { markets as marketsFr } from "@/content/fr/markets";
+import { markets as marketsEs } from "@/content/es/markets";
+
 import type { SiteContent } from "@/content/en/site";
 import type { HomeContent } from "@/content/home.types";
 import type { ServicesContent } from "@/content/services.types";
 import type { IndustriesContent } from "@/content/industries.types";
+import type { MarketsContent } from "@/content/markets.types";
 
 const siteMap: Record<Locale, SiteContent> = {
   en: siteEn,
@@ -66,6 +71,12 @@ const industriesMap: Record<Locale, IndustriesContent> = {
   en: industriesEn,
   fr: industriesFr,
   es: industriesEs,
+};
+
+const marketsMap: Record<Locale, MarketsContent> = {
+  en: marketsEn,
+  fr: marketsFr,
+  es: marketsEs,
 };
 
 /** All industry slugs (shared across locales — English canonical). */
@@ -190,4 +201,51 @@ export function getIndustries(
 /** Check whether a slug is a priority industry (highlighted on the hub). */
 export function isPriorityIndustry(slug: string): boolean {
   return (priorityIndustrySlugs as readonly string[]).includes(slug);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Markets                                                                     */
+/* -------------------------------------------------------------------------- */
+
+/** All market slugs (shared across locales — English canonical). */
+export const marketSlugs = [
+  "usa-seo-agency",
+  "canada-seo-agency",
+  "australia-seo-agency",
+] as const;
+
+/**
+ * Return markets content for a locale (hub + all 3 markets + UI strings).
+ * Falls back to English if the locale file is somehow missing.
+ */
+export function getMarketsContent(locale: Locale): MarketsContent {
+  return marketsMap[locale] ?? marketsEn;
+}
+
+/** Return all market slugs (shared across locales). */
+export function getMarketSlugs(): string[] {
+  return [...marketSlugs];
+}
+
+/**
+ * Return a localized market object by slug, or undefined if not found.
+ */
+export function getMarketBySlug(
+  slug: string,
+  locale: Locale
+): MarketsContent["markets"][string] | undefined {
+  const content = getMarketsContent(locale);
+  return content.markets[slug];
+}
+
+/**
+ * Return all markets for a locale as an ordered array (matching hub order).
+ */
+export function getMarkets(
+  locale: Locale
+): MarketsContent["markets"][string][] {
+  const content = getMarketsContent(locale);
+  return marketSlugs
+    .map((slug) => content.markets[slug])
+    .filter(Boolean);
 }

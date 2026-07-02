@@ -86,14 +86,37 @@ future enhancement (see `I18N_STRATEGY.md` §11).
 > referenced only as selected team/partner experience context — never as
 > endorsement.
 
-## Markets `(planned)`
+## Markets ✅ (built)
 
-- `/markets`
-- `/markets/usa-seo-agency`
-- `/markets/canada-seo-agency`
-- `/markets/australia-seo-agency`
+- `/markets` ✅
+- `/markets/usa-seo-agency` ✅
+- `/markets/canada-seo-agency` ✅
+- `/markets/australia-seo-agency` ✅
 
-> Each market page **must** have unique local context. Do not duplicate copy.
+Localized equivalents (`/fr/markets/*`, `/es/markets/*`) are also built for
+all 3 markets. Slugs are shared (English) for now; localized slugs are a
+future enhancement (see `I18N_STRATEGY.md` §11).
+
+> The hub (`/markets`) uses a global market command dashboard + interactive
+> regional selector + comparison matrix + stacked regional growth playbooks.
+> Each detail page uses the shared `MarketPageTemplate` with 11 distinct
+> sections and a market-specific regional intelligence visual. See
+> `docs/HOMEPAGE_VIBE_STANDARD.md` §20.
+>
+> **Market page adaptation rules:**
+> - Market pages **must** differentiate regional search behavior, trust
+>   signals, local/national opportunities, PPC demand capture, and AI search
+>   readiness — never duplicate content with the country name swapped
+>   (doorway-page behavior).
+> - Market page two-column sections **must** include meaningful secondary
+>   panels (fit summary, leverage panel, angle cards) to avoid empty visual
+>   space beside section headings.
+>
+> **Credibility rules:** No fabricated metrics, testimonials, case-study
+> numbers, awards, or fake proof. Taskcover is positioned as serving clients
+> in USA, Canada, and Australia — not necessarily headquartered there. Safe
+> wording only: "Selected team and partner experience across global brands,
+> campaigns, and search programs."
 
 ## Work / proof `(planned)`
 

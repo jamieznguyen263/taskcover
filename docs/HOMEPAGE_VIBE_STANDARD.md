@@ -464,7 +464,75 @@ Brand names are referenced as experience context only — never as endorsement.
 
 ---
 
-## 20. Customer journey (homepage reference)
+## 20. Market page adaptation rules (Task 6)
+
+Market pages (`/markets` and `/markets/[slug]`) must match the homepage
+vibe while using **distinct section structures per page**. Each market detail
+page uses the shared `MarketPageTemplate` from
+`src/components/marketing/markets/market-template.tsx`, which enforces
+section variety.
+
+### Hub (`/markets`)
+- Hero is a **split layout** with a floating **global market command
+  dashboard** (three regions around a "Search Demand" core with
+  demand/trust/AI/PPC signal lanes). Not a plain text hero.
+- "Regional selector" is an **interactive map-style panel list + detail
+  preview** (market badges + context preview). Not a plain 3-card grid.
+- "Search market comparison" is a **table-style matrix** with visual level
+  bars across dimensions (competition, local, national, multilingual, PPC,
+  trust, AI). Not a card grid.
+- "Market growth systems" is a **stacked regional playbooks** layout
+  (narrative left + connected service chip rail right). Not a card grid.
+- CTA is a **premium conversion panel** with audit preview rows.
+
+### Detail pages (`/markets/[slug]`)
+Each page has **11 sections, each with a distinct UI treatment**:
+
+| # | Section | Delivery method |
+|---|---------|-----------------|
+| 1 | Hero | Split layout + market-specific regional intelligence visual |
+| 2 | Search Landscape | Facet intelligence map (angled facets with icons, not a grid) |
+| 3 | Buyer Behavior | Horizontal demand-journey rail (stage labels + connected content) + angle cards (local/national/multilingual) |
+| 4 | Market Challenges | Friction scanner panel (numbered rows + severity radar) + leverage panel (AI + PPC angles paired) |
+| 5 | Taskcover Approach | Connected operating model (hexagonal grid with numbered nodes + connector arrows) |
+| 6 | Recommended Industries | Ranked fit list (numbered rows with fit bars) + fit summary panel (left column balances the rail on the right) |
+| 7 | Recommended Services | Growth stack bundle map (grouped service roles) + vertical service rail (different layout from #6) |
+| 8 | Content + Authority | Dual pipeline + ladder (content clusters list + authority ladder with shield capstone) |
+| 9 | Outcomes | Outcome ledger grid (category icons, no fake metrics) |
+| 10 | FAQ | Two-column header + compact accordion |
+| 11 | Final CTA | Market-specific audit preview panel (rows tailored by market slug) |
+
+**Critical rule — market detail pages must use distinct section delivery
+methods and cannot stack repeated card-row sections.**
+
+### Market-specific visuals (Part C)
+Each market has a unique hero visual in
+`src/components/marketing/markets/market-visuals.tsx`:
+- USA: national SERP saturation + local pack grid + AI overview band
+- Canada: bilingual EN/FR demand split + provincial radar
+- Australia: high-value commercial SERP + local metro demand
+
+### Market page adaptation notes
+- Market pages **must** differentiate regional search behavior, trust
+  signals, local/national opportunities, PPC demand capture, and AI search
+  readiness — never duplicate content with the country name swapped
+  (doorway-page behavior).
+- Market page two-column sections **must** include meaningful secondary
+  panels (fit summary, leverage panel, angle cards) to avoid empty visual
+  space beside section headings.
+
+### Credibility rules for markets
+- No fabricated metrics, testimonials, case-study numbers, awards, or fake
+  press.
+- Taskcover is positioned as **serving clients** in USA, Canada, and
+  Australia — not necessarily headquartered there.
+- Do not claim physical offices or local legal presence unless confirmed.
+- Safe wording only: "Selected team and partner experience across global
+  brands, campaigns, and search programs."
+
+---
+
+## 21. Customer journey (homepage reference)
 
 The homepage guides users through:
 
