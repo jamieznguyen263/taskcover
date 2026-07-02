@@ -379,17 +379,87 @@ function IndustryServices({
     .map((slug) => getServiceBySlug(slug, locale))
     .filter((s): s is NonNullable<typeof s> => Boolean(s));
 
+  // Build a slug -> service title map for the bundle map labels.
+  const serviceTitleBySlug = new Map(services.map((s) => [s.slug, s.title]));
+
   return (
     <Section background="soft" aria-labelledby={`services-${industry.slug}`}>
       <Container className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
-        <SectionHeader
-          align="left"
-          eyebrow={ui.servicesEyebrow}
-          titleId={`services-${industry.slug}`}
-          title={ui.servicesTitle}
-          description={ui.servicesDesc}
-        />
-        {/* Vertical module stack rail */}
+        {/* Left column: intro + vertical fit summary + bundle map */}
+        <div className="flex flex-col gap-6">
+          <SectionHeader
+            align="left"
+            eyebrow={ui.servicesEyebrow}
+            titleId={`services-${industry.slug}`}
+            title={ui.servicesTitle}
+            description={ui.servicesDesc}
+          />
+
+          {/* Vertical Fit Summary panel — tinted, scannable rows */}
+          <div className="overflow-hidden rounded-2xl border border-brand-teal/20 bg-brand-teal/[0.04] p-5">
+            <div className="mb-3 flex items-center gap-2">
+              <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-brand-gradient text-white">
+                <Gauge className="h-3.5 w-3.5" aria-hidden="true" />
+              </span>
+              <span className="text-xs font-semibold uppercase tracking-wide text-brand-teal">
+                {ui.servicesFitSummary}
+              </span>
+            </div>
+            <p className="mb-3 text-sm font-semibold text-graphite">{industry.fitSummary.title}</p>
+            <dl className="flex flex-col gap-2">
+              {industry.fitSummary.rows.map((row) => (
+                <div
+                  key={row.label}
+                  className="flex flex-col gap-0.5 rounded-xl border border-line-soft bg-white/70 px-3 py-2 sm:flex-row sm:items-center sm:gap-3"
+                >
+                  <dt className="shrink-0 text-[11px] font-bold uppercase tracking-wide text-muted sm:w-44">
+                    {row.label}
+                  </dt>
+                  <dd className="text-xs font-medium text-graphite sm:text-sm">{row.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+
+          {/* Bundle Map — grouped recommended services by role */}
+          <div className="overflow-hidden rounded-2xl border border-line bg-white p-5">
+            <div className="mb-3 flex items-center gap-2">
+              <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-surface-tint text-brand-teal">
+                <Layers className="h-3.5 w-3.5" aria-hidden="true" />
+              </span>
+              <span className="text-xs font-semibold uppercase tracking-wide text-muted">
+                {ui.servicesBundleMap}
+              </span>
+            </div>
+            <p className="mb-3 text-sm font-semibold text-graphite">{industry.bundleMap.title}</p>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {industry.bundleMap.groups.map((group) => (
+                <div
+                  key={group.label}
+                  className="rounded-xl border border-line-soft bg-surface-soft/60 p-3"
+                >
+                  <p className="mb-1.5 text-[11px] font-bold uppercase tracking-wide text-brand-teal">
+                    {group.label}
+                  </p>
+                  {group.slugs.length > 0 ? (
+                    <ul className="flex flex-col gap-1">
+                      {group.slugs.map((slug) => (
+                        <li key={slug} className="flex items-center gap-1.5 text-xs text-secondary">
+                          <span className="h-1 w-1 rounded-full bg-brand-teal" aria-hidden="true" />
+                          {serviceTitleBySlug.get(slug) ?? slug}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-[11px] italic text-muted">—</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Right column: vertical module stack rail */}
         <div className="flex flex-col gap-3">
           <div className="mb-1 flex items-center gap-2 rounded-xl border border-line bg-white px-4 py-2.5">
             <Layers className="h-4 w-4 text-brand-teal" aria-hidden="true" />

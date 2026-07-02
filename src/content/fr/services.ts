@@ -61,6 +61,12 @@ export const services: ServicesContent = {
           "La croissance par la recherche dépend de livrables mensuels aléatoires",
           "Les AI Overviews et les réponses LLM sont totalement ignorés",
         ],
+        leveragePoints: [
+          { text: "Connecter technique, contenu, autorité et recherche IA dans une seule feuille de route." },
+          { text: "Prioriser le travail par impact sur le chiffre d'affaires, pas par volume de tâches." },
+          { text: "Donner à la direction une vue plus claire de ce qui compte ensuite." },
+          { text: "Transformer la visibilité de recherche en pipeline qualifié." },
+        ],
       },
       approach: {
         title: "Un système de croissance par la recherche, pas une liste de tâches.",
@@ -144,6 +150,12 @@ export const services: ServicesContent = {
           "Lacunes de schéma et de données structurées bloquant la compréhension des entités",
           "Risque de migration ou de publication causant une perte de visibilité silencieuse",
         ],
+        leveragePoints: [
+          { text: "Améliorer l'efficacité de crawl." },
+          { text: "Protéger l'indexation." },
+          { text: "Lever les plafonds de croissance avant la mise à l'échelle du contenu." },
+          { text: "Réduire le risque de migration et de publication." },
+        ],
       },
       approach: {
         title: "Conçu pour les crawlers, optimisé pour la croissance.",
@@ -224,6 +236,12 @@ export const services: ServicesContent = {
           "Absence de validation tierce que les surfaces IA utilisent pour corroborer les affirmations",
           "FAQ et contenu structuré non alignés avec la façon dont les acheteurs posent réellement des questions",
           "Aucun suivi de la visibilité IA — vous ne savez pas où vous en êtes",
+        ],
+        leveragePoints: [
+          { text: "Clarifier les signaux d'entités." },
+          { text: "Construire des actifs de réponse dignes de citation." },
+          { text: "Aligner le contenu structuré avec les surfaces de réponse." },
+          { text: "Améliorer la cohérence de marque sur les résultats de recherche IA." },
         ],
       },
       approach: {
@@ -306,6 +324,12 @@ export const services: ServicesContent = {
           "Maillage interne faible — l'autorité ne circule pas entre le contenu apparenté",
           "Le contenu ne convertit pas — le trafic arrive mais n'atteint jamais le pipeline",
         ],
+        leveragePoints: [
+          { text: "Construire des clusters thématiques autour de la demande." },
+          { text: "Créer des briefs pilotés par des experts au lieu d'articles génériques." },
+          { text: "Connecter le contenu aux parcours de conversion." },
+          { text: "Actualiser et relier le contenu pour que l'autorité se cumule." },
+        ],
       },
       approach: {
         title: "Systèmes de contenu axés autorité, pilotés par l'intention.",
@@ -386,6 +410,12 @@ export const services: ServicesContent = {
           "Aucun récit éditorial — pas d'histoires de données ou d'actifs dignes d'être couverts",
           "Autorité non connectée aux sujets SEO — les liens existent mais pas pour les bons termes",
           "Aucun signal de confiance en dehors du site — les surfaces IA ne peuvent pas corroborer la marque",
+        ],
+        leveragePoints: [
+          { text: "Construire une autorité tierce pertinente." },
+          { text: "Obtenir des citations et mentions qui soutiennent la confiance thématique." },
+          { text: "Transformer l'expertise en opportunités éditoriales." },
+          { text: "Réduire la dépendance aux tactiques de liens de faible qualité." },
         ],
       },
       approach: {
@@ -468,6 +498,12 @@ export const services: ServicesContent = {
           "Citations locales et incohérences NAP entre les annuaires",
           "Aucun parcours de conversion local — le trafic de carte n'atteint pas les appels, formulaires ou visites",
         ],
+        leveragePoints: [
+          { text: "Renforcer le Google Business Profile et les pages d'atterrissage locales." },
+          { text: "Construire des signaux de confiance locaux." },
+          { text: "Améliorer la couverture de recherche ville/zone de service." },
+          { text: "Connecter la visibilité locale aux appels, réservations ou prospects." },
+        ],
       },
       approach: {
         title: "Un système local scalable, lieu par lieu.",
@@ -548,6 +584,12 @@ export const services: ServicesContent = {
           "Maillage interne faible entre catégories, produits et hubs de contenu",
           "Parcours de crawl technique faibles — grands catalogues avec budget de crawl bloqué ou gaspillé",
           "Contenu ne soutenant pas la découverte produit — guides d'achat et hubs manquants",
+        ],
+        leveragePoints: [
+          { text: "Améliorer la découverte des catégories et des produits." },
+          { text: "Réduire le gaspillage de crawl de la navigation à facettes." },
+          { text: "Aligner le contenu d'intention d'achat avec l'architecture produit." },
+          { text: "Soutenir un meilleur maillage interne et des parcours de conversion." },
         ],
       },
       approach: {
@@ -630,6 +672,12 @@ export const services: ServicesContent = {
           "Comportement SERP non analysé par marché — un seul ensemble de mots-clés appliqué partout",
           "Le contenu international manque de signaux de confiance locaux — avis, mentions et citations",
         ],
+        leveragePoints: [
+          { text: "Séparer l'intention pays/langue." },
+          { text: "Réduire les pages de marché dupliquées." },
+          { text: "Clarifier l'architecture hreflang/localisation si pertinent." },
+          { text: "Construire une confiance de recherche spécifique au marché." },
+        ],
       },
       approach: {
         title: "Système global, exécution locale.",
@@ -710,6 +758,12 @@ export const services: ServicesContent = {
           "Mauvais suivi des conversions masquant le vrai ROAS",
           "Aucune logique de capture de demande entre campagnes locales et globales",
           "Budget étalé trop finement sur les mauvais niveaux d'intention",
+        ],
+        leveragePoints: [
+          { text: "Réduire la dépense gaspillée par un mauvais appariement d'intention." },
+          { text: "Aligner les campagnes avec les pages d'atterrissage et le suivi." },
+          { text: "Utiliser les données de recherche payante pour informer le SEO." },
+          { text: "Séparer la capture de demande locale/globale." },
         ],
       },
       approach: {
@@ -792,6 +846,12 @@ export const services: ServicesContent = {
           "La préparation à la recherche IA est hors de l'expertise de l'équipe",
           "Aucune revue senior avant les décisions techniques ou de contenu majeures",
         ],
+        leveragePoints: [
+          { text: "Offrir aux fondateurs/CMO un soutien décisionnel SEO senior." },
+          { text: "Aider les équipes internes à éviter l'exécution aléatoire." },
+          { text: "Éprouver les priorités techniques, de contenu et de recherche IA." },
+          { text: "Créer un rythme de fonctionnement plus clair." },
+        ],
       },
       approach: {
         title: "Un mentorat qui bâtit la capacité de recherche de votre équipe.",
@@ -869,6 +929,12 @@ export const services: ServicesContent = {
           "Écarts concurrentiels identifiés mais jamais traduits en feuille de route",
           "Préparation IA non évaluée — une angle mort croissant",
           "Aucun plan d'exécution de 90 jours clair pour agir sur les constats",
+        ],
+        leveragePoints: [
+          { text: "Transformer les listes de problèmes en une feuille de route priorisée." },
+          { text: "Relier les écarts techniques, de contenu, d'autorité et de recherche IA à l'impact commercial." },
+          { text: "Identifier le premier parcours d'exécution de 90 jours." },
+          { text: "Donner à la direction un document de décision plus clair." },
         ],
       },
       approach: {
@@ -959,6 +1025,7 @@ export const services: ServicesContent = {
     problemEyebrow: "Pourquoi ça compte",
     problemScanner: "Scanneur de problèmes",
     problemGapCount: "écarts courants",
+    problemLeverage: "Où ce service crée un levier",
     approachEyebrow: "L'approche Taskcover",
     approachModel: "Modèle opérationnel",
     approachConnect: "Chaque engagement {service} se connecte au même système d'exploitation de croissance par la recherche — visibilité, autorité et chiffre d'affaires mesurés ensemble.",

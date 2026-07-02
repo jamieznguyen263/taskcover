@@ -70,6 +70,7 @@ export const services: ServicesContent = {
     problemEyebrow: "Why it matters",
     problemScanner: "Issue scanner",
     problemGapCount: "common gaps",
+    problemLeverage: "Where this service creates leverage",
     approachEyebrow: "The Taskcover approach",
     approachModel: "Operating model",
     approachConnect: "Every {service} engagement connects to the same search growth operating system — visibility, authority, and revenue measured together.",

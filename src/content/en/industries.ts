@@ -148,6 +148,24 @@ export const industries: IndustriesContent = {
         ],
       },
       recommendedServices: ["international-seo", "content-marketing", "technical-seo", "digital-pr-link-building", "ai-search-optimization", "ppc-management"],
+      fitSummary: {
+        title: "How travel fits the Taskcover system",
+        rows: [
+          { label: "Primary growth need", value: "Destination and direct-booking authority" },
+          { label: "Search demand type", value: "Destination, comparison, seasonal, AI recommendation" },
+          { label: "Trust requirement", value: "Reviews, editorial coverage, destination authority" },
+          { label: "Growth path", value: "Multi-language reach → direct conversion" },
+        ],
+      },
+      bundleMap: {
+        title: "Recommended bundle by role",
+        groups: [
+          { label: "Foundation", slugs: ["technical-seo"] },
+          { label: "Demand", slugs: ["international-seo", "ppc-management"] },
+          { label: "Authority", slugs: ["content-marketing", "digital-pr-link-building"] },
+          { label: "Scale", slugs: ["ai-search-optimization"] },
+        ],
+      },
       contentStrategy: {
         title: "Destination content that compounds authority.",
         description:
@@ -275,6 +293,24 @@ export const industries: IndustriesContent = {
         ],
       },
       recommendedServices: ["content-marketing", "technical-seo", "ai-search-optimization", "digital-pr-link-building", "international-seo", "seo-mentor-service"],
+      fitSummary: {
+        title: "How education fits the Taskcover system",
+        rows: [
+          { label: "Primary growth need", value: "Program authority and institutional trust" },
+          { label: "Search demand type", value: "Program, comparison, outcome, international" },
+          { label: "Trust requirement", value: "Accreditation, outcomes, faculty authority" },
+          { label: "Growth path", value: "Long-cycle trust → enrollment pipeline" },
+        ],
+      },
+      bundleMap: {
+        title: "Recommended bundle by role",
+        groups: [
+          { label: "Foundation", slugs: ["technical-seo"] },
+          { label: "Demand", slugs: ["international-seo"] },
+          { label: "Authority", slugs: ["content-marketing", "digital-pr-link-building"] },
+          { label: "Scale", slugs: ["ai-search-optimization", "seo-mentor-service"] },
+        ],
+      },
       contentStrategy: {
         title: "Content that builds trust across long cycles.",
         description:
@@ -402,6 +438,24 @@ export const industries: IndustriesContent = {
         ],
       },
       recommendedServices: ["local-seo", "content-marketing", "technical-seo", "seo-audit", "ai-search-optimization"],
+      fitSummary: {
+        title: "How healthcare fits the Taskcover system",
+        rows: [
+          { label: "Primary growth need", value: "Trust-led local and service visibility" },
+          { label: "Search demand type", value: "Condition, treatment, provider, near-me" },
+          { label: "Trust requirement", value: "Expert review, credentials, reputation" },
+          { label: "Growth path", value: "Compliance-safe authority → booking" },
+        ],
+      },
+      bundleMap: {
+        title: "Recommended bundle by role",
+        groups: [
+          { label: "Foundation", slugs: ["technical-seo", "seo-audit"] },
+          { label: "Demand", slugs: ["local-seo"] },
+          { label: "Authority", slugs: ["content-marketing"] },
+          { label: "Scale", slugs: ["ai-search-optimization"] },
+        ],
+      },
       contentStrategy: {
         title: "Content that earns healthcare trust.",
         description:
@@ -524,6 +578,24 @@ export const industries: IndustriesContent = {
         ],
       },
       recommendedServices: ["local-seo", "content-marketing", "technical-seo", "digital-pr-link-building", "ppc-management"],
+      fitSummary: {
+        title: "How legal & immigration fits the Taskcover system",
+        rows: [
+          { label: "Primary growth need", value: "High-trust consultative demand" },
+          { label: "Search demand type", value: "Case-type, jurisdiction, long-tail Q&A, local" },
+          { label: "Trust requirement", value: "Credentials, reputation, reviews" },
+          { label: "Growth path", value: "Service-area authority → intake conversion" },
+        ],
+      },
+      bundleMap: {
+        title: "Recommended bundle by role",
+        groups: [
+          { label: "Foundation", slugs: ["technical-seo"] },
+          { label: "Demand", slugs: ["local-seo", "ppc-management"] },
+          { label: "Authority", slugs: ["content-marketing", "digital-pr-link-building"] },
+          { label: "Scale", slugs: [] },
+        ],
+      },
       contentStrategy: {
         title: "Content that builds legal trust.",
         description:
@@ -646,6 +718,24 @@ export const industries: IndustriesContent = {
         ],
       },
       recommendedServices: ["seo-agency", "technical-seo", "content-marketing", "ai-search-optimization", "ppc-management", "seo-mentor-service"],
+      fitSummary: {
+        title: "How SaaS fits the Taskcover system",
+        rows: [
+          { label: "Primary growth need", value: "Category authority and evaluation capture" },
+          { label: "Search demand type", value: "Category, comparison, integration, alternatives" },
+          { label: "Trust requirement", value: "Product proof, expert reviews, integrations" },
+          { label: "Growth path", value: "Evaluation content → trial conversion" },
+        ],
+      },
+      bundleMap: {
+        title: "Recommended bundle by role",
+        groups: [
+          { label: "Foundation", slugs: ["seo-agency", "technical-seo"] },
+          { label: "Demand", slugs: ["ppc-management"] },
+          { label: "Authority", slugs: ["content-marketing"] },
+          { label: "Scale", slugs: ["ai-search-optimization", "seo-mentor-service"] },
+        ],
+      },
       contentStrategy: {
         title: "Content that wins SaaS categories.",
         description:
@@ -768,6 +858,24 @@ export const industries: IndustriesContent = {
         ],
       },
       recommendedServices: ["ecommerce-seo", "technical-seo", "content-marketing", "ppc-management", "seo-audit"],
+      fitSummary: {
+        title: "How eCommerce fits the Taskcover system",
+        rows: [
+          { label: "Primary growth need", value: "Buying-intent demand and conversion" },
+          { label: "Search demand type", value: "Category, product, comparison, transactional" },
+          { label: "Trust requirement", value: "Reviews, structured data, fulfillment trust" },
+          { label: "Growth path", value: "Architecture cleanup → revenue capture" },
+        ],
+      },
+      bundleMap: {
+        title: "Recommended bundle by role",
+        groups: [
+          { label: "Foundation", slugs: ["ecommerce-seo", "technical-seo", "seo-audit"] },
+          { label: "Demand", slugs: ["ppc-management"] },
+          { label: "Authority", slugs: ["content-marketing"] },
+          { label: "Scale", slugs: [] },
+        ],
+      },
       contentStrategy: {
         title: "Content that drives eCommerce revenue.",
         description:
@@ -890,6 +998,24 @@ export const industries: IndustriesContent = {
         ],
       },
       recommendedServices: ["local-seo", "technical-seo", "content-marketing", "ppc-management", "seo-audit"],
+      fitSummary: {
+        title: "How franchise & multi-location fits the Taskcover system",
+        rows: [
+          { label: "Primary growth need", value: "Consistent local authority at scale" },
+          { label: "Search demand type", value: "Near-me, location, service-area, map" },
+          { label: "Trust requirement", value: "Reviews, NAP consistency, GBP accuracy" },
+          { label: "Growth path", value: "Location consistency → per-location wins" },
+        ],
+      },
+      bundleMap: {
+        title: "Recommended bundle by role",
+        groups: [
+          { label: "Foundation", slugs: ["local-seo", "technical-seo", "seo-audit"] },
+          { label: "Demand", slugs: ["ppc-management"] },
+          { label: "Authority", slugs: ["content-marketing"] },
+          { label: "Scale", slugs: [] },
+        ],
+      },
       contentStrategy: {
         title: "Content that scales across locations.",
         description:
@@ -964,6 +1090,12 @@ export const industries: IndustriesContent = {
     servicesTitle: "The modules that fit this vertical.",
     servicesDesc: "Connected service modules — not a generic list — tailored to how this industry searches and converts.",
     servicesModule: "Module",
+    servicesFitSummary: "Vertical fit summary",
+    servicesBundleMap: "Bundle map",
+    servicesBundleFoundation: "Foundation",
+    servicesBundleDemand: "Demand",
+    servicesBundleAuthority: "Authority",
+    servicesBundleScale: "Scale",
     contentAuthorityEyebrow: "Content & authority plan",
     contentAuthorityGrowthSystem: "Growth system",
     outcomesEyebrow: "Business outcomes",

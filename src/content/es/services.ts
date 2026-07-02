@@ -61,6 +61,9 @@ export const services: ServicesContent = {
           "El crecimiento en búsqueda depende de entregables mensuales aleatorios",
           "Los AI Overviews y las respuestas de LLM se ignoran por completo",
         ],
+        leveragePoints: [
+          { text: "Conectar técnico, contenido, autoridad y búsqueda con IA en una sola hoja de ruta." },
+        ],
       },
       approach: {
         title: "Un sistema de crecimiento en búsqueda, no una lista de tareas.",
@@ -144,6 +147,9 @@ export const services: ServicesContent = {
           "Brechas de esquema y datos estructurados que bloquean la comprensión de entidades",
           "Riesgo de migración o lanzamiento que causa pérdida silenciosa de visibilidad",
         ],
+        leveragePoints: [
+          { text: "Mejorar la eficiencia de rastreo." },
+        ],
       },
       approach: {
         title: "Diseñado para rastreadores, optimizado para el crecimiento.",
@@ -224,6 +230,9 @@ export const services: ServicesContent = {
           "Falta de validación de terceros que las superficies IA usan para corroborar afirmaciones",
           "FAQ y contenido estructurado no alineados con cómo los compradores realmente hacen preguntas",
           "Sin seguimiento de la visibilidad IA — no sabe dónde se encuentra",
+        ],
+        leveragePoints: [
+          { text: "Clarificar las señales de entidades." },
         ],
       },
       approach: {
@@ -306,6 +315,9 @@ export const services: ServicesContent = {
           "Enlazado interno deficiente — la autoridad no fluye entre contenido relacionado",
           "El contenido no convierte — el tráfico llega pero nunca alcanza el pipeline",
         ],
+        leveragePoints: [
+          { text: "Construir clusters temáticos alrededor de la demanda." },
+        ],
       },
       approach: {
         title: "Sistemas de contenido centrados en autoridad, guiados por intención.",
@@ -386,6 +398,9 @@ export const services: ServicesContent = {
           "Sin narrativa editorial — sin historias de datos o activos dignos de cobertura",
           "Autoridad no conectada a los temas SEO — los enlaces existen pero no para los términos correctos",
           "Sin señales de confianza fuera del sitio web — las superficies IA no pueden corroborar la marca",
+        ],
+        leveragePoints: [
+          { text: "Construir autoridad de terceros relevante." },
         ],
       },
       approach: {
@@ -468,6 +483,9 @@ export const services: ServicesContent = {
           "Citas locales e inconsistencias NAP entre directorios",
           "Sin ruta de conversión local — el tráfico de mapa no llega a llamadas, formularios o visitas",
         ],
+        leveragePoints: [
+          { text: "Reforzar el Google Business Profile y las páginas de aterrizaje locales." },
+        ],
       },
       approach: {
         title: "Un sistema local escalable, ubicación por ubicación.",
@@ -548,6 +566,9 @@ export const services: ServicesContent = {
           "Enlazado interno deficiente entre categorías, productos y hubs de contenido",
           "Rutas de rastreo técnico débiles — catálogos grandes con presupuesto de rastreo bloqueado o desperdiciado",
           "Contenido que no respalda el descubrimiento de producto — guías de compra y hubs faltantes",
+        ],
+        leveragePoints: [
+          { text: "Mejorar el descubrimiento de categorías y productos." },
         ],
       },
       approach: {
@@ -630,6 +651,9 @@ export const services: ServicesContent = {
           "Comportamiento SERP no analizado por mercado — un conjunto de palabras clave aplicado a todas partes",
           "El contenido internacional carece de señales de confianza locales — reseñas, menciones y citas",
         ],
+        leveragePoints: [
+          { text: "Separar la intención de país e idioma." },
+        ],
       },
       approach: {
         title: "Sistema global, ejecución local.",
@@ -710,6 +734,9 @@ export const services: ServicesContent = {
           "Seguimiento de conversiones deficiente que oculta el ROAS real",
           "Sin lógica de captura de demanda entre campañas locales y globales",
           "Presupuesto repartido demasiado fino entre los niveles de intención equivocados",
+        ],
+        leveragePoints: [
+          { text: "Reducir la desperdiciada por un emparejamiento deficiente de intención." },
         ],
       },
       approach: {
@@ -792,6 +819,9 @@ export const services: ServicesContent = {
           "La preparación para búsqueda con IA está fuera de la experiencia del equipo",
           "Sin revisión senior antes de decisiones técnicas o de contenido importantes",
         ],
+        leveragePoints: [
+          { text: "Ofrecer a fundadores/CMO soporte de decisiones SEO senior." },
+        ],
       },
       approach: {
         title: "Mentoría que construye la capacidad de búsqueda de su equipo.",
@@ -869,6 +899,9 @@ export const services: ServicesContent = {
           "Brechas competitivas identificadas pero nunca traducidas a una hoja de ruta",
           "Preparación IA no evaluada — un punto ciego creciente",
           "Sin un plan de ejecución de 90 días claro para actuar sobre los hallazgos",
+        ],
+        leveragePoints: [
+          { text: "Transformar las listas de problemas en una hoja de ruta priorizada." },
         ],
       },
       approach: {
@@ -959,6 +992,7 @@ export const services: ServicesContent = {
     problemEyebrow: "Por qué importa",
     problemScanner: "Escáner de problemas",
     problemGapCount: "brechas comunes",
+    problemLeverage: "Dónde este servicio crea apalancamiento",
     approachEyebrow: "El enfoque Taskcover",
     approachModel: "Modelo operativo",
     approachConnect: "Cada engagement de {service} se conecta al mismo sistema operativo de crecimiento en búsqueda — visibilidad, autoridad e ingresos medidos juntos.",

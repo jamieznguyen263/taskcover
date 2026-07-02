@@ -147,6 +147,24 @@ export const industries: IndustriesContent = {
         ],
       },
       recommendedServices: ["international-seo", "content-marketing", "technical-seo", "digital-pr-link-building", "ai-search-optimization", "ppc-management"],
+      fitSummary: {
+        title: "Comment le voyage s'intègre au système Taskcover",
+        rows: [
+          { label: "Besoin de croissance principal", value: "Autorité de destination et réservations directes" },
+          { label: "Type de demande de recherche", value: "Destination, comparaison, saisonnalité, recommandation IA" },
+          { label: "Exigence de confiance", value: "Avis, couverture éditoriale, autorité de destination" },
+          { label: "Trajectoire de croissance", value: "Portée multilingue → conversion directe" },
+        ],
+      },
+      bundleMap: {
+        title: "Ensemble recommandé par rôle",
+        groups: [
+          { label: "Fondation", slugs: ["technical-seo"] },
+          { label: "Demande", slugs: ["international-seo", "ppc-management"] },
+          { label: "Autorité", slugs: ["content-marketing", "digital-pr-link-building"] },
+          { label: "Échelle", slugs: ["ai-search-optimization"] },
+        ],
+      },
       contentStrategy: {
         title: "Contenu de destination qui valorise l'autorité.",
         description:
@@ -273,6 +291,24 @@ export const industries: IndustriesContent = {
         ],
       },
       recommendedServices: ["content-marketing", "technical-seo", "ai-search-optimization", "digital-pr-link-building", "international-seo", "seo-mentor-service"],
+      fitSummary: {
+        title: "Comment l'éducation s'intègre au système Taskcover",
+        rows: [
+          { label: "Besoin de croissance principal", value: "Autorité de programme et confiance institutionnelle" },
+          { label: "Type de demande de recherche", value: "Programme, comparaison, résultats, international" },
+          { label: "Exigence de confiance", value: "Accréditation, résultats, autorité du corps professoral" },
+          { label: "Trajectoire de croissance", value: "Confiance à cycle long → pipeline d'inscription" },
+        ],
+      },
+      bundleMap: {
+        title: "Ensemble recommandé par rôle",
+        groups: [
+          { label: "Fondation", slugs: ["technical-seo"] },
+          { label: "Demande", slugs: ["international-seo"] },
+          { label: "Autorité", slugs: ["content-marketing", "digital-pr-link-building"] },
+          { label: "Échelle", slugs: ["ai-search-optimization", "seo-mentor-service"] },
+        ],
+      },
       contentStrategy: {
         title: "Contenu qui construit la confiance sur les longs cycles.",
         description:
@@ -399,6 +435,24 @@ export const industries: IndustriesContent = {
         ],
       },
       recommendedServices: ["local-seo", "content-marketing", "technical-seo", "seo-audit", "ai-search-optimization"],
+      fitSummary: {
+        title: "Comment la santé s'intègre au système Taskcover",
+        rows: [
+          { label: "Besoin de croissance principal", value: "Visibilité locale et de service axée confiance" },
+          { label: "Type de demande de recherche", value: "Pathologie, traitement, prestataire, près de chez moi" },
+          { label: "Exigence de confiance", value: "Revue d'expert, titres, réputation" },
+          { label: "Trajectoire de croissance", value: "Autorité conforme → réservation" },
+        ],
+      },
+      bundleMap: {
+        title: "Ensemble recommandé par rôle",
+        groups: [
+          { label: "Fondation", slugs: ["technical-seo", "seo-audit"] },
+          { label: "Demande", slugs: ["local-seo"] },
+          { label: "Autorité", slugs: ["content-marketing"] },
+          { label: "Échelle", slugs: ["ai-search-optimization"] },
+        ],
+      },
       contentStrategy: {
         title: "Contenu qui gagne la confiance santé.",
         description:
@@ -520,6 +574,24 @@ export const industries: IndustriesContent = {
         ],
       },
       recommendedServices: ["local-seo", "content-marketing", "technical-seo", "digital-pr-link-building", "ppc-management"],
+      fitSummary: {
+        title: "Comment le juridique et l'immigration s'intègrent au système Taskcover",
+        rows: [
+          { label: "Besoin de croissance principal", value: "Demande consultative à forte confiance" },
+          { label: "Type de demande de recherche", value: "Type de dossier, juridiction, Q&R longue traîne, local" },
+          { label: "Exigence de confiance", value: "Titres, réputation, avis" },
+          { label: "Trajectoire de croissance", value: "Autorité de zone de service → conversion d'intake" },
+        ],
+      },
+      bundleMap: {
+        title: "Ensemble recommandé par rôle",
+        groups: [
+          { label: "Fondation", slugs: ["technical-seo"] },
+          { label: "Demande", slugs: ["local-seo", "ppc-management"] },
+          { label: "Autorité", slugs: ["content-marketing", "digital-pr-link-building"] },
+          { label: "Échelle", slugs: [] },
+        ],
+      },
       contentStrategy: {
         title: "Contenu qui construit la confiance juridique.",
         description:
@@ -641,6 +713,24 @@ export const industries: IndustriesContent = {
         ],
       },
       recommendedServices: ["seo-agency", "technical-seo", "content-marketing", "ai-search-optimization", "ppc-management", "seo-mentor-service"],
+      fitSummary: {
+        title: "Comment le SaaS s'intègre au système Taskcover",
+        rows: [
+          { label: "Besoin de croissance principal", value: "Autorité de catégorie et capture d'évaluation" },
+          { label: "Type de demande de recherche", value: "Catégorie, comparaison, intégration, alternatives" },
+          { label: "Exigence de confiance", value: "Preuve produit, avis d'experts, intégrations" },
+          { label: "Trajectoire de croissance", value: "Contenu d'évaluation → conversion d'essai" },
+        ],
+      },
+      bundleMap: {
+        title: "Ensemble recommandé par rôle",
+        groups: [
+          { label: "Fondation", slugs: ["seo-agency", "technical-seo"] },
+          { label: "Demande", slugs: ["ppc-management"] },
+          { label: "Autorité", slugs: ["content-marketing"] },
+          { label: "Échelle", slugs: ["ai-search-optimization", "seo-mentor-service"] },
+        ],
+      },
       contentStrategy: {
         title: "Contenu qui gagne les catégories SaaS.",
         description:
@@ -762,6 +852,24 @@ export const industries: IndustriesContent = {
         ],
       },
       recommendedServices: ["ecommerce-seo", "technical-seo", "content-marketing", "ppc-management", "seo-audit"],
+      fitSummary: {
+        title: "Comment l'e-commerce s'intègre au système Taskcover",
+        rows: [
+          { label: "Besoin de croissance principal", value: "Demande à intention d'achat et conversion" },
+          { label: "Type de demande de recherche", value: "Catégorie, produit, comparaison, transactionnel" },
+          { label: "Exigence de confiance", value: "Avis, données structurées, confiance de fulfillment" },
+          { label: "Trajectoire de croissance", value: "Nettoyage d'architecture → capture de chiffre d'affaires" },
+        ],
+      },
+      bundleMap: {
+        title: "Ensemble recommandé par rôle",
+        groups: [
+          { label: "Fondation", slugs: ["ecommerce-seo", "technical-seo", "seo-audit"] },
+          { label: "Demande", slugs: ["ppc-management"] },
+          { label: "Autorité", slugs: ["content-marketing"] },
+          { label: "Échelle", slugs: [] },
+        ],
+      },
       contentStrategy: {
         title: "Contenu qui génère du revenu e-commerce.",
         description:
@@ -883,6 +991,24 @@ export const industries: IndustriesContent = {
         ],
       },
       recommendedServices: ["local-seo", "technical-seo", "content-marketing", "ppc-management", "seo-audit"],
+      fitSummary: {
+        title: "Comment la franchise et multi-sites s'intègrent au système Taskcover",
+        rows: [
+          { label: "Besoin de croissance principal", value: "Autorité locale cohérente à grande échelle" },
+          { label: "Type de demande de recherche", value: "Près de moi, localisation, zone de service, carte" },
+          { label: "Exigence de confiance", value: "Avis, cohérence NAP, précision GBP" },
+          { label: "Trajectoire de croissance", value: "Cohérence des localisations → victoires par site" },
+        ],
+      },
+      bundleMap: {
+        title: "Ensemble recommandé par rôle",
+        groups: [
+          { label: "Fondation", slugs: ["local-seo", "technical-seo", "seo-audit"] },
+          { label: "Demande", slugs: ["ppc-management"] },
+          { label: "Autorité", slugs: ["content-marketing"] },
+          { label: "Échelle", slugs: [] },
+        ],
+      },
       contentStrategy: {
         title: "Contenu qui évolue entre les localisations.",
         description:
@@ -957,6 +1083,12 @@ export const industries: IndustriesContent = {
     servicesTitle: "Les modules qui correspondent à ce secteur.",
     servicesDesc: "Modules de services connectés — pas une liste générique — adaptés à la façon dont ce secteur recherche et convertit.",
     servicesModule: "Module",
+    servicesFitSummary: "Résumé d'ajustement sectoriel",
+    servicesBundleMap: "Carte d'ensemble",
+    servicesBundleFoundation: "Fondation",
+    servicesBundleDemand: "Demande",
+    servicesBundleAuthority: "Autorité",
+    servicesBundleScale: "Échelle",
     contentAuthorityEyebrow: "Plan de contenu et d'autorité",
     contentAuthorityGrowthSystem: "Système de croissance",
     outcomesEyebrow: "Résultats commerciaux",

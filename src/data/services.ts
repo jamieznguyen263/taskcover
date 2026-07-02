@@ -56,6 +56,12 @@ export type ServiceFaq = {
   a: string;
 };
 
+/** Service-specific leverage points shown in the "Why it matters" opportunity panel. */
+export type ServiceLeveragePoint = {
+  /** Short strategic bullet describing the advantage this service creates. */
+  text: string;
+};
+
 export type Service = {
   slug: string;
   title: string;
@@ -92,6 +98,8 @@ export type Service = {
     title: string;
     paragraphs: string[];
     bullets: string[];
+    /** Leverage points for the "Why it matters" opportunity panel. */
+    leveragePoints: ServiceLeveragePoint[];
   };
   /** Taskcover approach section. */
   approach: {
@@ -172,6 +180,12 @@ export const services: Service[] = [
         "Leadership cannot see what matters next or why",
         "Search growth depends on random monthly deliverables",
         "AI Overviews and LLM answers are ignored entirely",
+      ],
+      leveragePoints: [
+        { text: "Connect technical, content, authority, and AI search into one roadmap." },
+        { text: "Prioritize work by revenue impact, not task volume." },
+        { text: "Give leadership a clearer view of what matters next." },
+        { text: "Turn search visibility into qualified pipeline." },
       ],
     },
     approach: {
@@ -262,6 +276,12 @@ export const services: Service[] = [
         "Schema and structured-data gaps blocking entity understanding",
         "Migration or release risk causing silent visibility loss",
       ],
+      leveragePoints: [
+        { text: "Improve crawl efficiency." },
+        { text: "Protect indexation." },
+        { text: "Remove growth ceilings before content scaling." },
+        { text: "Reduce migration and release risk." },
+      ],
     },
     approach: {
       title: "Engineered for crawlers, optimized for growth.",
@@ -349,6 +369,12 @@ export const services: Service[] = [
         "Missing third-party validation that AI surfaces use to corroborate claims",
         "FAQ and structured content not aligned with how buyers actually ask questions",
         "No tracking for AI visibility — you do not know where you stand",
+      ],
+      leveragePoints: [
+        { text: "Clarify entity signals." },
+        { text: "Build citation-worthy answer assets." },
+        { text: "Align structured content with answer surfaces." },
+        { text: "Improve brand consistency across AI search results." },
       ],
     },
     approach: {
@@ -438,6 +464,12 @@ export const services: Service[] = [
         "Poor internal linking — authority does not flow between related content",
         "Content does not convert — traffic arrives but never reaches pipeline",
       ],
+      leveragePoints: [
+        { text: "Build topic clusters around demand." },
+        { text: "Create expert-led briefs instead of generic posts." },
+        { text: "Connect content to conversion paths." },
+        { text: "Refresh and link content so authority compounds." },
+      ],
     },
     approach: {
       title: "Authority-first, intent-led content systems.",
@@ -525,6 +557,12 @@ export const services: Service[] = [
         "No editorial narrative — no data stories or assets worth covering",
         "Authority not connected to SEO topics — links exist but not for the right terms",
         "No trust signals outside the website — AI surfaces cannot corroborate the brand",
+      ],
+      leveragePoints: [
+        { text: "Build relevant third-party authority." },
+        { text: "Earn citations and mentions that support topical trust." },
+        { text: "Turn expertise into editorial opportunities." },
+        { text: "Reduce dependence on low-quality link tactics." },
       ],
     },
     approach: {
@@ -614,6 +652,12 @@ export const services: Service[] = [
         "Local citations and NAP inconsistencies across directories",
         "No local conversion path — map traffic does not reach calls, forms, or visits",
       ],
+      leveragePoints: [
+        { text: "Strengthen Google Business Profile and local landing pages." },
+        { text: "Build local trust signals." },
+        { text: "Improve city/service-area search coverage." },
+        { text: "Connect local visibility to calls, bookings, or leads." },
+      ],
     },
     approach: {
       title: "A scalable local system, location by location.",
@@ -701,6 +745,12 @@ export const services: Service[] = [
         "Poor internal linking between categories, products, and content hubs",
         "Weak technical crawl paths — large catalogs with blocked or wasted crawl budget",
         "Content not supporting product discovery — buying guides and hubs are missing",
+      ],
+      leveragePoints: [
+        { text: "Improve category and product discovery." },
+        { text: "Reduce crawl waste from faceted navigation." },
+        { text: "Align buying-intent content with product architecture." },
+        { text: "Support better internal linking and conversion paths." },
       ],
     },
     approach: {
@@ -790,6 +840,12 @@ export const services: Service[] = [
         "SERP behavior not analyzed by market — one keyword set applied everywhere",
         "International content lacks local trust signals — reviews, mentions, and citations",
       ],
+      leveragePoints: [
+        { text: "Separate country/language intent." },
+        { text: "Reduce duplicated market pages." },
+        { text: "Clarify hreflang/localization architecture where relevant." },
+        { text: "Build market-specific search trust." },
+      ],
     },
     approach: {
       title: "Global system, local execution.",
@@ -877,6 +933,12 @@ export const services: Service[] = [
         "Poor conversion tracking hiding true ROAS",
         "No demand-capture logic between local and global campaigns",
         "Budget spread thin across the wrong intent tiers",
+      ],
+      leveragePoints: [
+        { text: "Reduce wasted spend from poor intent matching." },
+        { text: "Align campaigns with landing pages and tracking." },
+        { text: "Use paid search data to inform SEO." },
+        { text: "Separate local/global demand capture." },
       ],
     },
     approach: {
@@ -966,6 +1028,12 @@ export const services: Service[] = [
         "AI search readiness is outside the team's expertise",
         "No senior review before major technical or content decisions",
       ],
+      leveragePoints: [
+        { text: "Give founders/CMOs senior SEO decision support." },
+        { text: "Help in-house teams avoid random execution." },
+        { text: "Pressure-test technical, content, and AI search priorities." },
+        { text: "Create a clearer operating rhythm." },
+      ],
     },
     approach: {
       title: "Mentorship that builds your team's search capability.",
@@ -1050,6 +1118,12 @@ export const services: Service[] = [
         "Competitor gaps identified but never translated into a roadmap",
         "AI readiness not evaluated — a growing blind spot",
         "No clear 90-day execution plan to act on the findings",
+      ],
+      leveragePoints: [
+        { text: "Turn issue lists into a prioritized roadmap." },
+        { text: "Tie technical, content, authority, and AI search gaps to business impact." },
+        { text: "Identify the first 90-day execution path." },
+        { text: "Give leadership a clearer decision document." },
       ],
     },
     approach: {

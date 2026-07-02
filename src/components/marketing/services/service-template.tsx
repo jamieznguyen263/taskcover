@@ -156,17 +156,66 @@ export function ServicePageHero({ service }: { service: Service }) {
 
 export function ServiceProblemSection({ service }: { service: Service }) {
   const ui = useUI();
+  const hasLeverage = service.problem.leveragePoints?.length > 0;
   return (
     <Section background="default" aria-labelledby={`problem-${service.slug}`}>
-      <Container className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr]">
-        <SectionHeader
-          align="left"
-          eyebrow={ui.problemEyebrow}
-          titleId={`problem-${service.slug}`}
-          title={service.problem.title}
-        />
-        {/* Diagnostic panel */}
-        <div className="overflow-hidden rounded-3xl border border-line bg-white depth-layered">
+      {/*
+        Three-zone grid: left column = header + leverage panel;
+        right column = issue scanner spanning both rows.
+        Mobile order: header → scanner → leverage.
+      */}
+      <Container
+        className={cn(
+          "grid gap-8 lg:grid-cols-[0.9fr_1.1fr]",
+          hasLeverage ? "lg:grid-rows-[auto_1fr]" : "lg:grid-rows-1"
+        )}
+      >
+        {/* 1. Header — first on all viewports */}
+        <div
+          className={cn(
+            "flex flex-col gap-5",
+            hasLeverage ? "lg:row-start-1 lg:col-start-1" : "lg:col-span-1"
+          )}
+        >
+          <SectionHeader
+            align="left"
+            eyebrow={ui.problemEyebrow}
+            titleId={`problem-${service.slug}`}
+            title={service.problem.title}
+          />
+          {/* Leverage panel — under the header on desktop, last on mobile */}
+          {hasLeverage && (
+            <div className="order-last lg:order-none overflow-hidden rounded-2xl border border-brand-teal/20 bg-brand-teal/[0.04] p-5">
+              <div className="mb-3 flex items-center gap-2">
+                <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-brand-gradient text-white">
+                  <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+                </span>
+                <span className="text-xs font-semibold uppercase tracking-wide text-brand-teal">
+                  {ui.problemLeverage}
+                </span>
+              </div>
+              <ul className="flex flex-col gap-2">
+                {service.problem.leveragePoints.map((point, i) => (
+                  <li
+                    key={i}
+                    className="flex items-start gap-2 text-xs text-secondary sm:text-sm"
+                  >
+                    <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand-green" aria-hidden="true" />
+                    {point.text}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        {/* 2. Diagnostic scanner — second on mobile, right column (spans rows) on desktop */}
+        <div
+          className={cn(
+            "overflow-hidden rounded-3xl border border-line bg-white depth-layered",
+            hasLeverage ? "lg:row-span-2 lg:col-start-2" : "lg:col-start-2"
+          )}
+        >
           {/* scanner header */}
           <div className="flex items-center justify-between border-b border-line bg-surface-tint px-5 py-3">
             <div className="flex items-center gap-2">

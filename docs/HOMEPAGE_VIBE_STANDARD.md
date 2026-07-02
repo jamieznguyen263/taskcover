@@ -377,7 +377,7 @@ Each page has **10 sections, each with a distinct UI treatment**:
 | # | Section | Delivery method |
 |---|---------|-----------------|
 | 1 | Hero | Split layout + service-specific floating visual |
-| 2 | Problem | Diagnostic scanner panel (numbered issue rows, amber accents, severity radar) |
+| 2 | Problem | Diagnostic scanner panel (numbered issue rows, amber accents, severity radar) + "Where this service creates leverage" panel (left column balances the scanner on the right) |
 | 3 | Approach | Layered operating model (vertical stack with gradient number rail, not cards) |
 | 4 | Deliverables | Implementation ledger (table-like board with alternating rows + priority/tier chips) |
 | 5 | Use cases | Decision paths (trigger → fit rows with arrow connectors, not identical cards) |
@@ -437,7 +437,7 @@ Each page has **9 sections, each with a distinct UI treatment**:
 | 2 | Search Behavior | Horizontal intent funnel flow (stage labels + connected content) |
 | 3 | Pain Points | Diagnostic scanner panel (numbered rows + severity radar + opportunities panel) |
 | 4 | Solution | Connected operating model (hexagonal grid with numbered nodes + connector arrows) |
-| 5 | Recommended Services | Vertical module stack rail (numbered rows linking to service pages) |
+| 5 | Recommended Services | Vertical module stack rail (numbered rows linking to service pages) + fit summary & bundle map panel (left column balances the module rail on the right) |
 | 6 | Content & Authority | Dual pipeline + ladder (content pillars list + authority ladder with shield capstone) |
 | 7 | Outcomes | Outcome ledger grid (category icons, no fake metrics) |
 | 8 | FAQ | Two-column header + compact accordion |

@@ -93,6 +93,7 @@ export type ServicesContent = {
     problemEyebrow: string;
     problemScanner: string;
     problemGapCount: string;
+    problemLeverage: string;
     approachEyebrow: string;
     approachModel: string;
     approachConnect: string;

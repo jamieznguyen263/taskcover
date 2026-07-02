@@ -60,6 +60,20 @@ export type Industry = {
   };
   /** Section 5 — Recommended Services (service slugs, locale-independent). */
   recommendedServices: string[];
+  /** Section 5b — Vertical Fit Summary (compact rows under the intro text). */
+  fitSummary: {
+    /** Short heading for the fit summary panel. */
+    title: string;
+    /** Compact fit rows shown under the recommended-services intro. */
+    rows: { label: string; value: string }[];
+  };
+  /** Section 5c — Service Bundle Map (grouped recommended-service roles). */
+  bundleMap: {
+    /** Short heading for the bundle map panel. */
+    title: string;
+    /** Groups of services by role (Foundation / Demand / Authority / Scale). */
+    groups: { label: string; slugs: string[] }[];
+  };
   /** Section 6 — Content & Authority Plan / Growth System. */
   contentStrategy: {
     title: string;
@@ -153,6 +167,13 @@ export type IndustriesContent = {
     servicesTitle: string;
     servicesDesc: string;
     servicesModule: string;
+    /** Vertical fit summary + bundle map panel labels. */
+    servicesFitSummary: string;
+    servicesBundleMap: string;
+    servicesBundleFoundation: string;
+    servicesBundleDemand: string;
+    servicesBundleAuthority: string;
+    servicesBundleScale: string;
     /** Content & authority section. */
     contentAuthorityEyebrow: string;
     contentAuthorityGrowthSystem: string;
