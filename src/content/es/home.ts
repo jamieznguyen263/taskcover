@@ -688,6 +688,15 @@ export const home: HomeContent = {
     ],
     primaryCta: { label: "Auditoría SEO gratuita", href: "/free-seo-audit" },
   },
+  caseStudyPreview: {
+    eyebrow: "Caso de estudio verificado",
+    title: "British University Vietnam: +37 % de tráfico orgánico.",
+    description: "Explora 10 casos de estudio verificados de Taskcover Agency.",
+    metricLabel: "Tráfico orgánico",
+    metricValue: "+37 %",
+    clientName: "British University Vietnam",
+    cta: { label: "Ver todos los casos", href: "/es/work/case-studies" },
+  },
   faq: {
     eyebrow: "FAQ",
     title: "Preguntas, respondidas directamente.",

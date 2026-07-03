@@ -184,6 +184,30 @@ export function HomeView({ home }: { home: HomeContent }) {
         />
       </Section>
 
+      {/* Compact verified case-study proof point */}
+      <Section background="default" className="py-14 sm:py-16" aria-labelledby="case-proof-title">
+        <Container>
+          <div className="grid gap-5 rounded-3xl border border-line bg-surface-tint p-6 shadow-soft sm:p-7 lg:grid-cols-[0.9fr_1.1fr_auto] lg:items-center">
+            <div>
+              <Eyebrow>{home.caseStudyPreview.eyebrow}</Eyebrow>
+              <h2 id="case-proof-title" className="mt-3 text-2xl font-semibold tracking-tight text-graphite sm:text-3xl">
+                {home.caseStudyPreview.title}
+              </h2>
+            </div>
+            <div className="rounded-2xl border border-line bg-white p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted">{home.caseStudyPreview.clientName}</p>
+              <p className="mt-2 text-3xl font-semibold text-brand-teal">{home.caseStudyPreview.metricValue}</p>
+              <p className="text-sm text-secondary">{home.caseStudyPreview.metricLabel}</p>
+              <p className="mt-3 text-sm text-secondary">{home.caseStudyPreview.description}</p>
+            </div>
+            <CTAButton href={home.caseStudyPreview.cta.href}>
+              {home.caseStudyPreview.cta.label}
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </CTAButton>
+          </div>
+        </Container>
+      </Section>
+
       {/* 10. Media & expert commentary — editorial rows */}
       <Section background="default" aria-labelledby="media-title">
         <MediaCommentary

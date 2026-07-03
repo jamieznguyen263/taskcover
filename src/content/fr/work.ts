@@ -1,4 +1,5 @@
 import type { SampleAudit, SampleAuditSlug, WorkContent } from "../work.types";
+import { caseStudyDetails } from "./case-studies";
 
 const disclosure =
   "Exemple de livrable illustratif. Il démontre la méthodologie de Taskcover et ne représente pas une mission client ni un résultat spécifique.";
@@ -268,6 +269,29 @@ export const work: WorkContent = {
     input: "Entrée",
     method: "Méthode",
     output: "Sortie",
+    overview: "Vue d'ensemble",
+    clientBackground: "Contexte client",
+    challenge: "Défi",
+    objectives: "Objectifs",
+    strategy: "Stratégie",
+    execution: "Exécution",
+    servicesDelivered: "Services livrés",
+    results: "Résultats",
+    keyMetrics: "Indicateurs clés",
+    visualGallery: "Galerie visuelle",
+    keyLearning: "Enseignement clé",
+    relatedMarkets: "Marchés liés",
+    finalCta: "Prochaine étape",
+    readCase: "Lire l'étude complète",
+    filterIndustry: "Filtrer par secteur",
+    filterMarket: "Filtrer par marché",
+    filterService: "Filtrer par service",
+    allCases: "Tous les cas",
+    client: "Client",
+    focus: "Priorité",
+    period: "Période",
+    startingPoint: "Point de départ",
+    workstream: "Flux de travail",
   },
   channelLinks: [
     { label: "Cas clients", href: "/work/case-studies", description: "Registre futur sûr pour des récits clients nommés lorsque les preuves sont approuvées." },
@@ -322,11 +346,11 @@ export const work: WorkContent = {
   },
   pages: {
     "case-studies": {
-      metaTitle: "Standards de cas client fondés sur la preuve | Taskcover Agency",
-      metaDescription: "Comment Taskcover publie des cas clients uniquement avec permission, preuves, contexte, formulation et actifs vérifiés.",
-      eyebrow: "Standard de cas client",
-      h1: "Des cas clients avec preuves et contexte",
-      intro: "Taskcover ne publie pas d'histoires inventées. Cette page explique comment les futurs cas publics doivent être vérifiés.",
+      metaTitle: "Études de cas SEO vérifiées | Taskcover Agency",
+      metaDescription: "Explorez 10 études de cas vérifiées de Taskcover Agency dans l'éducation, l'hospitalité, le juridique, l'eCommerce, le travel, le logiciel, l'immobilier et l'assurance.",
+      eyebrow: "Bibliothèque de cas vérifiés",
+      h1: "10 études de cas vérifiées de Taskcover Agency",
+      intro: "Explorez des études de cas publiques détaillées avec récits, métriques, services, visuels et contexte source approuvés.",
     },
     "sample-audits": {
       metaTitle: "Audits SEO exemples et livrables | Taskcover Agency",
@@ -351,7 +375,7 @@ export const work: WorkContent = {
     },
   },
   caseStudies: {
-    registryIntro: "Un cas client nommé n'est utile que si l'acheteur comprend le travail, le contexte, les preuves et les limites.",
+    registryIntro: "Ces études de cas nommées sont publiques parce que l'identité, le récit, les métriques, les visuels et la divulgation sont approuvés pour Taskcover Agency.",
     verification: [
       { label: "Permission d'identité", detail: "Le client approuve l'usage public du nom.", status: "Requis" },
       { label: "Contexte de mission", detail: "Portée, marché, services et contraintes documentés.", status: "Requis" },
@@ -488,4 +512,5 @@ export const work: WorkContent = {
     },
   },
   samples,
+  caseStudyDetails,
 };

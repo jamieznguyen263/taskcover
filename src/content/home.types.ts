@@ -193,6 +193,15 @@ export type HomeContent = {
     checklist: string[];
     primaryCta: CtaItem;
   };
+  caseStudyPreview: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    metricLabel: string;
+    metricValue: string;
+    clientName: string;
+    cta: CtaItem;
+  };
   faq: {
     eyebrow: string;
     title: string;

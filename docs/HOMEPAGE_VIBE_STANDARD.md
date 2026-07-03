@@ -569,6 +569,10 @@ results can be published safely.
   requirements, and private-reference handling.
 - Public case studies and results render only through Work registry public
   filters.
+- The homepage may include only one compact case-study preview: one highlighted
+  case, one verified metric or short outcome summary, short supporting copy,
+  and one CTA to `/work/case-studies`. Do not add a carousel, all 10 cases, six
+  compact rows, or a large case-study showcase to the homepage.
 
 ---
 

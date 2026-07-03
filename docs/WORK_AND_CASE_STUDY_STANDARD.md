@@ -56,6 +56,22 @@ A named case study may render only when all are true:
 - wording is approved
 - public assets are approved
 
+Task 8B adds a second requirement for published detail pages: approved case
+studies must be complete, not teaser summaries. Each public case detail page
+must include overview, client background, challenge, objectives, strategy,
+execution, services delivered, results, key metrics, a 2-3 image gallery, key
+learning, related services, related industry, related market, and final CTA.
+
+Within a single case-study page, sections must not repeat the same layout logic
+over and over. Use distinct structures such as dossiers, diagnostic panels,
+objective ladders, strategy maps, workstream boards, ledgers, outcome boards,
+metric bands, compact galleries, insight memos, and related rails.
+
+Every metric must preserve its source meaning. Do not change numbers, invent
+baselines, add unsupported platforms, combine unrelated metrics, or overstate
+attribution. When source context is limited, display the metric as a verified
+published result with limited context.
+
 The helper `getPublicCaseStudies()` must be used instead of manual filtering.
 
 ## Client Result Verification Requirements
@@ -148,6 +164,16 @@ inputs, priorities, and outputs without looking like fake client dashboards.
 
 Every two-column section must contain meaningful content on both sides.
 Disclosures must be premium, visible, and not hidden as tiny text.
+
+The homepage may include only one compact case-study preview section: one
+highlighted case, one verified metric or outcome summary, supporting copy, and
+a CTA to `/work/case-studies`. Do not add a carousel, a large multi-case
+showcase, or all 10 cases to the homepage.
+
+Case-study galleries use only 2-3 approved local images per case. Do not
+hotlink source assets.
+
+Public agency naming is always Taskcover Agency.
 
 ## SEO and Schema Rules
 

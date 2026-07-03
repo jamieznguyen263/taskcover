@@ -17,6 +17,7 @@ import {
   getIndustrySlugs,
   getMarketSlugs,
   getProofPageSlugs,
+  getCaseStudySlugs,
   getSampleAuditSlugs,
 } from "@/lib/content";
 
@@ -132,6 +133,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
         lastModified: now,
         changeFrequency: "monthly",
         priority: 0.72,
+        alternates: { languages: alts(base) },
+      });
+    }
+  }
+
+  // All 10 verified case-study detail pages for each locale.
+  const caseSlugs = getCaseStudySlugs();
+  for (const slug of caseSlugs) {
+    const base = `/work/case-studies/${slug}`;
+    for (const locale of locales) {
+      entries.push({
+        url: `${siteConfig.url}${localizePath(base, locale as Locale)}`,
+        lastModified: now,
+        changeFrequency: "monthly",
+        priority: 0.76,
         alternates: { languages: alts(base) },
       });
     }

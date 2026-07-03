@@ -139,3 +139,14 @@ Work records reuse the same permission and verification language as proof:
 Case studies and client results have stricter public requirements documented
 in `docs/WORK_AND_CASE_STUDY_STANDARD.md`. Do not publish private proof as
 Work output, and do not imply that an illustrative sample is client proof.
+
+## Task 8B Verified Case Studies
+
+The 10 Task 8B case studies are approved for full public use as Taskcover
+Agency case studies. Public copy must not mention Innovative Brain Agency,
+iBrain, partner-agency work, or historical team experience.
+
+Metrics may be shown only at the claim level supported by the approved source
+case pages. Do not transform narrative ratings, app-store context, awards, or
+review references into `Review`, `AggregateRating`, endorsement, or unsupported
+Organization schema.

@@ -74,6 +74,95 @@ export type WorkStep = {
   status?: string;
 };
 
+export type CaseMetric = {
+  id: string;
+  label: string;
+  value: string;
+  unit?: string;
+  baseline?: string;
+  endValue?: string;
+  timeframe?: string;
+  measurementScope?: string;
+  context: string;
+  category:
+    | "Organic traffic"
+    | "Keyword visibility"
+    | "Top 3 rankings"
+    | "Top 10 rankings"
+    | "CTR"
+    | "Bounce rate"
+    | "Conversion"
+    | "Local search"
+    | "Google Maps visibility"
+    | "Content authority"
+    | "Press coverage"
+    | "Social engagement"
+    | "Audience growth"
+    | "UX improvement";
+  verificationStatus: ProofVerificationStatus;
+  displayPublicly: boolean;
+};
+
+export type CaseVisual = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  caption: string;
+};
+
+export type CaseStudySlug =
+  | "british-university-vietnam"
+  | "casa-madera"
+  | "the-bamboo-bar"
+  | "matthew-jeffery-law-firm"
+  | "skatepro"
+  | "agoda"
+  | "avis"
+  | "novaworld"
+  | "ccleaner"
+  | "fwd-insurance";
+
+export type CaseStudy = Omit<WorkRecord, "metrics" | "deliverables"> & {
+  slug: CaseStudySlug;
+  clientName: string;
+  shortName: string;
+  industrySlug: string;
+  marketSlugs: string[];
+  serviceSlugs: string[];
+  eyebrow: string;
+  h1: string;
+  metaTitle: string;
+  metaDescription: string;
+  heroSummary: string;
+  overview: string;
+  clientBackground: string;
+  engagementPeriod: string;
+  startingPoint: string;
+  challenge: string;
+  objectives: string[];
+  strategy: string[];
+  execution: WorkStep[];
+  servicesDelivered: WorkStep[];
+  channels: string[];
+  deliverables: string[];
+  results: string[];
+  metrics: CaseMetric[];
+  visualGallery: CaseVisual[];
+  keyLearning: string;
+  relatedServices: string[];
+  relatedIndustries: string[];
+  relatedMarkets: string[];
+  relatedSampleAudits: string[];
+  finalCta: { title: string; description: string; label: string; href: string };
+  featuredOnHomepage: boolean;
+  featuredOrder?: number;
+  publicNarrativeApproved: true;
+  permissionStatus: "verified-public";
+  verificationStatus: "verified";
+  publicDisclosure: true;
+};
+
 export type SampleAudit = WorkRecord & {
   slug: SampleAuditSlug;
   eyebrow: string;
@@ -124,6 +213,29 @@ export type WorkContent = {
     input: string;
     method: string;
     output: string;
+    overview: string;
+    clientBackground: string;
+    challenge: string;
+    objectives: string;
+    strategy: string;
+    execution: string;
+    servicesDelivered: string;
+    results: string;
+    keyMetrics: string;
+    visualGallery: string;
+    keyLearning: string;
+    relatedMarkets: string;
+    finalCta: string;
+    readCase: string;
+    filterIndustry: string;
+    filterMarket: string;
+    filterService: string;
+    allCases: string;
+    client: string;
+    focus: string;
+    period: string;
+    startingPoint: string;
+    workstream: string;
   };
   channelLinks: WorkLink[];
   sampleAuditLinks: WorkLink[];
@@ -186,4 +298,5 @@ export type WorkContent = {
     cta: { title: string; description: string };
   };
   samples: Record<SampleAuditSlug, SampleAudit>;
+  caseStudyDetails: Record<CaseStudySlug, CaseStudy>;
 };

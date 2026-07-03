@@ -170,8 +170,8 @@ Examples:
 - Industries hub and all 7 industry detail pages en/fr/es
 - Markets hub and all 3 market detail pages en/fr/es
 - Proof hub and all 5 proof detail pages en/fr/es
-- Work hub, all 4 Work channel pages, and all 8 sample-audit detail pages
-  en/fr/es
+- Work hub, all 4 Work channel pages, all 10 case-study detail pages, and all
+  8 sample-audit detail pages en/fr/es
 
 Each entry includes hreflang alternate references.
 
@@ -187,6 +187,7 @@ Each entry includes hreflang alternate references.
   - `app/[locale]/proof/[slug]/page.tsx`
   - `app/[locale]/work/page.tsx`
   - `app/[locale]/work/*/page.tsx`
+  - `app/[locale]/work/case-studies/[slug]/page.tsx`
 - `[locale]` only generates `fr` and `es` via `generateStaticParams`.
 - All routes are statically generated (SSG) at build time.
 
@@ -200,6 +201,15 @@ Localized URL slugs are **not** implemented in Task 4A. When added:
 - Internal links, sitemap, and hreflang must use localized slugs.
 
 Until then, English slugs are shared across all locales.
+
+Task 8B follows this rule for case-study slugs:
+
+- `/work/case-studies/[slug]`
+- `/fr/work/case-studies/[slug]`
+- `/es/work/case-studies/[slug]`
+
+The page copy, metadata, filters, gallery labels, breadcrumbs, and CTAs are
+localized in EN/FR/ES while slugs remain English.
 
 ## 12. Translation QA checklist
 

@@ -1,4 +1,5 @@
 import type { SampleAudit, SampleAuditSlug, WorkContent } from "../work.types";
+import { caseStudyDetails } from "./case-studies";
 
 const disclosure =
   "Illustrative sample deliverable. It demonstrates Taskcover's methodology and does not represent a specific client engagement or result.";
@@ -267,6 +268,29 @@ export const work: WorkContent = {
     input: "Input",
     method: "Method",
     output: "Output",
+    overview: "Overview",
+    clientBackground: "Client Background",
+    challenge: "Challenge",
+    objectives: "Objectives",
+    strategy: "Strategy",
+    execution: "Execution",
+    servicesDelivered: "Services Delivered",
+    results: "Results",
+    keyMetrics: "Key Metrics",
+    visualGallery: "Visual Gallery",
+    keyLearning: "Key Learning",
+    relatedMarkets: "Related markets",
+    finalCta: "Next step",
+    readCase: "Read the full case",
+    filterIndustry: "Filter by industry",
+    filterMarket: "Filter by market",
+    filterService: "Filter by service",
+    allCases: "All cases",
+    client: "Client",
+    focus: "Focus",
+    period: "Period",
+    startingPoint: "Starting point",
+    workstream: "Workstream",
   },
   channelLinks: [
     { label: "Case Studies", href: "/work/case-studies", description: "A future-safe registry for named client stories once evidence is approved." },
@@ -326,11 +350,11 @@ export const work: WorkContent = {
   },
   pages: {
     "case-studies": {
-      metaTitle: "Evidence-Based Case Study Standards | Taskcover Agency",
-      metaDescription: "How Taskcover publishes case studies only when public permission, evidence, context, wording, and assets are verified.",
-      eyebrow: "Case-study standard",
-      h1: "Case studies with evidence and context",
-      intro: "Taskcover does not publish invented success stories. This page explains how future public case studies must be verified before they appear.",
+      metaTitle: "Verified SEO Case Studies | Taskcover Agency",
+      metaDescription: "Explore 10 verified Taskcover Agency case studies across education, hospitality, legal, eCommerce, travel, local search, software, real estate, and insurance.",
+      eyebrow: "Verified case-study library",
+      h1: "10 verified Taskcover Agency case studies",
+      intro: "Explore detailed public case studies with approved narratives, metrics, services, visuals, and source context across EN, FR, and ES.",
     },
     "sample-audits": {
       metaTitle: "Sample SEO Audits and Deliverables | Taskcover Agency",
@@ -355,7 +379,7 @@ export const work: WorkContent = {
     },
   },
   caseStudies: {
-    registryIntro: "Named case studies can be useful only when buyers can understand the work, context, evidence, and limits behind the result.",
+    registryIntro: "These named case studies are public because identity, narrative, metrics, visuals, and disclosure status are approved for Taskcover Agency use.",
     verification: [
       { label: "Identity permission", detail: "The client or organization has approved public naming.", status: "Required" },
       { label: "Engagement context", detail: "Scope, market, services, and constraints are documented.", status: "Required" },
@@ -502,4 +526,5 @@ export const work: WorkContent = {
     },
   },
   samples,
+  caseStudyDetails,
 };

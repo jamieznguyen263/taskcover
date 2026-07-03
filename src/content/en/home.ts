@@ -122,6 +122,15 @@ export const home: HomeContent = {
     ],
     primaryCta: { label: "Get Free SEO Audit", href: "/free-seo-audit" },
   },
+  caseStudyPreview: {
+    eyebrow: "Verified case study",
+    title: "British University Vietnam: +37% organic traffic.",
+    description: "Explore 10 verified Taskcover Agency case studies.",
+    metricLabel: "Organic traffic",
+    metricValue: "+37%",
+    clientName: "British University Vietnam",
+    cta: { label: "View all case studies", href: "/work/case-studies" },
+  },
   faq: {
     eyebrow: "FAQ",
     title: "Questions, answered directly.",

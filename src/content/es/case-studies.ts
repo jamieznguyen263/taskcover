@@ -1,0 +1,300 @@
+import { caseStudyDetails as enCaseStudyDetails, caseStudyOrder } from "../en/case-studies";
+import type { CaseMetric, CaseStudy, CaseStudySlug, WorkStep } from "../work.types";
+
+function steps(items: string[]): WorkStep[] {
+  return items.map((item) => {
+    const [label, detail = item] = item.split("::");
+    return { label, detail, status: "Entregado" };
+  });
+}
+
+const metricLabels: Record<string, string> = {
+  "Organic traffic": "Tráfico orgánico",
+  "Organic research visibility": "Visibilidad orgánica",
+  "Top Google keywords": "Palabras clave visibles en Google",
+  "Authority coverage": "Cobertura de autoridad",
+  "Average monthly traffic": "Tráfico mensual promedio",
+  "Organic traffic peak": "Pico de tráfico orgánico",
+  "Top 3 keywords": "Palabras clave en Top 3",
+  "Top 10 keywords": "Palabras clave en Top 10",
+  "Monthly organic traffic": "Tráfico orgánico mensual",
+  "Peak month traffic": "Pico mensual",
+  "Keywords in Top 3": "Palabras clave en Top 3",
+  CTR: "CTR",
+  "Time onsite": "Tiempo en el sitio",
+  "Bounce rate": "Tasa de rebote",
+  "Facebook audience": "Audiencia de Facebook",
+  "Instagram audience": "Audiencia de Instagram",
+  "Important keywords in Top 5": "Palabras clave importantes en Top 5",
+  "Brand keywords to intended landing page": "Palabras de marca hacia la página correcta",
+  "Vietnam travel searches": "Búsquedas de viajes a Vietnam",
+  "Local searches": "Búsquedas locales",
+  "Page load time": "Tiempo de carga",
+  "Conversion rate": "Tasa de conversión",
+  "Monthly website traffic": "Tráfico mensual del sitio",
+  "Traffic growth": "Crecimiento de tráfico",
+  "Google keywords": "Palabras clave de Google",
+  "Website traffic": "Tráfico del sitio",
+  "Core keywords in top 10": "Palabras clave principales en Top 10",
+  "Core keywords in top 5": "Palabras clave principales en Top 5",
+  "Core keywords in top 3": "Palabras clave principales en Top 3",
+  "Organic order conversion": "Conversión de pedidos orgánicos",
+  "Keywords in top 10": "Palabras clave en Top 10",
+  "Order conversion": "Conversión a pedido",
+  "Social engagement": "Interacción social",
+};
+
+function metrics(base: CaseMetric[]): CaseMetric[] {
+  return base.map((metric) => ({
+    ...metric,
+    label: metricLabels[metric.label] ?? metric.label,
+    context: `Resultado publicado y verificado para ${metricLabels[metric.label] ?? metric.label}.`,
+  }));
+}
+
+type LocalCase = {
+  title: string;
+  h1: string;
+  summary: string;
+  heroSummary: string;
+  overview: string;
+  clientBackground: string;
+  startingPoint: string;
+  challenge: string;
+  objectives: string[];
+  strategy: string[];
+  execution: string[];
+  servicesDelivered: string[];
+  channels: string[];
+  deliverables: string[];
+  results: string[];
+  keyLearning: string;
+  finalCta: CaseStudy["finalCta"];
+};
+
+function localize(slug: CaseStudySlug, data: LocalCase): CaseStudy {
+  const base = enCaseStudyDetails[slug];
+  return {
+    ...base,
+    title: data.title,
+    h1: data.h1,
+    metaTitle: `${data.title} | Taskcover Agency`,
+    metaDescription: data.summary,
+    summary: data.summary,
+    heroSummary: data.heroSummary,
+    overview: data.overview,
+    clientBackground: data.clientBackground,
+    startingPoint: data.startingPoint,
+    challenge: data.challenge,
+    objectives: data.objectives,
+    strategy: data.strategy,
+    execution: steps(data.execution),
+    servicesDelivered: steps(data.servicesDelivered),
+    channels: data.channels,
+    deliverables: data.deliverables,
+    results: data.results,
+    metrics: metrics(base.metrics),
+    visualGallery: base.visualGallery.map((visual, index) => ({
+      ...visual,
+      alt: `Visual aprobado ${index + 1} para el caso de estudio de ${base.clientName}`,
+      caption: index === 0 ? `Visual del proyecto de ${base.clientName}` : `Visual de evidencia del proyecto de ${base.clientName}`,
+    })),
+    keyLearning: data.keyLearning,
+    finalCta: data.finalCta,
+  };
+}
+
+export const caseStudyDetails = {
+  "british-university-vietnam": localize("british-university-vietnam", {
+    title: "Caso de estudio SEO British University Vietnam",
+    h1: "Expandir la demanda de educación internacional con SEO técnico, contenido, UX y autoridad.",
+    summary: "British University Vietnam amplió su visibilidad con resultados verificados en tráfico, palabras clave y cobertura de prensa.",
+    heroSummary: "Taskcover Agency estructuró el crecimiento alrededor de intención educativa internacional, páginas de programas, UX, señales sociales y autoridad PR.",
+    overview: "BUV necesitaba mayor visibilidad ante futuros estudiantes después de la pandemia. El trabajo conectó arquitectura de búsqueda, contenido, UX, entidad social y cobertura de medios.",
+    clientBackground: "British University Vietnam es una universidad internacional en Vietnam con programas de grado británicos reconocidos globalmente.",
+    startingPoint: "La cobertura inicial tenía 110 palabras clave significativas, una tasa de rebote de 72 % y 1,2 minutos de tiempo medio en página.",
+    challenge: "La educación internacional es competitiva y exige mensajes precisos, creíbles y legalmente correctos.",
+    objectives: ["Aumentar tráfico cualificado.", "Mejorar rankings de programas y educación internacional.", "Hacer el sitio más útil para descubrir programas.", "Reforzar confianza con prensa y autoridad."],
+    strategy: ["Mapear intención de grados británicos y admisiones.", "Actualizar contenido según necesidades de estudiantes.", "Mejorar navegación y UX.", "Reforzar evidencia pública de acreditaciones."],
+    execution: ["SEO técnico::Análisis de acceso, indexación y experiencia.", "Contenido::Alineación de páginas de programas con intención.", "UX::Menos fricción en navegación.", "PR::Cobertura de hitos institucionales."],
+    servicesDelivered: ["SEO técnico::Salud técnica y experiencia.", "Marketing de contenidos::Programas e intención educativa.", "PR digital::Pruebas de autoridad.", "SEO internacional::Demanda estudiantil internacional."],
+    channels: ["Búsqueda Google", "Sitio web", "Prensa educativa", "Facebook", "LinkedIn", "Instagram"],
+    deliverables: ["Mapa de palabras clave", "Recomendaciones técnicas y UX", "Plan de contenido", "Plan PR", "Alineación de señales de entidad"],
+    results: ["El tráfico orgánico pasó de 18.300 a 25.200 visitas mensuales.", "La visibilidad orgánica aumentó 75 %.", "El portafolio de palabras clave pasó de 110 a 1.400.", "Más de 25 artículos y 3 programas de TV educativa reforzaron la autoridad."],
+    keyLearning: "En educación, el SEO crece cuando descubrimiento de programas, acceso técnico, confianza y autoridad pública trabajan juntos.",
+    finalCta: { title: "Construir un sistema de búsqueda para demanda educativa.", description: "Taskcover puede analizar intención de programas, restricciones técnicas y brechas de autoridad.", label: "Obtener auditoría SEO gratis", href: "/free-seo-audit" },
+  }),
+  "casa-madera": localize("casa-madera", {
+    title: "Caso de estudio SEO local Casa Madera",
+    h1: "Aumentar visibilidad local, intención de reserva y reconocimiento para un restaurante latinoamericano.",
+    summary: "Casa Madera pasó de baja visibilidad a una presencia local medible con tráfico, rankings y reseñas verificadas.",
+    heroSummary: "Taskcover Agency conectó SEO local, contenido de menú, experiencia web, reputación y conversión.",
+    overview: "El restaurante debía captar búsquedas de cocina mexicana, cócteles, eventos y reservas.",
+    clientBackground: "Casa Madera es un concepto de restaurante latinoamericano con cocina mexicana, cócteles, música y experiencia social.",
+    startingPoint: "Antes de 2021, el sitio no tenía tráfico significativo ni palabras clave visibles.",
+    challenge: "La búsqueda local de restaurantes es visual, competitiva y depende tanto de mapas como de páginas de reserva.",
+    objectives: ["Construir una base SEO.", "Aumentar notoriedad local.", "Mejorar diseño y UX.", "Aumentar conversiones hacia reserva."],
+    strategy: ["Apuntar a consultas locales de restaurante, menú y eventos.", "Optimizar Google Business Profile.", "Crear contenido de platos, ambiente y ofertas.", "Clarificar llamadas a la acción."],
+    execution: ["SEO local::Visibilidad para intención de restaurante.", "Contenido::Cocina, menú, eventos y cultura.", "CRO::Velocidad, móvil y reserva.", "Reputación::Lectura de reseñas en Maps."],
+    servicesDelivered: ["SEO local::Demanda cercana.", "Marketing de contenidos::Menú y eventos.", "PPC::Apoyo paid para demanda inmediata.", "Optimización de conversión::Páginas y CTA."],
+    channels: ["Búsqueda Google", "Google Maps", "Sitio web", "Instagram", "Facebook", "YouTube"],
+    deliverables: ["Mapa local de keywords", "Optimización GBP", "Plan de contenido", "Recomendaciones landing", "Análisis de reputación"],
+    results: ["El tráfico medio superó 3.000 visitas mensuales.", "El tráfico orgánico llegó a 5.947 en diciembre de 2023.", "45 palabras clave alcanzaron Top 3 y 88 Top 10.", "La valoración media en Google Maps llegó a 4,3 estrellas."],
+    keyLearning: "El SEO de restaurantes funciona cuando descubrimiento local, contenido sensorial, reputación y reserva son un solo recorrido.",
+    finalCta: { title: "Convertir demanda local en reservas.", description: "Taskcover puede revisar visibilidad local, contenidos de menú, reseñas y flujo de reserva.", label: "Ver SEO local", href: "/services/local-seo" },
+  }),
+  "the-bamboo-bar": localize("the-bamboo-bar", {
+    title: "Caso de estudio hospitalidad de lujo The Bamboo Bar",
+    h1: "Mejorar el descubrimiento local en Bangkok para un bar de cócteles de lujo.",
+    summary: "The Bamboo Bar fortaleció rankings locales, tráfico orgánico, UX y reseñas.",
+    heroSummary: "Taskcover Agency alineó palabras clave locales, intención travel, contenido, UX de reserva y apoyo paid.",
+    overview: "El bar debía ser visible para viajeros y locales buscando cócteles, jazz, nightlife y Mandarin Oriental Bangkok.",
+    clientBackground: "The Bamboo Bar es un bar de lujo en Mandarin Oriental Bangkok, conocido por cócteles, ambiente clásico y jazz en vivo.",
+    startingPoint: "Antes de 2022 el sitio tenía poco tráfico; antes de 2023 la visibilidad de keywords era limitada.",
+    challenge: "La nightlife de Bangkok es competitiva y combina búsqueda local, redes sociales y una reserva sin fricción.",
+    objectives: ["Estabilizar visibilidad SEO local.", "Superar 5.000 visitas orgánicas mensuales.", "Aumentar Top 3 y Top 10.", "Mejorar acceso a menús, eventos y reservas."],
+    strategy: ["Centrarse en consultas long-tail y locales de Bangkok.", "Crear contenido de cócteles, eventos y experiencia.", "Mejorar velocidad, móvil y navegación.", "Coordinar social, Google Ads y Facebook Ads."],
+    execution: ["SEO local::Demanda nightlife Bangkok.", "Contenido::Cócteles, eventos y experiencia.", "UX::Navegación, velocidad y reserva.", "Paid/social::Apoyo a la demanda."],
+    servicesDelivered: ["SEO local::Visibilidad Bangkok.", "Marketing de contenidos::Hospitalidad de lujo.", "PPC::Google Ads y Facebook Ads.", "UX::Menús, eventos, contacto y reserva."],
+    channels: ["Búsqueda Google", "Google Ads", "Google Maps", "Facebook", "Instagram", "YouTube"],
+    deliverables: ["Estrategia de keywords locales", "Plan de contenido", "Recomendaciones UX", "Apoyo paid", "Plan social"],
+    results: ["9 palabras clave alcanzaron Top 3 a finales de 2023.", "18 palabras clave alcanzaron Top 10.", "El tráfico orgánico llegó a 5.000 visitas mensuales, con un mes por encima de 7.000.", "La valoración Google llegó a 4,6 estrellas."],
+    keyLearning: "En hospitalidad de lujo, la UX práctica debe apoyar la experiencia premium sin diluirla.",
+    finalCta: { title: "Captar búsquedas de hospitalidad de alta intención.", description: "Taskcover puede conectar demanda local, contenido, reseñas y conversión para travel y hospitality.", label: "Explorar SEO travel", href: "/industries/travel-seo" },
+  }),
+  "matthew-jeffery-law-firm": localize("matthew-jeffery-law-firm", {
+    title: "Caso de estudio recuperación SEO Matthew Jeffery Law Firm",
+    h1: "Recuperar visibilidad de inmigración con técnica, contenido, UX y reporting.",
+    summary: "Matthew Jeffery Law Firm recuperó visibilidad, engagement y rendimiento después de una caída orgánica.",
+    heroSummary: "Taskcover Agency reconstruyó rendimiento con intención migratoria, clusters de contenido, autoridad, UX y reporting.",
+    overview: "El despacho debía recuperar visibilidad en un mercado jurídico canadiense sensible a la confianza.",
+    clientBackground: "Matthew Jeffery Law Firm es un despacho de inmigración en Toronto con más de 20 años de experiencia.",
+    startingPoint: "El tráfico orgánico mensual cayó de 16.300 a 3.600 y la autoridad de dominio de 37 a 20 según la fuente.",
+    challenge: "El SEO legal exige precisión, confianza, intención local y una arquitectura técnica sólida.",
+    objectives: ["Recuperar tráfico y keywords.", "Reconstruir contenido sobre inmigración canadiense.", "Mejorar enlaces internos, autoridad y técnica.", "Mejorar CTR, engagement y reporting."],
+    strategy: ["Investigación de keywords migratorias.", "Auditoría de artículos por intención.", "Refuerzo de enlaces internos y autoridad.", "Lectura con GA4, Search Console y señales UX."],
+    execution: ["Técnica::Estructura, enlaces y acceso.", "Contenido::Clusters de inmigración canadiense.", "Autoridad::Confianza temática.", "Reporting::CTR, onsite y rebote."],
+    servicesDelivered: ["SEO técnico::Arquitectura y remediación.", "Marketing de contenidos::Clusters legales.", "SEO local::Toronto y Canadá.", "Reporting::Engagement y conversión."],
+    channels: ["Búsqueda Google", "Sitio web", "GA4", "Search Console", "Social", "CRM/reporting"],
+    deliverables: ["Auditoría técnica", "Estrategia de keywords", "Plan de clusters", "Arquitectura de enlaces", "Análisis UX"],
+    results: ["El tráfico orgánico aumentó 171 % interanual.", "Más del 80 % de keywords entraron en resultados de búsqueda destacados.", "45 % de keywords alcanzaron Top 3.", "El CTR aumentó 35 %.", "La tasa de rebote bajó de 72 % a 38 %."],
+    keyLearning: "La recuperación SEO legal debe resolver confianza, técnica, intención y conversión a la vez.",
+    finalCta: { title: "Recuperar visibilidad legal con contexto.", description: "Taskcover puede diagnosticar técnica, contenido, local y conversión en mercados legales.", label: "Explorar SEO legal", href: "/industries/legal-immigration-seo" },
+  }),
+  "skatepro": localize("skatepro", {
+    title: "Caso de estudio eCommerce SkatePro",
+    h1: "Fortalecer descubrimiento de producto, arquitectura de categorías, UX y conversión.",
+    summary: "SkatePro fortaleció descubrimiento orgánico y social desde una base de tráfico baja.",
+    heroSummary: "Taskcover Agency alineó categorías, productos, contenido, UX, checkout, paid, retargeting y reputación.",
+    overview: "SkatePro necesitaba que un catálogo amplio fuera fácil de encontrar y comprar.",
+    clientBackground: "SkatePro es un retailer global de deportes de acción con más de 20.000 artículos y más de 4 millones de clientes al año.",
+    startingPoint: "En 2020, el tráfico orgánico promedio era de unos 250 y el paid de unos 3.",
+    challenge: "Un catálogo grande exige arquitectura, controles técnicos, contenido de ayuda y checkout fluido.",
+    objectives: ["Alcanzar Top 10 en búsquedas clave de productos.", "Mejorar interfaz y contenido.", "Aumentar tráfico orgánico y paid.", "Mejorar conversión a pedidos."],
+    strategy: ["Mapear categorías y productos.", "Mejorar descubrimiento y enlaces internos.", "Actualizar contenido de ayuda.", "Apoyar con paid, social y reputación."],
+    execution: ["SEO categorías::Demanda de productos y deportes de acción.", "SEO técnico::Descubribilidad del catálogo.", "CRO::Navegación, contenido y checkout.", "Paid/social::Retargeting y demanda."],
+    servicesDelivered: ["SEO eCommerce::Arquitectura de categorías y productos.", "SEO técnico::Catálogo y crawl.", "Marketing de contenidos::Guías de producto.", "PPC::Paid y retargeting."],
+    channels: ["Búsqueda Google", "Paid search", "Sitio web", "Checkout", "Facebook", "Instagram"],
+    deliverables: ["Mapa de categorías", "Recomendaciones de producto", "Auditoría UX/checkout", "Plan de contenido", "Plan de retargeting"],
+    results: ["SkatePro Canada alcanzó Top 10 en keywords importantes.", "El tráfico orgánico pasó de unos 250 a miles de visitas mensuales.", "La audiencia llegó a 107.000 seguidores en Facebook y 234.000 en Instagram.", "La nota Google Maps subió a 4,2 estrellas."],
+    keyLearning: "El SEO eCommerce crece cuando arquitectura, guía de producto, reputación, paid y checkout trabajan juntos.",
+    finalCta: { title: "Hacer tu catálogo más encontrable y comprable.", description: "Taskcover puede revisar categorías, productos, técnica y fricción de conversión.", label: "Explorar SEO eCommerce", href: "/industries/ecommerce-seo" },
+  }),
+  "agoda": localize("agoda", {
+    title: "Caso de estudio travel SEO Agoda",
+    h1: "Alinear intención de destino, campañas móviles y SEO internacional para el Sudeste Asiático.",
+    summary: "Agoda reforzó visibilidad travel, páginas de marca y tráfico orgánico con resultados verificados.",
+    heroSummary: "Taskcover Agency apoyó crecimiento con intención de destino, contenido EEAT, campañas móviles y coordinación paid/organic.",
+    overview: "Agoda debía competir en búsquedas travel de SEA mientras cambiaban demanda, OTAs y comportamiento pospandemia.",
+    clientBackground: "Agoda es una plataforma de viajes de Booking Holdings con fuerte presencia en Asia.",
+    startingPoint: "De finales de 2020 a inicios del T1 2021, el tráfico orgánico cayó hasta 50 %.",
+    challenge: "La búsqueda travel combina hoteles, vuelos, destinos, ofertas móviles y alta competencia OTA.",
+    objectives: ["Aumentar notoriedad SEA.", "Lograr fuerte cobertura Top 5 y Top 10.", "Aumentar tráfico orgánico.", "Conectar influencers, hashtags y ofertas con intención."],
+    strategy: ["Investigación amplia de keywords.", "Contenido informativo antes de términos competitivos.", "Blogs SEO con estándares EEAT.", "Coordinación app móvil, Eco Deal, Gold Circle y Day Use."],
+    execution: ["SEO internacional::Demanda travel SEA.", "Contenido::Blogs y destinos.", "Campañas móviles::App y viajeros locales.", "Reputación::Contexto positivo."],
+    servicesDelivered: ["SEO internacional::Mercados e intención regional.", "SEO técnico::On-page y off-page.", "Marketing de contenidos::Blogs travel.", "PPC::Apoyo campañas y ofertas."],
+    channels: ["Búsqueda Google", "App móvil", "Blog SEO", "Influencers", "Hashtags", "Paid"],
+    deliverables: ["Mapa de keywords travel", "Plan de contenido", "Alineación landing pages", "Apoyo móvil", "Plan reputación"],
+    results: ["80 % de keywords importantes alcanzaron Top 5.", "100 % de keywords de marca apuntaron a la página prevista.", "El tráfico orgánico aumentó 13 % en septiembre de 2021 vs. el mes anterior.", "Las búsquedas de viajes a Vietnam crecieron 298 % en 2023 según datos de Agoda."],
+    keyLearning: "El travel SEO debe adaptarse continuamente a destino, móvil, ofertas y competencia regional.",
+    finalCta: { title: "Mapear la demanda travel por mercado y momento.", description: "Taskcover puede conectar SEO internacional, destinos, móvil e inteligencia paid-organic.", label: "Explorar SEO travel", href: "/industries/travel-seo" },
+  }),
+  "avis": localize("avis", {
+    title: "Caso de estudio SEO multiubicación Avis Canada",
+    h1: "Mejorar visibilidad local, Google Maps, UX y conversión para Avis Canada.",
+    summary: "Avis Canada mejoró visibilidad local, tráfico orgánico, UX, conversión y engagement en Google Maps.",
+    heroSummary: "Taskcover Agency conectó páginas locales, Google Business Profile, performance, reseñas, autoridad y conversión.",
+    overview: "Avis debía captar búsquedas de alquiler por ciudad y sucursal mientras reforzaba confianza.",
+    clientBackground: "Avis Car Rental es una marca global de alquiler de autos del grupo Avis Budget Group.",
+    startingPoint: "La presión de demanda pospandemia hizo prioritaria la recuperación digital y la visibilidad local.",
+    challenge: "El alquiler de autos es local, competitivo y muy influido por mapas y reserva.",
+    objectives: ["Mejorar posiciones en car rental.", "Aumentar tráfico natural.", "Conectar tráfico con reservas.", "Mejorar Google Maps y Search por ciudad."],
+    strategy: ["Optimizar páginas locales y avis.ca.", "Actualizar Google Business Profile.", "Mejorar performance técnica.", "Crear contenido travel y comparativo."],
+    execution: ["Páginas locales::Intención ciudad y near me.", "GBP::Fotos, reseñas e información local.", "Técnica::Velocidad y UX.", "Contenido::Confianza y comparación."],
+    servicesDelivered: ["SEO local::Visibilidad de ciudades y sucursales.", "SEO técnico::Performance.", "Marketing de contenidos::Travel y alquiler.", "SEO multiubicación::Arquitectura local."],
+    channels: ["Google Search", "Google Maps", "Google Business Profile", "Sitio web", "Contenido travel"],
+    deliverables: ["Plan de páginas ciudad", "Optimización GBP", "Recomendaciones de performance", "Apoyo de enlaces", "Análisis de conversión"],
+    results: ["Avis apareció en Top 3 de Google Maps en grandes ciudades.", "Las búsquedas locales subieron 30 %.", "El tráfico orgánico subió 40 %.", "La carga pasó de 4,2 s a 2,1 s.", "La conversión pasó de 2,7 % a 3,3 %."],
+    keyLearning: "El SEO multiubicación gana cuando páginas locales, mapas, performance y conversión sirven la misma intención.",
+    finalCta: { title: "Construir un sistema local para cada mercado.", description: "Taskcover puede mapear páginas de ciudad, GBP, pruebas locales y conversión.", label: "Explorar SEO Canadá", href: "/markets/canada-seo-agency" },
+  }),
+  "novaworld": localize("novaworld", {
+    title: "Caso de estudio crecimiento digital NovaWorld",
+    h1: "Crear visibilidad, arquitectura de contenido, paid media y confianza compradora para NovaWorld.",
+    summary: "NovaWorld transformó baja visibilidad digital en demanda, keywords y confianza de mercado.",
+    heroSummary: "Taskcover Agency conectó SEO, contenido, social, performance ads y recorrido del comprador.",
+    overview: "NovaWorld debía pasar de visibilidad de lanzamiento a demanda sostenida en inmobiliario turístico premium.",
+    clientBackground: "NovaWorld es una línea de grandes proyectos urbanos turísticos y de resort desarrollada por Novaland.",
+    startingPoint: "En junio de 2019, el sitio tenía 10 visitas y 19 keywords de Google.",
+    challenge: "El real estate de resort requiere aspiración, confianza, información del proyecto y visibilidad duradera.",
+    objectives: ["Aumentar tráfico a escala.", "Construir bases SEO y arquitectura de contenido.", "Coordinar paid y social.", "Generar atención cualificada."],
+    strategy: ["Mejorar estructura y visibilidad Google.", "Crear contenidos de proyecto, lifestyle e inversión.", "Acelerar con paid media.", "Guiar consideración de compradores."],
+    execution: ["SEO base::Estructura y visibilidad del proyecto.", "Contenido::Lifestyle, inversión y descubrimiento.", "Performance ads::Aceleración de demanda.", "Social::Conversación y notoriedad."],
+    servicesDelivered: ["SEO técnico::Fundamentos.", "Marketing de contenidos::Arquitectura de proyecto.", "PPC::Publicidad performance.", "Social::Notoriedad y conversación."],
+    channels: ["Búsqueda Google", "Sitio web", "Performance ads", "Social media", "Contenido"],
+    deliverables: ["Plan SEO", "Arquitectura de contenido", "Plan paid", "Coordinación social", "Mensajes de buyer journey"],
+    results: ["El tráfico pasó de 10 visitas en junio de 2019 a casi 100.000 visitas mensuales en diciembre de 2022.", "Las keywords pasaron de 19 a 2.513.", "NovaWorld se volvió más familiar en el mercado y atrajo decenas de miles de prospectos."],
+    keyLearning: "Los grandes lanzamientos inmobiliarios deben construir arquitectura search antes de que la demanda llegue al pico.",
+    finalCta: { title: "Construir demanda antes de que el mercado conozca plenamente el proyecto.", description: "Taskcover puede conectar lanzamiento, contenido, intención compradora y paid-organic.", label: "Planificar roadmap", href: "/work/sample-audits/90-day-search-growth-roadmap" },
+  }),
+  "ccleaner": localize("ccleaner", {
+    title: "Caso de estudio expansión software CCleaner",
+    h1: "Localizar demanda software, rankings, tráfico y conversión para CCleaner en Vietnam.",
+    summary: "CCleaner expandió visibilidad software en Vietnam con tráfico, rankings, conversión y engagement verificados.",
+    heroSummary: "Taskcover Agency apoyó localización, SEO técnico, contenido, paid, rankings y conversión.",
+    overview: "CCleaner debía entrar y competir en el mercado vietnamita de optimización y seguridad.",
+    clientBackground: "CCleaner es un software de limpieza y optimización respaldado por Avast tras la adquisición de 2017.",
+    startingPoint: "El tráfico orgánico caía por cambios de algoritmo y problemas de estructura del sitio.",
+    challenge: "El software competía con BKAV, McAfee, Kaspersky y marcas establecidas.",
+    objectives: ["Aumentar tráfico en Vietnam.", "Poner keywords principales en posiciones altas.", "Mejorar conversión orgánica.", "Aumentar engagement social."],
+    strategy: ["Localizar mensajes por segmento.", "Mejorar técnica y estructura.", "Crear contenidos PC, Windows, macOS y performance.", "Apoyar con paid y social."],
+    execution: ["Localización::Mensajes para usuarios vietnamitas.", "SEO técnico::Estructura y performance.", "Contenido::Educación software.", "Paid/social::Visibilidad y conversión."],
+    servicesDelivered: ["SEO internacional::Localización Vietnam.", "SEO técnico::Estructura del sitio.", "Marketing de contenidos::Contenido software.", "PPC::Apoyo paid."],
+    channels: ["Búsqueda Google", "Sitio web", "Paid", "Social", "Autoridad software"],
+    deliverables: ["Mapa Vietnam", "Auditoría técnica", "Plan de contenido localizado", "Plan paid", "Análisis de conversión"],
+    results: ["El tráfico del sitio llegó a 810.000.", "100 % de keywords principales estaban en Top 10.", "80 % estaban en Top 5 y 60 % en Top 3.", "La conversión orgánica a pedido llegó a 5 %."],
+    keyLearning: "La localización software debe traducir confianza de mercado, claridad técnica, intención de rendimiento y conversión.",
+    finalCta: { title: "Localizar demanda software sin perder credibilidad técnica.", description: "Taskcover puede analizar intención SaaS/software, localización, técnica y conversión.", label: "Explorar SEO SaaS", href: "/industries/saas-seo" },
+  }),
+  "fwd-insurance": localize("fwd-insurance", {
+    title: "Caso de estudio crecimiento digital FWD Insurance",
+    h1: "Aumentar visibilidad de seguros, confianza, conversión e interacción social.",
+    summary: "FWD Insurance fortaleció tráfico, keywords Top 10, conversión e interacción social con resultados verificados.",
+    heroSummary: "Taskcover Agency alineó contenido sensible de seguros, search, UX, mensaje de marca, paid y social.",
+    overview: "FWD debía mejorar presencia online en Vietnam mientras hacía los seguros más simples y humanos.",
+    clientBackground: "FWD Insurance es un grupo asegurador enfocado en soluciones simples, eficaces y accesibles.",
+    startingPoint: "Como marca más joven en Vietnam, enfrentaba competidores históricos y objetivos de tráfico, keywords, conversión y engagement.",
+    challenge: "El seguro es complejo y depende de confianza; crecer no debe crear confusión ni promesas excesivas.",
+    objectives: ["Aumentar tráfico del sitio.", "Desarrollar keywords Top 10.", "Mejorar conversión e interacción social.", "Apoyar campañas de marca."],
+    strategy: ["Clarificar contenidos de seguros.", "Mejorar visibilidad con lenguaje entendible.", "Coordinar paid y social.", "Reducir fricción UX."],
+    execution: ["Visibilidad search::Cobertura orgánica y keywords.", "Contenido claro::Conceptos de seguros simplificados.", "Paid/social::Distribución de campañas.", "UX::De awareness a acción."],
+    servicesDelivered: ["SEO técnico::Acceso de búsqueda.", "Marketing de contenidos::Contenido de seguros.", "PPC::Coordinación paid.", "Social::Interacción de campaña."],
+    channels: ["Búsqueda Google", "Sitio web", "Paid media", "Social media", "Campañas de marca"],
+    deliverables: ["Mapa search de seguros", "Plan de contenido de confianza", "Apoyo de messaging", "Coordinación paid/social", "Análisis de conversión"],
+    results: ["Después de 12 meses, el tráfico del sitio llegó a 1.140.000.", "70 % de keywords estaban en Top 10.", "La conversión a pedido llegó a 0,8 %.", "La interacción social llegó a 15.000 por publicación."],
+    keyLearning: "El crecimiento en seguros depende de claridad y confianza tanto como de visibilidad.",
+    finalCta: { title: "Hacer más clara la búsqueda en categorías sensibles.", description: "Taskcover puede analizar claridad de contenido, visibilidad, UX y conversión en mercados de alta confianza.", label: "Explorar estrategia de contenido", href: "/services/content-marketing" },
+  }),
+} satisfies Record<CaseStudySlug, CaseStudy>;
+
+export { caseStudyOrder };

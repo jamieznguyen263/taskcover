@@ -166,6 +166,26 @@ English for now.
 > handling, and evidence requirements, not fake case studies, fake metrics, or
 > anonymous success stories. See `docs/WORK_AND_CASE_STUDY_STANDARD.md`.
 
+### Task 8B Case Study Detail Routes
+
+Task 8B publishes 10 verified public Taskcover Agency case studies:
+
+- `/work/case-studies/british-university-vietnam`
+- `/work/case-studies/casa-madera`
+- `/work/case-studies/the-bamboo-bar`
+- `/work/case-studies/matthew-jeffery-law-firm`
+- `/work/case-studies/skatepro`
+- `/work/case-studies/agoda`
+- `/work/case-studies/avis`
+- `/work/case-studies/novaworld`
+- `/work/case-studies/ccleaner`
+- `/work/case-studies/fwd-insurance`
+
+Localized equivalents exist under `/fr/work/case-studies/[slug]` and
+`/es/work/case-studies/[slug]`, with English slugs preserved across locales.
+The 30 case-study detail routes are statically generated and included in the
+sitemap with localized hreflang alternates.
+
 ## Methodology & technology `(planned)`
 
 - `/methodology`

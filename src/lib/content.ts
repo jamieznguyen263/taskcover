@@ -69,6 +69,8 @@ import type { IndustriesContent } from "@/content/industries.types";
 import type { MarketsContent } from "@/content/markets.types";
 import type { ProofContent, ProofPageSlug, ProofType } from "@/content/proof.types";
 import type {
+  CaseStudy,
+  CaseStudySlug,
   SampleAuditSlug,
   WorkContent,
   WorkPageSlug,
@@ -279,6 +281,19 @@ export const sampleAuditSlugs = [
   "90-day-search-growth-roadmap",
 ] as const satisfies readonly SampleAuditSlug[];
 
+export const caseStudySlugs = [
+  "british-university-vietnam",
+  "casa-madera",
+  "the-bamboo-bar",
+  "matthew-jeffery-law-firm",
+  "skatepro",
+  "agoda",
+  "avis",
+  "novaworld",
+  "ccleaner",
+  "fwd-insurance",
+] as const satisfies readonly CaseStudySlug[];
+
 /**
  * Return markets content for a locale (hub + all 3 markets + UI strings).
  * Falls back to English if the locale file is somehow missing.
@@ -373,6 +388,23 @@ export function getSampleAuditSlugs(): string[] {
   return [...sampleAuditSlugs];
 }
 
+export function getCaseStudySlugs(): string[] {
+  return [...caseStudySlugs];
+}
+
+export function getCaseStudyBySlug(
+  slug: string,
+  locale: Locale
+): CaseStudy | undefined {
+  if (!(caseStudySlugs as readonly string[]).includes(slug)) return undefined;
+  return getWorkContent(locale).caseStudyDetails[slug as CaseStudySlug];
+}
+
+export function getCaseStudies(locale: Locale): CaseStudy[] {
+  const content = getWorkContent(locale);
+  return caseStudySlugs.map((slug) => content.caseStudyDetails[slug]).filter(Boolean);
+}
+
 export {
   getPublicCaseStudies,
   getVerifiedPublicResults,
@@ -380,3 +412,4 @@ export {
 };
 
 export type { SampleAuditSlug, WorkPageSlug, WorkType };
+export type { CaseStudySlug };

@@ -175,6 +175,14 @@ Work pages (`/work`, `/work/case-studies`, `/work/sample-audits`,
 `/work/client-results`) emit localized metadata, canonical URLs, hreflang
 alternates, and BreadcrumbList schema only.
 
+Task 8B adds case-study detail pages at `/work/case-studies/[slug]`,
+`/fr/work/case-studies/[slug]`, and `/es/work/case-studies/[slug]`. Each detail
+page must have a unique localized title and meta description, canonical,
+EN/FR/ES/x-default hreflang alternates, localized Open Graph metadata, one H1,
+semantic H2/H3 structure, and localized BreadcrumbList schema. The sitemap must
+include all 30 localized case-study detail routes while preserving existing
+routes.
+
 Rules:
 - No `Review` or `AggregateRating` schema.
 - No fake `Dataset`, `CaseStudy`, `Person`, `VideoObject`, awards, logos,
@@ -185,3 +193,5 @@ Rules:
 - Client results render only through `getVerifiedPublicResults()`.
 - Empty registries must render standards and evidence requirements, not
   "placeholder", "coming soon", anonymous success stories, or fake metrics.
+- Do not turn narrative app ratings, review context, or awards into Review,
+  AggregateRating, endorsement, or unsupported Organization schema.
