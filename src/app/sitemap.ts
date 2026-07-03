@@ -17,6 +17,7 @@ import {
   getIndustrySlugs,
   getMarketSlugs,
   getProofPageSlugs,
+  getSampleAuditSlugs,
 } from "@/lib/content";
 
 export const dynamic = "force-static";
@@ -36,8 +37,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const entries: MetadataRoute.Sitemap = [];
 
-  // Homepage + services hub + industries hub + markets hub + proof hub for each locale.
-  const staticBases = ["/", "/services", "/industries", "/markets", "/proof"];
+  // Homepage + top-level hubs for each locale.
+  const staticBases = [
+    "/",
+    "/services",
+    "/industries",
+    "/markets",
+    "/proof",
+    "/work",
+    "/work/case-studies",
+    "/work/sample-audits",
+    "/work/search-growth-frameworks",
+    "/work/client-results",
+  ];
   for (const base of staticBases) {
     for (const locale of locales) {
       entries.push({
@@ -105,6 +117,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
         lastModified: now,
         changeFrequency: "monthly",
         priority: 0.75,
+        alternates: { languages: alts(base) },
+      });
+    }
+  }
+
+  // All 8 sample audit detail pages for each locale.
+  const sampleSlugs = getSampleAuditSlugs();
+  for (const slug of sampleSlugs) {
+    const base = `/work/sample-audits/${slug}`;
+    for (const locale of locales) {
+      entries.push({
+        url: `${siteConfig.url}${localizePath(base, locale as Locale)}`,
+        lastModified: now,
+        changeFrequency: "monthly",
+        priority: 0.72,
         alternates: { languages: alts(base) },
       });
     }

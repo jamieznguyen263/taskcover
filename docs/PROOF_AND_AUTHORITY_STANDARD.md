@@ -126,3 +126,16 @@ If no verified public spokesperson exists, render at agency level.
 6. Run lint, typecheck, and build.
 7. QA the relevant localized proof page.
 8. Add schema only when the record type has complete verified schema data.
+
+## Relationship To Work Pages
+
+Proof answers why buyers should trust Taskcover. Work answers what Taskcover
+produces and how the work is structured.
+
+Work records reuse the same permission and verification language as proof:
+`verified-public`, `private-reference`, `internal-only`, `pending`,
+`verified`, `unverified`, `expired`, and `not-applicable`.
+
+Case studies and client results have stricter public requirements documented
+in `docs/WORK_AND_CASE_STUDY_STANDARD.md`. Do not publish private proof as
+Work output, and do not imply that an illustrative sample is client proof.

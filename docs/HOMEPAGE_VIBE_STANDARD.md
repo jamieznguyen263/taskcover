@@ -551,7 +551,28 @@ decorative social-proof pages.
 
 ---
 
-## 22. Customer journey (homepage reference)
+## 22. Work page adaptation rules (Task 8)
+
+Work pages must feel operational and deliverable-led. They show what
+Taskcover produces, how methodology becomes execution, and how future verified
+results can be published safely.
+
+- Sample pages must show methodology without looking like fake client
+  dashboards.
+- No repeated section structures within a page.
+- No empty intro columns.
+- Every two-column section must contain meaningful content on both sides.
+- Illustrative disclosures must be visible and premium, not hidden.
+- No fake case studies, anonymous success stories, fake percentages, fake
+  dashboards, fake client quotes, fake logos, or fake screenshots.
+- Empty case-study and result registries must render standards, evidence
+  requirements, and private-reference handling.
+- Public case studies and results render only through Work registry public
+  filters.
+
+---
+
+## 23. Customer journey (homepage reference)
 
 The homepage guides users through:
 

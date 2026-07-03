@@ -46,6 +46,9 @@ import { markets as marketsEs } from "@/content/es/markets";
 import { proof as proofEn } from "@/content/en/proof";
 import { proof as proofFr } from "@/content/fr/proof";
 import { proof as proofEs } from "@/content/es/proof";
+import { work as workEn } from "@/content/en/work";
+import { work as workFr } from "@/content/fr/work";
+import { work as workEs } from "@/content/es/work";
 import {
   getProofItemsByType,
   getPrivateReferenceAvailability,
@@ -53,6 +56,11 @@ import {
   getVerifiedPublicProofItems,
   getVerifiedPublicProofItemsByType,
 } from "@/content/proof.registry";
+import {
+  getPublicCaseStudies,
+  getVerifiedPublicResults,
+  getWorkItemsByType,
+} from "@/content/work.registry";
 
 import type { SiteContent } from "@/content/en/site";
 import type { HomeContent } from "@/content/home.types";
@@ -60,6 +68,12 @@ import type { ServicesContent } from "@/content/services.types";
 import type { IndustriesContent } from "@/content/industries.types";
 import type { MarketsContent } from "@/content/markets.types";
 import type { ProofContent, ProofPageSlug, ProofType } from "@/content/proof.types";
+import type {
+  SampleAuditSlug,
+  WorkContent,
+  WorkPageSlug,
+  WorkType,
+} from "@/content/work.types";
 
 const siteMap: Record<Locale, SiteContent> = {
   en: siteEn,
@@ -95,6 +109,12 @@ const proofMap: Record<Locale, ProofContent> = {
   en: proofEn,
   fr: proofFr,
   es: proofEs,
+};
+
+const workMap: Record<Locale, WorkContent> = {
+  en: workEn,
+  fr: workFr,
+  es: workEs,
 };
 
 /** All industry slugs (shared across locales — English canonical). */
@@ -241,6 +261,24 @@ export const proofPageSlugs = [
   "spokesperson",
 ] as const satisfies readonly ProofPageSlug[];
 
+export const workPageSlugs = [
+  "case-studies",
+  "sample-audits",
+  "search-growth-frameworks",
+  "client-results",
+] as const satisfies readonly WorkPageSlug[];
+
+export const sampleAuditSlugs = [
+  "technical-seo-audit",
+  "ai-search-visibility-review",
+  "content-gap-map",
+  "local-seo-audit",
+  "ecommerce-search-architecture",
+  "international-seo-market-map",
+  "ppc-organic-intelligence",
+  "90-day-search-growth-roadmap",
+] as const satisfies readonly SampleAuditSlug[];
+
 /**
  * Return markets content for a locale (hub + all 3 markets + UI strings).
  * Falls back to English if the locale file is somehow missing.
@@ -306,3 +344,39 @@ export {
 };
 
 export type { ProofPageSlug, ProofType };
+
+/* -------------------------------------------------------------------------- */
+/* Work                                                                        */
+/* -------------------------------------------------------------------------- */
+
+export function getWorkContent(locale: Locale): WorkContent {
+  return workMap[locale] ?? workEn;
+}
+
+export function getWorkPageContent(
+  slug: string,
+  locale: Locale
+): WorkContent["pages"][WorkPageSlug] | undefined {
+  if (!(workPageSlugs as readonly string[]).includes(slug)) return undefined;
+  return getWorkContent(locale).pages[slug as WorkPageSlug];
+}
+
+export function getSampleAuditBySlug(
+  slug: string,
+  locale: Locale
+): WorkContent["samples"][SampleAuditSlug] | undefined {
+  if (!(sampleAuditSlugs as readonly string[]).includes(slug)) return undefined;
+  return getWorkContent(locale).samples[slug as SampleAuditSlug];
+}
+
+export function getSampleAuditSlugs(): string[] {
+  return [...sampleAuditSlugs];
+}
+
+export {
+  getPublicCaseStudies,
+  getVerifiedPublicResults,
+  getWorkItemsByType,
+};
+
+export type { SampleAuditSlug, WorkPageSlug, WorkType };

@@ -61,6 +61,16 @@ export const site: SiteContent = {
         ],
       },
       {
+        title: "Proyectos",
+        links: [
+          { label: "Proyectos", href: "/work" },
+          { label: "Casos de estudio", href: "/work/case-studies" },
+          { label: "Auditorías de muestra", href: "/work/sample-audits" },
+          { label: "Marcos de crecimiento", href: "/work/search-growth-frameworks" },
+          { label: "Resultados de clientes", href: "/work/client-results" },
+        ],
+      },
+      {
         title: "Pruebas",
         links: [
           { label: "Pruebas", href: "/proof" },

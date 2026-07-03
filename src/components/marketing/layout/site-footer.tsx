@@ -68,7 +68,7 @@ export function SiteFooter() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-6">
             {content.footer.groups.map((group) => (
               <nav key={group.title} aria-label={group.title}>
                 <p className="text-xs font-semibold uppercase tracking-wide text-muted">

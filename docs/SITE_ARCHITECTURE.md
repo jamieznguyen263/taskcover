@@ -140,12 +140,31 @@ proof detail pages. Slugs are shared (English) for now.
 > videos, logos, ratings, awards, or case-study metrics. See
 > `docs/PROOF_AND_AUTHORITY_STANDARD.md`.
 
-## Work `(planned)`
+## Work ✅ (built)
 
-- `/work`
-- `/work/case-studies`
-- `/work/client-results`
-- `/work/video-testimonials`
+- `/work` ✅
+- `/work/case-studies` ✅
+- `/work/sample-audits` ✅
+- `/work/sample-audits/technical-seo-audit` ✅
+- `/work/sample-audits/ai-search-visibility-review` ✅
+- `/work/sample-audits/content-gap-map` ✅
+- `/work/sample-audits/local-seo-audit` ✅
+- `/work/sample-audits/ecommerce-search-architecture` ✅
+- `/work/sample-audits/international-seo-market-map` ✅
+- `/work/sample-audits/ppc-organic-intelligence` ✅
+- `/work/sample-audits/90-day-search-growth-roadmap` ✅
+- `/work/search-growth-frameworks` ✅
+- `/work/client-results` ✅
+
+Localized equivalents (`/fr/work/*`, `/es/work/*`) are also built for the Work
+hub, all four channel pages, and all 8 sample-audit detail pages. Slugs remain
+English for now.
+
+> Work pages use `src/content/work.registry.ts` plus public-only helper
+> filters in `src/lib/content.ts`. Empty public case-study and result
+> registries render publication standards, methodology, private-reference
+> handling, and evidence requirements, not fake case studies, fake metrics, or
+> anonymous success stories. See `docs/WORK_AND_CASE_STUDY_STANDARD.md`.
 
 ## Methodology & technology `(planned)`
 

@@ -75,19 +75,23 @@ src/content/
     home.ts        # homepage content (English)
     services.ts    # services hub + per-service short fields (English)
     proof.ts       # proof hub + detail page content (English)
+    work.ts        # work hub, channels, and sample deliverables (English)
   fr/
     site.ts        # French
     home.ts        # French
     services.ts    # French
     proof.ts       # French
+    work.ts        # French
   es/
     site.ts        # Spanish
     home.ts        # Spanish
     services.ts    # Spanish
     proof.ts       # Spanish
+    work.ts        # Spanish
   home.types.ts    # shared HomeContent type
   services.types.ts# shared ServicesContent type
   proof.types.ts   # shared proof and evidence record types
+  work.types.ts    # shared work, sample, and result record types
 ```
 
 Content accessors live in `src/lib/content.ts`:
@@ -101,6 +105,11 @@ Content accessors live in `src/lib/content.ts`:
 - `getProofPageBySlug(slug, locale)`
 - `getProofPageSlugs()`
 - public-only proof registry helpers
+- `getWorkContent(locale)`
+- `getWorkPageContent(slug, locale)`
+- `getSampleAuditBySlug(slug, locale)`
+- `getSampleAuditSlugs()`
+- public-only Work registry helpers
 
 Components and routes must use these accessors, not raw content imports.
 
@@ -114,6 +123,9 @@ For Task 4A, the following fields are **fully translated** in all locales:
   `summary`, `outcomePromise`, `metaTitle`, `metaDescription`
 - Proof: hub content, all 5 detail pages, proof/disclosure UI labels,
   evidence-policy empty states, private-reference wording, CTAs, metadata,
+  and breadcrumb labels
+- Work: hub content, all 4 channel pages, all 8 sample deliverables,
+  illustrative disclosures, case-study/result standards, CTAs, metadata,
   and breadcrumb labels
 
 The following **falls back to English** (canonical source in `src/data/`)
@@ -158,6 +170,8 @@ Examples:
 - Industries hub and all 7 industry detail pages en/fr/es
 - Markets hub and all 3 market detail pages en/fr/es
 - Proof hub and all 5 proof detail pages en/fr/es
+- Work hub, all 4 Work channel pages, and all 8 sample-audit detail pages
+  en/fr/es
 
 Each entry includes hreflang alternate references.
 
@@ -171,6 +185,8 @@ Each entry includes hreflang alternate references.
   - `app/[locale]/services/[slug]/page.tsx`
   - `app/[locale]/proof/page.tsx`
   - `app/[locale]/proof/[slug]/page.tsx`
+  - `app/[locale]/work/page.tsx`
+  - `app/[locale]/work/*/page.tsx`
 - `[locale]` only generates `fr` and `es` via `generateStaticParams`.
 - All routes are statically generated (SSG) at build time.
 

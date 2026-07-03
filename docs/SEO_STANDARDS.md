@@ -167,3 +167,21 @@ Rules:
   valid.
 - Empty proof registries must render evidence policy and verification
   workflow content, not placeholder proof.
+
+## 11. Work, Case Studies, and Client Results
+
+Work pages (`/work`, `/work/case-studies`, `/work/sample-audits`,
+`/work/sample-audits/[slug]`, `/work/search-growth-frameworks`, and
+`/work/client-results`) emit localized metadata, canonical URLs, hreflang
+alternates, and BreadcrumbList schema only.
+
+Rules:
+- No `Review` or `AggregateRating` schema.
+- No fake `Dataset`, `CaseStudy`, `Person`, `VideoObject`, awards, logos,
+  client `Organization`, or performance-claim schema.
+- Sample audit pages are illustrative public deliverables and must include
+  visible disclosure text.
+- Named case studies render only through `getPublicCaseStudies()`.
+- Client results render only through `getVerifiedPublicResults()`.
+- Empty registries must render standards and evidence requirements, not
+  "placeholder", "coming soon", anonymous success stories, or fake metrics.
