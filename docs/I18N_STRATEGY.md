@@ -74,16 +74,20 @@ src/content/
     site.ts        # nav, CTAs, footer, common UI strings (English)
     home.ts        # homepage content (English)
     services.ts    # services hub + per-service short fields (English)
+    proof.ts       # proof hub + detail page content (English)
   fr/
     site.ts        # French
     home.ts        # French
     services.ts    # French
+    proof.ts       # French
   es/
     site.ts        # Spanish
     home.ts        # Spanish
     services.ts    # Spanish
+    proof.ts       # Spanish
   home.types.ts    # shared HomeContent type
   services.types.ts# shared ServicesContent type
+  proof.types.ts   # shared proof and evidence record types
 ```
 
 Content accessors live in `src/lib/content.ts`:
@@ -93,6 +97,10 @@ Content accessors live in `src/lib/content.ts`:
 - `getServiceBySlug(slug, locale)` — merged Service (localized hero + English deep body)
 - `getServiceSlugs()` — shared slugs
 - `getServices(locale)` — all services merged for a locale
+- `getProofContent(locale)`
+- `getProofPageBySlug(slug, locale)`
+- `getProofPageSlugs()`
+- public-only proof registry helpers
 
 Components and routes must use these accessors, not raw content imports.
 
@@ -104,6 +112,9 @@ For Task 4A, the following fields are **fully translated** in all locales:
 - Services: hub hero/positioning/description, connect + which-service sections,
   per-service `title`, `shortLabel`, `h1`, `positioning`, `subheadline`,
   `summary`, `outcomePromise`, `metaTitle`, `metaDescription`
+- Proof: hub content, all 5 detail pages, proof/disclosure UI labels,
+  evidence-policy empty states, private-reference wording, CTAs, metadata,
+  and breadcrumb labels
 
 The following **falls back to English** (canonical source in `src/data/`)
 and is documented as acceptable in Task 4A:
@@ -144,6 +155,9 @@ Examples:
 - Homepage en/fr/es
 - Services hub en/fr/es
 - All 11 service detail pages en/fr/es
+- Industries hub and all 7 industry detail pages en/fr/es
+- Markets hub and all 3 market detail pages en/fr/es
+- Proof hub and all 5 proof detail pages en/fr/es
 
 Each entry includes hreflang alternate references.
 
@@ -155,6 +169,8 @@ Each entry includes hreflang alternate references.
   - `app/[locale]/page.tsx`
   - `app/[locale]/services/page.tsx`
   - `app/[locale]/services/[slug]/page.tsx`
+  - `app/[locale]/proof/page.tsx`
+  - `app/[locale]/proof/[slug]/page.tsx`
 - `[locale]` only generates `fr` and `es` via `generateStaticParams`.
 - All routes are statically generated (SSG) at build time.
 

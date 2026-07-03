@@ -63,12 +63,12 @@ export const site: SiteContent = {
       {
         title: "Pruebas",
         links: [
+          { label: "Pruebas", href: "/proof" },
           { label: "Experiencia de marca", href: "/proof/brand-experience" },
-          { label: "Casos de éxito", href: "/work/case-studies" },
-          { label: "Resultados de clientes", href: "/work/client-results" },
-          { label: "Testimonios en vídeo", href: "/work/video-testimonials" },
-          { label: "Prensa y medios", href: "/proof/press" },
+          { label: "Presencia en medios", href: "/proof/media-features" },
           { label: "Reseñas de clientes", href: "/proof/client-reviews" },
+          { label: "Reseñas en video", href: "/proof/video-reviews" },
+          { label: "Portavoz", href: "/proof/spokesperson" },
         ],
       },
       {

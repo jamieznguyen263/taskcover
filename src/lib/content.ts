@@ -43,11 +43,23 @@ import { markets as marketsEn } from "@/content/en/markets";
 import { markets as marketsFr } from "@/content/fr/markets";
 import { markets as marketsEs } from "@/content/es/markets";
 
+import { proof as proofEn } from "@/content/en/proof";
+import { proof as proofFr } from "@/content/fr/proof";
+import { proof as proofEs } from "@/content/es/proof";
+import {
+  getProofItemsByType,
+  getPrivateReferenceAvailability,
+  getPublicProofItems,
+  getVerifiedPublicProofItems,
+  getVerifiedPublicProofItemsByType,
+} from "@/content/proof.registry";
+
 import type { SiteContent } from "@/content/en/site";
 import type { HomeContent } from "@/content/home.types";
 import type { ServicesContent } from "@/content/services.types";
 import type { IndustriesContent } from "@/content/industries.types";
 import type { MarketsContent } from "@/content/markets.types";
+import type { ProofContent, ProofPageSlug, ProofType } from "@/content/proof.types";
 
 const siteMap: Record<Locale, SiteContent> = {
   en: siteEn,
@@ -77,6 +89,12 @@ const marketsMap: Record<Locale, MarketsContent> = {
   en: marketsEn,
   fr: marketsFr,
   es: marketsEs,
+};
+
+const proofMap: Record<Locale, ProofContent> = {
+  en: proofEn,
+  fr: proofFr,
+  es: proofEs,
 };
 
 /** All industry slugs (shared across locales — English canonical). */
@@ -214,6 +232,15 @@ export const marketSlugs = [
   "australia-seo-agency",
 ] as const;
 
+/** All proof detail slugs (shared across locales). */
+export const proofPageSlugs = [
+  "brand-experience",
+  "media-features",
+  "client-reviews",
+  "video-reviews",
+  "spokesperson",
+] as const satisfies readonly ProofPageSlug[];
+
 /**
  * Return markets content for a locale (hub + all 3 markets + UI strings).
  * Falls back to English if the locale file is somehow missing.
@@ -249,3 +276,33 @@ export function getMarkets(
     .map((slug) => content.markets[slug])
     .filter(Boolean);
 }
+
+/* -------------------------------------------------------------------------- */
+/* Proof + Authority                                                           */
+/* -------------------------------------------------------------------------- */
+
+export function getProofContent(locale: Locale): ProofContent {
+  return proofMap[locale] ?? proofEn;
+}
+
+export function getProofPageBySlug(
+  slug: string,
+  locale: Locale
+): ProofContent["pages"][ProofPageSlug] | undefined {
+  if (!(proofPageSlugs as readonly string[]).includes(slug)) return undefined;
+  return getProofContent(locale).pages[slug as ProofPageSlug];
+}
+
+export function getProofPageSlugs(): string[] {
+  return [...proofPageSlugs];
+}
+
+export {
+  getProofItemsByType,
+  getPrivateReferenceAvailability,
+  getPublicProofItems,
+  getVerifiedPublicProofItems,
+  getVerifiedPublicProofItemsByType,
+};
+
+export type { ProofPageSlug, ProofType };

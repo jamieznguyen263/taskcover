@@ -45,6 +45,7 @@ serializer in `src/lib/seo.ts` (`serializeJsonLd`).
 - **No fake review schema.**
 - **No spammy aggregate ratings.**
 - **No fabricated case-study metrics** in schema or copy.
+- **No fake proof schema** for reviews, videos, people, awards, or media.
 - Organization schema omits phone/address/founder/awards until verified.
 - For `Article` and `VideoObject`, only include fields backed by real data.
 
@@ -147,3 +148,22 @@ Each market page must include:
   in Australia, multi-state dynamics in the USA).
 - Localized internal links to relevant services and industries.
 - A clear call to action tailored to that market.
+
+## 10. Proof + Authority pages
+
+Proof pages (`/proof` and `/proof/[slug]`) emit localized metadata,
+canonical URLs, hreflang alternates, and BreadcrumbList schema only.
+
+Rules:
+- No `Review` schema.
+- No `AggregateRating` schema.
+- No fake `Person`, `ProfilePage`, `VideoObject`, awards, logos, sameAs links,
+  or organization relationships.
+- `VideoObject` may be emitted only for a real verified public video record
+  with complete source URL, thumbnail, title, description, and valid date data.
+- `Person` or `ProfilePage` may be emitted only when a verified public
+  spokesperson profile exists.
+- `ItemList` may be emitted only for real public proof records when useful and
+  valid.
+- Empty proof registries must render evidence policy and verification
+  workflow content, not placeholder proof.

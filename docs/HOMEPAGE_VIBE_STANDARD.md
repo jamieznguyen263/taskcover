@@ -532,7 +532,26 @@ Each market has a unique hero visual in
 
 ---
 
-## 21. Customer journey (homepage reference)
+## 21. Proof page adaptation rules (Task 7)
+
+Proof pages must feel editorial, verified, and evidence-led. They are not
+decorative social-proof pages.
+
+- Do not use fake testimonials, fake media, fake awards, fake case-study
+  metrics, fake video thumbnails, or fake logos.
+- Empty evidence states must remain professional without exposing
+  "placeholder" or "coming soon" language.
+- Use evidence ledgers, verification workflows, disclosure panels, private
+  reference pathways, topic maps, and source standards.
+- No two proof sections within one page may repeat the same structure,
+  layout pattern, or UI logic.
+- Brand experience uses text-only approved nameplates unless permissioned
+  public logo assets exist.
+- Public proof records render only through verified-public filters.
+
+---
+
+## 22. Customer journey (homepage reference)
 
 The homepage guides users through:
 

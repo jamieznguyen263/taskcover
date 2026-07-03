@@ -114,12 +114,12 @@ export const site: SiteContent = {
       {
         title: "Proof",
         links: [
+          { label: "Proof", href: "/proof" },
           { label: "Brand Experience", href: "/proof/brand-experience" },
-          { label: "Case Studies", href: "/work/case-studies" },
-          { label: "Client Results", href: "/work/client-results" },
-          { label: "Video Testimonials", href: "/work/video-testimonials" },
-          { label: "Press & Media", href: "/proof/press" },
+          { label: "Media Features", href: "/proof/media-features" },
           { label: "Client Reviews", href: "/proof/client-reviews" },
+          { label: "Video Reviews", href: "/proof/video-reviews" },
+          { label: "Spokesperson", href: "/proof/spokesperson" },
         ],
       },
       {

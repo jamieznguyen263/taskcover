@@ -21,6 +21,10 @@ Route prefix is the source of truth for the active locale. See
 - `app/[locale]/services/page.tsx` — French/Spanish services hub
 - `app/services/[slug]/page.tsx` — English service detail
 - `app/[locale]/services/[slug]/page.tsx` — French/Spanish service detail
+- `app/proof/page.tsx` — English proof hub
+- `app/proof/[slug]/page.tsx` — English proof detail
+- `app/[locale]/proof/page.tsx` — French/Spanish proof hub
+- `app/[locale]/proof/[slug]/page.tsx` — French/Spanish proof detail
 - `app/sitemap.ts` — emits all localized routes with hreflang alternates
 
 ## Top-level
@@ -118,18 +122,30 @@ future enhancement (see `I18N_STRATEGY.md` §11).
 > wording only: "Selected team and partner experience across global brands,
 > campaigns, and search programs."
 
-## Work / proof `(planned)`
+## Proof + Authority ✅ (built)
+
+- `/proof` ✅
+- `/proof/brand-experience` ✅
+- `/proof/media-features` ✅
+- `/proof/client-reviews` ✅
+- `/proof/video-reviews` ✅
+- `/proof/spokesperson` ✅
+
+Localized equivalents (`/fr/proof/*`, `/es/proof/*`) are also built for all 5
+proof detail pages. Slugs are shared (English) for now.
+
+> Proof pages use `src/content/proof.registry.ts` plus public-only helper
+> filters in `src/lib/content.ts`. Empty public registries render evidence
+> standards and private-reference pathways, not fake testimonials, press,
+> videos, logos, ratings, awards, or case-study metrics. See
+> `docs/PROOF_AND_AUTHORITY_STANDARD.md`.
+
+## Work `(planned)`
 
 - `/work`
 - `/work/case-studies`
 - `/work/client-results`
 - `/work/video-testimonials`
-- `/proof`
-- `/proof/brand-experience`
-- `/proof/press`
-- `/proof/client-reviews`
-- `/proof/media-features`
-- `/proof/spokesperson`
 
 ## Methodology & technology `(planned)`
 
