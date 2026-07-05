@@ -1,47 +1,13 @@
 "use client";
 
 import * as React from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { useReducedMotion } from "motion/react";
 import { Container } from "@/components/marketing/shared/container";
+import { ClientLogoTile } from "@/components/marketing/shared/client-logo-tile";
 import type { ClientLogoProof, CtaItem } from "@/content/home.types";
 import { cn } from "@/lib/utils";
-
-function LogoCard({ logo, compact = false }: { logo: ClientLogoProof; compact?: boolean }) {
-  return (
-    <Link
-      href={logo.href}
-      aria-label={logo.alt}
-      className={cn(
-        "group relative overflow-hidden rounded-2xl border border-line bg-white p-2 shadow-[0_14px_38px_-28px_rgba(20,31,36,0.72)] transition hover:-translate-y-0.5 hover:border-brand-teal/40 hover:shadow-[0_22px_48px_-28px_rgba(24,138,172,0.55)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal",
-        compact ? "min-h-28" : "w-56 shrink-0 sm:w-64",
-      )}
-    >
-      <span
-        className={cn(
-          "relative flex aspect-[9/5] items-center justify-center overflow-hidden rounded-xl border",
-          logo.background === "dark"
-            ? "border-white/10 bg-graphite"
-            : "border-line-soft bg-surface-soft",
-        )}
-      >
-        <Image
-          src={logo.src}
-          alt={logo.alt}
-          width={logo.width}
-          height={logo.height}
-          sizes={compact ? "(max-width: 640px) 45vw, 18vw" : "256px"}
-          className="h-full w-full object-contain transition duration-300 group-hover:scale-[1.025]"
-        />
-      </span>
-      <span className="mt-2 block truncate px-1 text-xs font-semibold text-secondary">
-        {logo.clientName}
-      </span>
-    </Link>
-  );
-}
 
 function LogoRail({ logos }: { logos: readonly ClientLogoProof[] }) {
   const loop = [...logos, ...logos];
@@ -57,8 +23,8 @@ function LogoRail({ logos }: { logos: readonly ClientLogoProof[] }) {
       />
       <ul className="flex w-max items-stretch gap-4 animate-[marquee_48s_linear_infinite] group-hover:[animation-play-state:paused]">
         {loop.map((logo, index) => (
-          <li key={`${logo.src}-${index}`} className="flex">
-            <LogoCard logo={logo} />
+          <li key={`${logo.id}-${index}`} className="flex">
+            <ClientLogoTile logo={logo} href={logo.href} />
           </li>
         ))}
       </ul>
@@ -104,14 +70,14 @@ export function BrandMarquee({
 
         <div className="grid grid-cols-2 gap-3 py-2 sm:hidden">
           {logos.map((logo) => (
-            <LogoCard key={logo.src} logo={logo} compact />
+            <ClientLogoTile key={logo.id} logo={logo} href={logo.href} compact />
           ))}
         </div>
 
         {reduceMotion ? (
           <div className="hidden grid-cols-2 gap-4 py-2 sm:grid lg:grid-cols-5">
             {logos.map((logo) => (
-              <LogoCard key={logo.src} logo={logo} compact />
+              <ClientLogoTile key={logo.id} logo={logo} href={logo.href} compact />
             ))}
           </div>
         ) : (

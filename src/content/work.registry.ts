@@ -1,8 +1,10 @@
 import type { WorkRecord, WorkType } from "./work.types";
 import { caseStudyDetails, caseStudyOrder } from "./en/case-studies";
+import { getPublicClientLogoAssetByCaseStudySlug } from "./client-logo-assets";
 
 export const workRegistry: WorkRecord[] = caseStudyOrder.map((slug) => {
   const item = caseStudyDetails[slug];
+  const logo = getPublicClientLogoAssetByCaseStudySlug(slug);
   return {
     id: item.id,
     type: item.type,
@@ -22,7 +24,7 @@ export const workRegistry: WorkRecord[] = caseStudyOrder.map((slug) => {
     metrics: item.metrics.map((metric) => `${metric.label}: ${metric.value}`),
     timeframe: item.engagementPeriod,
     methodology: item.execution.map((step) => step.label),
-    assetPath: item.visualGallery[0]?.src,
+    assetPath: logo?.logoPath ?? item.visualGallery[0]?.src,
     permissionStatus: "verified-public",
     verificationStatus: "verified",
     publicDisclosure: true,

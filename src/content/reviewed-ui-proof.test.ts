@@ -7,22 +7,37 @@ import {
   getServiceBySlug,
   getWorkContent,
 } from "@/lib/content";
+import { clientLogoAssets, publicClientLogoAssets } from "@/content/home-proof-assets";
 import { getInsightsContent } from "@/lib/insights/content";
 import { locales } from "@/lib/i18n";
 
 describe("Task 13C reviewed UI proof data", () => {
   it("uses local verified logo assets for the homepage brand strip", () => {
+    expect(clientLogoAssets).toHaveLength(12);
+    expect(publicClientLogoAssets).toHaveLength(10);
+    expect(
+      clientLogoAssets
+        .filter((asset) => asset.permissionStatus === "permission-review")
+        .map((asset) => asset.id)
+    ).toEqual(["british-council", "skyscanner"]);
+
     for (const locale of locales) {
       const home = getHomeContent(locale);
       expect(home.brandExperience.logos).toHaveLength(10);
 
       for (const logo of home.brandExperience.logos) {
-        expect(logo.src).toMatch(/^\/case-studies\/.+\/image-1\.webp$/);
+        expect(logo.src).toMatch(/^\/brand-logos\/.+\.webp$/);
         expect(logo.alt).toContain(logo.clientName);
+        expect(logo.permissionStatus).toBe("approved-case-study");
+        expect(logo.caseStudySlug).toBeTruthy();
         expect(logo.width).toBeGreaterThan(400);
         expect(logo.height).toBeGreaterThan(250);
         expect(existsSync(path.join(process.cwd(), "public", logo.src.replace(/^\//, "")))).toBe(true);
       }
+
+      const publicIds = new Set(home.brandExperience.logos.map((logo) => logo.id));
+      expect(publicIds.has("british-council")).toBe(false);
+      expect(publicIds.has("skyscanner")).toBe(false);
     }
   });
 

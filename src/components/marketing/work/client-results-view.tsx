@@ -1,12 +1,13 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BarChart3, Grid2X2, LockKeyhole, Network, ShieldCheck } from "lucide-react";
 import { Container } from "@/components/marketing/shared/container";
+import { ClientLogoMark } from "@/components/marketing/shared/client-logo-tile";
 import { Section } from "@/components/marketing/shared/section";
 import { Eyebrow, SectionHeader } from "@/components/marketing/shared/section-header";
 import { CTAButton } from "@/components/marketing/shared/cta-button";
+import { buildClientLogoProofAsset, publicClientLogoAssets } from "@/content/home-proof-assets";
 import { getCaseStudies, getServiceBySlug, getWorkContent } from "@/lib/content";
-import { localizePath, type Locale } from "@/lib/i18n";
+import { getLocalePrefix, localizePath, type Locale } from "@/lib/i18n";
 import { PriorityLedger, SignalMosaic } from "./work-visuals";
 import { WorkStatusBadge } from "./work-status-badge";
 
@@ -25,6 +26,16 @@ export function ClientResultsView({ locale }: { locale: Locale }) {
   const page = content.pages["client-results"];
   const cases = getCaseStudies(locale);
   const loc = (path: string) => localizePath(path, locale);
+  const logoBySlug = new Map(
+    publicClientLogoAssets.map((asset) => [
+      asset.caseStudySlug,
+      buildClientLogoProofAsset({
+        asset,
+        hrefPrefix: getLocalePrefix(locale),
+        alt: (clientName) => `${clientName} logo`,
+      }),
+    ])
+  );
   const serviceSlugs = Array.from(new Set(cases.flatMap((item) => item.serviceSlugs)));
   const serviceLabels = Object.fromEntries(
     serviceSlugs.map((slug) => [slug, getServiceBySlug(slug, locale)?.title ?? slug])
@@ -104,36 +115,41 @@ export function ClientResultsView({ locale }: { locale: Locale }) {
             description={content.clientResults.registryIntro}
           />
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-            {highlights.map(({ case: item, metric, serviceLabel }) => (
-              <Link
-                key={`${item.slug}-${metric.id}`}
-                href={loc(`/work/case-studies/${item.slug}`)}
-                className="group overflow-hidden rounded-3xl border border-line bg-white shadow-soft transition hover:-translate-y-0.5 hover:border-brand-teal/35"
-              >
-                <div className="relative bg-surface-tint p-3">
-                  <div className="relative aspect-[9/5] overflow-hidden rounded-2xl border border-line-soft bg-white">
-                    <Image
-                      src={item.visualGallery[0].src}
-                      alt={item.visualGallery[0].alt}
-                      fill
-                      sizes="(max-width: 768px) 50vw, 20vw"
-                      className="object-contain"
-                    />
+            {highlights.map(({ case: item, metric, serviceLabel }) => {
+              const logo = logoBySlug.get(item.slug);
+              return (
+                <Link
+                  key={`${item.slug}-${metric.id}`}
+                  href={loc(`/work/case-studies/${item.slug}`)}
+                  className="group overflow-hidden rounded-3xl border border-line bg-white shadow-soft transition hover:-translate-y-0.5 hover:border-brand-teal/35"
+                >
+                  <div className="relative bg-surface-tint p-3">
+                    {logo ? (
+                      <ClientLogoMark
+                        logo={logo}
+                        sizes="(max-width: 768px) 50vw, 20vw"
+                        className="rounded-2xl"
+                      />
+                    ) : (
+                      <div className="flex aspect-[9/5] items-center justify-center rounded-2xl border border-line-soft bg-white p-4 text-center text-sm font-semibold text-graphite">
+                        {item.clientName}
+                      </div>
+                    )}
                   </div>
-                </div>
-                <div className="p-5">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-muted">{metric.label}</p>
-                  <p className="mt-2 text-3xl font-semibold text-brand-teal">{metric.value}</p>
-                  <h2 className="mt-3 text-base font-semibold text-graphite">{item.clientName}</h2>
-                  <p className="mt-1 text-xs font-semibold text-secondary">{serviceLabel}</p>
-                  <p className="mt-3 text-sm leading-6 text-secondary">{metric.context}</p>
-                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-teal">
-                    {content.ui.viewCaseStudy}
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-                  </span>
-                </div>
-              </Link>
-            ))}
+                  <div className="p-5">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted">{metric.label}</p>
+                    <p className="mt-2 text-3xl font-semibold text-brand-teal">{metric.value}</p>
+                    <h2 className="mt-3 text-base font-semibold text-graphite">{item.clientName}</h2>
+                    <p className="mt-1 text-xs font-semibold text-secondary">{serviceLabel}</p>
+                    <p className="mt-3 text-sm leading-6 text-secondary">{metric.context}</p>
+                    <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-teal">
+                      {content.ui.viewCaseStudy}
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </Container>
       </Section>

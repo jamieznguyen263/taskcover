@@ -1,12 +1,13 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, BarChart3, Network, ShieldCheck } from "lucide-react";
 import { Container } from "@/components/marketing/shared/container";
+import { ClientLogoMark } from "@/components/marketing/shared/client-logo-tile";
 import { Section } from "@/components/marketing/shared/section";
 import { Eyebrow, SectionHeader } from "@/components/marketing/shared/section-header";
 import { CTAButton } from "@/components/marketing/shared/cta-button";
+import { buildClientLogoProofAsset, publicClientLogoAssets } from "@/content/home-proof-assets";
 import { getCaseStudies, getServiceBySlug, getWorkContent } from "@/lib/content";
-import { localizePath, type Locale } from "@/lib/i18n";
+import { getLocalePrefix, localizePath, type Locale } from "@/lib/i18n";
 import { WorkStatusBadge } from "./work-status-badge";
 import { CaseStudyIndex } from "./case-study-index";
 
@@ -20,30 +21,47 @@ export function CaseStudiesView({ locale }: { locale: Locale }) {
   const cases = getCaseStudies(locale);
   const featured = cases.find((item) => item.featuredOnHomepage) ?? cases[0];
   const loc = (path: string) => localizePath(path, locale);
+  const logoBySlug = new Map(
+    publicClientLogoAssets.map((asset) => [
+      asset.caseStudySlug,
+      buildClientLogoProofAsset({
+        asset,
+        hrefPrefix: getLocalePrefix(locale),
+        alt: (clientName) => `${clientName} logo`,
+      }),
+    ])
+  );
+  const featuredLogo = logoBySlug.get(featured.slug);
   const serviceSlugs = Array.from(new Set(cases.flatMap((item) => item.serviceSlugs)));
   const serviceLabels = Object.fromEntries(
     serviceSlugs.map((slug) => [slug, getServiceBySlug(slug, locale)?.title ?? slug])
   );
-  const indexCases = cases.map((item) => ({
-    slug: item.slug,
-    clientName: item.clientName,
-    summary: item.summary,
-    industry: item.industry,
-    industrySlug: item.industrySlug,
-    market: item.market,
-    marketSlugs: item.marketSlugs,
-    serviceSlugs: item.serviceSlugs,
-    metrics: item.metrics
-      .filter((metric) => metric.displayPublicly)
-      .map((metric) => ({
-        id: metric.id,
-        label: metric.label,
-        value: metric.value,
-        context: metric.context,
-        category: metric.category,
-      })),
-    visualGallery: item.visualGallery,
-  }));
+  const indexCases = cases.flatMap((item) => {
+    const logo = logoBySlug.get(item.slug);
+    if (!logo) return [];
+    return [
+      {
+        slug: item.slug,
+        clientName: item.clientName,
+        summary: item.summary,
+        industry: item.industry,
+        industrySlug: item.industrySlug,
+        market: item.market,
+        marketSlugs: item.marketSlugs,
+        serviceSlugs: item.serviceSlugs,
+        metrics: item.metrics
+          .filter((metric) => metric.displayPublicly)
+          .map((metric) => ({
+            id: metric.id,
+            label: metric.label,
+            value: metric.value,
+            context: metric.context,
+            category: metric.category,
+          })),
+        logo,
+      },
+    ];
+  });
   const outcomeCards = cases
     .flatMap((item) =>
       item.metrics
@@ -109,15 +127,18 @@ export function CaseStudiesView({ locale }: { locale: Locale }) {
       <Section background="default" aria-labelledby="featured-case">
         <Container className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="relative overflow-hidden rounded-3xl border border-line bg-surface-tint p-3 shadow-soft">
-            <div className="relative aspect-[9/5] overflow-hidden rounded-2xl border border-line-soft bg-white">
-              <Image
-                src={featured.visualGallery[0].src}
-                alt={featured.visualGallery[0].alt}
-                fill
+            {featuredLogo ? (
+              <ClientLogoMark
+                logo={featuredLogo}
+                priority
                 sizes="(max-width: 1024px) 100vw, 48vw"
-                className="object-contain"
+                className="rounded-2xl"
               />
-            </div>
+            ) : (
+              <div className="flex aspect-[9/5] items-center justify-center rounded-2xl border border-line-soft bg-white p-8 text-center text-xl font-semibold text-graphite">
+                {featured.clientName}
+              </div>
+            )}
           </div>
           <div className="flex flex-col justify-center gap-5">
             <Eyebrow>{content.ui.featuredCaseStudy}</Eyebrow>

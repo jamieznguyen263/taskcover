@@ -118,13 +118,18 @@ export type HeroVideoContent = {
 };
 
 export type ClientLogoProof = {
+  id: string;
   clientName: string;
+  shortName?: string;
   src: string;
   alt: string;
   width: number;
   height: number;
   href: string;
   background: "dark" | "light";
+  caseStudySlug: string;
+  permissionStatus: "approved-case-study";
+  sourceType: string;
 };
 
 export type SearchSurface = {

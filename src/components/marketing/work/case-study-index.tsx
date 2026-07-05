@@ -1,10 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Filter, RotateCcw } from "lucide-react";
-import type { CaseMetric, CaseVisual } from "@/content/work.types";
+import { ClientLogoMark } from "@/components/marketing/shared/client-logo-tile";
+import type { ClientLogoProof } from "@/content/home.types";
+import type { CaseMetric } from "@/content/work.types";
 import { localizePath, type Locale } from "@/lib/i18n";
 
 export type CaseStudyIndexItem = {
@@ -17,7 +18,7 @@ export type CaseStudyIndexItem = {
   marketSlugs: string[];
   serviceSlugs: string[];
   metrics: Pick<CaseMetric, "id" | "label" | "value" | "context" | "category">[];
-  visualGallery: CaseVisual[];
+  logo: ClientLogoProof;
 };
 
 type FilterOption = { value: string; label: string };
@@ -138,7 +139,6 @@ export function CaseStudyIndex({ cases, locale, serviceLabels, labels }: Props) 
 
       <div className="grid gap-5 lg:grid-cols-2">
         {filtered.map((item) => {
-          const image = item.visualGallery[0];
           const primaryMetric = item.metrics[0];
           return (
             <article
@@ -147,15 +147,11 @@ export function CaseStudyIndex({ cases, locale, serviceLabels, labels }: Props) 
             >
               <Link href={localizePath(`/work/case-studies/${item.slug}`, locale)} className="grid min-w-0">
                 <div className="relative bg-surface-tint p-3">
-                  <div className="relative aspect-[9/5] overflow-hidden rounded-2xl border border-line-soft bg-white">
-                    <Image
-                      src={image.src}
-                      alt={image.alt}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 50vw"
-                      className="object-contain"
-                    />
-                  </div>
+                  <ClientLogoMark
+                    logo={item.logo}
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="rounded-2xl"
+                  />
                 </div>
                 <div className="grid gap-4 p-5">
                   <div className="flex flex-wrap gap-2 text-[11px] font-semibold uppercase tracking-wide text-muted">

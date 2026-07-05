@@ -9,7 +9,9 @@ Task 13C replaces the old stacked registry with a premium verified case-study li
 - Render cards in a two-column desktop grid and a stacked mobile layout.
 - Show client name, industry/market context, verified metric value, metric context, related service names, and a clear case-study CTA.
 - Resolve service names through the service registry. Do not display raw slugs like `technical-seo`.
-- Use local case-study visual assets only and preserve aspect ratio.
+- Use centralized local client logo assets for hub and results-card logo
+  visuals; keep full case-study gallery visuals on detail pages.
+- Preserve logo and gallery aspect ratios.
 
 ## Proof Modules
 
