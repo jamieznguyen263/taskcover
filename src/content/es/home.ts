@@ -12,9 +12,80 @@ export const home: HomeContent = {
     subheadline:
       "Taskcover Agency ayuda a marcas en Estados Unidos, Canadá y Australia a hacer crecer su visibilidad orgánica, construir autoridad y convertir la demanda de búsqueda de alta intención en resultados comerciales medibles.",
     proofLine:
-      "La experiencia seleccionada del equipo y los socios incluye marcas globales como Agoda, Skyscanner, British Council, Avis y otras.",
+      "Explore casos de crecimiento search verificados en educación, viajes, SaaS, eCommerce, hospitalidad, seguros y marcas multi-mercado.",
     primaryCta: { label: "Auditoría SEO gratuita", href: "/free-seo-audit" },
     secondaryCta: { label: "Ver nuestro sistema", href: "/methodology" },
+  },
+  dashboard: {
+    title: "Cockpit de crecimiento search",
+    subtitle:
+      "Google, búsqueda con IA, autoridad de contenido, salud técnica y prioridades de conversión en una sola vista operativa.",
+    disclosure:
+      "Vista ilustrativa del cockpit. Los datos verificados de clientes se agregan solo con autorización.",
+    signals: [
+      {
+        label: "Demanda search",
+        value: "240K",
+        delta: "+18 %",
+        status: "En expansión",
+        icon: "search",
+        tone: "teal",
+      },
+      {
+        label: "Visibilidad orgánica",
+        value: "90 %",
+        delta: "+22 pts",
+        status: "Acumulando",
+        icon: "trend",
+        tone: "emerald",
+      },
+      {
+        label: "Cobertura de citas IA",
+        value: "64 %",
+        delta: "+31 pts",
+        status: "En construcción activa",
+        icon: "sparkles",
+        tone: "blue",
+      },
+      {
+        label: "Salud técnica",
+        value: "98 %",
+        delta: "+6 pts",
+        status: "Protegida",
+        icon: "gauge",
+        tone: "green",
+      },
+    ],
+    opportunityTitle: "Mapa de oportunidades",
+    opportunitySubtitle: "Brechas prioritarias por demanda, autoridad y palanca de conversión.",
+    opportunities: [
+      { label: "Optimización búsqueda IA", intent: "Superficie de respuesta", value: "Alto", x: 18, y: 38 },
+      { label: "Auditoría SEO técnica", intent: "Base", value: "Urgente", x: 48, y: 24 },
+      { label: "SEO internacional", intent: "Expansión de mercado", value: "Escala", x: 72, y: 48 },
+      { label: "Autoridad de contenido", intent: "Cobertura temática", value: "Construir", x: 34, y: 68 },
+      { label: "Inteligencia PPC search", intent: "Captura de demanda", value: "Mixto", x: 82, y: 72 },
+    ],
+    entityTitle: "Cobertura de entidad y citas",
+    entitySubtitle: "Señales de calidad de fuente que ayudan a Google y los sistemas IA a confiar en la marca.",
+    entityRows: [
+      { label: "Claridad de entidad de marca", value: "Fuerte", status: "Schema + fuentes alineadas" },
+      { label: "Páginas listas para citar", value: "34", status: "Secciones expertas mapeadas" },
+      { label: "Brechas de fuentes de confianza", value: "7", status: "Cola editorial de PR" },
+    ],
+    queueTitle: "Cola del próximo sprint",
+    queueSubtitle: "Correcciones priorizadas antes de ampliar la producción de contenido.",
+    queueRows: [
+      { task: "Corregir trampas de rastreo y deriva canónica", impact: "Alto", effort: "Medio", status: "Técnico" },
+      { task: "Publicar bloques FAQ listos para IA", impact: "Alto", effort: "Bajo", status: "Contenido" },
+      { task: "Enrutar CTA de auditoría por intención del comprador", impact: "Medio", effort: "Bajo", status: "Conversión" },
+    ],
+    pathTitle: "Ruta de conversión",
+    pathSteps: ["Solicitud de auditoría", "Revisión diagnóstica", "Hoja de ruta 90 días", "Decisión de sprint"],
+    labels: {
+      impact: "Impacto",
+      effort: "Esfuerzo",
+      value: "Valor",
+    },
   },
   searchHasChanged: {
     eyebrow: "La búsqueda ha cambiado",

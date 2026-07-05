@@ -197,6 +197,14 @@ export function getLocalizedSite(locale: Locale): SiteContent {
   return {
     ...base,
     navigation: base.navigation.map((n) => ({ ...n, href: loc(n.href) })),
+    megaMenu: base.megaMenu.map((item) => ({
+      ...item,
+      groups: item.groups.map((group) => ({
+        ...group,
+        links: group.links.map((link) => ({ ...link, href: loc(link.href) })),
+      })),
+      cta: item.cta ? { ...item.cta, href: loc(item.cta.href) } : undefined,
+    })),
     primaryCta: { ...base.primaryCta, href: loc(base.primaryCta.href) },
     secondaryCta: { ...base.secondaryCta, href: loc(base.secondaryCta.href) },
     footer: {

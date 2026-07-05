@@ -35,3 +35,17 @@ No new public commercial pages were created in Task 13. The proposed root-level 
 - `src/content/seo/url-intent-map.ts` stores the typed URL intent and keyword family map.
 - `src/content/seo/url-intent-map.test.ts` enforces key architecture constraints.
 - Commercial documentation now explains URL ownership, cannibalization, gaps, internal links, SEM readiness, and launch risks.
+
+## Task 13B Internal Linking Note
+
+Task 13B strengthens global internal linking through header mega menus and
+footer regrouping. It does not change commercial URL ownership.
+
+- Services links point to existing `/services/*` owners.
+- Solutions links point to existing `/industries/*` and `/markets/*` owners.
+- Work links point to existing Work and Proof support pages.
+- Insights links point to existing category hubs.
+- Company and Legal links point to trust, contact, accessibility, and data
+  request routes.
+
+Root-level duplicate commercial URLs remain rejected.

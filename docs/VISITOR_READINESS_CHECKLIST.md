@@ -23,3 +23,18 @@ Production deployment, DNS changes, provider secret configuration, and external 
 - EN/FR/ES route localization preserved with English slugs.
 - Private Admin and thank-you routes excluded from the commercial map.
 - Final Task 13 quality gates still need to pass before launch.
+
+## Task 13B UI/IA Readiness
+
+- Header IA now guides visitors through Services, Solutions, Work, Insights,
+  and Company instead of exposing old page families as a flat list.
+- Mobile navigation now uses accordion groups, Escape close behavior, link-close
+  behavior, and localized language labels.
+- Footer now keeps company identity, contact details, conversion CTAs, legal,
+  accessibility, and data-request paths visible.
+- Homepage hero cockpit uses localized illustrative data and one permission
+  disclosure.
+- Verified case-study proof wording replaces selected-experience brand wording
+  in the homepage hero.
+- Final legal review, deployment, DNS, provider secrets, analytics, and consent
+  tooling remain separate launch tasks.

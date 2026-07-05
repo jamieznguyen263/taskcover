@@ -277,3 +277,22 @@ breadcrumb labels. The typed commercial route helper in
 `src/content/seo/url-intent-map.ts` uses `localizePath()` so future QA can verify
 English, French, and Spanish route forms without creating localized slug
 variants.
+
+## Global Navigation and Dashboard Localization (Task 13B)
+
+Task 13B requires localized public UI for:
+
+- Top-level header labels.
+- Desktop mega-menu group titles, descriptions, links, chips, and contextual
+  CTAs.
+- Mobile accordion labels and language labels.
+- Footer group titles and link labels.
+- Homepage Search Growth Cockpit title, signals, opportunity map, entity
+  rows, sprint queue, conversion path, and illustrative disclosure.
+
+`getLocalizedSite(locale)` localizes nested `megaMenu` links as well as
+header, footer, and CTA links. English remains unprefixed; French and Spanish
+use `/fr` and `/es` with English slugs.
+
+No new public UI introduced in Task 13B may render hardcoded English on `/fr`
+or `/es`.

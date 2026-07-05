@@ -2,6 +2,10 @@
 
 Each keyword family has exactly one primary URL. Supporting URLs can reinforce the primary URL, but should not be optimized as duplicate primary targets.
 
+Task 13B global navigation polish did not change this map. Mega-menu and footer
+links must reinforce these owners without creating root-level duplicate
+commercial URLs.
+
 | Keyword family | Primary URL | Supporting URLs | Proof URLs | Lead funnel | Notes | Risk |
 | --- | --- | --- | --- | --- | --- | --- |
 | SEO agency | `/services/seo-agency` | `/services`, `/`, `/methodology` | `/work/case-studies`, `/work/sample-audits/90-day-search-growth-roadmap` | `/free-seo-audit` | Existing service page owns this. Do not create `/seo-agency`. | Medium |

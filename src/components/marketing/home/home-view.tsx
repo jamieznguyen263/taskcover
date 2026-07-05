@@ -40,16 +40,16 @@ export function HomeView({ home }: { home: HomeContent }) {
       <Section background="tint" className="relative overflow-hidden pt-20 sm:pt-24 lg:pt-28">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-line-grid opacity-70" />
         <div aria-hidden="true" className="pointer-events-none absolute -top-24 right-0 h-72 w-72 rounded-full bg-brand-gradient-soft blur-3xl" />
-        <Container className="relative grid items-center gap-12 lg:grid-cols-[1.05fr_1fr]">
-          <div className="flex flex-col items-start gap-6">
+        <Container className="relative grid min-w-0 items-center gap-12 lg:grid-cols-[1.05fr_1fr]">
+          <div className="flex min-w-0 flex-col items-start gap-6">
             <Eyebrow>{home.hero.eyebrow}</Eyebrow>
-            <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-tight text-graphite sm:text-5xl lg:text-6xl">
+            <h1 className="max-w-full break-words text-balance text-4xl font-semibold leading-[1.08] tracking-tight text-graphite sm:text-5xl lg:text-6xl">
               {home.hero.headline}
             </h1>
-            <p className="max-w-xl text-pretty text-base leading-relaxed text-secondary sm:text-lg">
+            <p className="max-w-full text-pretty text-base leading-relaxed text-secondary sm:max-w-xl sm:text-lg">
               {home.hero.subheadline}
             </p>
-            <p className="max-w-xl text-sm text-muted">{home.hero.proofLine}</p>
+            <p className="max-w-full text-sm text-muted sm:max-w-xl">{home.hero.proofLine}</p>
             <div className="mt-2 flex flex-col gap-3 sm:flex-row">
               <CTAButton size="lg" href={home.hero.primaryCta.href}>
                 {home.hero.primaryCta.label}
@@ -60,8 +60,8 @@ export function HomeView({ home }: { home: HomeContent }) {
               </CTAButton>
             </div>
           </div>
-          <div className="relative">
-            <SearchDashboardMockup />
+          <div className="relative min-w-0">
+            <SearchDashboardMockup dashboard={home.dashboard} />
           </div>
         </Container>
       </Section>

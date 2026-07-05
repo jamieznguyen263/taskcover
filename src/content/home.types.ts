@@ -104,6 +104,36 @@ export type VideoProofSlot = {
   detail: string;
 };
 
+export type SearchDashboardSignal = {
+  label: string;
+  value: string;
+  delta: string;
+  status: string;
+  icon: "search" | "trend" | "sparkles" | "gauge";
+  tone: "green" | "emerald" | "teal" | "blue";
+};
+
+export type SearchDashboardOpportunity = {
+  label: string;
+  intent: string;
+  value: string;
+  x: number;
+  y: number;
+};
+
+export type SearchDashboardRow = {
+  label: string;
+  value: string;
+  status: string;
+};
+
+export type SearchDashboardTask = {
+  task: string;
+  impact: string;
+  effort: string;
+  status: string;
+};
+
 export type HomeContent = {
   hero: {
     eyebrow: string;
@@ -112,6 +142,28 @@ export type HomeContent = {
     proofLine: string;
     primaryCta: CtaItem;
     secondaryCta: CtaItem;
+  };
+  dashboard: {
+    title: string;
+    subtitle: string;
+    disclosure: string;
+    signals: readonly SearchDashboardSignal[];
+    opportunityTitle: string;
+    opportunitySubtitle: string;
+    opportunities: readonly SearchDashboardOpportunity[];
+    entityTitle: string;
+    entitySubtitle: string;
+    entityRows: readonly SearchDashboardRow[];
+    queueTitle: string;
+    queueSubtitle: string;
+    queueRows: readonly SearchDashboardTask[];
+    pathTitle: string;
+    pathSteps: readonly string[];
+    labels: {
+      impact: string;
+      effort: string;
+      value: string;
+    };
   };
   searchHasChanged: {
     eyebrow: string;

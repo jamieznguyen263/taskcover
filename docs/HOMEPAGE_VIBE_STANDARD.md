@@ -604,6 +604,28 @@ unless a configured adapter accepted it.
 
 ---
 
+## 25. Global IA and Cockpit V2 (Task 13B)
+
+The global header uses the Task 13B IA: Services, Solutions, Work, Insights,
+and Company, plus the Free SEO Audit CTA. Industries and Markets live under
+Solutions; Proof lives under Work; trust/legal paths remain footer-first.
+
+Desktop uses grouped mega menus. Mobile uses accordion groups with Escape,
+focus, route-close behavior, language switching, and a visible primary CTA.
+Future global nav work must preserve route ownership and avoid adding duplicate
+commercial pages.
+
+The homepage hero dashboard is now the Search Growth Cockpit V2. It supersedes
+the older generic chart-dashboard requirement in this document. Required
+modules are search signal cards, opportunity map, entity/citation coverage,
+next sprint queue, conversion path rail, and one localized illustrative
+disclosure.
+
+The cockpit is illustrative only. It must stay localized in EN/FR/ES and must
+not imply real client data unless permissioned proof exists.
+
+---
+
 *This standard is the source of truth. All future pages must conform to it.
 Update this document if the approved vibe evolves — do not silently diverge.*
 ## Task 10: Insights Visual Standard

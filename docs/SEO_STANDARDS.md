@@ -264,3 +264,19 @@ Rules:
   localized copy, proof support, and no overlap with organic pages.
 - No doorway pages, city pages, fake offices, fake local business schema, fake
   reviews, fake ratings, or ranking guarantees.
+
+## Task 13B Navigation SEO Safety
+
+Task 13B changed global navigation and footer grouping only. It preserves:
+
+- Existing public route inventory.
+- Canonical URL generation.
+- Hreflang alternates.
+- Sitemap inclusion/exclusion rules.
+- Keyword-family primary URL ownership.
+- Admin, preview, and thank-you exclusions.
+
+The header can expose supporting routes through mega-menu groups, but those
+links must not redefine a page's primary keyword ownership. Do not add
+root-level duplicate pages such as `/seo-agency`, `/technical-seo-agency`, or
+country-name variants outside the existing `/markets/*` structure.

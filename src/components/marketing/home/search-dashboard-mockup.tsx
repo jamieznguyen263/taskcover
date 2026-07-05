@@ -2,362 +2,314 @@
 
 import * as React from "react";
 import { motion, useReducedMotion } from "motion/react";
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
-import { ArrowUp, Gauge, Search, Sparkles, TrendingUp } from "lucide-react";
+import { ArrowRight, Gauge, Search, Sparkles, TrendingUp } from "lucide-react";
+import type { HomeContent } from "@/content/home.types";
 import { cn } from "@/lib/utils";
 
-/**
- * Bright "Search Intelligence Command Center" mockup for the hero.
- *
- * Designed to feel like a premium SEO intelligence platform (Semrush/Ahrefs
- * logic) while staying on-brand: green → emerald → teal → blue.
- *
- * Growth-oriented illustrative metrics (not real client results):
- *  - Top KPI row: Search Volume, Organic Visibility, AI Visibility, Site Health
- *  - Main chart: organic visibility / search demand trend (upward)
- *  - Score module: AI Search, Audit, Authority as compact score rows
- *  - Keyword opportunity list + search intent distribution
- *
- * All metrics are illustrative for the product visual only. A single subtle
- * disclaimer is used instead of scattered "demo"/"placeholder" labels.
- *
- * Accessibility: respects prefers-reduced-motion.
- */
+type DashboardContent = HomeContent["dashboard"];
+type Signal = DashboardContent["signals"][number];
 
-const visibilityTrend = [
-  { m: "Jan", v: 72, d: 150 },
-  { m: "Feb", v: 76, d: 166 },
-  { m: "Mar", v: 81, d: 178 },
-  { m: "Apr", v: 84, d: 191 },
-  { m: "May", v: 87, d: 204 },
-  { m: "Jun", v: 89, d: 218 },
-  { m: "Jul", v: 90, d: 240 },
-];
+const iconMap = {
+  search: Search,
+  trend: TrendingUp,
+  sparkles: Sparkles,
+  gauge: Gauge,
+} satisfies Record<Signal["icon"], typeof Search>;
 
-type TooltipPayloadItem = {
-  dataKey?: string | number;
-  name?: string;
-  value?: string | number;
-  color?: string;
-};
+const toneStyles = {
+  green: {
+    icon: "text-brand-green",
+    bg: "bg-brand-green/10",
+    border: "border-brand-green/20",
+    fill: "bg-brand-green",
+    text: "text-brand-emerald",
+  },
+  emerald: {
+    icon: "text-brand-emerald",
+    bg: "bg-brand-emerald/10",
+    border: "border-brand-emerald/20",
+    fill: "bg-brand-emerald",
+    text: "text-brand-emerald",
+  },
+  teal: {
+    icon: "text-brand-teal",
+    bg: "bg-brand-teal/10",
+    border: "border-brand-teal/20",
+    fill: "bg-brand-teal",
+    text: "text-brand-teal",
+  },
+  blue: {
+    icon: "text-brand-blue",
+    bg: "bg-brand-blue/10",
+    border: "border-brand-blue/20",
+    fill: "bg-brand-blue",
+    text: "text-brand-blue",
+  },
+} satisfies Record<Signal["tone"], Record<"icon" | "bg" | "border" | "fill" | "text", string>>;
 
-function ChartTooltip({
-  active,
-  payload,
-  label,
-}: {
-  active?: boolean;
-  payload?: TooltipPayloadItem[];
-  label?: string | number;
-}) {
-  if (!active || !payload?.length) return null;
+function SignalCard({ signal }: { signal: Signal }) {
+  const Icon = iconMap[signal.icon];
+  const tone = toneStyles[signal.tone];
+
   return (
-    <div className="rounded-lg border border-line bg-white px-3 py-2 text-xs shadow-sm">
-      <p className="font-semibold text-graphite">{label}</p>
-      {payload.map((p) => (
-        <p key={String(p.dataKey)} className="text-muted">
-          <span
-            className="mr-1 inline-block h-2 w-2 rounded-full align-middle"
-            style={{ background: p.color }}
-          />
-          {p.name}: {p.value}
-        </p>
-      ))}
-    </div>
-  );
-}
-
-/* Compact score row — replaces rings to avoid overflow, stays inside the card */
-function ScoreRow({
-  label,
-  value,
-  delta,
-  tone,
-}: {
-  label: string;
-  value: number;
-  delta: string;
-  tone: "brand" | "teal" | "blue";
-}) {
-  const barFrom =
-    tone === "brand"
-      ? "from-brand-green"
-      : tone === "teal"
-        ? "from-brand-teal"
-        : "from-brand-blue";
-  const valueColor =
-    tone === "brand"
-      ? "text-brand-emerald"
-      : tone === "teal"
-        ? "text-brand-teal"
-        : "text-brand-blue";
-  return (
-    <div className="flex flex-col gap-1.5">
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-[11px] font-medium text-secondary">{label}</span>
-        <span className="inline-flex items-center gap-1">
-          <span className={cn("text-sm font-semibold", valueColor)}>{value}%</span>
-          <span className="inline-flex items-center gap-0.5 rounded-full bg-brand-emerald/10 px-1.5 py-0.5 text-[9px] font-semibold text-brand-emerald">
-            <ArrowUp className="h-2.5 w-2.5" aria-hidden="true" />
-            {delta}
-          </span>
+    <div className="rounded-xl border border-line bg-white p-3.5 shadow-[0_10px_24px_-20px_rgba(24,138,172,0.45)]">
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">
+            {signal.label}
+          </p>
+          <p className="mt-1 text-2xl font-semibold tracking-tight text-graphite">
+            {signal.value}
+          </p>
+        </div>
+        <span className={cn("inline-flex h-8 w-8 items-center justify-center rounded-lg border", tone.bg, tone.border)}>
+          <Icon className={cn("h-4 w-4", tone.icon)} aria-hidden="true" />
         </span>
       </div>
-      <div className="h-1.5 w-full overflow-hidden rounded-full bg-line-soft">
-        <motion.span
-          className={cn("h-full rounded-full bg-gradient-to-r to-brand-teal", barFrom)}
-          initial={{ width: 0 }}
-          whileInView={{ width: `${value}%` }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.9, ease: "easeOut" }}
-        />
+      <div className="mt-3 flex items-center justify-between gap-2">
+        <span className="truncate text-[11px] text-secondary">{signal.status}</span>
+        <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-semibold", tone.bg, tone.text)}>
+          {signal.delta}
+        </span>
       </div>
     </div>
   );
 }
 
-export function SearchDashboardMockup({ className }: { className?: string }) {
+function ProgressRow({
+  row,
+  index,
+  reduceMotion,
+}: {
+  row: DashboardContent["entityRows"][number];
+  index: number;
+  reduceMotion: boolean | null;
+}) {
+  const width = 68 + index * 9;
+
+  return (
+    <li className="rounded-lg border border-line-soft bg-surface-tint/60 px-3 py-2.5">
+      <div className="flex items-center justify-between gap-3">
+        <span className="min-w-0 text-xs font-semibold text-graphite">{row.label}</span>
+        <span className="shrink-0 text-xs font-semibold text-brand-teal">{row.value}</span>
+      </div>
+      <p className="mt-1 truncate text-[11px] text-secondary">{row.status}</p>
+      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-line-soft">
+        <motion.span
+          className="block h-full rounded-full bg-brand-gradient"
+          style={{ width: `${width}%` }}
+          initial={false}
+          animate={{ width: `${width}%` }}
+          transition={{ duration: reduceMotion ? 0 : 0.7, delay: index * 0.08 }}
+        />
+      </div>
+    </li>
+  );
+}
+
+export function SearchDashboardMockup({
+  dashboard,
+  className,
+}: {
+  dashboard: DashboardContent;
+  className?: string;
+}) {
   const reduceMotion = useReducedMotion();
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: reduceMotion ? 0 : 0.07,
-        delayChildren: reduceMotion ? 0 : 0.15,
-      },
-    },
-  };
-
   const moduleVariants = {
-    hidden: { opacity: 0, y: reduceMotion ? 0 : 16 },
+    hidden: { opacity: 0, y: reduceMotion ? 0 : 14 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const },
+      transition: { duration: reduceMotion ? 0 : 0.45, ease: [0.16, 1, 0.3, 1] as const },
     },
   };
 
   return (
-    <div className={cn("perspective-1000 relative", className)}>
-      {/* Soft gradient halo behind the whole module */}
+    <div className={cn("perspective-1000 relative", className)} aria-label={dashboard.title}>
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -inset-6 -z-10 rounded-[2.5rem] bg-brand-gradient-soft blur-2xl"
       />
 
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className={cn(
-          "relative overflow-hidden rounded-3xl border border-line bg-white/95 p-4 backdrop-blur-sm sm:p-5",
-          "depth-layered halo-soft",
-        )}
-      >
-        {/* Top status bar */}
+      <motion.div className="relative overflow-hidden rounded-3xl border border-line bg-white/95 p-4 shadow-[0_30px_80px_-40px_rgba(24,138,172,0.45)] backdrop-blur-sm sm:p-5">
         <motion.div
           variants={moduleVariants}
-          className="mb-4 flex items-center justify-between rounded-xl border border-line-soft bg-surface-tint px-4 py-2.5"
+          className="mb-4 rounded-xl border border-line-soft bg-surface-tint px-4 py-3"
         >
-          <div className="flex items-center gap-2">
-            <span className="pulse-dot inline-block h-2 w-2 rounded-full bg-brand-emerald" />
-            <span className="text-xs font-semibold text-graphite">
-              Search Intelligence Command Center
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="pulse-dot inline-block h-2 w-2 rounded-full bg-brand-emerald" />
+                <p className="text-xs font-semibold uppercase tracking-wide text-brand-teal">
+                  {dashboard.title}
+                </p>
+              </div>
+              <p className="mt-1 max-w-md text-xs leading-relaxed text-secondary">
+                {dashboard.subtitle}
+              </p>
+            </div>
+            <span className="hidden rounded-full border border-line bg-white px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-muted sm:inline-flex">
+              {dashboard.signals[0]?.status}
             </span>
           </div>
-          <span className="hidden items-center gap-1 text-[11px] font-medium text-muted sm:inline-flex">
-            <Search className="h-3 w-3 text-brand-teal" aria-hidden="true" />
-            Unified search overview
-          </span>
         </motion.div>
 
-        {/* Top KPI row */}
-        <motion.div
-          variants={moduleVariants}
-          className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4"
-        >
-          {[
-            { label: "Search Volume", value: "240K", icon: Search, tone: "text-brand-teal", delta: "+18%" },
-            { label: "Organic Visibility", value: "90", icon: TrendingUp, tone: "text-brand-emerald", suffix: "%", delta: "+22 pts" },
-            { label: "AI Visibility", value: "95", icon: Sparkles, tone: "text-brand-blue", suffix: "%", delta: "+31 pts" },
-            { label: "Site Health", value: "98", icon: Gauge, tone: "text-brand-teal", suffix: "%", delta: "+6 pts" },
-          ].map((kpi) => (
-            <div
-              key={kpi.label}
-              className="card-lift rounded-xl border border-line bg-white p-3.5"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-medium uppercase tracking-wide text-muted">
-                  {kpi.label}
-                </span>
-                <kpi.icon className={cn("h-3.5 w-3.5", kpi.tone)} aria-hidden="true" />
-              </div>
-              <div className="mt-1.5 flex items-end justify-between gap-1">
-                <p className="text-2xl font-semibold tracking-tight text-graphite">
-                  {kpi.value}
-                  {kpi.suffix ? (
-                    <span className="text-sm font-medium text-muted">{kpi.suffix}</span>
-                  ) : null}
-                </p>
-                <span className="inline-flex items-center gap-0.5 rounded-full bg-brand-emerald/10 px-1.5 py-0.5 text-[9px] font-semibold text-brand-emerald">
-                  <ArrowUp className="h-2.5 w-2.5" aria-hidden="true" />
-                  {kpi.delta}
-                </span>
-              </div>
-            </div>
+        <motion.div variants={moduleVariants} className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
+          {dashboard.signals.map((signal) => (
+            <SignalCard key={signal.label} signal={signal} />
           ))}
         </motion.div>
 
-        {/* Main chart + score module */}
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-          {/* Visibility trend — main feature */}
-          <motion.div variants={moduleVariants} className="lg:col-span-2">
-            <div className="card-lift h-full rounded-2xl border border-line bg-white p-5 ring-brand-glow">
-              <div className="mb-3 flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-semibold text-graphite">
-                    Organic visibility trend
-                  </p>
-                  <p className="text-xs text-muted">Demand-weighted share of voice</p>
-                </div>
-                <span className="inline-flex items-center gap-1 rounded-full bg-brand-emerald/10 px-2.5 py-1 text-[11px] font-semibold text-brand-emerald">
-                  <TrendingUp className="h-3 w-3" aria-hidden="true" />
-                  +18 pts
-                </span>
-              </div>
-              <div className="h-44">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={visibilityTrend} margin={{ top: 6, right: 6, bottom: 0, left: -22 }}>
-                    <defs>
-                      <linearGradient id="visGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#10E66A" stopOpacity={0.35} />
-                        <stop offset="100%" stopColor="#197DB4" stopOpacity={0.04} />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid stroke="#E5EEF3" vertical={false} />
-                    <XAxis dataKey="m" tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: "#64748B" }} />
-                    <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: "#64748B" }} />
-                    <Tooltip content={<ChartTooltip />} />
-                    <Area
-                      type="monotone"
-                      dataKey="v"
-                      name="Visibility"
-                      stroke="#10E66A"
-                      strokeWidth={2.5}
-                      fill="url(#visGrad)"
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Score module — compact rows instead of rings to prevent overflow */}
-          <motion.div variants={moduleVariants}>
-            <div className="card-lift flex h-full flex-col rounded-2xl border border-line bg-white p-5 ring-brand-glow">
-              <p className="text-sm font-semibold text-graphite">Search scores</p>
-              <p className="text-xs text-muted">AI, audit, and authority signals</p>
-              <div className="mt-4 flex flex-col gap-4">
-                <ScoreRow label="AI Search Score" value={95} delta="12 pts" tone="brand" />
-                <ScoreRow label="Audit Score" value={98} delta="4 pts" tone="teal" />
-                <ScoreRow label="Authority Score" value={92} delta="9 pts" tone="blue" />
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Secondary row: keyword opportunities + intent distribution */}
-        <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
-          {/* Keyword opportunity / content gap list */}
-          <motion.div variants={moduleVariants}>
-            <div className="card-lift h-full rounded-2xl border border-line bg-white p-5 ring-brand-glow">
-              <div className="mb-3 flex items-center justify-between">
-                <p className="text-sm font-semibold text-graphite">
-                  Keyword opportunities
+        <div className="grid gap-4 lg:grid-cols-[1.12fr_0.88fr]">
+          <motion.section
+            variants={moduleVariants}
+            className="rounded-2xl border border-line bg-white p-4 ring-brand-glow"
+            aria-labelledby="search-dashboard-opportunities"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 id="search-dashboard-opportunities" className="text-sm font-semibold text-graphite">
+                  {dashboard.opportunityTitle}
+                </h2>
+                <p className="mt-1 text-xs leading-relaxed text-secondary">
+                  {dashboard.opportunitySubtitle}
                 </p>
-                <span className="rounded-full bg-brand-emerald/10 px-2 py-0.5 text-[10px] font-medium text-brand-emerald">
-                  Growth
-                </span>
               </div>
-              <ul className="flex flex-col gap-2">
-                {[
-                  { kw: "enterprise seo platform", vol: "12.4K", diff: 42 },
-                  { kw: "ai search optimization", vol: "8.9K", diff: 38 },
-                  { kw: "technical seo audit", vol: "6.1K", diff: 51 },
-                ].map((row) => (
-                  <li
-                    key={row.kw}
-                    className="flex items-center justify-between rounded-lg border border-line-soft bg-surface-tint/50 px-3 py-2"
-                  >
-                    <span className="truncate text-xs font-medium text-graphite">
-                      {row.kw}
-                    </span>
-                    <span className="flex shrink-0 items-center gap-2">
-                      <span className="text-[11px] text-muted">{row.vol}/mo</span>
-                      <span
-                        className={cn(
-                          "inline-flex h-1.5 w-10 overflow-hidden rounded-full bg-line-soft",
-                        )}
-                        aria-hidden="true"
-                      >
-                        <span
-                          className="h-full rounded-full bg-brand-gradient"
-                          style={{ width: `${row.diff}%` }}
-                        />
-                      </span>
-                    </span>
-                  </li>
-                ))}
-              </ul>
+              <span className="rounded-full bg-brand-teal/10 px-2 py-0.5 text-[10px] font-semibold text-brand-teal">
+                {dashboard.labels.value}
+              </span>
             </div>
-          </motion.div>
 
-          {/* Search intent distribution */}
-          <motion.div variants={moduleVariants}>
-            <div className="card-lift h-full rounded-2xl border border-line bg-white p-5 ring-brand-glow">
-              <p className="text-sm font-semibold text-graphite">
-                Search intent distribution
-              </p>
-              <p className="text-xs text-muted">Share of qualified demand</p>
-              <ul className="mt-4 flex flex-col gap-3">
-                {[
-                  { label: "Commercial", pct: 62, tone: "bg-brand-green" },
-                  { label: "Informational", pct: 71, tone: "bg-brand-teal" },
-                  { label: "Transactional", pct: 48, tone: "bg-brand-blue" },
-                ].map((row) => (
-                  <li key={row.label}>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="font-medium text-graphite">{row.label}</span>
-                      <span className="text-muted">{row.pct}%</span>
-                    </div>
-                    <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-line-soft">
-                      <motion.span
-                        className={cn("h-full rounded-full", row.tone)}
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${row.pct}%` }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8, ease: "easeOut" }}
-                      />
-                    </div>
-                  </li>
-                ))}
-              </ul>
+            <div className="relative mt-4 h-56 overflow-hidden rounded-xl border border-line-soft bg-surface-tint">
+              <svg className="absolute inset-0 h-full w-full" aria-hidden="true">
+                <defs>
+                  <linearGradient id="dashboard-line" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="#10e66a" stopOpacity="0.55" />
+                    <stop offset="100%" stopColor="#197db4" stopOpacity="0.45" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M 36 132 C 110 74, 172 50, 246 82 S 360 150, 430 106"
+                  fill="none"
+                  stroke="url(#dashboard-line)"
+                  strokeWidth="2"
+                  strokeDasharray="7 7"
+                  className={cn(!reduceMotion && "flow-line")}
+                />
+                <line x1="12%" y1="78%" x2="88%" y2="22%" stroke="#ddeaf0" strokeWidth="1" />
+                <line x1="12%" y1="22%" x2="88%" y2="78%" stroke="#ddeaf0" strokeWidth="1" />
+              </svg>
+
+              {dashboard.opportunities.map((item, index) => (
+                <motion.div
+                  key={item.label}
+                  className="absolute w-32 -translate-x-1/2 -translate-y-1/2 rounded-lg border border-line bg-white/95 p-2 shadow-[0_12px_28px_-20px_rgba(15,23,42,0.45)] backdrop-blur"
+                  style={{ left: `${item.x}%`, top: `${item.y}%` }}
+                  initial={false}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: reduceMotion ? 0 : 0.35, delay: index * 0.06 }}
+                >
+                  <p className="truncate text-[11px] font-semibold text-graphite">{item.label}</p>
+                  <p className="truncate text-[10px] text-secondary">{item.intent}</p>
+                  <span className="mt-1 inline-flex rounded-full bg-brand-emerald/10 px-1.5 py-0.5 text-[9px] font-semibold text-brand-emerald">
+                    {item.value}
+                  </span>
+                </motion.div>
+              ))}
             </div>
-          </motion.div>
+          </motion.section>
+
+          <motion.section
+            variants={moduleVariants}
+            className="rounded-2xl border border-line bg-white p-4 ring-brand-glow"
+            aria-labelledby="search-dashboard-entity"
+          >
+            <h2 id="search-dashboard-entity" className="text-sm font-semibold text-graphite">
+              {dashboard.entityTitle}
+            </h2>
+            <p className="mt-1 text-xs leading-relaxed text-secondary">
+              {dashboard.entitySubtitle}
+            </p>
+            <ul className="mt-4 grid gap-2">
+              {dashboard.entityRows.map((row, index) => (
+                <ProgressRow
+                  key={row.label}
+                  row={row}
+                  index={index}
+                  reduceMotion={reduceMotion}
+                />
+              ))}
+            </ul>
+          </motion.section>
         </div>
 
-        <p className="mt-4 px-1 text-[11px] text-muted">
-          Illustrative dashboard preview — verified client data is added only with permission.
+        <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_0.88fr]">
+          <motion.section
+            variants={moduleVariants}
+            className="rounded-2xl border border-line bg-white p-4 ring-brand-glow"
+            aria-labelledby="search-dashboard-queue"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 id="search-dashboard-queue" className="text-sm font-semibold text-graphite">
+                  {dashboard.queueTitle}
+                </h2>
+                <p className="mt-1 text-xs leading-relaxed text-secondary">
+                  {dashboard.queueSubtitle}
+                </p>
+              </div>
+              <Sparkles className="h-4 w-4 text-brand-teal" aria-hidden="true" />
+            </div>
+            <ul className="mt-4 grid gap-2">
+              {dashboard.queueRows.map((row) => (
+                <li
+                  key={row.task}
+                  className="rounded-lg border border-line-soft bg-surface-tint/55 px-3 py-2.5"
+                >
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold text-graphite">{row.task}</p>
+                    <p className="mt-1 text-[11px] text-secondary">{row.status}</p>
+                  </div>
+                  <div className="mt-2 flex flex-wrap items-center gap-2 text-[10px] font-semibold">
+                    <span className="rounded-full bg-brand-emerald/10 px-2 py-0.5 text-brand-emerald">
+                      {dashboard.labels.impact}: {row.impact}
+                    </span>
+                    <span className="rounded-full bg-brand-blue/10 px-2 py-0.5 text-brand-blue">
+                      {dashboard.labels.effort}: {row.effort}
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </motion.section>
+
+          <motion.section
+            variants={moduleVariants}
+            className="rounded-2xl border border-line bg-white p-4 ring-brand-glow"
+            aria-labelledby="search-dashboard-path"
+          >
+            <h2 id="search-dashboard-path" className="text-sm font-semibold text-graphite">
+              {dashboard.pathTitle}
+            </h2>
+            <ol className="mt-4 grid gap-2">
+              {dashboard.pathSteps.map((step, index) => (
+                <li key={step} className="flex items-center gap-3">
+                  <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-gradient text-xs font-semibold text-white">
+                    {index + 1}
+                  </span>
+                  <span className="min-w-0 text-xs font-semibold text-graphite">{step}</span>
+                  {index < dashboard.pathSteps.length - 1 && (
+                    <ArrowRight className="ml-auto h-3.5 w-3.5 shrink-0 text-brand-teal" aria-hidden="true" />
+                  )}
+                </li>
+              ))}
+            </ol>
+          </motion.section>
+        </div>
+
+        <p className="mt-4 px-1 text-[11px] leading-relaxed text-muted">
+          {dashboard.disclosure}
         </p>
       </motion.div>
     </div>

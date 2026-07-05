@@ -322,3 +322,24 @@ service, industry, and market pages own the major keyword families. No
 root-level duplicate commercial pages, city pages, doorway pages, or
 swapped-location pages were added. The typed source for future QA is
 `src/content/seo/url-intent-map.ts`.
+
+## Task 13B Global Navigation Polish
+
+Task 13B changed global information architecture only. It did not create,
+delete, merge, noindex, canonicalize, or redirect routes.
+
+Header top-level IA is now:
+
+- Services
+- Solutions
+- Work
+- Insights
+- Company
+
+Solutions groups the existing Industries and Markets routes. Work groups the
+existing Work and Proof routes plus the private-reference contact intent. The
+footer groups Services, Solutions, Work, Insights, Company, and Legal.
+
+Localized navigation data lives in `src/content/{en,fr,es}/site.ts`, and
+`getLocalizedSite()` applies `/fr` and `/es` prefixes while preserving English
+slugs.

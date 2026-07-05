@@ -38,7 +38,7 @@ export function SiteFooter() {
             {/* Logo card — light pill surface for clear brand presence */}
             <Link
               href={homeHref}
-              aria-label={`${siteConfig.name} home`}
+              aria-label={`${siteConfig.name} ${content.ui.home}`}
               className="inline-flex w-fit items-center rounded-2xl border border-line bg-white px-5 py-3 shadow-sm"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -106,7 +106,7 @@ export function SiteFooter() {
 
         <div className="mt-12 flex flex-col gap-4 border-t border-line-soft pt-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} {siteConfig.legalName}. {content.footer.rights}
+            &copy; {new Date().getFullYear()} {siteConfig.legalName}. {content.footer.rights}
           </p>
           <p className="max-w-2xl">
             {content.footer.footnote}

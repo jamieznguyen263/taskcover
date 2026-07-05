@@ -5,7 +5,30 @@
  * French/Spanish files import the `SiteContent` type and must keep the same keys.
  */
 
-export type NavItem = { label: string; href: string };
+export type NavItem = {
+  label: string;
+  href: string;
+  description?: string;
+  chip?: string;
+};
+
+export type MegaMenuGroup = {
+  title: string;
+  description?: string;
+  links: NavItem[];
+};
+
+export type MegaMenuItem = {
+  id: "services" | "solutions" | "work" | "insights" | "company";
+  label: string;
+  description: string;
+  groups: MegaMenuGroup[];
+  cta?: {
+    label: string;
+    href: string;
+    description: string;
+  };
+};
 
 export type SiteContent = {
   /** Brand-level strings shown in header/footer/SEO defaults. */
@@ -17,6 +40,8 @@ export type SiteContent = {
   };
   /** Primary header nav. */
   navigation: NavItem[];
+  /** Grouped desktop/mobile navigation. */
+  megaMenu: MegaMenuItem[];
   /** Primary + secondary calls to action. */
   primaryCta: { label: string; href: string };
   secondaryCta: { label: string; href: string };
@@ -56,12 +81,170 @@ export type SiteContent = {
  */
 export const sharedNav: NavItem[] = [
   { label: "Services", href: "/services" },
-  { label: "Industries", href: "/industries" },
-  { label: "Markets", href: "/markets" },
+  { label: "Solutions", href: "/industries" },
   { label: "Work", href: "/work" },
-  { label: "Proof", href: "/proof" },
   { label: "Insights", href: "/insights" },
-  { label: "About", href: "/about" },
+  { label: "Company", href: "/about" },
+];
+
+export const megaMenu: MegaMenuItem[] = [
+  {
+    id: "services",
+    label: "Services",
+    description: "Choose the search-growth capability that matches the buyer problem.",
+    groups: [
+      {
+        title: "Core services",
+        links: [
+          {
+            label: "SEO Strategy & Audit",
+            href: "/services/seo-agency",
+            description: "Roadmaps, diagnosis, prioritization, and search-growth planning.",
+            chip: "Strategy",
+          },
+          {
+            label: "Technical SEO",
+            href: "/services/technical-seo",
+            description: "Crawl, indexation, rendering, speed, and site architecture.",
+            chip: "Foundation",
+          },
+          {
+            label: "AI Search / GEO",
+            href: "/services/ai-search-optimization",
+            description: "Answer-surface readiness, entities, citations, and source quality.",
+            chip: "AI",
+          },
+          {
+            label: "Content Authority",
+            href: "/services/content-marketing",
+            description: "Expert-led content systems mapped to revenue intent.",
+            chip: "Authority",
+          },
+        ],
+      },
+      {
+        title: "Growth channels",
+        links: [
+          {
+            label: "Local & International SEO",
+            href: "/services/international-seo",
+            description: "Multi-market architecture, local visibility, and hreflang-safe scale.",
+            chip: "Markets",
+          },
+          {
+            label: "PPC Management",
+            href: "/services/ppc-management",
+            description: "Paid search demand capture aligned with organic intelligence.",
+            chip: "Paid",
+          },
+          {
+            label: "SEO Mentor",
+            href: "/services/seo-mentor-service",
+            description: "Advisory, founder coaching, and team capability building.",
+            chip: "Advisory",
+          },
+        ],
+      },
+    ],
+    cta: {
+      label: "Start with a Free SEO Audit",
+      href: "/free-seo-audit",
+      description: "Not sure what you need? Get a prioritized diagnostic first.",
+    },
+  },
+  {
+    id: "solutions",
+    label: "Solutions",
+    description: "Explore search-growth systems by industry and market.",
+    groups: [
+      {
+        title: "By industry",
+        links: [
+          { label: "Travel & Hospitality", href: "/industries/travel-seo", description: "Destination, hotel, restaurant, and booking demand." },
+          { label: "Education", href: "/industries/education-seo", description: "Program, institution, trust, and enrollment search journeys." },
+          { label: "Healthcare & Wellness", href: "/industries/healthcare-seo", description: "High-trust local and authority-led health search." },
+          { label: "Legal & Immigration", href: "/industries/legal-immigration-seo", description: "Reputation, jurisdiction, and high-intent case demand." },
+          { label: "SaaS & Technology", href: "/industries/saas-seo", description: "Category, alternative, integration, and AI visibility." },
+          { label: "eCommerce", href: "/industries/ecommerce-seo", description: "Category, product, and transaction-led search architecture." },
+          { label: "Franchise & Multi-location", href: "/industries/franchise-local-seo", description: "Location-scale search systems without doorway pages." },
+        ],
+      },
+      {
+        title: "By market",
+        links: [
+          { label: "USA", href: "/markets/usa-seo-agency", description: "National, local, review-led, PPC, and AI-search competition." },
+          { label: "Canada", href: "/markets/canada-seo-agency", description: "Bilingual and provincial search behavior across EN/FR contexts." },
+          { label: "Australia", href: "/markets/australia-seo-agency", description: "Metro demand, local packs, reputation, and paid search overlap." },
+          { label: "International SEO / Multi-market search", href: "/services/international-seo", description: "Architecture for cross-market growth without duplicate content." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "work",
+    label: "Work",
+    description: "Review verified case studies, sample deliverables, proof standards, and private reference paths.",
+    groups: [
+      {
+        title: "Work and proof",
+        links: [
+          { label: "Work Hub", href: "/work", description: "How Taskcover turns methodology into deliverables." },
+          { label: "Case Studies", href: "/work/case-studies", description: "Verified public search-growth case studies." },
+          { label: "Sample Audits", href: "/work/sample-audits", description: "Illustrative deliverables that show the method." },
+          { label: "Client Results", href: "/work/client-results", description: "Result publication standards and verified-result handling." },
+          { label: "Proof System", href: "/proof", description: "Evidence rules, authority standards, and trust pathways." },
+          { label: "Search Growth Frameworks", href: "/work/search-growth-frameworks", description: "Operating models and strategic frameworks." },
+        ],
+      },
+    ],
+    cta: {
+      label: "Request a Private Reference",
+      href: "/contact?intent=private-reference",
+      description: "Qualified private references are handled case by case and permission-bound.",
+    },
+  },
+  {
+    id: "insights",
+    label: "Insights",
+    description: "Read practical guidance by search-growth topic.",
+    groups: [
+      {
+        title: "Editorial categories",
+        links: [
+          { label: "SEO Guides", href: "/insights/seo-guides", description: "Search strategy, revenue growth, and modern SEO guides." },
+          { label: "AI Search & GEO", href: "/insights/ai-search", description: "AI visibility, citations, answer surfaces, and measurement." },
+          { label: "Technical SEO", href: "/insights/technical-seo", description: "Crawl, rendering, performance, and indexation systems." },
+          { label: "Content Authority", href: "/insights/content-authority", description: "Information gain, topical authority, and citations." },
+          { label: "Local & International SEO", href: "/insights/local-international-seo", description: "Market expansion, local search, and multilingual structure." },
+          { label: "PPC & Search Intelligence", href: "/insights/ppc-search-intelligence", description: "Paid and organic signal alignment." },
+          { label: "SEO Mentor", href: "/insights/seo-mentor", description: "Advisory, training, and search leadership guidance." },
+        ],
+      },
+    ],
+    cta: {
+      label: "Explore the Insights Hub",
+      href: "/insights",
+      description: "Use articles to support the right commercial page, not replace it.",
+    },
+  },
+  {
+    id: "company",
+    label: "Company",
+    description: "Understand Taskcover's operating model, trust standards, and contact paths.",
+    groups: [
+      {
+        title: "Company",
+        links: [
+          { label: "About", href: "/about", description: "Company identity, operating principles, and proof rules." },
+          { label: "Methodology", href: "/methodology", description: "Search Growth Operating System and diagnostic approach." },
+          { label: "How We Work", href: "/how-we-work", description: "Engagement flow, inputs, approvals, and collaboration rhythm." },
+          { label: "Contact", href: "/contact", description: "Sales, media, partnership, and general request routing." },
+          { label: "Accessibility", href: "/accessibility", description: "Accessibility approach and feedback channel." },
+          { label: "Data Request", href: "/data-request", description: "Privacy and data request pathway." },
+        ],
+      },
+    ],
+  },
 ];
 
 export const site: SiteContent = {
@@ -71,6 +254,7 @@ export const site: SiteContent = {
     marketsLine: "Serving clients in the USA, Canada, and Australia.",
   },
   navigation: sharedNav,
+  megaMenu,
   primaryCta: { label: "Get Free SEO Audit", href: "/free-seo-audit" },
   secondaryCta: { label: "Book Strategy Call", href: "/book-a-call" },
   footer: {
@@ -92,7 +276,7 @@ export const site: SiteContent = {
         ],
       },
       {
-        title: "Industries",
+        title: "Solutions",
         links: [
           { label: "Travel SEO", href: "/industries/travel-seo" },
           { label: "Education SEO", href: "/industries/education-seo" },
@@ -101,11 +285,6 @@ export const site: SiteContent = {
           { label: "SaaS SEO", href: "/industries/saas-seo" },
           { label: "eCommerce SEO", href: "/industries/ecommerce-seo" },
           { label: "Franchise & Local SEO", href: "/industries/franchise-local-seo" },
-        ],
-      },
-      {
-        title: "Markets",
-        links: [
           { label: "USA SEO Agency", href: "/markets/usa-seo-agency" },
           { label: "Canada SEO Agency", href: "/markets/canada-seo-agency" },
           { label: "Australia SEO Agency", href: "/markets/australia-seo-agency" },
@@ -119,17 +298,19 @@ export const site: SiteContent = {
           { label: "Sample Audits", href: "/work/sample-audits" },
           { label: "Search Growth Frameworks", href: "/work/search-growth-frameworks" },
           { label: "Client Results", href: "/work/client-results" },
+          { label: "Proof", href: "/proof" },
+          { label: "Private Reference", href: "/contact?intent=private-reference" },
         ],
       },
       {
-        title: "Proof",
+        title: "Insights",
         links: [
-          { label: "Proof", href: "/proof" },
-          { label: "Brand Experience", href: "/proof/brand-experience" },
-          { label: "Media Features", href: "/proof/media-features" },
-          { label: "Client Reviews", href: "/proof/client-reviews" },
-          { label: "Video Reviews", href: "/proof/video-reviews" },
-          { label: "Spokesperson", href: "/proof/spokesperson" },
+          { label: "SEO Guides", href: "/insights/seo-guides" },
+          { label: "AI Search & GEO", href: "/insights/ai-search" },
+          { label: "Technical SEO", href: "/insights/technical-seo" },
+          { label: "Content Authority", href: "/insights/content-authority" },
+          { label: "Local & International SEO", href: "/insights/local-international-seo" },
+          { label: "PPC & Search Intelligence", href: "/insights/ppc-search-intelligence" },
         ],
       },
       {
@@ -141,6 +322,11 @@ export const site: SiteContent = {
           { label: "Free SEO Audit", href: "/free-seo-audit" },
           { label: "Book a Call", href: "/book-a-call" },
           { label: "Contact", href: "/contact" },
+        ],
+      },
+      {
+        title: "Legal",
+        links: [
           { label: "Privacy Policy", href: "/privacy-policy" },
           { label: "Cookie Policy", href: "/cookie-policy" },
           { label: "Cookie Preferences", href: "/cookie-preferences" },

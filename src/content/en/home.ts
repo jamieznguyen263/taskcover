@@ -28,9 +28,80 @@ export const home: HomeContent = {
     subheadline:
       "Taskcover Agency helps brands in the USA, Canada, and Australia grow organic visibility, build authority, and convert high-intent search demand into measurable business outcomes.",
     proofLine:
-      "Selected team and partner experience includes global brands such as Agoda, Skyscanner, British Council, Avis, and more.",
+      "Explore verified search-growth case studies across education, travel, SaaS, eCommerce, hospitality, insurance, and multi-market brands.",
     primaryCta: { label: "Get Free SEO Audit", href: "/free-seo-audit" },
     secondaryCta: { label: "View Our Search System", href: "/methodology" },
+  },
+  dashboard: {
+    title: "Search Growth Cockpit",
+    subtitle:
+      "Google, AI search, content authority, technical health, and conversion priorities in one operating view.",
+    disclosure:
+      "Illustrative cockpit preview. Verified client data is added only with permission.",
+    signals: [
+      {
+        label: "Search demand",
+        value: "240K",
+        delta: "+18%",
+        status: "Expanding",
+        icon: "search",
+        tone: "teal",
+      },
+      {
+        label: "Organic visibility",
+        value: "90%",
+        delta: "+22 pts",
+        status: "Compounding",
+        icon: "trend",
+        tone: "emerald",
+      },
+      {
+        label: "AI citation coverage",
+        value: "64%",
+        delta: "+31 pts",
+        status: "Under active build",
+        icon: "sparkles",
+        tone: "blue",
+      },
+      {
+        label: "Technical health",
+        value: "98%",
+        delta: "+6 pts",
+        status: "Protected",
+        icon: "gauge",
+        tone: "green",
+      },
+    ],
+    opportunityTitle: "Opportunity map",
+    opportunitySubtitle: "Priority gaps by demand, authority, and conversion leverage.",
+    opportunities: [
+      { label: "AI search optimization", intent: "Answer surface", value: "High", x: 18, y: 38 },
+      { label: "Technical SEO audit", intent: "Foundation", value: "Urgent", x: 48, y: 24 },
+      { label: "International SEO", intent: "Market expansion", value: "Scale", x: 72, y: 48 },
+      { label: "Content authority", intent: "Topic coverage", value: "Build", x: 34, y: 68 },
+      { label: "PPC search intelligence", intent: "Demand capture", value: "Blend", x: 82, y: 72 },
+    ],
+    entityTitle: "Entity and citation coverage",
+    entitySubtitle: "Source-quality signals that help Google and AI systems trust the brand.",
+    entityRows: [
+      { label: "Brand entity clarity", value: "Strong", status: "Schema + sources aligned" },
+      { label: "Citation-ready pages", value: "34", status: "Expert sections mapped" },
+      { label: "Trust-source gaps", value: "7", status: "Editorial outreach queue" },
+    ],
+    queueTitle: "Next sprint queue",
+    queueSubtitle: "Prioritized fixes before expanding content production.",
+    queueRows: [
+      { task: "Fix crawl traps and canonical drift", impact: "High", effort: "Medium", status: "Technical" },
+      { task: "Publish AI-ready FAQ source blocks", impact: "High", effort: "Low", status: "Content" },
+      { task: "Route audit CTAs by buyer intent", impact: "Medium", effort: "Low", status: "Conversion" },
+    ],
+    pathTitle: "Conversion path",
+    pathSteps: ["Audit request", "Diagnostic review", "90-day roadmap", "Sprint decision"],
+    labels: {
+      impact: "Impact",
+      effort: "Effort",
+      value: "Value",
+    },
   },
   searchHasChanged: {
     eyebrow: "Search has changed",

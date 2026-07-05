@@ -15,6 +15,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { Check, Globe, ChevronDown } from "lucide-react";
+import { getSiteContent } from "@/lib/content";
 import { cn } from "@/lib/utils";
 import { locales, localeLabels, switchLocale, type Locale } from "@/lib/i18n";
 import { useLocalePathname } from "./use-locale";
@@ -47,6 +48,7 @@ function buildLocaleHref(currentPathname: string, target: Locale, search = ""): 
 /** Compact dropdown used in the desktop header. */
 export function LanguageSwitcher({ className }: { className?: string }) {
   const { locale, pathname, search } = useLocalePathname();
+  const content = getSiteContent(locale);
   const [open, setOpen] = React.useState(false);
   const wrapperRef = React.useRef<HTMLDivElement>(null);
 
@@ -76,7 +78,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        aria-label="Language"
+        aria-label={content.ui.languageLabel}
         className="inline-flex h-10 items-center gap-1.5 rounded-full border border-line px-3 text-sm font-medium text-secondary transition-colors hover:bg-surface-tint hover:text-graphite"
       >
         <Globe className="h-4 w-4" aria-hidden="true" />
@@ -89,7 +91,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
       {open && (
         <div
           role="listbox"
-          aria-label="Select language"
+          aria-label={content.ui.languageLabel}
           className="absolute right-0 z-50 mt-2 w-44 overflow-hidden rounded-2xl border border-line bg-white p-1 shadow-lg"
         >
           {locales.map((l) => {
@@ -123,10 +125,11 @@ export function LanguageSwitcher({ className }: { className?: string }) {
 /** Stacked list used in the mobile menu. */
 export function LanguageSwitcherList() {
   const { locale, pathname, search } = useLocalePathname();
+  const content = getSiteContent(locale);
   return (
-    <div className="flex flex-col gap-1" role="listbox" aria-label="Select language">
+    <div className="flex flex-col gap-1" role="listbox" aria-label={content.ui.languageLabel}>
       <p className="px-1 pb-1 text-[10px] font-semibold uppercase tracking-wide text-muted">
-        Language
+        {content.ui.languageLabel}
       </p>
       {locales.map((l) => {
         const href = buildLocaleHref(pathname, l, search);
