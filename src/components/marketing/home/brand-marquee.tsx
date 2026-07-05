@@ -1,64 +1,64 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { useReducedMotion } from "motion/react";
 import { Container } from "@/components/marketing/shared/container";
+import type { ClientLogoProof, CtaItem } from "@/content/home.types";
 import { cn } from "@/lib/utils";
 
-/**
- * Premium Brand / partner experience marquee.
- *
- * A continuously moving horizontal strip of premium brand-proof tiles with
- * gradient halos, soft shadows, and stronger fade masks at the edges.
- * Two rows: brands row + capabilities row. Pauses on hover and respects
- * prefers-reduced-motion.
- *
- * No official logos are used unless assets are permissioned. Text tiles only.
- */
-
-function MarqueeRow({
-  items,
-  reverse = false,
-  duration = 45,
-}: {
-  items: readonly string[];
-  reverse?: boolean;
-  duration?: number;
-}) {
-  const loop = [...items, ...items];
+function LogoCard({ logo, compact = false }: { logo: ClientLogoProof; compact?: boolean }) {
   return (
-    <div className="group relative overflow-hidden">
-      {/* Edge fade masks */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-surface-soft via-surface-soft/80 to-transparent sm:w-32"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-surface-soft via-surface-soft/80 to-transparent sm:w-32"
-      />
-      <ul
+    <Link
+      href={logo.href}
+      aria-label={logo.alt}
+      className={cn(
+        "group relative overflow-hidden rounded-2xl border border-line bg-white p-2 shadow-[0_14px_38px_-28px_rgba(20,31,36,0.72)] transition hover:-translate-y-0.5 hover:border-brand-teal/40 hover:shadow-[0_22px_48px_-28px_rgba(24,138,172,0.55)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal",
+        compact ? "min-h-28" : "w-56 shrink-0 sm:w-64",
+      )}
+    >
+      <span
         className={cn(
-          "flex w-max items-center gap-4",
-          reverse
-            ? "animate-[marquee-reverse_var(--dur)_linear_infinite]"
-            : "animate-[marquee_var(--dur)_linear_infinite]",
+          "relative flex aspect-[9/5] items-center justify-center overflow-hidden rounded-xl border",
+          logo.background === "dark"
+            ? "border-white/10 bg-graphite"
+            : "border-line-soft bg-surface-soft",
         )}
-        style={{ ["--dur" as string]: `${duration}s` }}
       >
-        {loop.map((name, i) => (
-          <li
-            key={`${name}-${i}`}
-            className="group/tile relative inline-flex shrink-0 items-center rounded-2xl border border-line bg-white px-6 py-3 shadow-[0_4px_20px_-8px_rgba(24,138,172,0.25)] ring-1 ring-transparent transition-all duration-300 hover:-translate-y-1 hover:border-brand-teal/40 hover:ring-brand-teal/10"
-          >
-            {/* Subtle gradient halo on hover */}
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 rounded-2xl bg-brand-gradient-soft opacity-0 transition-opacity duration-300 group-hover/tile:opacity-100"
-            />
-            <span className="relative text-base font-semibold tracking-tight text-graphite sm:text-lg">
-              {name}
-            </span>
+        <Image
+          src={logo.src}
+          alt={logo.alt}
+          width={logo.width}
+          height={logo.height}
+          sizes={compact ? "(max-width: 640px) 45vw, 18vw" : "256px"}
+          className="h-full w-full object-contain transition duration-300 group-hover:scale-[1.025]"
+        />
+      </span>
+      <span className="mt-2 block truncate px-1 text-xs font-semibold text-secondary">
+        {logo.clientName}
+      </span>
+    </Link>
+  );
+}
+
+function LogoRail({ logos }: { logos: readonly ClientLogoProof[] }) {
+  const loop = [...logos, ...logos];
+  return (
+    <div className="group relative overflow-hidden py-2">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-white via-white/85 to-transparent sm:w-32"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-white via-white/85 to-transparent sm:w-32"
+      />
+      <ul className="flex w-max items-stretch gap-4 animate-[marquee_48s_linear_infinite] group-hover:[animation-play-state:paused]">
+        {loop.map((logo, index) => (
+          <li key={`${logo.src}-${index}`} className="flex">
+            <LogoCard logo={logo} />
           </li>
         ))}
       </ul>
@@ -68,77 +68,55 @@ function MarqueeRow({
 
 export function BrandMarquee({
   caption,
-  items,
-  rowBrands,
-  rowCapabilities,
+  logos,
+  cta,
   className,
 }: {
-  caption?: React.ReactNode;
-  items?: readonly string[];
-  rowBrands?: readonly string[];
-  rowCapabilities?: readonly string[];
+  caption: React.ReactNode;
+  logos: readonly ClientLogoProof[];
+  cta: CtaItem;
   className?: string;
 }) {
-  void items; // kept for API compat; two-row split preferred
   const reduceMotion = useReducedMotion();
-
-  // If two-row data provided, use it; otherwise fall back to single items
-  const hasTwoRows = (rowBrands?.length ?? 0) > 0 && (rowCapabilities?.length ?? 0) > 0;
 
   return (
     <Container className={cn("flex flex-col gap-6", className)}>
-      {caption ? (
-        <p className="mx-auto max-w-2xl text-center text-sm font-medium text-secondary sm:text-base">
-          {caption}
-        </p>
-      ) : null}
+      <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 text-center">
+        <p className="text-sm font-medium leading-6 text-secondary sm:text-base">{caption}</p>
+        <Link
+          href={cta.href}
+          className="inline-flex min-h-10 items-center gap-2 rounded-full border border-line bg-white px-4 text-sm font-semibold text-graphite shadow-sm transition hover:border-brand-teal hover:text-brand-teal focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal"
+        >
+          {cta.label}
+          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+        </Link>
+      </div>
 
-      {/* Premium gradient band divider */}
       <div className="relative">
-        {/* Thin top/bottom divider with gradient accent */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-teal/20 to-transparent"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-teal/24 to-transparent"
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand-teal/20 to-transparent"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-brand-teal/24 to-transparent"
         />
+
+        <div className="grid grid-cols-2 gap-3 py-2 sm:hidden">
+          {logos.map((logo) => (
+            <LogoCard key={logo.src} logo={logo} compact />
+          ))}
+        </div>
 
         {reduceMotion ? (
-          /* Reduced motion: static grid layout */
-          <div className="flex flex-col gap-4 py-2">
-            <div className="flex flex-wrap justify-center gap-3">
-              {(hasTwoRows ? rowBrands! : items ?? []).map((name) => (
-                <span
-                  key={name}
-                  className="inline-flex items-center rounded-2xl border border-line bg-white px-5 py-2.5 text-sm font-semibold text-graphite shadow-sm"
-                >
-                  {name}
-                </span>
-              ))}
-            </div>
-            {hasTwoRows && (
-              <div className="flex flex-wrap justify-center gap-3">
-                {rowCapabilities!.map((name) => (
-                  <span
-                    key={name}
-                    className="inline-flex items-center rounded-2xl border border-line bg-white px-5 py-2.5 text-sm font-semibold text-graphite shadow-sm"
-                  >
-                    {name}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
-        ) : hasTwoRows ? (
-          <div className="flex flex-col gap-3 py-2">
-            <MarqueeRow items={rowBrands!} duration={40} />
-            <MarqueeRow items={rowCapabilities!} duration={50} reverse />
+          <div className="hidden grid-cols-2 gap-4 py-2 sm:grid lg:grid-cols-5">
+            {logos.map((logo) => (
+              <LogoCard key={logo.src} logo={logo} compact />
+            ))}
           </div>
         ) : (
-          <div className="py-2">
-            <MarqueeRow items={items ?? []} duration={40} />
+          <div className="hidden sm:block">
+            <LogoRail logos={logos} />
           </div>
         )}
       </div>

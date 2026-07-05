@@ -4,6 +4,105 @@
  */
 
 import type { HomeContent } from "../home.types";
+import { buildClientLogoProofAssets } from "../home-proof-assets";
+
+const clientLogoProof = buildClientLogoProofAssets({
+  hrefPrefix: "/es",
+  alt: (clientName) => `Visual de prueba del caso verificado de ${clientName}`,
+});
+
+const searchSurfaces: HomeContent["searchHasChanged"]["surfaces"] = [
+  {
+    id: "google-organic",
+    label: "Google orgánico",
+    shortLabel: "Google",
+    ariaLabel: "Explorar la visibilidad orgánica en Google",
+    buyersSee: "Páginas posicionadas, snippets, entidades y funciones SERP que forman la primera impresión.",
+    taskcoverImproves: "Acceso técnico, mapeo de intención, estructura de contenido y señales de autoridad.",
+    growthSupport: "Acumula visibilidad no-marca cualificada y dirige la demanda a páginas de conversión.",
+    angle: 0,
+  },
+  {
+    id: "ai-overviews",
+    label: "AI Overviews",
+    shortLabel: "IA",
+    ariaLabel: "Explorar la visibilidad en AI Overviews",
+    buyersSee: "Bloques de respuesta resumidos y fuentes citadas antes del clic.",
+    taskcoverImproves: "Secciones listas para respuestas, evidencia estructurada, claridad de entidad y fuentes citables.",
+    growthSupport: "Ayuda a que la marca aparezca cuando la IA resume opciones.",
+    angle: 40,
+  },
+  {
+    id: "llms",
+    label: "ChatGPT y LLM",
+    shortLabel: "LLM",
+    ariaLabel: "Explorar la visibilidad en ChatGPT y LLM",
+    buyersSee: "Recomendaciones generadas, comparaciones y resúmenes respaldados por fuentes.",
+    taskcoverImproves: "Consistencia de entidad, activos de respuesta reutilizables, calidad de fuente y autoridad temática.",
+    growthSupport: "Apoya el descubrimiento asistido antes de volver a Google o al sitio web.",
+    angle: 80,
+  },
+  {
+    id: "local",
+    label: "Resultados locales",
+    shortLabel: "Local",
+    ariaLabel: "Explorar búsqueda local y mapas",
+    buyersSee: "Maps, local packs, reseñas, páginas locales y señales de área de servicio.",
+    taskcoverImproves: "Arquitectura local, perfiles completos, temas de reseñas y relevancia por zona.",
+    growthSupport: "Convierte demanda local de alta intención en llamadas, formularios y visitas cualificadas.",
+    angle: 120,
+  },
+  {
+    id: "reviews",
+    label: "Plataformas de reseñas",
+    shortLabel: "Reseñas",
+    ariaLabel: "Explorar señales de confianza de reseñas",
+    buyersSee: "Valoraciones, temas de reseñas, sentimiento de terceros y fricción de confianza.",
+    taskcoverImproves: "Mapeo de señales de reseñas, alineación de contenido y tranquilidad en el recorrido.",
+    growthSupport: "Reduce la duda cuando los compradores comparan proveedores.",
+    angle: 160,
+  },
+  {
+    id: "youtube",
+    label: "YouTube",
+    shortLabel: "Vídeo",
+    ariaLabel: "Explorar YouTube y búsqueda en vídeo",
+    buyersSee: "Explicaciones, reseñas, demostraciones y vídeos de respuesta dentro del recorrido de búsqueda.",
+    taskcoverImproves: "Selección de temas, integración en páginas, estructura de transcripción y contenido de apoyo.",
+    growthSupport: "Crea prueba más rica para compradores que necesitan ver la experiencia.",
+    angle: 200,
+  },
+  {
+    id: "forums",
+    label: "Reddit y foros",
+    shortLabel: "Foros",
+    ariaLabel: "Explorar Reddit y foros en la demanda de búsqueda",
+    buyersSee: "Preguntas de pares, objeciones, comparaciones y lenguaje de compra sin filtrar.",
+    taskcoverImproves: "Minería de preguntas, cobertura de objeciones, respuestas con fuentes y briefs de contenido.",
+    growthSupport: "Lleva el lenguaje real de compradores a páginas que posicionan, se citan y convierten.",
+    angle: 240,
+  },
+  {
+    id: "publications",
+    label: "Publicaciones",
+    shortLabel: "Prensa",
+    ariaLabel: "Explorar publicaciones y señales de autoridad",
+    buyersSee: "Menciones editoriales, comentarios expertos, citas y contexto de terceros confiables.",
+    taskcoverImproves: "Objetivos de PR digital, activos de experto, higiene de prueba y rutas de autoridad.",
+    growthSupport: "Construye la capa de confianza que ayuda a motores y compradores a creer en la marca.",
+    angle: 280,
+  },
+  {
+    id: "landing-pages",
+    label: "Páginas de conversión",
+    shortLabel: "Páginas",
+    ariaLabel: "Explorar rutas de conversión en páginas",
+    buyersSee: "Páginas comerciales, módulos de prueba, formularios, CTA y siguiente paso claro.",
+    taskcoverImproves: "Intención de página, ubicación de prueba, rutas de CTA y caminos medibles.",
+    growthSupport: "Convierte visibilidad en pipeline en lugar de dejar demanda sin convertir.",
+    angle: 320,
+  },
+];
 
 export const home: HomeContent = {
   hero: {
@@ -87,6 +186,18 @@ export const home: HomeContent = {
       value: "Valor",
     },
   },
+  heroVideo: {
+    eyebrow: "Introducción del portavoz",
+    title: "Un módulo de vídeo listo para presentar el sistema Taskcover.",
+    caption:
+      "Una breve introducción a cómo Taskcover aborda el SEO, la búsqueda con IA y el crecimiento de ingresos.",
+    playLabel: "Reproducir vídeo de introducción",
+    unavailableLabel: "Vídeo pendiente de carga",
+    fallbackTitle: "El vídeo del portavoz está listo para añadirse",
+    fallbackBody:
+      "La tarjeta está configurada para un futuro vídeo de introducción de Taskcover. No se carga vídeo falso ni de stock.",
+    trustChips: ["Casos verificados", "SEO + búsqueda IA + PPC", "USA · Canadá · Australia"],
+  },
   searchHasChanged: {
     eyebrow: "La búsqueda ha cambiado",
     title: "La búsqueda ya no es solo enlaces azules de Google.",
@@ -94,6 +205,18 @@ export const home: HomeContent = {
       "La demanda de búsqueda moderna está fragmentada entre Google, AI Overviews, ChatGPT y los LLM, resultados locales, plataformas de reseñas, YouTube, Reddit y foros, y publicaciones especializadas. Ganar significa ser visible y digno de confianza en todas partes donde los compradores buscan.",
     message:
       "No separamos SEO, GEO, AEO, contenido y autoridad. Los conectamos en un solo sistema de crecimiento en búsqueda.",
+    surfaces: searchSurfaces,
+    labels: {
+      desktopGuidance: "Pasa el cursor o haz clic en una superficie",
+      mobileGuidance: "Toca cada señal para ver la conexión",
+      startHere: "Empieza aquí",
+      defaultTitle: "Nueve superficies. Un sistema de crecimiento search.",
+      defaultBody:
+        "Elige un nodo para ver cómo los compradores descubren, validan y actúan antes de convertirse en lead.",
+      buyersSee: "Lo que ven los compradores",
+      taskcoverImproves: "Lo que mejora Taskcover",
+      growthSupport: "Cómo impulsa crecimiento",
+    },
   },
   operatingSystem: {
     eyebrow: "Sistema operativo de búsqueda Taskcover",
@@ -731,18 +854,9 @@ export const home: HomeContent = {
   },
   brandExperience: {
     caption:
-      "Experiencia seleccionada del equipo y los socios en marcas globales, campañas y programas de búsqueda.",
-    rowBrands: ["Agoda", "Skyscanner", "British Council", "Avis"],
-    rowCapabilities: [
-      "SEO de viajes",
-      "SEO de educación",
-      "Campañas SEO",
-      "RP digitales",
-      "Búsqueda IA",
-      "Artículos de prensa",
-      "Reseñas en vídeo",
-      "Portavoz",
-    ],
+      "Casos verificados en educación, hospitalidad, viajes, software, seguros y crecimiento search multi-mercado.",
+    logos: clientLogoProof,
+    cta: { label: "Ver casos de estudio", href: "/es/work/case-studies" },
   },
   audit: {
     eyebrow: "Auditoría de crecimiento SEO gratuita",

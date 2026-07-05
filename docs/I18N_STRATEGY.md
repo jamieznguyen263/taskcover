@@ -296,3 +296,7 @@ use `/fr` and `/es` with English slugs.
 
 No new public UI introduced in Task 13B may render hardcoded English on `/fr`
 or `/es`.
+
+## Task 13C Localization Additions
+
+The video placeholder, homepage logo alt text, radial search-surface map, case-study library filters, proof module labels, Client Results modules, and Insights article rail labels are all locale-owned in EN/FR/ES content files. English slugs remain unchanged for `/fr` and `/es` routes.

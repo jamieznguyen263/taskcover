@@ -138,3 +138,7 @@ Implemented modules:
 The component now uses CSS/SVG/motion primitives and removes visible
 hardcoded English labels from `/fr` and `/es`. The data remains illustrative
 and permission-bound, not real client performance reporting.
+
+## Task 13C Direction Change
+
+The Search Growth Cockpit is no longer used as the homepage hero right-side visual. The hero now uses a video-ready spokesperson card. The component accepts future video and poster URLs, does not autoplay, and does not load a real video until user interaction. Until a real asset is configured, it shows a clear fallback state instead of a fake dashboard or fake video.

@@ -22,6 +22,29 @@ import { CTAButton } from "@/components/marketing/shared/cta-button";
 import { useLocale } from "./use-locale";
 import { LanguageSwitcher, LanguageSwitcherList } from "./language-switcher";
 
+function chipToneClass(link: MegaMenuItem["groups"][number]["links"][number]) {
+  const key = `${link.href} ${link.chip ?? ""}`.toLowerCase();
+  if (key.includes("technical-seo") || key.includes("foundation") || key.includes("fondation") || key.includes("base")) {
+    return "border-emerald-200 bg-emerald-50 text-emerald-700";
+  }
+  if (key.includes("ai-search") || key.includes(" ai") || key.includes(" ia") || key.includes("geo")) {
+    return "border-violet-200 bg-violet-50 text-violet-700";
+  }
+  if (key.includes("content-marketing") || key.includes("authority") || key.includes("autorite") || key.includes("autoridad")) {
+    return "border-amber-200 bg-amber-50 text-amber-700";
+  }
+  if (key.includes("international-seo") || key.includes("local") || key.includes("markets") || key.includes("marches") || key.includes("mercados")) {
+    return "border-cyan-200 bg-cyan-50 text-cyan-700";
+  }
+  if (key.includes("ppc") || key.includes("paid")) {
+    return "border-blue-200 bg-blue-50 text-blue-700";
+  }
+  if (key.includes("mentor") || key.includes("advisory") || key.includes("conseil") || key.includes("asesoria")) {
+    return "border-teal-200 bg-teal-50 text-teal-700";
+  }
+  return "border-indigo-200 bg-indigo-50 text-indigo-700";
+}
+
 function MenuLink({
   link,
   onClick,
@@ -33,20 +56,24 @@ function MenuLink({
     <Link
       href={link.href}
       onClick={onClick}
-      className="group block rounded-lg border border-transparent px-3 py-2.5 transition-colors hover:border-line hover:bg-surface-soft focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal"
+      className="group relative block overflow-hidden rounded-xl border border-transparent px-3 py-3 transition hover:border-brand-teal/20 hover:bg-brand-teal/[0.045] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal"
     >
+      <span
+        aria-hidden="true"
+        className="absolute left-0 top-3 h-7 w-1 rounded-r-full bg-brand-gradient opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+      />
       <span className="flex items-center justify-between gap-3">
-        <span className="text-sm font-semibold text-graphite group-hover:text-brand-teal">
+        <span className="pl-1 text-sm font-semibold text-graphite transition group-hover:text-brand-teal">
           {link.label}
         </span>
         {link.chip && (
-          <span className="shrink-0 rounded-full bg-surface-tint px-2 py-0.5 text-[10px] font-semibold uppercase text-muted">
+          <span className={cn("shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase", chipToneClass(link))}>
             {link.chip}
           </span>
         )}
       </span>
       {link.description && (
-        <span className="mt-1 block text-xs leading-relaxed text-secondary">
+        <span className="mt-1 block pl-1 text-xs leading-relaxed text-secondary">
           {link.description}
         </span>
       )}
@@ -73,6 +100,7 @@ export function SiteHeader() {
   const headerRef = React.useRef<HTMLElement>(null);
   const mobileTriggerRef = React.useRef<HTMLButtonElement>(null);
   const firstMobileGroupRef = React.useRef<HTMLButtonElement>(null);
+  const pointerFocusRef = React.useRef(false);
 
   const openMenuId = openMenuState.pathname === pathname ? openMenuState.id : null;
   const mobileOpen = mobileMenuState.pathname === pathname ? mobileMenuState.open : false;
@@ -153,7 +181,16 @@ export function SiteHeader() {
                     aria-expanded={expanded}
                     aria-controls={`mega-menu-${item.id}`}
                     onClick={() => setOpenMenuState({ pathname, id: expanded ? null : item.id })}
-                    onFocus={() => setOpenMenuState({ pathname, id: item.id })}
+                    onPointerDown={() => {
+                      pointerFocusRef.current = true;
+                    }}
+                    onFocus={() => {
+                      if (pointerFocusRef.current) {
+                        pointerFocusRef.current = false;
+                        return;
+                      }
+                      setOpenMenuState({ pathname, id: item.id });
+                    }}
                     onMouseEnter={() => setOpenMenuState({ pathname, id: item.id })}
                     className={cn(
                       "inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal",
@@ -232,17 +269,24 @@ export function SiteHeader() {
                   <Link
                     href={openMenu.cta.href}
                     onClick={() => setOpenMenuState({ pathname, id: null })}
-                    className="group rounded-xl border border-line bg-surface-soft p-4 transition-colors hover:border-brand-teal/40 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal"
+                    className="group relative overflow-hidden rounded-2xl bg-brand-gradient p-px shadow-[0_20px_55px_-28px_rgba(24,138,172,0.9)] transition hover:-translate-y-0.5 hover:shadow-[0_28px_65px_-30px_rgba(16,230,106,0.55)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal"
                   >
-                    <span className="flex items-center justify-between gap-3 text-sm font-semibold text-graphite">
-                      {openMenu.cta.label}
-                      <ArrowRight
-                        className="h-4 w-4 text-brand-teal transition-transform group-hover:translate-x-0.5"
-                        aria-hidden="true"
-                      />
-                    </span>
-                    <span className="mt-1 block text-xs leading-relaxed text-secondary">
-                      {openMenu.cta.description}
+                    <span className="block rounded-[calc(1rem-1px)] bg-[linear-gradient(135deg,rgba(255,255,255,0.98),rgba(239,253,248,0.96))] p-4">
+                      <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-teal">
+                        {content.ui.recommendedFirstStep}
+                      </span>
+                      <span className="mt-2 flex items-center justify-between gap-3 text-sm font-semibold text-graphite">
+                        {openMenu.cta.label}
+                        <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-gradient text-white shadow-[0_10px_24px_-12px_rgba(24,138,172,0.9)]">
+                          <ArrowRight
+                            className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
+                            aria-hidden="true"
+                          />
+                        </span>
+                      </span>
+                      <span className="mt-2 block text-xs leading-relaxed text-secondary">
+                        {openMenu.cta.description}
+                      </span>
                     </span>
                   </Link>
                 )}
@@ -345,14 +389,21 @@ export function SiteHeader() {
                           <Link
                             href={item.cta.href}
                             onClick={closeMobileMenu}
-                            className="group rounded-lg border border-line bg-surface-soft px-3 py-3 text-sm font-semibold text-graphite"
+                            className="group rounded-2xl bg-brand-gradient p-px text-sm font-semibold text-graphite shadow-[0_18px_44px_-28px_rgba(24,138,172,0.85)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal"
                           >
-                            <span className="flex items-center justify-between gap-3">
-                              {item.cta.label}
-                              <ArrowRight className="h-4 w-4 text-brand-teal" aria-hidden="true" />
-                            </span>
-                            <span className="mt-1 block text-xs font-normal leading-relaxed text-secondary">
-                              {item.cta.description}
+                            <span className="block rounded-[calc(1rem-1px)] bg-[linear-gradient(135deg,rgba(255,255,255,0.98),rgba(239,253,248,0.96))] px-3 py-3">
+                              <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-teal">
+                                {content.ui.recommendedFirstStep}
+                              </span>
+                              <span className="mt-1 flex items-center justify-between gap-3">
+                                {item.cta.label}
+                                <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-gradient text-white">
+                                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                                </span>
+                              </span>
+                              <span className="mt-1 block text-xs font-normal leading-relaxed text-secondary">
+                                {item.cta.description}
+                              </span>
                             </span>
                           </Link>
                         )}

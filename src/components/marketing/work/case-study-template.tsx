@@ -5,22 +5,24 @@ import { Container } from "@/components/marketing/shared/container";
 import { Section } from "@/components/marketing/shared/section";
 import { Eyebrow } from "@/components/marketing/shared/section-header";
 import { CTAButton } from "@/components/marketing/shared/cta-button";
-import { getCaseStudyBySlug, getWorkContent } from "@/lib/content";
+import { getCaseStudyBySlug, getIndustryBySlug, getMarketBySlug, getServiceBySlug, getWorkContent } from "@/lib/content";
 import { localizePath, type Locale } from "@/lib/i18n";
 import type { CaseStudySlug } from "@/content/work.types";
 
-function CompactRail({ title, items, hrefBase, locale }: { title: string; items: string[]; hrefBase: string; locale: Locale }) {
+type RailItem = { label: string; href: string };
+
+function CompactRail({ title, items, locale }: { title: string; items: RailItem[]; locale: Locale }) {
   return (
     <div className="rounded-2xl border border-line bg-white p-5">
       <h3 className="text-sm font-semibold uppercase tracking-wide text-muted">{title}</h3>
       <div className="mt-4 flex flex-wrap gap-2">
         {items.map((item) => (
           <Link
-            key={item}
-            href={localizePath(`${hrefBase}/${item}`, locale)}
+            key={item.href}
+            href={localizePath(item.href, locale)}
             className="min-h-10 rounded-full border border-line-soft bg-surface-tint px-3 py-2 text-xs font-semibold text-graphite transition hover:border-brand-teal hover:text-brand-teal focus:outline-none focus:ring-2 focus:ring-brand-teal/30"
           >
-            {item}
+            {item.label}
           </Link>
         ))}
       </div>
@@ -34,6 +36,18 @@ export function CaseStudyTemplate({ slug, locale }: { slug: CaseStudySlug; local
   if (!item) return null;
   const loc = (path: string) => localizePath(path, locale);
   const heroImage = item.visualGallery[0];
+  const serviceLinks = item.relatedServices.map((slug) => ({
+    label: getServiceBySlug(slug, locale)?.title ?? slug,
+    href: `/services/${slug}`,
+  }));
+  const industryLinks = item.relatedIndustries.map((slug) => ({
+    label: getIndustryBySlug(slug, locale)?.name ?? slug,
+    href: `/industries/${slug}`,
+  }));
+  const marketLinks = item.relatedMarkets.map((slug) => ({
+    label: getMarketBySlug(slug, locale)?.name ?? slug,
+    href: `/markets/${slug}`,
+  }));
 
   return (
     <>
@@ -225,9 +239,9 @@ export function CaseStudyTemplate({ slug, locale }: { slug: CaseStudySlug; local
             <p className="mt-4 text-base leading-relaxed text-secondary">{item.keyLearning}</p>
           </div>
           <div className="grid gap-4">
-            <CompactRail title={content.ui.relatedServices} items={item.relatedServices} hrefBase="/services" locale={locale} />
-            <CompactRail title={content.ui.relatedIndustries} items={item.relatedIndustries} hrefBase="/industries" locale={locale} />
-            <CompactRail title={content.ui.relatedMarkets} items={item.relatedMarkets} hrefBase="/markets" locale={locale} />
+            <CompactRail title={content.ui.relatedServices} items={serviceLinks} locale={locale} />
+            <CompactRail title={content.ui.relatedIndustries} items={industryLinks} locale={locale} />
+            <CompactRail title={content.ui.relatedMarkets} items={marketLinks} locale={locale} />
           </div>
         </Container>
       </Section>

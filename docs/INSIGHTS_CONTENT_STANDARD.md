@@ -97,3 +97,7 @@ Publish QA must not block publication based on word count, keyword density, exac
 Task 10B can replace the local provider with an Admin-backed provider that implements the same `InsightsProvider` interface. The block model, workflow statuses, source model, QA checks, and schema helpers are already structured for that migration.
 
 Task 10B adds `INSIGHTS_PROVIDER=database` for published PostgreSQL snapshots. Database mode must expose published immutable `InsightArticle` snapshots only. Draft, in-review, approved, scheduled future, and archived records must never be returned by public provider calls.
+
+## Task 13C Article Rail
+
+Article pages now use a desktop layout with a left table of contents, readable center column, and sticky right conversion rail. The rail uses article metadata for the related service and related sample audit. On mobile, the same modules stack after the table of contents before the article body. Article tables must use contained horizontal scroll and must not create body-level overflow.

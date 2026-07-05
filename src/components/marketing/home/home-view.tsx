@@ -18,9 +18,9 @@ import { Eyebrow } from "@/components/marketing/shared/section-header";
 import { CTAButton } from "@/components/marketing/shared/cta-button";
 import { GradientBorderCard } from "@/components/marketing/shared/gradient-border-card";
 import { FAQAccordion } from "@/components/marketing/shared/faq-accordion";
-import { SearchDashboardMockup } from "@/components/marketing/home/search-dashboard-mockup";
 import { BrandMarquee } from "@/components/marketing/home/brand-marquee";
 import { SearchEcosystemMap } from "@/components/marketing/home/search-ecosystem-map";
+import { SpokespersonVideoCard } from "@/components/marketing/home/spokesperson-video-card";
 import { OperatingSystemPipeline } from "@/components/marketing/home/operating-system-pipeline";
 import { GrowthPlaybook } from "@/components/marketing/home/growth-playbook";
 import { ServicesBento } from "@/components/marketing/home/services-bento";
@@ -36,7 +36,7 @@ import type { HomeContent } from "@/content/home.types";
 export function HomeView({ home }: { home: HomeContent }) {
   return (
     <>
-      {/* 1. Hero — split layout with floating layered dashboard */}
+      {/* 1. Hero — split layout with video-ready spokesperson module */}
       <Section background="tint" className="relative overflow-hidden pt-20 sm:pt-24 lg:pt-28">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-line-grid opacity-70" />
         <div aria-hidden="true" className="pointer-events-none absolute -top-24 right-0 h-72 w-72 rounded-full bg-brand-gradient-soft blur-3xl" />
@@ -61,7 +61,7 @@ export function HomeView({ home }: { home: HomeContent }) {
             </div>
           </div>
           <div className="relative min-w-0">
-            <SearchDashboardMockup dashboard={home.dashboard} />
+            <SpokespersonVideoCard video={home.heroVideo} />
           </div>
         </Container>
       </Section>
@@ -70,8 +70,8 @@ export function HomeView({ home }: { home: HomeContent }) {
       <Section background="default" className="py-14 sm:py-16">
         <BrandMarquee
           caption={home.brandExperience.caption}
-          rowBrands={[...home.brandExperience.rowBrands]}
-          rowCapabilities={[...home.brandExperience.rowCapabilities]}
+          logos={[...home.brandExperience.logos]}
+          cta={home.brandExperience.cta}
         />
       </Section>
 
@@ -83,6 +83,8 @@ export function HomeView({ home }: { home: HomeContent }) {
           titleId="search-changed-title"
           description={home.searchHasChanged.description}
           message={home.searchHasChanged.message}
+          surfaces={[...home.searchHasChanged.surfaces]}
+          labels={home.searchHasChanged.labels}
         />
       </Section>
 

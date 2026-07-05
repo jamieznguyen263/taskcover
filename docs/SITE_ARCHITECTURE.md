@@ -343,3 +343,7 @@ footer groups Services, Solutions, Work, Insights, Company, and Legal.
 Localized navigation data lives in `src/content/{en,fr,es}/site.ts`, and
 `getLocalizedSite()` applies `/fr` and `/es` prefixes while preserving English
 slugs.
+
+## Task 13C Architecture Preservation
+
+Task 13C is a UI/content proof polish pass only. It does not create public routes, delete routes, change canonical or hreflang behavior, change sitemap inclusion rules, add analytics, add a cookie banner, deploy production, or change DNS. English route slugs remain shared across localized routes.

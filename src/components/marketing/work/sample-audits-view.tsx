@@ -25,8 +25,8 @@ export function SampleAuditsView({ locale }: { locale: Locale }) {
     <>
       <Section background="tint" className="relative overflow-hidden pt-16 sm:pt-20 lg:pt-24">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-line-grid opacity-70" />
-        <Container className="relative grid items-center gap-10 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="flex flex-col gap-5">
+        <Container className="relative grid min-w-0 items-center gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+          <div className="flex min-w-0 flex-col gap-5">
             <nav aria-label={content.ui.breadcrumb} className="text-xs text-muted">
               <ol className="flex flex-wrap items-center gap-1.5">
                 <li><Link href={loc("/")} className="hover:text-brand-teal">{content.ui.home}</Link></li>
@@ -45,8 +45,8 @@ export function SampleAuditsView({ locale }: { locale: Locale }) {
             </p>
             <IllustrativeDisclosure label={content.ui.disclosureLabel} text={content.sampleAudits.disclosureBody} />
           </div>
-          <div className="rounded-3xl border border-line bg-white p-5 depth-layered">
-            <div className="flex gap-3 overflow-x-auto pb-2" role="tablist" aria-label={content.pages["sample-audits"].h1}>
+          <div className="min-w-0 overflow-hidden rounded-3xl border border-line bg-white p-4 depth-layered sm:p-5">
+            <div className="flex max-w-full gap-3 overflow-x-auto scroll-px-2 pb-2" role="tablist" aria-label={content.pages["sample-audits"].h1}>
               {samples.map((item, index) => (
                 <button
                   key={item.slug}
@@ -56,7 +56,7 @@ export function SampleAuditsView({ locale }: { locale: Locale }) {
                   aria-controls="sample-audit-preview"
                   onClick={() => setActiveSlug(item.slug)}
                   className={cn(
-                    "min-h-24 w-44 shrink-0 rounded-2xl border p-4 text-left transition-colors",
+                    "min-h-24 w-[9.5rem] shrink-0 rounded-2xl border p-4 text-left transition-colors sm:w-44",
                     active.slug === item.slug
                       ? "border-brand-teal bg-surface-tint text-graphite"
                       : "border-line bg-white text-secondary hover:border-brand-teal/40"
@@ -69,18 +69,18 @@ export function SampleAuditsView({ locale }: { locale: Locale }) {
                 </button>
               ))}
             </div>
-            <div id="sample-audit-preview" role="tabpanel" className="mt-5 rounded-3xl border border-line-soft bg-surface-tint p-5">
-              <div className="flex items-start justify-between gap-4">
-                <div>
+            <div id="sample-audit-preview" role="tabpanel" className="mt-5 min-w-0 rounded-3xl border border-line-soft bg-surface-tint p-4 sm:p-5">
+              <div className="flex min-w-0 items-start justify-between gap-4">
+                <div className="min-w-0">
                   <WorkStatusBadge label={content.ui.illustrativeSample} tone="sample" />
                   <h2 className="mt-4 text-2xl font-semibold tracking-tight text-graphite">{active.title}</h2>
                   <p className="mt-2 text-sm leading-relaxed text-secondary">{active.focus}</p>
                 </div>
                 <FileSearch className="h-10 w-10 shrink-0 text-brand-teal" aria-hidden="true" />
               </div>
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <div className="mt-5 grid min-w-0 gap-3 sm:grid-cols-2">
                 {active.answers.slice(0, 4).map((answer) => (
-                  <div key={answer} className="rounded-2xl border border-line bg-white p-4 text-sm font-semibold text-graphite">
+                  <div key={answer} className="min-w-0 rounded-2xl border border-line bg-white p-4 text-sm font-semibold leading-6 text-graphite">
                     {answer}
                   </div>
                 ))}
@@ -95,14 +95,14 @@ export function SampleAuditsView({ locale }: { locale: Locale }) {
       </Section>
 
       <Section background="default" aria-labelledby="audit-type-comparison">
-        <Container className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+        <Container className="grid min-w-0 gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
           <SectionHeader
             align="left"
             eyebrow={content.ui.method}
             titleId="audit-type-comparison"
             title={content.sampleAudits.selectorIntro}
           />
-          <div className="overflow-x-auto rounded-3xl border border-line bg-white depth-layered">
+          <div className="max-w-full overflow-x-auto rounded-3xl border border-line bg-white depth-layered">
             <table className="w-full min-w-[720px] border-collapse text-left">
               <thead className="bg-surface-tint text-xs uppercase text-muted">
                 <tr>
@@ -126,8 +126,8 @@ export function SampleAuditsView({ locale }: { locale: Locale }) {
       </Section>
 
       <Section background="soft" aria-labelledby="every-audit">
-        <Container className="grid gap-8 lg:grid-cols-[1fr_1fr]">
-          <div className="rounded-3xl border border-line bg-white p-6 depth-layered">
+        <Container className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+          <div className="min-w-0 rounded-3xl border border-line bg-white p-6 depth-layered">
             <Columns3 className="h-10 w-10 text-brand-teal" aria-hidden="true" />
             <h2 id="every-audit" className="mt-5 text-3xl font-semibold tracking-tight text-graphite">
               {content.sampleAudits.everyAudit[0]}
@@ -145,7 +145,7 @@ export function SampleAuditsView({ locale }: { locale: Locale }) {
       </Section>
 
       <Section background="default" aria-labelledby="findings-to-priority">
-        <Container className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr]">
+        <Container className="grid min-w-0 gap-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
           <SignalMosaic items={active.priority} />
           <div className="flex flex-col justify-center gap-5">
             <Rows3 className="h-10 w-10 text-brand-teal" aria-hidden="true" />
@@ -158,7 +158,7 @@ export function SampleAuditsView({ locale }: { locale: Locale }) {
       </Section>
 
       <Section background="tint" aria-labelledby="illustrative-disclosure">
-        <Container className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
+        <Container className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
           <div>
             <Eyebrow>{content.ui.disclosureLabel}</Eyebrow>
             <h2 id="illustrative-disclosure" className="mt-4 text-3xl font-semibold tracking-tight text-graphite">

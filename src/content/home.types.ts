@@ -104,6 +104,51 @@ export type VideoProofSlot = {
   detail: string;
 };
 
+export type HeroVideoContent = {
+  eyebrow: string;
+  title: string;
+  caption: string;
+  playLabel: string;
+  unavailableLabel: string;
+  fallbackTitle: string;
+  fallbackBody: string;
+  videoUrl?: string;
+  posterUrl?: string;
+  trustChips: readonly string[];
+};
+
+export type ClientLogoProof = {
+  clientName: string;
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  href: string;
+  background: "dark" | "light";
+};
+
+export type SearchSurface = {
+  id: string;
+  label: string;
+  shortLabel: string;
+  ariaLabel: string;
+  buyersSee: string;
+  taskcoverImproves: string;
+  growthSupport: string;
+  angle: number;
+};
+
+export type SearchSurfaceLabels = {
+  desktopGuidance: string;
+  mobileGuidance: string;
+  startHere: string;
+  defaultTitle: string;
+  defaultBody: string;
+  buyersSee: string;
+  taskcoverImproves: string;
+  growthSupport: string;
+};
+
 export type SearchDashboardSignal = {
   label: string;
   value: string;
@@ -165,11 +210,14 @@ export type HomeContent = {
       value: string;
     };
   };
+  heroVideo: HeroVideoContent;
   searchHasChanged: {
     eyebrow: string;
     title: string;
     description: string;
     message: string;
+    surfaces: readonly SearchSurface[];
+    labels: SearchSurfaceLabels;
   };
   operatingSystem: {
     eyebrow: string;
@@ -235,8 +283,8 @@ export type HomeContent = {
   };
   brandExperience: {
     caption: string;
-    rowBrands: readonly string[];
-    rowCapabilities: readonly string[];
+    logos: readonly ClientLogoProof[];
+    cta: CtaItem;
   };
   audit: {
     eyebrow: string;

@@ -280,3 +280,7 @@ The header can expose supporting routes through mega-menu groups, but those
 links must not redefine a page's primary keyword ownership. Do not add
 root-level duplicate pages such as `/seo-agency`, `/technical-seo-agency`, or
 country-name variants outside the existing `/markets/*` structure.
+
+## Task 13C SEO Safety
+
+Task 13C does not alter keyword-to-URL ownership, route slugs, canonical strategy, hreflang, x-default, sitemap behavior, noindex rules, structured data, or metadata strategy. The Client Results and Case Studies changes enrich existing routes only. New proof modules must not invent metrics, rankings, testimonials, or private results.

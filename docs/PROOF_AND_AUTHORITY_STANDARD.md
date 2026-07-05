@@ -160,3 +160,7 @@ automatically. Availability remains case by case and permission-bound.
 
 Media inquiry CTAs route to localized `/contact?intent=media` and must not
 promise spokesperson availability.
+
+## Task 13C Proof Handling
+
+The homepage logo strip, case-study library, and Client Results page may use only local verified case-study assets and public case-study metrics. Do not add fake logos, fake metrics, anonymous private proof, or remote client assets. Where standalone client logos are unavailable, use the approved local case-study visual cards and document the limitation in `docs/CLIENT_LOGO_ASSET_AUDIT.md`.

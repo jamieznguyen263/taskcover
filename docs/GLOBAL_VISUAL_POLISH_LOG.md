@@ -91,3 +91,12 @@ Post-implementation QA completed with:
 - Add more permissioned proof for AI Search/GEO, PPC, SEO Mentor, and selected
   verticals when verified public evidence exists.
 - Consider localized slugs in a future i18n task, not in Task 13B.
+
+## Task 13C Targeted Review Fixes
+
+- Mega menu rows now use stronger hover/focus surfaces, left accents, and differentiated service chips.
+- The mega-menu CTA card uses a green-to-teal-to-blue gradient border, tinted background, and stronger arrow treatment.
+- The homepage hero no longer renders the Search Growth Cockpit. It now renders a video-ready spokesperson module with no autoplay and no fake video.
+- The homepage proof strip now uses the 10 local verified case-study visual assets instead of service/capability text pills.
+- The radial search-surface map now uses real buttons with localized guidance, focus states, and reduced-motion support.
+- Case Studies, Client Results, Sample Audits, and Insights article pages received targeted layout and proof upgrades without SEO route changes.

@@ -75,7 +75,7 @@ describe("global site navigation IA", () => {
     expect(footerPaths).toContain("/book-a-call");
   });
 
-  it("localizes the homepage dashboard and removes old hardcoded mockup copy", () => {
+  it("localizes the homepage video module, logo strip, and radial surface data", () => {
     const english = getHomeContent("en");
     const french = getHomeContent("fr");
     const spanish = getHomeContent("es");
@@ -83,13 +83,26 @@ describe("global site navigation IA", () => {
     expect(english.hero.proofLine).not.toContain("Agoda");
     expect(french.hero.proofLine).not.toContain("Agoda");
     expect(spanish.hero.proofLine).not.toContain("Agoda");
-    expect(french.dashboard.title).not.toBe(english.dashboard.title);
-    expect(spanish.dashboard.title).not.toBe(english.dashboard.title);
 
-    const serialized = JSON.stringify([english.dashboard, french.dashboard, spanish.dashboard]);
+    expect(french.heroVideo.caption).not.toBe(english.heroVideo.caption);
+    expect(spanish.heroVideo.caption).not.toBe(english.heroVideo.caption);
+    expect(english.heroVideo.videoUrl).toBeUndefined();
+    expect(english.brandExperience.logos).toHaveLength(10);
+    expect(french.brandExperience.logos).toHaveLength(10);
+    expect(spanish.brandExperience.logos).toHaveLength(10);
+    expect(english.searchHasChanged.surfaces).toHaveLength(9);
+    expect(french.searchHasChanged.surfaces).toHaveLength(9);
+    expect(spanish.searchHasChanged.surfaces).toHaveLength(9);
+    expect(french.searchHasChanged.labels.desktopGuidance).not.toBe(english.searchHasChanged.labels.desktopGuidance);
+    expect(spanish.searchHasChanged.labels.mobileGuidance).not.toBe(english.searchHasChanged.labels.mobileGuidance);
+
+    const serialized = JSON.stringify([english, french, spanish]);
     expect(serialized).not.toContain("Search Intelligence Command Center");
     expect(serialized).not.toContain("Keyword opportunities");
     expect(serialized).not.toContain("Illustrative dashboard preview");
+    const brandSerialized = JSON.stringify([english.brandExperience, french.brandExperience, spanish.brandExperience]);
+    expect(brandSerialized).not.toContain("Travel SEO");
+    expect(brandSerialized).not.toContain("Spokesperson");
   });
 
   it("does not introduce root-level duplicate commercial URL targets", () => {

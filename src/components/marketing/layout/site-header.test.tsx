@@ -56,6 +56,28 @@ function classTokens(element: Element | null | undefined) {
 }
 
 describe("SiteHeader mobile navigation", () => {
+  it("keeps a desktop mega menu open after pointer focus and click", () => {
+    const container = renderHeader();
+    const servicesTrigger = container.querySelector<HTMLButtonElement>(
+      'button[aria-controls="mega-menu-services"]'
+    );
+
+    expect(servicesTrigger).not.toBeNull();
+    expect(servicesTrigger?.getAttribute("aria-expanded")).toBe("false");
+
+    act(() => {
+      servicesTrigger?.dispatchEvent(new MouseEvent("pointerdown", { bubbles: true }));
+      servicesTrigger?.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
+      servicesTrigger?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+
+    const menu = container.querySelector<HTMLDivElement>("#mega-menu-services");
+
+    expect(servicesTrigger?.getAttribute("aria-expanded")).toBe("true");
+    expect(menu).not.toBeNull();
+    expect(menu?.textContent).toContain("Recommended first step");
+  });
+
   it("opens the mobile accordion menu and exposes the default services group", () => {
     const container = renderHeader();
 

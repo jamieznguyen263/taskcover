@@ -109,12 +109,12 @@ function InsightBlockView({ block, locale }: { block: InsightBlock; locale: Loca
       );
     case "comparison-table":
       return (
-        <figure className="overflow-hidden rounded-2xl border border-line bg-white">
+        <figure className="max-w-full overflow-hidden rounded-2xl border border-line bg-white">
           <figcaption className="border-b border-line bg-surface-tint px-4 py-3 text-sm font-semibold text-graphite">
             {block.caption}
           </figcaption>
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[680px] border-collapse text-left text-sm">
+          <div className="max-w-full overflow-x-auto">
+            <table className="w-max min-w-[680px] border-collapse text-left text-sm">
               <thead className="bg-surface-soft text-xs uppercase tracking-wide text-muted">
                 <tr>
                   {block.columns.map((column) => (

@@ -277,7 +277,7 @@ export function InsightArticleView({
       </Section>
 
       <Section background="default" className="py-12 sm:py-16 lg:py-20">
-        <Container className="grid gap-10 lg:grid-cols-[17rem_minmax(0,1fr)_18rem]">
+        <Container className="grid gap-10 lg:grid-cols-[15rem_minmax(0,1fr)_19rem] xl:grid-cols-[16rem_minmax(0,48rem)_20rem]">
           <aside className="hidden lg:block">
             <div className="sticky top-24 rounded-2xl border border-line bg-white p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand-teal">{content.ui.tableOfContents}</p>
@@ -296,7 +296,7 @@ export function InsightArticleView({
           </aside>
 
           <div className="min-w-0">
-            <div className="lg:hidden mb-8 rounded-2xl border border-line bg-white p-4">
+            <div className="mb-8 rounded-2xl border border-line bg-white p-4 lg:hidden">
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand-teal">{content.ui.tableOfContents}</p>
               <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
                 {toc.map((item) => (
@@ -306,15 +306,15 @@ export function InsightArticleView({
                 ))}
               </div>
             </div>
+            <div className="mb-8 lg:hidden">
+              <ArticleConversionRail article={article} content={content} locale={locale} compact />
+            </div>
             <InsightBlockRenderer article={article} locale={locale} />
           </div>
 
-          <aside className="flex flex-col gap-4">
-            <LinkList title={content.ui.relatedServices} links={article.internalLinking.serviceLinks} locale={locale} />
-            <div className="rounded-2xl border border-line bg-white p-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand-teal">{content.ui.author}</p>
-              <h2 className="mt-3 text-lg font-semibold text-graphite">{content.author.name}</h2>
-              <p className="mt-2 text-sm leading-6 text-secondary">{content.author.description}</p>
+          <aside className="hidden lg:block">
+            <div className="sticky top-24">
+              <ArticleConversionRail article={article} content={content} locale={locale} />
             </div>
           </aside>
         </Container>
@@ -501,6 +501,65 @@ function Breadcrumb({
         })}
       </ol>
     </nav>
+  );
+}
+
+function ArticleConversionRail({
+  article,
+  content,
+  locale,
+  compact = false,
+}: {
+  article: InsightArticle;
+  content: InsightsContent;
+  locale: Locale;
+  compact?: boolean;
+}) {
+  const category = content.categories[article.category];
+  const service = article.internalLinking.serviceLinks[0] ?? category.relatedServices[0];
+  const sample = article.internalLinking.sampleAuditLinks[0];
+  const cards: { eyebrow: string; title: string; href: string; body?: string }[] = [];
+  if (service) {
+    cards.push({ eyebrow: content.ui.relatedServices, title: service.label, href: service.href, body: service.note });
+  }
+  if (sample) {
+    cards.push({ eyebrow: content.ui.relatedSample, title: sample.label, href: sample.href, body: sample.note });
+  }
+
+  return (
+    <div className={cn("grid gap-4", compact && "sm:grid-cols-2")}>
+      <div className={cn("relative overflow-hidden rounded-2xl border border-line bg-white p-5 depth-layered", compact && "sm:col-span-2")}>
+        <div aria-hidden="true" className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-brand-gradient-soft blur-2xl" />
+        <div className="relative">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand-teal">{content.ui.finalCta}</p>
+          <h2 className="mt-3 text-xl font-semibold tracking-tight text-graphite">{content.hub.cta.primary.label}</h2>
+          <p className="mt-2 text-sm leading-6 text-secondary">{content.hub.cta.body}</p>
+          <Link
+            href={localizePath(content.hub.cta.primary.href, locale)}
+            className="mt-4 inline-flex min-h-10 items-center gap-2 rounded-full bg-brand-gradient px-4 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal"
+          >
+            {content.ui.startFreeAudit}
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </div>
+      </div>
+
+      {cards.slice(0, 2).map((card) => (
+        <Link
+          key={`${card.eyebrow}-${card.href}`}
+          href={localizePath(card.href, locale)}
+          className="group rounded-2xl border border-line bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-teal/35"
+        >
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand-teal">{card.eyebrow}</p>
+          <h3 className="mt-3 text-lg font-semibold tracking-tight text-graphite group-hover:text-brand-teal">{card.title}</h3>
+          {card.body ? <p className="mt-2 text-sm leading-6 text-secondary">{card.body}</p> : null}
+          <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-teal">
+            {content.ui.readMore}
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+          </span>
+        </Link>
+      ))}
+    </div>
   );
 }
 

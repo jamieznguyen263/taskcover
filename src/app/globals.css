@@ -92,6 +92,13 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  @supports not (overflow: clip) {
+    body {
+      overflow-x: hidden;
+    }
   }
 
   ::selection {

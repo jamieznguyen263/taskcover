@@ -227,7 +227,9 @@ export type InsightsContent = {
     keyTakeaways: string;
     sources: string;
     relatedServices: string;
+    relatedSample: string;
     relatedArticles: string;
+    startFreeAudit: string;
     author: string;
     finalCta: string;
     categoryContext: string;

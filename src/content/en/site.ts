@@ -72,6 +72,7 @@ export type SiteContent = {
     /** Breadcrumb labels. */
     home: string;
     services: string;
+    recommendedFirstStep: string;
   };
 };
 
@@ -353,5 +354,6 @@ export const site: SiteContent = {
     languageLabel: "Language",
     home: "Home",
     services: "Services",
+    recommendedFirstStep: "Recommended first step",
   },
 };

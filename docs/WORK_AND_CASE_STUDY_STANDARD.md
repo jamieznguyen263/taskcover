@@ -196,3 +196,11 @@ Work, case-study, and sample-audit CTAs should use localized funnel paths:
 
 English slugs remain shared across locales. Do not route localized users back
 to unprefixed English funnel pages.
+
+## Task 13C Case Library And Results Updates
+
+- Case Studies now uses a premium verified library pattern: featured case, top filters, result count, clear filters, and two-column cards.
+- Proof modules must use verified case-study metrics with context and links to full cases.
+- Service names must resolve through the service registry. Do not show raw slugs in public proof modules.
+- Client Results is now a proof hub derived from the 10 verified case studies, including highlights, a case-to-result matrix, service-to-results map, and industry/market distribution.
+- Localized EN/FR/ES labels are required for all new filter, proof, and results modules.

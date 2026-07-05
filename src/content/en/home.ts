@@ -7,8 +7,8 @@
  */
 
 import type { HomeContent } from "../home.types";
+import { buildClientLogoProofAssets } from "../home-proof-assets";
 import {
-  brandExperienceStrip,
   comparisonRows,
   growthPlays,
   industries,
@@ -20,6 +20,103 @@ import {
   technologyCapabilities,
   videoProofFramework,
 } from "@/data/home";
+
+const clientLogoProof = buildClientLogoProofAssets({
+  alt: (clientName) => `${clientName} verified case-study visual asset`,
+});
+
+const searchSurfaces: HomeContent["searchHasChanged"]["surfaces"] = [
+  {
+    id: "google-organic",
+    label: "Google Organic",
+    shortLabel: "Google",
+    ariaLabel: "Explore Google organic search visibility",
+    buyersSee: "Ranked pages, snippets, entities, and SERP features that shape first impressions.",
+    taskcoverImproves: "Technical access, intent mapping, content structure, and authority signals.",
+    growthSupport: "Compounds qualified non-brand visibility and routes demand to conversion pages.",
+    angle: 0,
+  },
+  {
+    id: "ai-overviews",
+    label: "AI Overviews",
+    shortLabel: "AI",
+    ariaLabel: "Explore AI Overview answer visibility",
+    buyersSee: "Condensed answer blocks and cited sources before they click through.",
+    taskcoverImproves: "Answer-ready sections, structured evidence, entity clarity, and citation sources.",
+    growthSupport: "Increases the chance that buyers see Taskcover-ready proof where AI summarizes choices.",
+    angle: 40,
+  },
+  {
+    id: "llms",
+    label: "ChatGPT and LLMs",
+    shortLabel: "LLMs",
+    ariaLabel: "Explore ChatGPT and LLM answer visibility",
+    buyersSee: "Generated recommendations, comparison answers, and source-backed summaries.",
+    taskcoverImproves: "Entity consistency, reusable answer assets, source quality, and topical authority.",
+    growthSupport: "Supports assisted discovery before buyers return to Google or a website.",
+    angle: 80,
+  },
+  {
+    id: "local",
+    label: "Local Results",
+    shortLabel: "Local",
+    ariaLabel: "Explore local search and maps visibility",
+    buyersSee: "Maps, local packs, reviews, location pages, and service-area signals.",
+    taskcoverImproves: "Local architecture, profile completeness, review themes, and service-area relevance.",
+    growthSupport: "Turns high-intent local demand into calls, form fills, and visit-ready traffic.",
+    angle: 120,
+  },
+  {
+    id: "reviews",
+    label: "Review Platforms",
+    shortLabel: "Reviews",
+    ariaLabel: "Explore review-platform trust signals",
+    buyersSee: "Ratings, review themes, third-party sentiment, and trust friction.",
+    taskcoverImproves: "Review signal mapping, content alignment, and conversion-path reassurance.",
+    growthSupport: "Reduces hesitation when buyers compare providers after the first search touch.",
+    angle: 160,
+  },
+  {
+    id: "youtube",
+    label: "YouTube",
+    shortLabel: "Video",
+    ariaLabel: "Explore YouTube and video search visibility",
+    buyersSee: "Explainers, reviews, demonstrations, and answer videos in search journeys.",
+    taskcoverImproves: "Video topic selection, page embedding, transcript structure, and supporting content.",
+    growthSupport: "Creates richer proof for buyers who need to see and hear the expertise.",
+    angle: 200,
+  },
+  {
+    id: "forums",
+    label: "Reddit and Forums",
+    shortLabel: "Forums",
+    ariaLabel: "Explore Reddit and forum search demand",
+    buyersSee: "Peer questions, objections, comparisons, and unfiltered buying language.",
+    taskcoverImproves: "Question mining, objection coverage, source-backed answers, and content briefs.",
+    growthSupport: "Feeds real buyer language into pages that rank, cite, and convert.",
+    angle: 240,
+  },
+  {
+    id: "publications",
+    label: "Publications",
+    shortLabel: "Press",
+    ariaLabel: "Explore publication and authority signals",
+    buyersSee: "Editorial mentions, expert commentary, citations, and trusted third-party context.",
+    taskcoverImproves: "Digital PR targets, expert source assets, proof hygiene, and authority routing.",
+    growthSupport: "Builds the trust layer that helps search engines and buyers believe the brand.",
+    angle: 280,
+  },
+  {
+    id: "landing-pages",
+    label: "Landing Pages",
+    shortLabel: "Pages",
+    ariaLabel: "Explore landing-page conversion paths",
+    buyersSee: "Commercial pages, proof modules, forms, calls to action, and next-step clarity.",
+    taskcoverImproves: "Page intent, proof placement, CTA routing, and measurement-ready conversion paths.",
+    growthSupport: "Turns visibility into pipeline instead of leaving search demand unconverted.",
+    angle: 320,
+  },
+];
 
 export const home: HomeContent = {
   hero: {
@@ -103,6 +200,18 @@ export const home: HomeContent = {
       value: "Value",
     },
   },
+  heroVideo: {
+    eyebrow: "Founder introduction",
+    title: "A video-ready intro for the Taskcover search growth system.",
+    caption:
+      "A short introduction to how Taskcover approaches SEO, AI search, and revenue growth.",
+    playLabel: "Play introduction video",
+    unavailableLabel: "Video upload pending",
+    fallbackTitle: "Spokesperson video is ready for upload",
+    fallbackBody:
+      "The card is configured for a future Taskcover introduction video. No stock or fake video is loaded.",
+    trustChips: ["Verified case studies", "SEO + AI Search + PPC", "USA · Canada · Australia"],
+  },
   searchHasChanged: {
     eyebrow: "Search has changed",
     title: "Search is no longer just Google blue links.",
@@ -110,6 +219,18 @@ export const home: HomeContent = {
       "Modern search demand is fragmented across Google, AI Overviews, ChatGPT and LLMs, local results, review platforms, YouTube, Reddit and forums, and industry publications. Winning means being visible and trusted everywhere buyers look.",
     message:
       "We do not separate SEO, GEO, AEO, content, and authority. We connect them into one search growth system.",
+    surfaces: searchSurfaces,
+    labels: {
+      desktopGuidance: "Hover or click a surface to explore",
+      mobileGuidance: "Tap each signal to see how it connects",
+      startHere: "Start here",
+      defaultTitle: "Nine surfaces. One search growth system.",
+      defaultBody:
+        "Choose a node to see how modern buyers discover, validate, and act before they become a lead.",
+      buyersSee: "What buyers see",
+      taskcoverImproves: "What Taskcover improves",
+      growthSupport: "How it supports growth",
+    },
   },
   operatingSystem: {
     eyebrow: operatingSystem.eyebrow,
@@ -174,9 +295,10 @@ export const home: HomeContent = {
     rows: [...comparisonRows],
   },
   brandExperience: {
-    caption: brandExperienceStrip.caption,
-    rowBrands: [...brandExperienceStrip.rowBrands],
-    rowCapabilities: [...brandExperienceStrip.rowCapabilities],
+    caption:
+      "Verified case studies across education, hospitality, travel, software, insurance, and multi-market search growth.",
+    logos: clientLogoProof,
+    cta: { label: "View case studies", href: "/work/case-studies" },
   },
   audit: {
     eyebrow: "Free SEO Growth Audit",

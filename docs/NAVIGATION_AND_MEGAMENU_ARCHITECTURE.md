@@ -160,3 +160,13 @@ Task 13B implementation lives in:
 - `src/components/marketing/layout/language-switcher.tsx` for localized
   language labels.
 - `src/content/site-navigation.test.ts` for IA and route-safety tests.
+
+## Task 13C Mega Menu Polish
+
+The mega menu keeps the Task 13B IA but now has stronger visual hierarchy:
+
+- Service chips use differentiated premium color accents.
+- Rows have tinted hover/focus backgrounds and a left accent.
+- CTA cards use gradient borders, tinted interiors, shadows, and a stronger arrow control.
+- Desktop and mobile menus share the same row and CTA treatment.
+- Escape close, click/tap access, focus states, and localized href behavior remain unchanged.

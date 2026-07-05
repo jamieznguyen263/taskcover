@@ -2,55 +2,66 @@
 
 import * as React from "react";
 import { motion, useReducedMotion } from "motion/react";
+import { ArrowUpRight, MousePointerClick } from "lucide-react";
 import { Container } from "@/components/marketing/shared/container";
 import { Eyebrow } from "@/components/marketing/shared/section-header";
 import { GradientBorderCard } from "@/components/marketing/shared/gradient-border-card";
+import type { SearchSurface, SearchSurfaceLabels } from "@/content/home.types";
 import { cn } from "@/lib/utils";
 
-/**
- * Search Ecosystem Map — floating DNA / knowledge-graph feel.
- *
- * Renders the fragmented modern search landscape as an interactive network:
- * a central "Your brand" hub with satellite surfaces (Google, AI, Local, etc.)
- * connected by gentle, breathing SVG lines.
- *
- * Motion philosophy:
- *  - Nodes drift very slightly (organic, floating)
- *  - Line connections breathe/sway gently (opacity, not stroke-dash blinking)
- *  - Hub has subtle breathing glow, not flashing
- *  - No strong blinking/pulsing toward the hub
- *
- * On mobile, falls back to a clean radial list so it stays legible.
- */
+const CENTER = 50;
+const RADIUS = 37;
 
-type Surface = {
-  id: string;
-  label: string;
-  note: string;
-  /** Position on the ring (0-360 degrees, 0 = top) */
-  angle: number;
-};
-
-const surfaces: Surface[] = [
-  { id: "google", label: "Google Organic", note: "Core SERP visibility", angle: 0 },
-  { id: "ai", label: "AI Overviews", note: "AI-assisted discovery", angle: 40 },
-  { id: "llm", label: "ChatGPT & LLMs", note: "Generative answers", angle: 80 },
-  { id: "local", label: "Local Results", note: "Maps & local pack", angle: 120 },
-  { id: "reviews", label: "Review Platforms", note: "Trust & reputation", angle: 160 },
-  { id: "youtube", label: "YouTube", note: "Video search", angle: 200 },
-  { id: "forums", label: "Reddit & Forums", note: "Community search", angle: 240 },
-  { id: "press", label: "Publications", note: "Editorial authority", angle: 280 },
-  { id: "landing", label: "Landing Pages", note: "Conversion intent", angle: 320 },
-];
-
-// Ring geometry (viewBox 0 0 400 400, center 200,200)
-const CX = 200;
-const CY = 200;
-const RING_RADIUS = 140;
-
-function polarToCartesian(cx: number, cy: number, r: number, angleDeg: number) {
+function polarToPercent(angleDeg: number) {
   const rad = ((angleDeg - 90) * Math.PI) / 180;
-  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+  return {
+    x: CENTER + RADIUS * Math.cos(rad),
+    y: CENTER + RADIUS * Math.sin(rad),
+  };
+}
+
+function SurfaceDetail({
+  surface,
+  labels,
+  message,
+}: {
+  surface: SearchSurface | undefined;
+  labels: SearchSurfaceLabels;
+  message: React.ReactNode;
+}) {
+  return (
+    <GradientBorderCard>
+      <div className="grid gap-5">
+        <div>
+          <p className="text-sm font-semibold text-brand-teal">
+            {surface ? surface.label : labels.defaultTitle}
+          </p>
+          <p className="mt-2 text-base leading-relaxed text-secondary">
+            {surface ? surface.buyersSee : labels.defaultBody}
+          </p>
+        </div>
+
+        {surface ? (
+          <div className="grid gap-3">
+            {[
+              { label: labels.buyersSee, value: surface.buyersSee },
+              { label: labels.taskcoverImproves, value: surface.taskcoverImproves },
+              { label: labels.growthSupport, value: surface.growthSupport },
+            ].map((item) => (
+              <div key={item.label} className="rounded-2xl border border-line bg-white p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">{item.label}</p>
+                <p className="mt-2 text-sm leading-6 text-secondary">{item.value}</p>
+              </div>
+            ))}
+          </div>
+        ) : null}
+
+        <p className="border-t border-line-soft pt-4 text-base font-medium text-graphite">
+          {message}
+        </p>
+      </div>
+    </GradientBorderCard>
+  );
 }
 
 export function SearchEcosystemMap({
@@ -59,6 +70,8 @@ export function SearchEcosystemMap({
   titleId,
   description,
   message,
+  surfaces,
+  labels,
   className,
 }: {
   eyebrow: string;
@@ -66,10 +79,14 @@ export function SearchEcosystemMap({
   titleId: string;
   description: React.ReactNode;
   message: React.ReactNode;
+  surfaces: readonly SearchSurface[];
+  labels: SearchSurfaceLabels;
   className?: string;
 }) {
   const reduceMotion = useReducedMotion();
-  const [activeId, setActiveId] = React.useState<string | null>(null);
+  const [activeId, setActiveId] = React.useState(surfaces[0]?.id);
+  const activeSurface = surfaces.find((surface) => surface.id === activeId) ?? surfaces[0];
+  const firstPosition = surfaces[0] ? polarToPercent(surfaces[0].angle) : { x: 50, y: 12 };
 
   return (
     <Container className={cn("flex flex-col gap-12", className)}>
@@ -86,172 +103,163 @@ export function SearchEcosystemMap({
         </p>
       </div>
 
-      <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.1fr]">
-        {/* Network map (desktop) / list (mobile) */}
-        <div className="order-2 lg:order-1">
-          {/* Desktop SVG network — floating DNA / knowledge-graph */}
+      <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.05fr]">
+        <div className="order-2 min-w-0 lg:order-1">
           <div className="hidden lg:block">
-            <svg viewBox="0 0 400 400" className="mx-auto w-full max-w-md" role="img" aria-labelledby="ecosystem-map-title">
-              <title id="ecosystem-map-title">Search ecosystem network map</title>
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-brand-teal/20 bg-white px-4 py-2 text-sm font-semibold text-graphite shadow-sm">
+              <MousePointerClick className="h-4 w-4 text-brand-teal" aria-hidden="true" />
+              {labels.desktopGuidance}
+            </div>
 
-              {/* Connection lines — gentle breathing opacity, no blinking dash */}
-              {surfaces.map((s, i) => {
-                const pos = polarToCartesian(CX, CY, RING_RADIUS, s.angle);
-                const isActive = activeId === s.id;
+            <div className="relative mx-auto aspect-square w-full max-w-[32rem]">
+              <div
+                aria-hidden="true"
+                className="absolute inset-[18%] rounded-full border border-brand-teal/15 bg-white/45 shadow-[inset_0_0_70px_rgba(24,138,172,0.08)]"
+              />
+              <div
+                aria-hidden="true"
+                className="absolute left-1/2 top-1/2 h-28 w-28 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-gradient-soft blur-2xl"
+              />
+
+              <svg className="absolute inset-0 h-full w-full" aria-hidden="true" viewBox="0 0 100 100">
+                {surfaces.map((surface, index) => {
+                  const pos = polarToPercent(surface.angle);
+                  const isActive = activeId === surface.id;
+                  return (
+                    <motion.line
+                      key={surface.id}
+                      x1={CENTER}
+                      y1={CENTER}
+                      x2={pos.x}
+                      y2={pos.y}
+                      stroke={isActive ? "#10E66A" : "#188AAC"}
+                      strokeWidth={isActive ? 0.7 : 0.35}
+                      strokeLinecap="round"
+                      initial={false}
+                      animate={
+                        reduceMotion
+                          ? { opacity: isActive ? 0.75 : 0.32 }
+                          : { opacity: isActive ? [0.65, 1, 0.65] : [0.22, 0.46, 0.22] }
+                      }
+                      transition={
+                        reduceMotion
+                          ? { duration: 0 }
+                          : { duration: 2.6 + (index % 3) * 0.5, repeat: Infinity, ease: "easeInOut" }
+                      }
+                    />
+                  );
+                })}
+              </svg>
+
+              <div className="absolute left-1/2 top-1/2 z-10 flex h-24 w-24 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-brand-teal/25 bg-white text-center shadow-soft">
+                <span className="text-xs font-bold uppercase tracking-[0.12em] text-graphite">
+                  Taskcover
+                  <span className="mt-1 block text-[10px] font-semibold text-brand-teal">Search OS</span>
+                </span>
+              </div>
+
+              <div
+                className="absolute z-20 flex items-center gap-2 rounded-full border border-brand-green/25 bg-white px-3 py-1.5 text-xs font-semibold text-graphite shadow-soft"
+                style={{ left: `${Math.min(firstPosition.x + 6, 78)}%`, top: `${Math.max(firstPosition.y - 6, 4)}%` }}
+              >
+                {labels.startHere}
+                <ArrowUpRight className="h-3.5 w-3.5 text-brand-teal" aria-hidden="true" />
+              </div>
+
+              {surfaces.map((surface, index) => {
+                const pos = polarToPercent(surface.angle);
+                const isActive = activeId === surface.id;
                 return (
-                  <motion.line
-                    key={`line-${s.id}`}
-                    x1={CX}
-                    y1={CY}
-                    x2={pos.x}
-                    y2={pos.y}
-                    stroke={isActive ? "#10E66A" : "#188AAC"}
-                    strokeWidth={isActive ? 2 : 1.25}
-                    initial={{ opacity: 0 }}
+                  <motion.button
+                    key={surface.id}
+                    type="button"
+                    aria-label={surface.ariaLabel}
+                    aria-pressed={isActive}
+                    onClick={() => setActiveId(surface.id)}
+                    onFocus={() => setActiveId(surface.id)}
+                    onMouseEnter={() => setActiveId(surface.id)}
+                    className="group absolute z-30 flex min-h-12 min-w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-teal"
+                    style={{ left: `${pos.x}%`, top: `${pos.y}%` }}
+                    initial={reduceMotion ? false : { opacity: 0, scale: 0.75 }}
                     animate={
                       reduceMotion
-                        ? { opacity: isActive ? 0.7 : 0.35 }
-                        : {
-                            opacity: isActive
-                              ? [0.65, 0.8, 0.65]
-                              : [0.3, 0.45, 0.3],
-                          }
+                        ? { opacity: 1, scale: 1 }
+                        : { opacity: 1, scale: isActive ? 1.08 : [1, 1.04, 1] }
                     }
                     transition={
                       reduceMotion
                         ? { duration: 0 }
-                        : {
-                            duration: 4 + (i % 3),
-                            repeat: Infinity,
-                            ease: "easeInOut" as const,
-                            delay: i * 0.3,
-                          }
+                        : { duration: isActive ? 0.2 : 2.8, delay: index * 0.08, repeat: isActive ? 0 : Infinity }
                     }
-                  />
-                );
-              })}
-
-              {/* Center hub — subtle breathing glow */}
-              <motion.g
-                initial={reduceMotion ? false : { opacity: 0, scale: 0.5 }}
-                animate={reduceMotion ? { opacity: 1, scale: 1 } : { opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4 }}
-              >
-                {/* Breathing halo */}
-                {!reduceMotion && (
-                  <motion.circle
-                    cx={CX}
-                    cy={CY}
-                    r="48"
-                    fill="url(#hubGrad)"
-                    animate={{ opacity: [0.4, 0.6, 0.4], scale: [1, 1.06, 1] }}
-                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" as const }}
-                    style={{ transformOrigin: `${CX}px ${CY}px` }}
-                  />
-                )}
-                <circle cx={CX} cy={CY} r="38" fill="url(#hubGrad)" />
-                <circle cx={CX} cy={CY} r="38" fill="none" stroke="#188AAC" strokeWidth="1" opacity="0.3" />
-                <text x={CX} y={CY - 4} textAnchor="middle" className="fill-graphite text-[10px] font-bold">
-                  Your
-                </text>
-                <text x={CX} y={CY + 8} textAnchor="middle" className="fill-graphite text-[10px] font-bold">
-                  Brand
-                </text>
-              </motion.g>
-
-              <defs>
-                <radialGradient id="hubGrad">
-                  <stop offset="0%" stopColor="#10E66A" stopOpacity="0.2" />
-                  <stop offset="100%" stopColor="#197DB4" stopOpacity="0.08" />
-                </radialGradient>
-              </defs>
-
-              {/* Satellite nodes — gentle floating drift */}
-              {surfaces.map((s, i) => {
-                const pos = polarToCartesian(CX, CY, RING_RADIUS, s.angle);
-                const isActive = activeId === s.id;
-                return (
-                  <motion.g
-                    key={s.id}
-                    initial={reduceMotion ? false : { opacity: 0, scale: 0.6 }}
-                    animate={reduceMotion ? { opacity: 1, scale: 1 } : { opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4, delay: 0.2 + i * 0.05 }}
-                    onMouseEnter={() => setActiveId(s.id)}
-                    onMouseLeave={() => setActiveId(null)}
-                    className="cursor-pointer"
                   >
-                    {/* Floating wrapper — gentle organic drift */}
-                    <motion.g
-                      animate={
-                        reduceMotion
-                          ? {}
-                          : {
-                              x: [0, 1.5, 0, -1.5, 0],
-                              y: [0, -1.5, 0, 1.5, 0],
-                            }
-                      }
-                      transition={{
-                        duration: 6 + (i % 4),
-                        repeat: Infinity,
-                        ease: "easeInOut" as const,
-                        delay: i * 0.4,
-                      }}
-                    >
-                      <circle
-                        cx={pos.x}
-                        cy={pos.y}
-                        r={isActive ? 8 : 6}
-                        fill={isActive ? "#10E66A" : "#FFFFFF"}
-                        stroke="#188AAC"
-                        strokeWidth="1.5"
-                        className="transition-all"
-                      />
-                      {isActive && (
-                        <circle cx={pos.x} cy={pos.y} r="12" fill="none" stroke="#10E66A" strokeWidth="1" opacity="0.4" />
+                    <span
+                      className={cn(
+                        "absolute h-12 w-12 rounded-full border transition",
+                        isActive
+                          ? "border-brand-green/70 bg-brand-green/15 shadow-[0_0_0_8px_rgba(16,230,106,0.12)]"
+                          : "border-brand-teal/20 bg-white shadow-sm group-hover:border-brand-teal/45",
                       )}
-                    </motion.g>
-                  </motion.g>
+                    />
+                    <span
+                      className={cn(
+                        "relative h-4 w-4 rounded-full border transition",
+                        isActive
+                          ? "border-brand-green bg-brand-green"
+                          : "border-brand-teal bg-white group-hover:bg-brand-teal",
+                      )}
+                    />
+                    <span
+                      className={cn(
+                        "absolute top-[calc(100%+0.35rem)] whitespace-nowrap rounded-full border bg-white px-2 py-1 text-[11px] font-semibold shadow-sm transition",
+                        isActive
+                          ? "translate-y-0 border-brand-teal/30 text-graphite opacity-100"
+                          : "translate-y-1 border-line text-secondary opacity-0 group-hover:translate-y-0 group-hover:opacity-100",
+                      )}
+                    >
+                      {surface.shortLabel}
+                    </span>
+                  </motion.button>
                 );
               })}
-            </svg>
+            </div>
           </div>
 
-          {/* Mobile radial list */}
-          <ul className="grid grid-cols-2 gap-2 lg:hidden">
-            {surfaces.map((s) => (
-              <li
-                key={s.id}
-                className="flex flex-col gap-0.5 rounded-xl border border-line bg-white p-3"
-              >
-                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-graphite">
-                  <span className="h-1.5 w-1.5 rounded-full bg-brand-gradient" aria-hidden="true" />
-                  {s.label}
-                </span>
-                <span className="text-[11px] text-muted">{s.note}</span>
-              </li>
-            ))}
-          </ul>
+          <div className="grid gap-4 lg:hidden">
+            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-brand-teal/20 bg-white px-4 py-2 text-sm font-semibold text-graphite shadow-sm">
+              <MousePointerClick className="h-4 w-4 text-brand-teal" aria-hidden="true" />
+              {labels.mobileGuidance}
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {surfaces.map((surface) => {
+                const isActive = activeId === surface.id;
+                return (
+                  <button
+                    key={surface.id}
+                    type="button"
+                    aria-label={surface.ariaLabel}
+                    aria-pressed={isActive}
+                    onClick={() => setActiveId(surface.id)}
+                    onFocus={() => setActiveId(surface.id)}
+                    className={cn(
+                      "min-h-12 rounded-2xl border px-3 py-3 text-left text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal",
+                      isActive
+                        ? "border-brand-teal bg-surface-tint text-graphite"
+                        : "border-line bg-white text-secondary",
+                    )}
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      <span className={cn("h-2 w-2 rounded-full", isActive ? "bg-brand-green" : "bg-brand-teal")} />
+                      {surface.shortLabel}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
-        {/* Active surface detail / default list */}
-        <div className="order-1 lg:order-2">
-          <GradientBorderCard>
-            <div className="flex flex-col gap-4">
-              <p className="text-sm font-semibold text-brand-teal">
-                {activeId
-                  ? surfaces.find((s) => s.id === activeId)?.label
-                  : "Nine surfaces. One system."}
-              </p>
-              <p className="text-base leading-relaxed text-secondary">
-                {activeId
-                  ? surfaces.find((s) => s.id === activeId)?.note
-                  : "Hover the map to see how each surface connects to your brand. Taskcover does not treat them as separate channels — they are one connected search growth system."}
-              </p>
-              <p className="border-t border-line-soft pt-4 text-base font-medium text-graphite">
-                {message}
-              </p>
-            </div>
-          </GradientBorderCard>
+        <div className="order-1 min-w-0 lg:order-2">
+          <SurfaceDetail surface={activeSurface} labels={labels} message={message} />
         </div>
       </div>
     </Container>

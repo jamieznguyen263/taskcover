@@ -395,5 +395,6 @@ export const site: SiteContent = {
     languageLabel: "Langue",
     home: "Accueil",
     services: "Services",
+    recommendedFirstStep: "Premiere etape recommandee",
   },
 };

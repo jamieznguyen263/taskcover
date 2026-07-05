@@ -635,3 +635,7 @@ The homepage remains the Master Vibe Standard. Task 10 does not add an Insights 
 Insights pages should inherit the bright premium Taskcover visual language: white, off-white, and light-blue surfaces; green-to-teal-to-blue accents; strong editorial typography; calm long-form readability; restrained depth; accessible tables; practical framework visuals; and clear internal-link pathways.
 
 Insights must not look like a generic WordPress blog grid. The hub uses an editorial dossier, category navigation, topic map, reading paths, and a CTA architecture. Category pages vary their visual treatment by category theme.
+
+## Task 13C Homepage Standard
+
+The hero should feel calmer and more premium than a dense dashboard. Use the video-ready spokesperson module on the right side until a real permissioned video exists. The brand proof strip must contain verified client/case-study proof assets only, not service capability tags. The radial search-surface section should make interaction obvious with button nodes, localized guidance, visible focus, and a clear active-surface explanation card.
