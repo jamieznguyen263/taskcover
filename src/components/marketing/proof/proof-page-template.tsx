@@ -161,7 +161,7 @@ function ProofCta({ content, locale, media = false }: { content: ProofContent; l
                 {content.ui.bookStrategyCall}
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </CTAButton>
-              <CTAButton variant="secondary" href={loc("/contact")}>
+              <CTAButton variant="secondary" href={loc(media ? "/contact?intent=media" : "/contact?intent=private-reference")}>
                 {media ? content.ui.mediaInquiry : content.ui.requestReference}
               </CTAButton>
             </div>
@@ -597,7 +597,7 @@ function MediaInquiryPanel({
             <h2 className="text-3xl font-semibold tracking-tight text-graphite">{title}</h2>
             <p className="mt-2 max-w-2xl text-secondary">{description}</p>
           </div>
-          <CTAButton href={loc("/contact")}>
+          <CTAButton href={loc("/contact?intent=media")}>
             {content.ui.mediaInquiry}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </CTAButton>

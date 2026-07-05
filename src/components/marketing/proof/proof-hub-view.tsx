@@ -71,7 +71,7 @@ export function ProofHubView({ locale }: { locale: Locale }) {
                 {content.ui.bookStrategyCall}
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </CTAButton>
-              <CTAButton variant="secondary" size="lg" href={loc("/contact")}>
+              <CTAButton variant="secondary" size="lg" href={loc("/contact?intent=private-reference")}>
                 {content.ui.requestReference}
               </CTAButton>
             </div>
@@ -181,7 +181,7 @@ export function ProofHubView({ locale }: { locale: Locale }) {
                     {content.ui.bookStrategyCall}
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </CTAButton>
-                  <CTAButton variant="secondary" size="lg" href={loc("/contact")}>
+                  <CTAButton variant="secondary" size="lg" href={loc("/contact?intent=private-reference")}>
                     {content.ui.requestReference}
                   </CTAButton>
                 </div>

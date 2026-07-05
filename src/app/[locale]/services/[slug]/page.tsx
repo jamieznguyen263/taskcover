@@ -77,7 +77,7 @@ export default async function LocalizedServiceDetailPage({ params }: Params) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(faq) }}
       />
-      <ServicePageTemplate service={service} ui={content.ui} />
+      <ServicePageTemplate service={service} ui={content.ui} locale={locale} />
     </>
   );
 }

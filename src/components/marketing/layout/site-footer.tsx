@@ -64,7 +64,9 @@ export function SiteFooter() {
               </CTAButton>
             </div>
             <div className="mt-2">
-              <LanguageSwitcher />
+              <React.Suspense fallback={<div className="h-10 w-20 rounded-full border border-line" />}>
+                <LanguageSwitcher />
+              </React.Suspense>
             </div>
           </div>
 

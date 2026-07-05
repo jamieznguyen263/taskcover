@@ -50,6 +50,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/work/sample-audits",
     "/work/search-growth-frameworks",
     "/work/client-results",
+    "/free-seo-audit",
+    "/book-a-call",
+    "/contact",
   ];
   for (const base of staticBases) {
     for (const locale of locales) {

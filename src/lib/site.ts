@@ -19,7 +19,7 @@ export const siteConfig = {
   marketSlugs: ["usa", "canada", "australia"],
   contact: {
     // TODO: replace with verified contact details before launch
-    email: "hello@taskcover.com",
+    email: "business@taskcover.com",
     phone: "", // do not invent
     formPath: "/book-a-call",
     auditPath: "/free-seo-audit",

@@ -11,7 +11,7 @@
 
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { getLocaleFromPathname, type Locale } from "@/lib/i18n";
 
 export function useLocale(): Locale {
@@ -22,7 +22,8 @@ export function useLocale(): Locale {
 /**
  * Also expose the current pathname for convenience in the language switcher.
  */
-export function useLocalePathname(): { locale: Locale; pathname: string } {
+export function useLocalePathname(): { locale: Locale; pathname: string; search: string } {
   const pathname = usePathname() ?? "/";
-  return { locale: getLocaleFromPathname(pathname), pathname };
+  const searchParams = useSearchParams();
+  return { locale: getLocaleFromPathname(pathname), pathname, search: searchParams.toString() };
 }

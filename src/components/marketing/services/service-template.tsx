@@ -35,6 +35,8 @@ import {
   ServiceDeliverableVisual,
 } from "@/components/marketing/services/service-visuals";
 import type { ServicesContent } from "@/content/services.types";
+import type { Locale } from "@/lib/i18n";
+import { localizePath } from "@/lib/i18n";
 
 /** UI labels passed from the route to all service template sub-components. */
 export type ServiceUI = ServicesContent["ui"];
@@ -93,8 +95,9 @@ export function ServiceBreadcrumb({
 /* 1. Hero — split layout + floating service-specific dashboard                */
 /* -------------------------------------------------------------------------- */
 
-export function ServicePageHero({ service }: { service: Service }) {
+export function ServicePageHero({ service, locale }: { service: Service; locale: Locale }) {
   const ui = useUI();
+  const loc = (path: string) => localizePath(path, locale);
   return (
     <Section
       background="tint"
@@ -107,8 +110,8 @@ export function ServicePageHero({ service }: { service: Service }) {
         <div className="flex flex-col gap-5">
           <ServiceBreadcrumb
             items={[
-              { label: ui.breadcrumbHome, href: "/" },
-              { label: ui.breadcrumbServices, href: "/services" },
+              { label: ui.breadcrumbHome, href: loc("/") },
+              { label: ui.breadcrumbServices, href: loc("/services") },
               { label: service.shortLabel },
             ]}
           />
@@ -123,11 +126,11 @@ export function ServicePageHero({ service }: { service: Service }) {
             {service.subheadline}
           </p>
           <div className="mt-1 flex flex-col gap-3 sm:flex-row">
-            <CTAButton size="lg" href="/free-seo-audit">
+            <CTAButton size="lg" href={loc("/free-seo-audit")}>
               {ui.heroCtaPrimary}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </CTAButton>
-            <CTAButton variant="secondary" size="lg" href="/book-a-call">
+            <CTAButton variant="secondary" size="lg" href={loc("/book-a-call")}>
               {ui.heroCtaSecondary}
             </CTAButton>
           </div>
@@ -726,8 +729,9 @@ const ctaPreviewIconsBySlug: Partial<Record<string, React.ElementType[]>> = {
 
 const ctaPreviewIconsDefault: React.ElementType[] = [ListChecks, Target, Sparkles];
 
-export function ServiceCTA({ service }: { service: Service }) {
+export function ServiceCTA({ service, locale }: { service: Service; locale: Locale }) {
   const ui = useUI();
+  const loc = (path: string) => localizePath(path, locale);
   const labels = ui.ctaPreviewLabels[service.slug] ?? ui.ctaPreviewDefault;
   const icons = ctaPreviewIconsBySlug[service.slug] ?? ctaPreviewIconsDefault;
   const previewRows = labels.map((label, i) => ({
@@ -753,11 +757,11 @@ export function ServiceCTA({ service }: { service: Service }) {
                 {ui.ctaDesc}
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
-                <CTAButton size="lg" href="/free-seo-audit">
+                <CTAButton size="lg" href={loc("/free-seo-audit")}>
                   {ui.heroCtaPrimary}
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </CTAButton>
-                <CTAButton variant="secondary" size="lg" href="/book-a-call">
+                <CTAButton variant="secondary" size="lg" href={loc("/book-a-call")}>
                   {ui.heroCtaSecondary}
                 </CTAButton>
               </div>
@@ -797,10 +801,10 @@ export function ServiceCTA({ service }: { service: Service }) {
 /* Full service page template                                                  */
 /* -------------------------------------------------------------------------- */
 
-export function ServicePageTemplate({ service, ui }: { service: Service; ui: ServiceUI }) {
+export function ServicePageTemplate({ service, ui, locale = "en" }: { service: Service; ui: ServiceUI; locale?: Locale }) {
   return (
     <ServiceUIContext.Provider value={ui}>
-      <ServicePageHero service={service} />
+      <ServicePageHero service={service} locale={locale} />
       <ServiceProblemSection service={service} />
       <ServiceApproachSection service={service} />
       <ServiceDeliverables service={service} />
@@ -809,7 +813,7 @@ export function ServicePageTemplate({ service, ui }: { service: Service; ui: Ser
       <ServiceOutcomes service={service} />
       <RelatedServices service={service} />
       <ServiceFAQ service={service} />
-      <ServiceCTA service={service} />
+      <ServiceCTA service={service} locale={locale} />
     </ServiceUIContext.Provider>
   );
 }

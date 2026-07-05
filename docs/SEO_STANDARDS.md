@@ -195,3 +195,15 @@ Rules:
   "placeholder", "coming soon", anonymous success stories, or fake metrics.
 - Do not turn narrative app ratings, review context, or awards into Review,
   AggregateRating, endorsement, or unsupported Organization schema.
+
+## Lead Funnel SEO (Task 9)
+
+Indexable lead funnel pages are `/free-seo-audit`, `/book-a-call`, and
+`/contact` across EN/FR/ES. Each page uses localized metadata, canonical URLs,
+hreflang alternates, Open Graph metadata, one H1, and BreadcrumbList schema.
+
+`/thank-you` is `noindex` and excluded from sitemap. It must not include PII,
+submission IDs, conversion values, or fake ContactPoint data in metadata.
+
+Do not add fake Review, AggregateRating, ContactPoint, opening-hours, physical
+location, appointment, or booking schema to the lead funnel.

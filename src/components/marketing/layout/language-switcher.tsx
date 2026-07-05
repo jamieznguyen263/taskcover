@@ -23,17 +23,30 @@ import { useLocalePathname } from "./use-locale";
  * Build the equivalent href for a target locale from the current pathname.
  * Falls back to the localized homepage if something is off.
  */
-function buildLocaleHref(currentPathname: string, target: Locale): string {
+function safeQuery(search: string): string {
+  const params = new URLSearchParams(search);
+  const next = new URLSearchParams();
+  const intent = params.get("intent");
+  const type = params.get("type");
+  const safeIntents = new Set(["media", "private-reference", "partnership"]);
+  const safeTypes = new Set(["seo-audit", "strategy-call", "contact", "media-inquiry", "private-reference"]);
+  if (intent && safeIntents.has(intent)) next.set("intent", intent);
+  if (type && safeTypes.has(type)) next.set("type", type);
+  const value = next.toString();
+  return value ? `?${value}` : "";
+}
+
+function buildLocaleHref(currentPathname: string, target: Locale, search = ""): string {
   try {
-    return switchLocale(currentPathname, target);
+    return `${switchLocale(currentPathname, target)}${safeQuery(search)}`;
   } catch {
-    return target === "en" ? "/" : `/${target}`;
+    return `${target === "en" ? "/" : `/${target}`}${safeQuery(search)}`;
   }
 }
 
 /** Compact dropdown used in the desktop header. */
 export function LanguageSwitcher({ className }: { className?: string }) {
-  const { locale, pathname } = useLocalePathname();
+  const { locale, pathname, search } = useLocalePathname();
   const [open, setOpen] = React.useState(false);
   const wrapperRef = React.useRef<HTMLDivElement>(null);
 
@@ -80,7 +93,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
           className="absolute right-0 z-50 mt-2 w-44 overflow-hidden rounded-2xl border border-line bg-white p-1 shadow-lg"
         >
           {locales.map((l) => {
-            const href = buildLocaleHref(pathname, l);
+            const href = buildLocaleHref(pathname, l, search);
             const active = l === locale;
             return (
               <Link
@@ -109,14 +122,14 @@ export function LanguageSwitcher({ className }: { className?: string }) {
 
 /** Stacked list used in the mobile menu. */
 export function LanguageSwitcherList() {
-  const { locale, pathname } = useLocalePathname();
+  const { locale, pathname, search } = useLocalePathname();
   return (
     <div className="flex flex-col gap-1" role="listbox" aria-label="Select language">
       <p className="px-1 pb-1 text-[10px] font-semibold uppercase tracking-wide text-muted">
         Language
       </p>
       {locales.map((l) => {
-        const href = buildLocaleHref(pathname, l);
+        const href = buildLocaleHref(pathname, l, search);
         const active = l === locale;
         return (
           <Link

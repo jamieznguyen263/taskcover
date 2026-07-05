@@ -150,3 +150,13 @@ Metrics may be shown only at the claim level supported by the approved source
 case pages. Do not transform narrative ratings, app-store context, awards, or
 review references into `Review`, `AggregateRating`, endorsement, or unsupported
 Organization schema.
+
+## Private Reference Routing (Task 9)
+
+Private reference CTAs route to localized `/contact?intent=private-reference`.
+The contact form may qualify the request, but it must not expose private
+reference names, engagement details, source files, or introductions
+automatically. Availability remains case by case and permission-bound.
+
+Media inquiry CTAs route to localized `/contact?intent=media` and must not
+promise spokesperson availability.

@@ -227,3 +227,17 @@ localized in EN/FR/ES while slugs remain English.
 - [ ] Sitemap includes all localized routes.
 - [ ] No horizontal overflow from longer French/Spanish nav labels.
 - [ ] Service page hero title changes language when locale changes.
+
+## 13. Lead Funnel Localization (Task 9)
+
+Lead funnel slugs remain English across locales:
+
+- `/free-seo-audit`, `/fr/free-seo-audit`, `/es/free-seo-audit`
+- `/book-a-call`, `/fr/book-a-call`, `/es/book-a-call`
+- `/contact`, `/fr/contact`, `/es/contact`
+- `/thank-you`, `/fr/thank-you`, `/es/thank-you`
+
+Language switching preserves safe funnel query values only, including
+`intent=media`, `intent=private-reference`, `intent=partnership`, and safe
+thank-you `type` values. Lead content, field labels, validation messages,
+fallbacks, and thank-you states live in `src/content/*/leads.ts`.

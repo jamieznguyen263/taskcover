@@ -218,3 +218,18 @@ sitemap with localized hreflang alternates.
 - Internal links from the footer (`src/components/marketing/layout/site-footer.tsx`)
   are localized automatically for the active locale.
 - See `docs/I18N_STRATEGY.md` for the full multilingual strategy.
+
+## Lead Funnel (Task 9)
+
+Built localized lead funnel routes:
+
+- `/free-seo-audit`, `/fr/free-seo-audit`, `/es/free-seo-audit`
+- `/book-a-call`, `/fr/book-a-call`, `/es/book-a-call`
+- `/contact`, `/fr/contact`, `/es/contact`
+- `/contact?intent=media`, `/contact?intent=private-reference`, `/contact?intent=partnership`
+- `/thank-you?type=seo-audit`, `/thank-you?type=strategy-call`, `/thank-you?type=contact`
+
+Indexable funnel pages are included in sitemap. Thank-you pages are built,
+marked `noindex`, and excluded from sitemap. Submissions use
+`src/app/api/leads/route.ts` and require at least one configured delivery
+adapter before redirecting to thank-you. See `docs/LEAD_FUNNEL_STANDARD.md`.

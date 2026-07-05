@@ -185,3 +185,14 @@ fake VideoObject, fake Organization, awards, or performance-claim schema.
 
 CreativeWork schema is optional only for real illustrative public samples and
 must not imply client ownership or client results.
+
+## Funnel CTA Routing (Task 9)
+
+Work, case-study, and sample-audit CTAs should use localized funnel paths:
+
+- Free audit: `/free-seo-audit`
+- Strategy call: `/book-a-call`
+- Private reference: `/contact?intent=private-reference`
+
+English slugs remain shared across locales. Do not route localized users back
+to unprefixed English funnel pages.

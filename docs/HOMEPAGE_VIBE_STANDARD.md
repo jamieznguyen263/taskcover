@@ -586,6 +586,22 @@ Industries → Markets → Proof → Methodology → Technology → Audit CTA**
 Future pages should preserve this logical, evidence-led progression within
 their own scope.
 
+## 24. Lead Funnel Vibe (Task 9)
+
+Lead funnel pages must keep the approved bright premium Taskcover system:
+white, off-white, light-blue surfaces, green-to-blue accents, tactile controls,
+clear state communication, diagnostic/search-growth visuals, and no dark theme.
+
+The four funnel pages must not use one repeated template:
+
+- Free SEO Audit: diagnostic assessment wizard.
+- Book a Call: strategy-session planner.
+- Contact: intelligent request-routing desk.
+- Thank You: confirmation and next-step pathway.
+
+No funnel page may imply a submission, email, CRM record, or booking succeeded
+unless a configured adapter accepted it.
+
 ---
 
 *This standard is the source of truth. All future pages must conform to it.

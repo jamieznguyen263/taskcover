@@ -65,14 +65,18 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <LanguageSwitcher />
+          <React.Suspense fallback={<div className="h-10 w-20 rounded-full border border-line" />}>
+            <LanguageSwitcher />
+          </React.Suspense>
           <CTAButton size="md" href={content.primaryCta.href}>
             {content.primaryCta.label}
           </CTAButton>
         </div>
 
         <div className="flex items-center gap-2 lg:hidden">
-          <LanguageSwitcher />
+          <React.Suspense fallback={<div className="h-10 w-20 rounded-full border border-line" />}>
+            <LanguageSwitcher />
+          </React.Suspense>
           <button
             type="button"
             className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-graphite lg:hidden"
@@ -115,7 +119,9 @@ export function SiteHeader() {
             </CTAButton>
           </div>
           <div className="mt-4 border-t border-line-soft pt-4">
-            <LanguageSwitcherList />
+            <React.Suspense fallback={null}>
+              <LanguageSwitcherList />
+            </React.Suspense>
           </div>
         </Container>
       </div>
