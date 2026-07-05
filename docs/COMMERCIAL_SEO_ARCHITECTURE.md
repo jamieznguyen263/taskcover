@@ -49,3 +49,14 @@ footer regrouping. It does not change commercial URL ownership.
   request routes.
 
 Root-level duplicate commercial URLs remain rejected.
+## Pricing Page Role
+
+`/pricing` is the commercial comparison layer for Taskcover's Local SEO,
+National SEO, Global SEO, SEO Mentor, audit, PPC, and custom pricing options.
+It should support decision-stage buyers without replacing canonical service,
+industry, market, work, or proof URLs.
+
+Internal linking should point pricing visitors toward Free SEO Audit, Strategy
+Call, relevant sample audits, and verified case studies. Pricing must not create
+new root-level duplicate pages such as `/local-seo-pricing` or
+`/national-seo-pricing`.

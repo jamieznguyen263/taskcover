@@ -347,3 +347,14 @@ slugs.
 ## Task 13C Architecture Preservation
 
 Task 13C is a UI/content proof polish pass only. It does not create public routes, delete routes, change canonical or hreflang behavior, change sitemap inclusion rules, add analytics, add a cookie banner, deploy production, or change DNS. English route slugs remain shared across localized routes.
+## Pricing Page
+
+The localized pricing route lives at `/pricing`, `/fr/pricing`, and
+`/es/pricing`. Slugs remain English for all locales.
+
+Pricing is a decision-stage commercial page, not a duplicate service page. It
+links visitors toward Free SEO Audit and Strategy Call paths, explains Local /
+National / Global / SEO Mentor / Audit / PPC starting prices, and preserves the
+global canonical, hreflang, and sitemap strategy.
+
+See `docs/PRICING_PAGE_STANDARD.md` for the pricing model and scope rules.

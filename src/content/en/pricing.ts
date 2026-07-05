@@ -1,0 +1,938 @@
+import type { PricingContent } from "../pricing.types";
+
+export const pricing = {
+  metadata: {
+    title: "Pricing | Local, National & Global SEO Plans | Taskcover Agency",
+    description:
+      "Explore Taskcover Agency pricing for Local SEO, National SEO, Global SEO, SEO Mentor, audits, PPC management, and custom search-growth programs.",
+  },
+  breadcrumbs: {
+    home: "Home",
+    pricing: "Pricing",
+  },
+  hero: {
+    eyebrow: "Search growth pricing",
+    h1: "Pricing for Local, National, and Global Search Growth",
+    subheadline:
+      "Start with a focused local SEO foundation or scale into national and global search growth across SEO, AI Search, PPC, content authority, and technical execution.",
+    primaryCta: { label: "Get Free SEO Audit", href: "/free-seo-audit" },
+    secondaryCta: { label: "Book Strategy Call", href: "/book-a-call" },
+    signalChips: ["Local", "National", "Global", "Mentor"],
+    commandPanel: {
+      title: "Scope command panel",
+      rows: [
+        { label: "Entry point", value: "Free SEO Audit" },
+        { label: "Recommended execution", value: "National SEO Growth System" },
+        { label: "Recommended advisory", value: "SEO Mentor Growth Advisory" },
+        { label: "Complex markets", value: "Custom scope required" },
+      ],
+      note: "Every engagement starts from the smallest scope that can realistically support the goal.",
+    },
+  },
+  recurringNote:
+    "All pricing is shown in USD. Final pricing depends on market, site complexity, competition, content needs, and execution speed. Contact us or request a free audit for the most accurate scope.",
+  scopeNote:
+    "Lower entry plans are intentionally focused. If your goals require content production, technical implementation, multi-market SEO, or ongoing execution, Taskcover will recommend a broader scope.",
+  factors: {
+    eyebrow: "Why pricing changes",
+    title: "Exact pricing depends on the search system you need to build.",
+    description:
+      "A single local service area is not priced like a national category play or a multi-country search program. These factors shape the scope.",
+    items: [
+      {
+        label: "Market scope",
+        description:
+          "Local, national, or global competition changes the level of strategy, content, and technical support required.",
+      },
+      {
+        label: "Website complexity",
+        description:
+          "Large sites, JavaScript frameworks, migrations, or messy CMS setups require deeper technical work.",
+      },
+      {
+        label: "Content needs",
+        description:
+          "A roadmap is lighter than ongoing briefs, editorial QA, content refreshes, and authority building.",
+      },
+      {
+        label: "Search surfaces",
+        description:
+          "Google organic, local packs, AI answers, PPC, and international results each add different workstreams.",
+      },
+      {
+        label: "Execution speed",
+        description:
+          "Compressed timelines require tighter review cadence, more senior involvement, and clearer dependencies.",
+      },
+      {
+        label: "Internal team support",
+        description:
+          "Pricing changes when your team can execute versus when Taskcover must carry strategy, QA, and implementation support.",
+      },
+    ],
+  },
+  tabs: {
+    eyebrow: "Pricing menu",
+    title: "Choose the search-growth lane that matches the problem.",
+    description:
+      "Use the tabs to scan starting prices, scope limits, and the right next step. Prices are starting points, not fixed quotes.",
+    compareLink: "Compare all plans",
+    ariaLabel: "Pricing categories",
+    items: [
+      {
+        id: "local",
+        label: "Local SEO",
+        eyebrow: "Focused local foundation",
+        title: "Local SEO pricing",
+        intro:
+          "For businesses that need cleaner visibility in one city, one service area, or a small number of local markets.",
+        plans: [
+          {
+            id: "local-starter",
+            name: "Local SEO Starter",
+            price: "From $1,000/month",
+            positioning:
+              "For focused local businesses that need a clean local search foundation.",
+            bestFor: [
+              "One primary location or service area",
+              "Local service business",
+              "Restaurant, clinic, professional service, or local hospitality",
+              "Small site with limited technical complexity",
+            ],
+            includes: [
+              "Google Business Profile review and optimization guidance",
+              "Local keyword and intent map",
+              "One primary location or service-area page review",
+              "Basic citation/NAP consistency review",
+              "Review signal recommendations",
+              "Local competitor snapshot",
+              "Monthly local visibility checklist",
+              "Simple reporting",
+            ],
+            scopeGuard:
+              "Designed for one location or focused service area. Multi-location, content production, technical remediation, PPC, and digital PR require broader scope.",
+            minimum: "3-month minimum",
+            addOn: "Additional locations from $300-$500/location/month",
+            cta: { label: "Start with local audit", href: "/free-seo-audit" },
+          },
+          {
+            id: "local-growth",
+            name: "Local Growth / Multi-location",
+            price: "From $2,500/month",
+            positioning:
+              "A compact custom-scope path for businesses with multiple locations, more content, or local technical complexity.",
+            bestFor: [
+              "Two or more priority locations",
+              "Franchise or branch-level visibility",
+              "Local landing page architecture",
+              "Local proof and reporting needs",
+            ],
+            includes: [
+              "Multi-location intent map",
+              "Location page structure review",
+              "Google Business Profile guidance by priority location",
+              "Local competitor and content gap review",
+              "Monthly search visibility roadmap",
+            ],
+            scopeGuard:
+              "Used when the starter plan is too narrow but the business does not need a national growth system yet.",
+            cta: { label: "Request local scope", href: "/book-a-call" },
+          },
+        ],
+      },
+      {
+        id: "national",
+        label: "National SEO",
+        eyebrow: "One-country growth",
+        title: "National SEO pricing",
+        intro:
+          "For companies competing across one country for category, service, SaaS, eCommerce, education, legal, healthcare, or professional-service demand.",
+        plans: [
+          {
+            id: "national-foundation",
+            name: "National SEO Foundation",
+            price: "From $2,500/month",
+            positioning:
+              "For businesses that need technical clarity, search-demand mapping, and a serious roadmap before scaling execution.",
+            bestFor: [
+              "One country market",
+              "National category or service keywords",
+              "SaaS, eCommerce, education, legal, healthcare, or professional services",
+              "Business needing technical plus content roadmap",
+            ],
+            includes: [
+              "National keyword and intent map",
+              "Technical SEO review",
+              "Site architecture recommendations",
+              "Competitor SERP review",
+              "Content gap and topic cluster planning",
+              "Internal linking strategy",
+              "AI search readiness snapshot",
+              "Monthly roadmap and reporting",
+            ],
+            cta: { label: "Build the foundation", href: "/book-a-call" },
+          },
+          {
+            id: "national-growth",
+            name: "National SEO Growth System",
+            price: "From $4,500/month",
+            recommended: true,
+            positioning:
+              "The recommended execution plan for serious growth-stage businesses that need technical SEO, content authority, AI search, and reporting working together.",
+            bestFor: [
+              "Serious growth-stage business",
+              "Technical SEO plus content authority plus AI search plus reporting",
+              "Non-local commercial keywords",
+              "Qualified demand, not just traffic",
+            ],
+            includes: [
+              "Technical SEO roadmap",
+              "Content authority planning",
+              "AI Search optimization",
+              "Internal linking improvements",
+              "Search intelligence reporting",
+              "Conversion path recommendations",
+              "Monthly strategy review",
+              "Case-study/proof-driven trust recommendations",
+            ],
+            cta: { label: "Discuss growth system", href: "/book-a-call" },
+          },
+        ],
+      },
+      {
+        id: "global",
+        label: "Global SEO",
+        eyebrow: "Multi-market expansion",
+        title: "Global SEO pricing",
+        intro:
+          "For brands selling across countries, languages, or regional search systems where architecture and localization quality matter.",
+        plans: [
+          {
+            id: "global-expansion",
+            name: "Global SEO Expansion",
+            price: "From $7,500/month",
+            positioning:
+              "For brands expanding across multiple countries, languages, or market-specific search journeys.",
+            bestFor: [
+              "USA plus Canada plus Australia",
+              "Multi-country search",
+              "Multilingual SEO",
+              "English, French, and Spanish markets",
+              "SaaS, education, travel, eCommerce, franchise, or international brands",
+            ],
+            includes: [
+              "Multi-market SEO architecture",
+              "Country/language intent mapping",
+              "International technical SEO",
+              "Hreflang/localization review when relevant",
+              "Regional keyword strategy",
+              "Content localization strategy",
+              "Entity and AI search consistency review",
+              "Reporting by market",
+            ],
+            cta: { label: "Plan global scope", href: "/book-a-call" },
+          },
+          {
+            id: "enterprise-authority",
+            name: "Enterprise / Multi-Market Authority",
+            price: "Custom from $12,000/month",
+            positioning:
+              "Custom pricing for complex enterprise, migration, authority, regulated, or multi-stakeholder search programs.",
+            bestFor: [
+              "Enterprise site",
+              "Large technical architecture",
+              "Migrations",
+              "Many stakeholders",
+              "Digital PR / authority campaigns",
+              "Multiple markets/languages",
+              "Regulated or trust-sensitive industries",
+            ],
+            includes: [
+              "Enterprise search-growth architecture",
+              "Migration and stakeholder planning",
+              "Technical, content, AI Search, and authority governance",
+              "Market-by-market reporting model",
+              "Senior advisory and execution planning",
+            ],
+            scopeGuard:
+              "Enterprise and complex multi-market work always require custom pricing.",
+            cta: { label: "Request custom scope", href: "/book-a-call" },
+          },
+        ],
+      },
+      {
+        id: "mentor",
+        label: "SEO Mentor",
+        eyebrow: "Senior advisory",
+        title: "SEO Mentor pricing",
+        intro:
+          "SEO Mentor is for teams that want senior SEO judgment without handing every task to an agency.",
+        subcopy:
+          "Use it to pressure-test strategy, review technical and content decisions, train internal teams, and build a search-growth operating rhythm.",
+        plans: [
+          {
+            id: "mentor-office-hours",
+            name: "SEO Mentor Office Hours",
+            price: "From $1,000/month",
+            positioning:
+              "Focused senior feedback for founders, marketers, and small teams executing SEO internally.",
+            bestFor: [
+              "Founder or marketer doing SEO internally",
+              "Small team needing senior feedback",
+              "Review of priority SEO decisions",
+            ],
+            includes: [
+              "1 monthly strategy session",
+              "Async SEO questions",
+              "Review of priority SEO decisions",
+              "Review of 1-2 key pages or briefs/month",
+              "Light technical/content/AI search guidance",
+              "Monthly action list",
+            ],
+            scopeGuard:
+              "Advisory only. No hands-on implementation, content writing, development, or campaign management included.",
+            minimum: "3-month minimum",
+            cta: { label: "Start mentorship", href: "/book-a-call" },
+          },
+          {
+            id: "mentor-growth-advisory",
+            name: "SEO Mentor Growth Advisory",
+            price: "From $1,500/month",
+            recommended: true,
+            positioning:
+              "The recommended mentor plan for teams with internal capacity but unclear SEO prioritization.",
+            bestFor: [
+              "In-house marketer or founder needing ongoing senior SEO guidance",
+              "Team with content/dev capacity but unclear SEO prioritization",
+              "Business that wants roadmap and decision support",
+            ],
+            includes: [
+              "2 monthly strategy/advisory sessions",
+              "SEO roadmap review",
+              "Technical SEO priority review",
+              "Content strategy and brief review",
+              "AI Search / entity readiness guidance",
+              "Internal linking and authority review",
+              "Monthly decision memo",
+              "Async review support",
+            ],
+            cta: { label: "Choose growth advisory", href: "/book-a-call" },
+          },
+          {
+            id: "mentor-team-enablement",
+            name: "SEO Mentor Team Enablement",
+            price: "From $2,500/month",
+            positioning:
+              "Training, QA, and operating-process support for internal content, SEO, and dev teams.",
+            bestFor: [
+              "Content teams",
+              "Junior/mid-level in-house SEO",
+              "Dev plus marketing team needing SEO process",
+              "Company wanting internal capability",
+            ],
+            includes: [
+              "2-3 monthly workshops/review sessions",
+              "Team training curriculum",
+              "Content brief QA",
+              "Technical SEO QA",
+              "SEO workflow setup",
+              "Editorial standards",
+              "Internal linking process",
+              "Measurement review",
+              "AI Search training module",
+              "Office-hours support",
+            ],
+            cta: { label: "Enable the team", href: "/book-a-call" },
+          },
+          {
+            id: "executive-advisory",
+            name: "Executive Search Advisory",
+            price: "From $4,500/month",
+            positioning:
+              "Senior search-growth direction for executives deciding budget, team structure, vendors, and market expansion.",
+            bestFor: [
+              "CMO",
+              "Founder",
+              "Head of growth",
+              "Multi-market business",
+              "Leadership teams deciding agency/in-house/hybrid model",
+            ],
+            includes: [
+              "Monthly executive strategy session",
+              "Search growth opportunity review",
+              "Roadmap prioritization",
+              "Agency/vendor review",
+              "Hiring/team structure guidance",
+              "Measurement and KPI review",
+              "Market expansion guidance",
+              "Leadership-ready summary",
+            ],
+            cta: { label: "Book executive advisory", href: "/book-a-call" },
+          },
+          {
+            id: "custom-mentorship",
+            name: "Custom SEO Mentorship",
+            price: "Custom",
+            positioning:
+              "Custom advisory for multi-market, enterprise, training, migration, PPC, or AI Search programs.",
+            bestFor: [
+              "Multi-market advisory",
+              "In-house SEO team buildout",
+              "Corporate training program",
+              "SEO plus PPC plus AI Search advisory",
+              "Quarterly workshop program",
+              "Migration advisory",
+              "Enterprise governance",
+            ],
+            includes: [
+              "Custom advisory cadence",
+              "Workshop planning",
+              "Governance and QA model",
+              "Leadership and team enablement",
+            ],
+            cta: { label: "Request custom mentorship", href: "/book-a-call" },
+          },
+        ],
+      },
+      {
+        id: "audits",
+        label: "Audits & Add-ons",
+        eyebrow: "Diagnostics and channel support",
+        title: "Audits, PPC, and add-on pricing",
+        intro:
+          "Audits clarify the right scope. Add-ons support paid demand capture, content planning, technical projects, localization, and authority work.",
+        plans: [
+          {
+            id: "free-audit",
+            name: "Free SEO Audit",
+            price: "$0",
+            positioning:
+              "A quick diagnostic to understand whether Local, National, Global, Mentor, PPC, or custom scope fits.",
+            bestFor: ["Not sure where to start", "Need initial prioritization", "Want a path to exact pricing"],
+            includes: ["Website and market review", "Priority issues", "Recommended next scope"],
+            cta: { label: "Get Free SEO Audit", href: "/free-seo-audit" },
+          },
+          {
+            id: "search-growth-audit",
+            name: "Search Growth Audit",
+            price: "From $1,500 one-time",
+            positioning: "A focused audit across demand, content, technical, and commercial search fit.",
+            bestFor: ["Growth planning", "Roadmap clarity", "Prioritization before monthly work"],
+            includes: ["Search demand review", "Priority roadmap", "Scope recommendation"],
+            cta: { label: "Start with an audit", href: "/work/sample-audits" },
+          },
+          {
+            id: "technical-audit",
+            name: "Technical SEO Audit",
+            price: "From $2,500 one-time",
+            positioning: "A technical review for crawl, indexation, rendering, site architecture, and performance risk.",
+            bestFor: ["Complex sites", "CMS or framework issues", "Migration preparation"],
+            includes: ["Technical issue map", "Priority fixes", "Implementation-ready recommendations"],
+            cta: { label: "View sample audits", href: "/work/sample-audits" },
+          },
+          {
+            id: "ai-search-review",
+            name: "AI Search Visibility Review",
+            price: "From $1,500 one-time",
+            positioning: "A review of entity clarity, answer readiness, citation paths, and source consistency.",
+            bestFor: ["AI answer visibility", "Entity consistency", "Content authority gaps"],
+            includes: ["AI readiness snapshot", "Entity and citation review", "Action list"],
+            cta: { label: "Review AI visibility", href: "/work/sample-audits/ai-search-visibility-review" },
+          },
+          {
+            id: "ppc-organic-review",
+            name: "PPC + Organic Intelligence Review",
+            price: "From $2,500 one-time",
+            positioning: "A paid and organic signal review to find demand capture, waste, and overlap.",
+            bestFor: ["Paid search teams", "SEO plus SEM planning", "Keyword and landing-page overlap"],
+            includes: ["Paid/organic query review", "Landing-page opportunity map", "Budget intelligence"],
+            cta: { label: "Review PPC + organic", href: "/work/sample-audits/ppc-organic-intelligence" },
+          },
+          {
+            id: "international-market-map",
+            name: "International SEO Market Map",
+            price: "From $3,500 one-time",
+            positioning: "A market map for multi-country, multilingual, or regional search expansion.",
+            bestFor: ["USA, Canada, Australia expansion", "Language-market decisions", "Localization planning"],
+            includes: ["Market intent map", "Technical localization review", "Priority market roadmap"],
+            cta: { label: "Map international SEO", href: "/work/sample-audits/international-seo-market-map" },
+          },
+          {
+            id: "ppc-management",
+            name: "PPC Management",
+            price: "From $1,500/month or 10-12% of ad spend, whichever is higher",
+            positioning: "Paid search management aligned with organic intelligence and commercial demand.",
+            bestFor: ["Fast paid demand capture", "Search and PPC alignment", "Budget control"],
+            includes: ["Campaign structure review", "Search query intelligence", "Landing-page recommendations", "Monthly reporting"],
+            scopeGuard: "Ad spend is not included.",
+            cta: { label: "Discuss PPC scope", href: "/book-a-call" },
+          },
+          {
+            id: "content-cluster-planning",
+            name: "Content Cluster Planning",
+            price: "From $1,500/project",
+            positioning: "Topic cluster planning, briefs, and internal-linking direction.",
+            bestFor: ["Editorial teams", "Authority building", "Content planning"],
+            includes: ["Topic cluster map", "Brief direction", "Internal-link opportunities"],
+          },
+          {
+            id: "digital-pr-authority",
+            name: "Digital PR / Authority Campaign",
+            price: "From $3,000/project",
+            positioning: "Authority planning and digital PR support without guaranteed links or placements.",
+            bestFor: ["Authority campaigns", "Expert-led content", "Proof and citation support"],
+            includes: ["Campaign angle review", "Authority opportunity map", "Outreach planning"],
+            scopeGuard: "Digital PR does not include guaranteed links or guaranteed placements.",
+          },
+          {
+            id: "technical-project",
+            name: "Technical SEO Project",
+            price: "From $2,500/project",
+            positioning: "Scoped technical SEO support for specific site issues or implementation planning.",
+            bestFor: ["Technical debt", "CMS changes", "Migration support"],
+            includes: ["Issue diagnosis", "Fix prioritization", "Developer-ready recommendations"],
+          },
+          {
+            id: "localization-support",
+            name: "Localization / International SEO Support",
+            price: "Custom",
+            positioning: "Custom support for language, country, hreflang, content localization, and market expansion.",
+            bestFor: ["Multilingual SEO", "Multi-country rollout", "Regional content strategy"],
+            includes: ["Localization review", "Country/language mapping", "International SEO QA"],
+          },
+        ],
+        notes: [
+          "Ad spend is not included.",
+          "Digital PR does not include guaranteed links or guaranteed placements.",
+          "Audits can help define the right monthly scope.",
+        ],
+        cta: { label: "Start with an audit", href: "/free-seo-audit" },
+      },
+    ],
+  },
+  comparison: {
+    eyebrow: "Plan comparison",
+    title: "Compare all starting scopes.",
+    description:
+      "Use this table to see how the main options differ before requesting an exact quote.",
+    columns: [
+      { id: "localStarter", label: "Local SEO Starter" },
+      { id: "nationalFoundation", label: "National SEO Foundation" },
+      { id: "nationalGrowth", label: "National SEO Growth" },
+      { id: "globalExpansion", label: "Global SEO Expansion" },
+      { id: "mentorGrowth", label: "SEO Mentor Growth" },
+      { id: "enterpriseCustom", label: "Enterprise Custom" },
+    ],
+    rows: [
+      {
+        label: "Best for",
+        values: {
+          localStarter: "One location or service area",
+          nationalFoundation: "One-country roadmap",
+          nationalGrowth: "Serious growth execution",
+          globalExpansion: "Multi-country expansion",
+          mentorGrowth: "Internal team guidance",
+          enterpriseCustom: "Complex multi-market systems",
+        },
+      },
+      {
+        label: "Market scope",
+        values: {
+          localStarter: "Local",
+          nationalFoundation: "One country",
+          nationalGrowth: "One country",
+          globalExpansion: "Multiple countries/languages",
+          mentorGrowth: "Depends on team scope",
+          enterpriseCustom: "Enterprise / multi-market",
+        },
+      },
+      {
+        label: "Execution included",
+        values: {
+          localStarter: "Focused guidance and checklist",
+          nationalFoundation: "Roadmap-focused",
+          nationalGrowth: "Execution planning and QA",
+          globalExpansion: "Multi-market execution planning",
+          mentorGrowth: "Advisory-focused, not implementation",
+          enterpriseCustom: "Scoped case by case",
+        },
+      },
+      {
+        label: "Advisory included",
+        values: {
+          localStarter: "Light",
+          nationalFoundation: "Monthly",
+          nationalGrowth: "Monthly strategy review",
+          globalExpansion: "Market-level advisory",
+          mentorGrowth: "Core service",
+          enterpriseCustom: "Senior advisory",
+        },
+      },
+      {
+        label: "Technical SEO",
+        values: {
+          localStarter: "Basic review",
+          nationalFoundation: "Review and roadmap",
+          nationalGrowth: "Roadmap and QA",
+          globalExpansion: "International technical review",
+          mentorGrowth: "Priority review",
+          enterpriseCustom: "Advanced",
+        },
+      },
+      {
+        label: "Content strategy",
+        values: {
+          localStarter: "Limited local page review",
+          nationalFoundation: "Gap and cluster planning",
+          nationalGrowth: "Authority planning",
+          globalExpansion: "Localization strategy",
+          mentorGrowth: "Brief and strategy review",
+          enterpriseCustom: "Custom",
+        },
+      },
+      {
+        label: "AI Search readiness",
+        values: {
+          localStarter: "Light recommendations",
+          nationalFoundation: "Snapshot",
+          nationalGrowth: "Optimization included",
+          globalExpansion: "Entity consistency review",
+          mentorGrowth: "Guidance included",
+          enterpriseCustom: "Custom governance",
+        },
+      },
+      {
+        label: "Google Business Profile",
+        values: {
+          localStarter: "Included",
+          nationalFoundation: "If relevant",
+          nationalGrowth: "If relevant",
+          globalExpansion: "If local markets matter",
+          mentorGrowth: "Advisory if needed",
+          enterpriseCustom: "Custom",
+        },
+      },
+      {
+        label: "Local SEO",
+        values: {
+          localStarter: "Core focus",
+          nationalFoundation: "Supporting scope",
+          nationalGrowth: "Supporting scope",
+          globalExpansion: "By market",
+          mentorGrowth: "Advisory if needed",
+          enterpriseCustom: "Custom",
+        },
+      },
+      {
+        label: "International SEO",
+        values: {
+          localStarter: "Not included",
+          nationalFoundation: "Not included",
+          nationalGrowth: "Limited",
+          globalExpansion: "Core focus",
+          mentorGrowth: "Available depending on scope",
+          enterpriseCustom: "Core when needed",
+        },
+      },
+      {
+        label: "PPC intelligence",
+        values: {
+          localStarter: "Not included",
+          nationalFoundation: "Optional",
+          nationalGrowth: "Recommendations",
+          globalExpansion: "Optional",
+          mentorGrowth: "Available depending on scope",
+          enterpriseCustom: "Custom",
+        },
+      },
+      {
+        label: "Team training",
+        values: {
+          localStarter: "Not included",
+          nationalFoundation: "Light",
+          nationalGrowth: "Optional",
+          globalExpansion: "Optional",
+          mentorGrowth: "Available depending on scope",
+          enterpriseCustom: "Custom",
+        },
+      },
+      {
+        label: "Reporting",
+        values: {
+          localStarter: "Simple",
+          nationalFoundation: "Monthly",
+          nationalGrowth: "Search intelligence reporting",
+          globalExpansion: "By market",
+          mentorGrowth: "Decision memo",
+          enterpriseCustom: "Custom",
+        },
+      },
+      {
+        label: "Review cadence",
+        values: {
+          localStarter: "Monthly checklist",
+          nationalFoundation: "Monthly",
+          nationalGrowth: "Monthly strategy review",
+          globalExpansion: "Monthly / market cadence",
+          mentorGrowth: "2 sessions/month",
+          enterpriseCustom: "Custom",
+        },
+      },
+      {
+        label: "Minimum term",
+        values: {
+          localStarter: "3 months",
+          nationalFoundation: "Scope dependent",
+          nationalGrowth: "Scope dependent",
+          globalExpansion: "Scope dependent",
+          mentorGrowth: "Scope dependent",
+          enterpriseCustom: "Custom",
+        },
+      },
+      {
+        label: "Starting price",
+        values: {
+          localStarter: "From $1,000/month",
+          nationalFoundation: "From $2,500/month",
+          nationalGrowth: "From $4,500/month",
+          globalExpansion: "From $7,500/month",
+          mentorGrowth: "From $1,500/month",
+          enterpriseCustom: "Custom from $12,000/month",
+        },
+      },
+    ],
+    exactPricingNote:
+      "Need exact pricing? Request a free audit or book a strategy call. We will recommend the smallest scope that can realistically support your goals.",
+  },
+  decisionGuide: {
+    eyebrow: "Decision guide",
+    title: "Which plan fits you?",
+    description:
+      "Choose the situation closest to your current growth problem. The recommendation is a starting point for the diagnostic conversation.",
+    ariaLabel: "Choose your pricing situation",
+    paths: [
+      {
+        id: "one-city",
+        trigger: "I need visibility in one city or service area",
+        planName: "Local SEO Starter",
+        startingPrice: "From $1,000/month",
+        why: "A focused local foundation is usually enough when the business has one main location, one service area, and limited technical complexity.",
+        cta: { label: "Get local audit", href: "/free-seo-audit" },
+      },
+      {
+        id: "one-country",
+        trigger: "I want to compete across one country",
+        planName: "National SEO Foundation",
+        startingPrice: "From $2,500/month",
+        why: "You need a national search map, technical review, and content roadmap before scaling into heavier execution.",
+        cta: { label: "Book strategy call", href: "/book-a-call" },
+      },
+      {
+        id: "technical-content-ai",
+        trigger: "I need technical + content + AI search growth",
+        planName: "National SEO Growth System",
+        startingPrice: "From $4,500/month",
+        why: "This is the recommended execution plan when search growth depends on technical SEO, content authority, AI readiness, and reporting together.",
+        cta: { label: "Discuss growth system", href: "/book-a-call" },
+      },
+      {
+        id: "multi-country",
+        trigger: "I sell or operate across multiple countries",
+        planName: "Global SEO Expansion",
+        startingPrice: "From $7,500/month",
+        why: "Multi-country work needs architecture, market intent, localization QA, and reporting by market.",
+        cta: { label: "Plan global scope", href: "/book-a-call" },
+      },
+      {
+        id: "in-house-team",
+        trigger: "I have an in-house team but need senior direction",
+        planName: "SEO Mentor Growth Advisory",
+        startingPrice: "From $1,500/month",
+        why: "Your team can execute, but senior prioritization, technical review, content QA, and decision support reduce wasted work.",
+        cta: { label: "Start mentorship", href: "/book-a-call" },
+      },
+      {
+        id: "paid-demand",
+        trigger: "I need fast paid demand capture",
+        planName: "PPC Management",
+        startingPrice: "From $1,500/month or 10-12% of ad spend",
+        why: "Paid search can capture active demand faster, but ad spend is separate and landing-page quality still matters.",
+        cta: { label: "Discuss PPC", href: "/book-a-call" },
+      },
+      {
+        id: "not-sure",
+        trigger: "I am not sure",
+        planName: "Free SEO Audit",
+        startingPrice: "$0",
+        why: "A diagnostic review can identify the smallest realistic scope before you commit to a monthly program.",
+        cta: { label: "Get Free SEO Audit", href: "/free-seo-audit" },
+      },
+    ],
+  },
+  drivers: {
+    eyebrow: "Final pricing drivers",
+    title: "What affects final price?",
+    description:
+      "The prices above are starting points. The most accurate price comes after we understand your site, market, competition, and execution needs.",
+    items: [
+      { label: "Number of locations", description: "More locations add GBP, local page, reporting, and reputation work." },
+      { label: "Number of countries/languages", description: "More markets require localization, technical checks, and market-specific intent mapping." },
+      { label: "Website size", description: "Larger sites need deeper crawl, architecture, internal-linking, and QA work." },
+      { label: "Technical debt", description: "Indexation, rendering, speed, duplication, and migration issues increase complexity." },
+      { label: "CMS complexity", description: "Custom CMS, headless builds, and workflow limits affect execution speed." },
+      { label: "Content production needs", description: "Strategy-only content support differs from writing, editing, refreshes, and QA." },
+      { label: "Competition level", description: "Difficult SERPs need stronger authority, content depth, technical quality, and patience." },
+      { label: "Authority/link needs", description: "Digital PR and authority campaigns are scoped separately and never guarantee placements." },
+      { label: "PPC spend", description: "Higher spend usually requires more structure, search query review, and conversion QA." },
+      { label: "Reporting/analytics setup", description: "Messy analytics or CRM gaps require measurement cleanup before confident reporting." },
+      { label: "Internal team support", description: "Available writers, developers, marketers, and executives change the delivery model." },
+      { label: "Execution speed", description: "Faster timelines require more senior time, tighter cycles, and fewer open dependencies." },
+    ],
+  },
+  includedExcluded: {
+    eyebrow: "Scope clarity",
+    title: "Included vs not included unless scoped.",
+    description:
+      "Taskcover keeps starting scopes clear so entry plans do not look like full-service campaigns.",
+    includedTitle: "Included by scope",
+    excludedTitle: "Not included unless scoped",
+    included: [
+      "SEO strategy",
+      "Technical review",
+      "Search demand map",
+      "Content roadmap",
+      "AI search readiness",
+      "Internal linking",
+      "Reporting",
+      "Monthly review",
+    ],
+    excluded: [
+      "Ad spend",
+      "Full content writing",
+      "Development implementation",
+      "PR placement fees",
+      "Guaranteed backlinks",
+      "Guaranteed rankings",
+      "Legal/compliance review",
+      "Translation production",
+      "CRM implementation",
+      "Paid tools owned by client",
+    ],
+  },
+  customScope: {
+    eyebrow: "Custom pricing",
+    title: "Need a custom scope?",
+    description:
+      "If your business has multiple locations, multiple markets, complex technical requirements, high content volume, paid search, or internal team needs, we will build a custom scope after a diagnostic review.",
+    useCases: [
+      "Multi-location SEO",
+      "Enterprise SEO",
+      "Site migration",
+      "International SEO",
+      "Multilingual SEO",
+      "Digital PR",
+      "Content production",
+      "PPC + SEO integration",
+      "SEO Mentor for internal teams",
+    ],
+    primaryCta: { label: "Request custom pricing", href: "/free-seo-audit" },
+    secondaryCta: { label: "Book Strategy Call", href: "/book-a-call" },
+    note: "For the most accurate pricing, start with a Free SEO Audit or a strategy call.",
+  },
+  proof: {
+    eyebrow: "Proof support",
+    title: "Use verified work to understand the scope behind the price.",
+    description:
+      "These examples show different search-growth systems. Taskcover does not invent metrics or guarantees.",
+    groups: [
+      { label: "Local SEO proof", caseStudySlugs: ["casa-madera", "the-bamboo-bar", "avis"] },
+      { label: "National SEO proof", caseStudySlugs: ["british-university-vietnam", "matthew-jeffery-law-firm", "skatepro"] },
+      { label: "Global SEO proof", caseStudySlugs: ["agoda", "ccleaner", "fwd-insurance", "novaworld"] },
+    ],
+    cta: { label: "View all case studies", href: "/work/case-studies" },
+  },
+  faq: {
+    eyebrow: "Pricing FAQ",
+    title: "Questions buyers ask before choosing a scope.",
+    items: [
+      {
+        q: "What is the difference between Local SEO, National SEO, and Global SEO?",
+        a: "Local SEO focuses on visibility in a city, service area, or location set. National SEO targets one country-wide market. Global SEO handles multiple countries, languages, localization, and market-specific search behavior.",
+      },
+      {
+        q: "Why does Local SEO start at $1,000/month?",
+        a: "The starter plan is intentionally focused: one primary location or service area, local search review, Google Business Profile guidance, competitor snapshot, and simple reporting. It is not a full-service SEO campaign.",
+      },
+      {
+        q: "Can I start with Local SEO and upgrade later?",
+        a: "Yes. Many businesses start with a focused local scope, then expand into multi-location, national, PPC, content, or technical execution after the first diagnostic and roadmap work.",
+      },
+      {
+        q: "Is SEO Mentor different from SEO execution?",
+        a: "Yes. SEO Mentor is advisory-focused. It helps your team make better decisions, review priorities, and improve process. Hands-on implementation, writing, development, and campaign management are not included unless scoped separately.",
+      },
+      {
+        q: "Who is SEO Mentor for?",
+        a: "SEO Mentor fits founders, marketers, in-house SEO teams, content teams, executives, and companies that have execution capacity but need senior SEO direction.",
+      },
+      {
+        q: "Can our internal team execute while Taskcover advises?",
+        a: "Yes. That is the strongest fit for SEO Mentor Growth Advisory and Team Enablement. Taskcover can review roadmaps, briefs, technical priorities, internal links, AI Search readiness, and reporting decisions.",
+      },
+      {
+        q: "Can SEO Mentor include AI Search and PPC guidance?",
+        a: "Yes, depending on scope. AI Search, entity readiness, content quality, and PPC/organic intelligence can be included in advisory plans when those decisions affect search growth.",
+      },
+      {
+        q: "Is ad spend included in PPC pricing?",
+        a: "No. PPC management pricing starts from $1,500/month or 10-12% of ad spend, whichever is higher. Ad spend is separate and paid by the client.",
+      },
+      {
+        q: "Is content writing included?",
+        a: "Content strategy, topic planning, briefs, and QA may be included depending on the plan. Full content writing or high-volume production is scoped separately.",
+      },
+      {
+        q: "Do you guarantee rankings?",
+        a: "No. Taskcover does not guarantee rankings, backlinks, placements, traffic, or revenue. We build search systems, prioritize the work, and report honestly on progress and constraints.",
+      },
+      {
+        q: "Do you work with USA, Canada, and Australia?",
+        a: "Yes. Taskcover supports search-growth programs for the USA, Canada, and Australia, including local, national, and multi-market work.",
+      },
+      {
+        q: "Can you support English, French, and Spanish?",
+        a: "Yes. Taskcover can support English, French, and Spanish search strategy, localization review, and international SEO planning. Translation production is scoped separately.",
+      },
+      {
+        q: "What is the minimum engagement?",
+        a: "Local SEO Starter and SEO Mentor Office Hours have a 3-month minimum. Other scopes depend on market, complexity, and execution needs.",
+      },
+      {
+        q: "How do I get an exact quote?",
+        a: "Request a Free SEO Audit or book a strategy call. Taskcover will review your site, market, competition, and execution needs before recommending the smallest realistic scope.",
+      },
+    ],
+  },
+  finalCta: {
+    eyebrow: "Next step",
+    title: "Not sure which scope is right?",
+    description:
+      "Send your website and market goals. Taskcover will recommend the smallest scope that can realistically support your goals.",
+    primaryCta: { label: "Get Free SEO Audit", href: "/free-seo-audit" },
+    secondaryCta: { label: "Book Strategy Call", href: "/book-a-call" },
+  },
+  ui: {
+    bestFor: "Best for",
+    includes: "Includes",
+    minimum: "Minimum",
+    addOn: "Add-on",
+    recommended: "Recommended",
+    scopeGuard: "Scope guard",
+    notes: "Notes",
+    startingPoint: "Starting point",
+    viewPlan: "View plan",
+    selectPath: "Select path",
+    recommendation: "Recommendation",
+    compareRowHeader: "Plan detail",
+  },
+} satisfies PricingContent;

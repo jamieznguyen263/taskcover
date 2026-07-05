@@ -38,3 +38,16 @@ Production deployment, DNS changes, provider secret configuration, and external 
   in the homepage hero.
 - Final legal review, deployment, DNS, provider secrets, analytics, and consent
   tooling remain separate launch tasks.
+## Pricing Readiness
+
+- Pricing page is available in EN/FR/ES at `/pricing`, `/fr/pricing`, and
+  `/es/pricing`.
+- All prices are USD starting points with a visible scope disclaimer.
+- Local SEO Starter and SEO Mentor Office Hours are clearly limited entry
+  scopes, not full-service execution campaigns.
+- Free SEO Audit and Strategy Call remain the primary paths for exact pricing.
+- The page states that ad spend, full content writing, development
+  implementation, translation production, guaranteed backlinks, and guaranteed
+  rankings are not included unless scoped.
+- No production deployment, DNS change, tracking script, fake discount, fake
+  scarcity, or outcome guarantee is required for pricing readiness.

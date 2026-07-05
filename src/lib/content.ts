@@ -52,6 +52,9 @@ import { work as workEs } from "@/content/es/work";
 import { leads as leadsEn } from "@/content/en/leads";
 import { leads as leadsFr } from "@/content/fr/leads";
 import { leads as leadsEs } from "@/content/es/leads";
+import { pricing as pricingEn } from "@/content/en/pricing";
+import { pricing as pricingFr } from "@/content/fr/pricing";
+import { pricing as pricingEs } from "@/content/es/pricing";
 import {
   getProofItemsByType,
   getPrivateReferenceAvailability,
@@ -80,6 +83,7 @@ import type {
   WorkType,
 } from "@/content/work.types";
 import type { LeadsContent } from "@/content/leads.types";
+import type { PricingContent } from "@/content/pricing.types";
 
 const siteMap: Record<Locale, SiteContent> = {
   en: siteEn,
@@ -127,6 +131,12 @@ const leadsMap: Record<Locale, LeadsContent> = {
   en: leadsEn,
   fr: leadsFr,
   es: leadsEs,
+};
+
+const pricingMap: Record<Locale, PricingContent> = {
+  en: pricingEn,
+  fr: pricingFr,
+  es: pricingEs,
 };
 
 /** All industry slugs (shared across locales — English canonical). */
@@ -388,6 +398,10 @@ export function getWorkContent(locale: Locale): WorkContent {
 
 export function getLeadsContent(locale: Locale): LeadsContent {
   return leadsMap[locale] ?? leadsEn;
+}
+
+export function getPricingContent(locale: Locale): PricingContent {
+  return pricingMap[locale] ?? pricingEn;
 }
 
 export function getWorkPageContent(

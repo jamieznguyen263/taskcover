@@ -115,3 +115,14 @@ primary conversion intent to `/free-seo-audit` when the visitor needs diagnosis
 and to `/book-a-call` when the visitor is evaluating strategy, market expansion,
 PPC, mentorship, or fit. Task 13 does not add tracking scripts or activate ads;
 future SEM conversion tracking must respect the consent architecture.
+## Pricing CTA Paths
+
+Pricing uses the existing lead-funnel CTAs:
+
+- Free SEO Audit for visitors who need an exact scope recommendation or are not
+  sure which plan fits.
+- Strategy Call for visitors comparing national, global, mentor, PPC, custom,
+  enterprise, or timeline-sensitive scopes.
+
+No new lead form, tracking script, production deployment, DNS change, or
+external database migration is required by the pricing page.

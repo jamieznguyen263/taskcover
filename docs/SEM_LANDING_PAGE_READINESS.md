@@ -22,3 +22,13 @@ Do not mark a page SEM-ready if it lacks a clear CTA, proof/supporting content, 
 ## SEM Conclusion
 
 The strongest future SEM candidates are `/services/seo-agency`, `/services/seo-audit`, and `/free-seo-audit`, but they should not be activated until consent, tracking, campaign events, and conversion reporting are implemented.
+## Pricing And SEM
+
+The pricing page can be used as a decision-stage destination for high-intent
+paid traffic when the query is about price, plans, audits, PPC management, or
+SEO mentorship. It must keep the USD starting-price disclosure visible.
+
+Future SEM-specific pricing variants require a separate readiness review:
+localized copy, consent/tracking plan, proof support, no fake discounts, no fake
+scarcity, no guaranteed outcomes, and no overlap with the organic `/pricing`
+canonical page.

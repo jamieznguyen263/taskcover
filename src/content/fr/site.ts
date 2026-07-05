@@ -17,6 +17,7 @@ export const site: SiteContent = {
     { label: "Realisations", href: "/work" },
     { label: "Analyses", href: "/insights" },
     { label: "Entreprise", href: "/about" },
+    { label: "Tarifs", href: "/pricing" },
   ],
   megaMenu: [
     {
@@ -361,6 +362,7 @@ export const site: SiteContent = {
           { label: "A propos", href: "/about" },
           { label: "Methodologie", href: "/methodology" },
           { label: "Comment nous travaillons", href: "/how-we-work" },
+          { label: "Tarifs", href: "/pricing" },
           { label: "Audit SEO gratuit", href: "/free-seo-audit" },
           { label: "Prendre rendez-vous", href: "/book-a-call" },
           { label: "Contact", href: "/contact" },

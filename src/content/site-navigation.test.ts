@@ -31,6 +31,7 @@ describe("global site navigation IA", () => {
       "Work",
       "Insights",
       "Company",
+      "Pricing",
     ]);
     expect(site.megaMenu.map((item) => item.id)).toEqual([
       "services",
@@ -71,6 +72,7 @@ describe("global site navigation IA", () => {
       expect(footerPaths).toContain(path);
     }
     expect(footerPaths).toContain("/contact");
+    expect(footerPaths).toContain("/pricing");
     expect(footerPaths).toContain("/free-seo-audit");
     expect(footerPaths).toContain("/book-a-call");
   });

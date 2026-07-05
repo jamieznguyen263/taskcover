@@ -105,6 +105,9 @@ export function SiteHeader() {
   const openMenuId = openMenuState.pathname === pathname ? openMenuState.id : null;
   const mobileOpen = mobileMenuState.pathname === pathname ? mobileMenuState.open : false;
   const openMenu = content.megaMenu.find((item) => item.id === openMenuId) ?? null;
+  const directNavItems = content.navigation.filter(
+    (item) => !content.megaMenu.some((menu) => menu.label === item.label)
+  );
 
   React.useEffect(() => {
     if (!mobileOpen) return;
@@ -208,6 +211,21 @@ export function SiteHeader() {
                 </li>
               );
             })}
+            {directNavItems.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className={cn(
+                    "inline-flex items-center rounded-full px-3 py-2 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal",
+                    pathname === item.href
+                      ? "bg-surface-tint text-graphite"
+                      : "text-secondary hover:bg-surface-tint hover:text-graphite"
+                  )}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
           </ul>
         </nav>
 
@@ -413,6 +431,22 @@ export function SiteHeader() {
                 </section>
               );
             })}
+            {directNavItems.length ? (
+              <div className="px-3 py-3">
+                <div className="grid gap-1">
+                  {directNavItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={closeMobileMenu}
+                      className="block rounded-xl px-3 py-3 text-sm font-semibold text-graphite transition hover:bg-surface-tint focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-brand-teal"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </div>
 
           <div className="mt-4">

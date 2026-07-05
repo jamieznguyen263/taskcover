@@ -300,3 +300,13 @@ or `/es`.
 ## Task 13C Localization Additions
 
 The video placeholder, homepage logo alt text, radial search-surface map, case-study library filters, proof module labels, Client Results modules, and Insights article rail labels are all locale-owned in EN/FR/ES content files. English slugs remain unchanged for `/fr` and `/es` routes.
+## Pricing Localization
+
+Pricing is localized in `src/content/en/pricing.ts`,
+`src/content/fr/pricing.ts`, and `src/content/es/pricing.ts`, accessed through
+`getPricingContent(locale)`.
+
+The route is `/pricing` for English, `/fr/pricing` for French, and
+`/es/pricing` for Spanish. Prices stay in USD across locales, while headings,
+plan descriptions, comparison labels, FAQ, CTAs, breadcrumbs, aria labels, and
+metadata are localized. Slugs remain English.

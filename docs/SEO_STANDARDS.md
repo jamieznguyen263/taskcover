@@ -284,3 +284,15 @@ country-name variants outside the existing `/markets/*` structure.
 ## Task 13C SEO Safety
 
 Task 13C does not alter keyword-to-URL ownership, route slugs, canonical strategy, hreflang, x-default, sitemap behavior, noindex rules, structured data, or metadata strategy. The Client Results and Case Studies changes enrich existing routes only. New proof modules must not invent metrics, rankings, testimonials, or private results.
+
+## Pricing Page SEO
+
+The pricing routes (`/pricing`, `/fr/pricing`, `/es/pricing`) are indexable
+decision-stage pages. They use localized metadata, canonical URLs, hreflang
+alternates, Open Graph metadata, one H1, BreadcrumbList schema, and FAQPage
+schema only because the FAQ is visible.
+
+Do not add Review, AggregateRating, LocalBusiness, fake Offer, or unsafe pricing
+schema. Pricing must be described as USD starting points, with final pricing
+dependent on market, site complexity, competition, content needs, and execution
+speed. Do not guarantee rankings, backlinks, placements, traffic, or revenue.

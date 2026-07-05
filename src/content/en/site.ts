@@ -86,6 +86,7 @@ export const sharedNav: NavItem[] = [
   { label: "Work", href: "/work" },
   { label: "Insights", href: "/insights" },
   { label: "Company", href: "/about" },
+  { label: "Pricing", href: "/pricing" },
 ];
 
 export const megaMenu: MegaMenuItem[] = [
@@ -320,6 +321,7 @@ export const site: SiteContent = {
           { label: "About", href: "/about" },
           { label: "Methodology", href: "/methodology" },
           { label: "How We Work", href: "/how-we-work" },
+          { label: "Pricing", href: "/pricing" },
           { label: "Free SEO Audit", href: "/free-seo-audit" },
           { label: "Book a Call", href: "/book-a-call" },
           { label: "Contact", href: "/contact" },
