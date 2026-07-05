@@ -2,6 +2,8 @@
 
 Task 10B will build a Notion/Google Docs-style content Admin. Task 10 prepares the public rendering and content architecture only; it does not build Admin UI.
 
+Task 10B implementation now adds the first production architecture for this Admin: PostgreSQL/Drizzle schema, Argon2id auth, session tables, invites, role permissions, Tiptap editor shell, eight content tabs, media/scheduler providers, audit logs, and a database snapshot provider path. Public rendering remains typed and provider-neutral.
+
 ## Roles
 
 - Admin: manage users, settings, publishing, scheduling, archival, and final approvals.

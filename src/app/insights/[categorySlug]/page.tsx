@@ -64,7 +64,7 @@ export default async function InsightCategoryPage({ params }: Params) {
           ),
         }}
       />
-      <InsightCategoryView locale="en" category={categoryContent} articles={getInsightsByCategory(category, "en")} />
+      <InsightCategoryView locale="en" category={categoryContent} articles={await getInsightsByCategory(category, "en")} />
     </>
   );
 }

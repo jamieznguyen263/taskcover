@@ -248,3 +248,22 @@ The public Insights system lives under `/insights` with localized mirrors under 
 Article routes use `/insights/[categorySlug]/[articleSlug]` and localized equivalents. All routes are statically generated from `InsightsProvider`; public rendering, sitemap, related content, and search/filter metadata use only published articles.
 
 The provider-neutral architecture is documented in `docs/INSIGHTS_CONTENT_STANDARD.md`. Future Admin requirements are documented in `docs/ADMIN_CONTENT_SPEC.md`.
+
+## Admin Content OS (Task 10B)
+
+Admin routes live under `/admin` and are excluded from public navigation and marked `noindex`.
+
+- `/admin/login`
+- `/admin/accept-invite`
+- `/admin`
+- `/admin/insights`
+- `/admin/insights/new`
+- `/admin/insights/[id]`
+- `/admin/insights/[id]/preview`
+- `/admin/media`
+- `/admin/users`
+- `/admin/audit-log`
+- `/admin/settings/integrations`
+- `/admin/settings/publishing`
+
+The secure scheduler endpoint is `POST /api/internal/publishing/run`.

@@ -14,9 +14,9 @@ import { InsightsClientFilter, type InsightFilterItem } from "./insights-client-
 import { getArticleToc, InsightBlockRenderer } from "./insight-block-renderer";
 import { cn } from "@/lib/utils";
 
-export function InsightsHubView({ locale }: { locale: Locale }) {
+export async function InsightsHubView({ locale }: { locale: Locale }) {
   const content = getInsightsContent(locale);
-  const articles = getPublishedInsights(locale);
+  const articles = await getPublishedInsights(locale);
   const featured = articles[0];
   const filterItems = articles.map((article) => toFilterItem(article, content, locale));
   const categories = insightCategorySlugs.map((slug) => ({
@@ -135,7 +135,7 @@ export function InsightCategoryView({
   articles: InsightArticle[];
 }) {
   const content = getInsightsContent(locale);
-  const allArticles = getPublishedInsights(locale);
+  const allArticles = articles;
   const fallbackArticles = category.curatedArticleSlugs
     .map((slug) => allArticles.find((article) => article.slug === slug))
     .filter((article): article is InsightArticle => Boolean(article));

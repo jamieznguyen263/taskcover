@@ -214,3 +214,5 @@ Insights articles use localized metadata, canonical URLs, hreflang alternates fo
 Do not add fake review, AggregateRating, Person, HowTo, award, or rating schema. Do not publish fake dates, invented statistics, invented expert quotes, invented rankings, or unsupported client examples.
 
 Source-backed factual claims use the source model in `src/content/insights.types.ts`. Taskcover pages may be internal links, but they are not independent evidence sources. Publish QA intentionally rejects keyword density, arbitrary SEO scores, readability scores, and ranking predictions as publication gates.
+
+Admin and preview routes are always `noindex`, are excluded from sitemap generation, and must not emit public canonical, Open Graph, or schema metadata. Draft preview routes require authentication and no-store behavior.

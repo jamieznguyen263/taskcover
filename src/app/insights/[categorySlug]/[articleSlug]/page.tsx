@@ -8,8 +8,8 @@ import { siteConfig } from "@/lib/site";
 
 type Params = { params: Promise<{ categorySlug: string; articleSlug: string }> };
 
-export function generateStaticParams() {
-  return getInsightArticleSlugs()
+export async function generateStaticParams() {
+  return (await getInsightArticleSlugs())
     .filter((item) => item.locale === "en")
     .map((item) => ({
       categorySlug: item.categorySlug,
@@ -19,7 +19,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { categorySlug, articleSlug } = await params;
-  const article = getInsightBySlug(articleSlug, "en");
+  const article = await getInsightBySlug(articleSlug, "en");
   if (!article || article.category !== categorySlug) return {};
   const path = getInsightPath(article);
   return {
@@ -56,12 +56,12 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function InsightArticlePage({ params }: Params) {
   const { categorySlug, articleSlug } = await params;
-  const article = getInsightBySlug(articleSlug, "en");
+  const article = await getInsightBySlug(articleSlug, "en");
   if (!article || article.category !== categorySlug) notFound();
   const content = getInsightsContent("en");
   const category = getInsightCategory(article.category, "en");
   if (!category) notFound();
-  const related = getRelatedInsights(article.slug, "en", 3);
+  const related = await getRelatedInsights(article.slug, "en", 3);
   const faq = faqJsonLd(article);
 
   return (

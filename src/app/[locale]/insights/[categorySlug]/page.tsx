@@ -69,7 +69,7 @@ export default async function LocalizedInsightCategoryPage({ params }: Params) {
           ),
         }}
       />
-      <InsightCategoryView locale={locale} category={categoryContent} articles={getInsightsByCategory(category, locale)} />
+      <InsightCategoryView locale={locale} category={categoryContent} articles={await getInsightsByCategory(category, locale)} />
     </>
   );
 }

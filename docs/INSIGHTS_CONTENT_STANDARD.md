@@ -88,3 +88,5 @@ Publish QA must not block publication based on word count, keyword density, exac
 ## Future Admin/CMS Migration
 
 Task 10B can replace the local provider with an Admin-backed provider that implements the same `InsightsProvider` interface. The block model, workflow statuses, source model, QA checks, and schema helpers are already structured for that migration.
+
+Task 10B adds `INSIGHTS_PROVIDER=database` for published PostgreSQL snapshots. Database mode must expose published immutable `InsightArticle` snapshots only. Draft, in-review, approved, scheduled future, and archived records must never be returned by public provider calls.

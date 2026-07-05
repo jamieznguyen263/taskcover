@@ -105,6 +105,11 @@
     outline-offset: 2px;
     border-radius: 4px;
   }
+
+  body:has([data-admin-root]) > header,
+  body:has([data-admin-root]) > footer {
+    display: none;
+  }
 }
 
 @layer utilities {

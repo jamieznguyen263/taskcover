@@ -35,7 +35,7 @@ function alts(basePath: string): Record<string, string> {
   return map;
 }
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const entries: MetadataRoute.Sitemap = [];
@@ -84,7 +84,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }
 
   // Published insight article pages for each locale.
-  for (const item of getInsightArticleSlugs()) {
+  for (const item of await getInsightArticleSlugs()) {
     const base = `/insights/${item.categorySlug}/${item.articleSlug}`;
     entries.push({
       url: `${siteConfig.url}${localizePath(base, item.locale as Locale)}`,
