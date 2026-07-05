@@ -9,10 +9,17 @@ export default async function IntegrationsPage() {
   if (!status.databaseConfigured) return <AdminUnavailable />;
   const session = await requireAdminSession();
   const rows = [
-    ["Database", status.databaseConfigured ? "Configured" : "Unavailable"],
-    ["Public provider", status.provider],
-    ["Cloudinary", status.cloudinaryConfigured ? "Configured" : "Unavailable"],
-    ["Scheduler", status.schedulerConfigured ? status.schedulerProvider : "disabled"],
+    ["Database", status.databaseConfigured ? "configured" : "unavailable"],
+    ["Hyperdrive", status.hyperdriveConfigured ? "configured" : "not tested"],
+    ["Resend", status.resendConfigured ? "configured" : "unavailable"],
+    ["HubSpot", status.hubspotConfigured ? "configured" : "unavailable"],
+    ["Cal.com", status.calcomConfigured ? "configured" : "unavailable"],
+    ["Turnstile", status.turnstileConfigured ? "configured" : "unavailable"],
+    ["Cloudinary", status.cloudinaryConfigured ? "configured" : "unavailable"],
+    ["Rate limiting binding", status.rateLimitingConfigured ? "configured" : "unavailable"],
+    ["Durable Object", status.durableObjectConfigured ? "configured" : "not tested"],
+    ["Cron/scheduler", status.schedulerConfigured ? status.schedulerProvider : "unavailable"],
+    ["Insights provider", status.provider],
   ];
   return (
     <AdminShell session={session}>

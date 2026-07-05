@@ -175,13 +175,15 @@ export function ThankYouPageView({
   content,
   locale,
   type,
+  bookingUrl,
 }: {
   content: LeadsContent;
   locale: Locale;
   type: keyof LeadsContent["thankYou"]["states"];
+  bookingUrl?: string;
 }) {
   const state = content.thankYou.states[type] ?? content.thankYou.states.contact;
-  const showCall = type !== "strategy-call";
+  const showCall = Boolean(bookingUrl) || type !== "strategy-call";
   return (
     <Section background="tint" className="pt-16 sm:pt-20">
       <Container className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
@@ -194,7 +196,7 @@ export function ThankYouPageView({
           <p className="text-lg text-secondary">{state.message}</p>
           <div className="flex flex-col gap-3 sm:flex-row">
             {showCall && (
-              <CTAButton href={localized(locale, "/book-a-call")}>
+              <CTAButton href={bookingUrl ?? localized(locale, "/book-a-call")}>
                 {state.primaryCta}
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </CTAButton>

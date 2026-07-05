@@ -1,8 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { constantTimeEqual } from "@/lib/admin/security";
-import { getPublishScheduler } from "@/lib/admin/scheduler";
-
-export const runtime = "nodejs";
+import { runScheduledTasks } from "@/lib/cloudflare/scheduled";
 
 export async function POST(request: NextRequest) {
   const configuredSecret = process.env.PUBLISH_CRON_SECRET;
@@ -11,6 +9,6 @@ export async function POST(request: NextRequest) {
     return new Response(null, { status: 401, headers: { "cache-control": "no-store" } });
   }
 
-  const result = await getPublishScheduler().publishDueArticles();
+  const result = await runScheduledTasks();
   return NextResponse.json(result, { headers: { "cache-control": "no-store" } });
 }

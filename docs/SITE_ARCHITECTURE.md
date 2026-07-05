@@ -267,3 +267,21 @@ Admin routes live under `/admin` and are excluded from public navigation and mar
 - `/admin/settings/publishing`
 
 The secure scheduler endpoint is `POST /api/internal/publishing/run`.
+## Task 11 Production Layer
+
+Production hosting is Cloudflare Workers through OpenNext for Cloudflare. Runtime data flows use Neon PostgreSQL via Hyperdrive. The lead funnel writes first to Neon, creates outbox jobs transactionally, and then uses Cron-driven retries for Resend and HubSpot.
+
+```mermaid
+flowchart LR
+  Visitor["Visitor form"] --> Worker["Cloudflare Worker / OpenNext"]
+  Worker --> Rate["Rate Limiting + Turnstile"]
+  Rate --> Neon["Neon PostgreSQL via Hyperdrive"]
+  Neon --> Outbox["Lead delivery jobs"]
+  Outbox --> Resend["Resend email"]
+  Outbox --> HubSpot["HubSpot CRM"]
+  Worker --> Cal["Cal.com CTA after acceptance"]
+  Cron["Cloudflare Cron"] --> Outbox
+  Cron --> Insights["Scheduled Insights publishing"]
+```
+
+Cloudinary uploads are signed server-side. Admin and preview content stay noindex/private.

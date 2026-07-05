@@ -1,6 +1,7 @@
 import { type Locale } from "@/lib/i18n";
+import { isDatabaseConfigured } from "@/lib/db/client";
 import { parseLeadPayload, thankYouPathFor } from "./schema";
-import { getLeadDeliveryAdapters } from "./adapters";
+import { acceptLeadDurably } from "./acceptance";
 import { checkRateLimit, rateLimitKeyFromRequest } from "./rate-limit";
 import { hasHoneypotSignal, isTurnstileConfigured, verifyTurnstile } from "./spam";
 import type { LeadSubmissionResult } from "./types";
@@ -55,39 +56,21 @@ export async function submitLead({ payload, ip }: SubmissionInput): Promise<Lead
     turnstileVerified: turnstile.verified,
   };
 
-  const adapters = getLeadDeliveryAdapters().filter((adapter) => adapter.isConfigured());
-  if (adapters.length === 0) {
-    return {
-      status: "not-configured",
-      requestType: parsed.lead.requestType,
-      messageKey: "delivery-unavailable",
-      delivery: [{ status: "not-configured", adapter: "none" }],
-    };
-  }
-
-  const delivery = await Promise.all(adapters.map((adapter) => adapter.deliver(parsed.lead)));
-  if (delivery.some((result) => result.status === "accepted")) {
+  try {
+    const accepted = await acceptLeadDurably(parsed.lead);
     return {
       status: "success",
       requestType: parsed.lead.requestType,
       redirectPath: thankYouPathFor(parsed.lead.locale as Locale, parsed.lead.requestType),
-      delivery,
+      leadReference: accepted.id,
+      delivery: [{ status: "accepted", adapter: "neon-outbox" }],
     };
-  }
-
-  if (delivery.some((result) => result.status === "temporary-error")) {
+  } catch {
     return {
-      status: "temporary-error",
+      status: isDatabaseConfigured() ? "temporary-error" : "not-configured",
       requestType: parsed.lead.requestType,
-      messageKey: "temporary-error",
-      delivery,
+      messageKey: isDatabaseConfigured() ? "temporary-error" : "delivery-unavailable",
+      delivery: [{ status: isDatabaseConfigured() ? "temporary-error" : "not-configured", adapter: "neon-outbox" }],
     };
   }
-
-  return {
-    status: "rejected",
-    requestType: parsed.lead.requestType,
-    messageKey: "rejected",
-    delivery,
-  };
 }

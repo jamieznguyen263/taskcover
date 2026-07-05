@@ -8,7 +8,7 @@ import { getDatabasePublishedInsights } from "./database-provider";
 export const insightsProvider = localInsightsProvider;
 
 function shouldUseDatabaseProvider() {
-  return process.env.INSIGHTS_PROVIDER === "database" && Boolean(process.env.DATABASE_URL);
+  return String(process.env.INSIGHTS_PROVIDER ?? "local") === "database" && Boolean(process.env.DATABASE_URL);
 }
 
 export function getInsightsContent(locale: Locale) {

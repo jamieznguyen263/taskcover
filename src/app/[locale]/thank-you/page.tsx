@@ -29,5 +29,5 @@ export default async function LocalizedThankYouPage({ params, searchParams }: Pr
   const sp = await searchParams;
   const content = getLeadsContent(locale);
   const type = safeThankYouType(Array.isArray(sp.type) ? sp.type[0] : sp.type);
-  return <ThankYouPageView content={content} locale={locale} type={type} />;
+  return <ThankYouPageView content={content} locale={locale} type={type} bookingUrl={process.env.CALCOM_BOOKING_URL} />;
 }

@@ -8,6 +8,7 @@ import {
   normalizeEmail,
   resetLoginRateLimit,
   verifyPassword,
+  ARGON2ID_PARAMS,
 } from "./security";
 
 describe("admin security", () => {
@@ -16,6 +17,7 @@ describe("admin security", () => {
     expect(hash).not.toContain("correct horse");
     expect(await verifyPassword(hash, "correct horse battery staple")).toBe(true);
     expect(await verifyPassword(hash, "wrong horse battery staple")).toBe(false);
+    expect(ARGON2ID_PARAMS).toEqual({ memorySize: 19456, iterations: 2, parallelism: 1, hashLength: 32 });
   });
 
   it("normalizes email and hashes opaque tokens", () => {

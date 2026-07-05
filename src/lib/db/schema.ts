@@ -50,6 +50,30 @@ export const auditEventEnum = pgEnum("admin_audit_event", [
   "media_delete",
   "scheduler_success",
   "scheduler_failure",
+  "integration_test",
+]);
+export const leadSubmissionStatusEnum = pgEnum("lead_submission_status", [
+  "accepted",
+  "processing",
+  "completed",
+  "needs_attention",
+  "cancelled",
+]);
+export const leadDeliveryJobStatusEnum = pgEnum("lead_delivery_job_status", [
+  "pending",
+  "processing",
+  "succeeded",
+  "retrying",
+  "dead-letter",
+  "cancelled",
+]);
+export const leadDeliveryProviderEnum = pgEnum("lead_delivery_provider", ["resend", "hubspot"]);
+export const leadDeliveryJobTypeEnum = pgEnum("lead_delivery_job_type", [
+  "resend-internal-notification",
+  "resend-visitor-confirmation",
+  "hubspot-contact-sync",
+  "hubspot-company-sync",
+  "hubspot-deal-sync",
 ]);
 
 const timestamps = {
@@ -275,4 +299,121 @@ export const adminAuditLogs = pgTable(
     index("admin_audit_logs_target_idx").on(table.targetType, table.targetId),
     index("admin_audit_logs_created_at_idx").on(table.createdAt),
   ]
+);
+
+export const leadSubmissions = pgTable(
+  "lead_submissions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    idempotencyKey: text("idempotency_key").notNull(),
+    requestType: text("request_type").notNull(),
+    locale: localeEnum("locale").notNull(),
+    name: text("name").notNull(),
+    normalizedEmail: text("normalized_email").notNull(),
+    company: text("company"),
+    role: text("role"),
+    websiteUrl: text("website_url"),
+    market: text("market"),
+    industry: text("industry"),
+    serviceInterests: text("service_interests").array().notNull().default(sql`ARRAY[]::text[]`),
+    primaryChallenge: text("primary_challenge"),
+    goals: text("goals"),
+    timeline: text("timeline"),
+    investmentRange: text("investment_range"),
+    currentTrafficRange: text("current_traffic_range"),
+    paidSearchActivity: text("paid_search_activity"),
+    preferredTimeZone: text("preferred_time_zone"),
+    preferredCallWindows: text("preferred_call_windows").array().notNull().default(sql`ARRAY[]::text[]`),
+    message: text("message"),
+    consentVersion: text("consent_version").notNull().default("2026-07-05"),
+    sourcePath: text("source_path").notNull(),
+    landingPath: text("landing_path"),
+    referrerDomain: text("referrer_domain"),
+    utmSource: text("utm_source"),
+    utmMedium: text("utm_medium"),
+    utmCampaign: text("utm_campaign"),
+    utmContent: text("utm_content"),
+    utmTerm: text("utm_term"),
+    clickIdentifiers: jsonb("click_identifiers").notNull().default({}),
+    status: leadSubmissionStatusEnum("status").notNull().default("accepted"),
+    acceptedAt: timestamp("accepted_at", { withTimezone: true }).notNull().defaultNow(),
+    ...timestamps,
+  },
+  (table) => [
+    uniqueIndex("lead_submissions_idempotency_idx").on(table.idempotencyKey),
+    index("lead_submissions_email_idx").on(table.normalizedEmail),
+    index("lead_submissions_status_idx").on(table.status),
+    index("lead_submissions_created_at_idx").on(table.createdAt),
+  ]
+);
+
+export const leadDeliveryJobs = pgTable(
+  "lead_delivery_jobs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    leadId: uuid("lead_id").notNull().references(() => leadSubmissions.id, { onDelete: "cascade" }),
+    provider: leadDeliveryProviderEnum("provider").notNull(),
+    jobType: leadDeliveryJobTypeEnum("job_type").notNull(),
+    idempotencyKey: text("idempotency_key").notNull(),
+    status: leadDeliveryJobStatusEnum("status").notNull().default("pending"),
+    attemptCount: integer("attempt_count").notNull().default(0),
+    nextAttemptAt: timestamp("next_attempt_at", { withTimezone: true }).notNull().defaultNow(),
+    lockedAt: timestamp("locked_at", { withTimezone: true }),
+    lockedBy: text("locked_by"),
+    lastErrorCategory: text("last_error_category"),
+    lastErrorAt: timestamp("last_error_at", { withTimezone: true }),
+    completedAt: timestamp("completed_at", { withTimezone: true }),
+    ...timestamps,
+  },
+  (table) => [
+    uniqueIndex("lead_delivery_jobs_idempotency_idx").on(table.idempotencyKey),
+    index("lead_delivery_jobs_due_idx").on(table.status, table.nextAttemptAt),
+    index("lead_delivery_jobs_lead_idx").on(table.leadId),
+  ]
+);
+
+export const leadDeliveryAttempts = pgTable(
+  "lead_delivery_attempts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    jobId: uuid("job_id").notNull().references(() => leadDeliveryJobs.id, { onDelete: "cascade" }),
+    provider: leadDeliveryProviderEnum("provider").notNull(),
+    jobType: leadDeliveryJobTypeEnum("job_type").notNull(),
+    result: text("result").notNull(),
+    errorCategory: text("error_category"),
+    statusCodeCategory: text("status_code_category"),
+    durationMs: integer("duration_ms"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index("lead_delivery_attempts_job_idx").on(table.jobId)]
+);
+
+export const leadProviderLinks = pgTable(
+  "lead_provider_links",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    leadId: uuid("lead_id").notNull().references(() => leadSubmissions.id, { onDelete: "cascade" }),
+    provider: leadDeliveryProviderEnum("provider").notNull(),
+    linkType: text("link_type").notNull(),
+    providerId: text("provider_id").notNull(),
+    metadata: jsonb("metadata").notNull().default({}),
+    ...timestamps,
+  },
+  (table) => [
+    uniqueIndex("lead_provider_links_unique_idx").on(table.leadId, table.provider, table.linkType),
+    index("lead_provider_links_provider_id_idx").on(table.provider, table.providerId),
+  ]
+);
+
+export const leadStatusEvents = pgTable(
+  "lead_status_events",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    leadId: uuid("lead_id").notNull().references(() => leadSubmissions.id, { onDelete: "cascade" }),
+    eventType: text("event_type").notNull(),
+    summary: text("summary").notNull(),
+    metadata: jsonb("metadata").notNull().default({}),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index("lead_status_events_lead_idx").on(table.leadId)]
 );

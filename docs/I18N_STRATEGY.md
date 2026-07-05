@@ -248,3 +248,12 @@ Insights content is complete in English, French, and Spanish. English remains un
 Localized content includes article bodies, metadata, breadcrumbs, category labels, filter UI, dates, reading time, source labels, CTA labels, author descriptions, and FAQ schema text. Public routes must not fall back to English for visible French or Spanish Insights UI.
 
 Admin UI remains English-only in Task 10B, but the content model requires complete EN/FR/ES article localizations before approval, scheduling, or publishing.
+## Production Integration Locales
+
+Lead confirmation emails and thank-you flows must remain localized for EN/FR/ES.
+
+- English remains unprefixed.
+- French uses `/fr`.
+- Spanish uses `/es`.
+- Resend visitor confirmations use localized copy.
+- Cal.com CTA display is localized by the page context, but the configured booking URL must not carry PII.

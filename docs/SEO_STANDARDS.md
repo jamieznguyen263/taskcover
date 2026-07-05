@@ -216,3 +216,11 @@ Do not add fake review, AggregateRating, Person, HowTo, award, or rating schema.
 Source-backed factual claims use the source model in `src/content/insights.types.ts`. Taskcover pages may be internal links, but they are not independent evidence sources. Publish QA intentionally rejects keyword density, arbitrary SEO scores, readability scores, and ranking predictions as publication gates.
 
 Admin and preview routes are always `noindex`, are excluded from sitemap generation, and must not emit public canonical, Open Graph, or schema metadata. Draft preview routes require authentication and no-store behavior.
+## Production Canonical Host
+
+The production canonical origin is `https://taskcover.com`.
+
+- `www.taskcover.com` must redirect permanently to `taskcover.com`.
+- Metadata, Open Graph URLs, sitemap entries, robots sitemap URL, and hreflang URLs use the canonical origin.
+- Local, preview, staging, and workers.dev hosts must not be redirected to production.
+- Admin and thank-you pages stay noindex and are excluded from the sitemap.

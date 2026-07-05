@@ -26,8 +26,12 @@ export async function verifyTurnstile(token: string | undefined, ip?: string): P
       body: form,
     });
     if (!response.ok) return { configured: true, verified: false };
-    const data = (await response.json()) as { success?: boolean };
-    return { configured: true, verified: data.success === true };
+    const data = (await response.json()) as { success?: boolean; hostname?: string; action?: string };
+    const expectedHostname = process.env.TURNSTILE_EXPECTED_HOSTNAME;
+    const expectedAction = process.env.TURNSTILE_EXPECTED_ACTION;
+    const hostnameOk = expectedHostname ? data.hostname === expectedHostname : true;
+    const actionOk = expectedAction ? data.action === expectedAction : true;
+    return { configured: true, verified: data.success === true && hostnameOk && actionOk };
   } catch {
     return { configured: true, verified: false };
   }

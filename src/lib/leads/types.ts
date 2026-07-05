@@ -81,6 +81,7 @@ export type LeadSubmissionStatus =
 export type LeadSubmissionResult = {
   status: LeadSubmissionStatus;
   requestType?: LeadRequestType;
+  leadReference?: string;
   redirectPath?: string;
   fieldErrors?: FieldErrors;
   messageKey?: string;

@@ -32,3 +32,11 @@ Set `INSIGHTS_PROVIDER=local` and redeploy. The public site will use local Insig
 Backups:
 
 Back up PostgreSQL before migrations and before bulk imports. Published revisions are immutable but do not replace database backups.
+## Task 11 Production Notes
+
+- Admin remains under `/admin` on `https://taskcover.com/admin`.
+- Configure Neon and Hyperdrive before creating real Admin users.
+- Run Drizzle migrations only after the user provides the direct Neon migration URL and approval.
+- Verify Argon2id password hashing in Cloudflare Worker preview.
+- Keep `INSIGHTS_PROVIDER=local` until database import and publish verification pass.
+- Configure secrets through `.env.local`, `.dev.vars`, `wrangler secret put`, or Cloudflare dashboard secrets.

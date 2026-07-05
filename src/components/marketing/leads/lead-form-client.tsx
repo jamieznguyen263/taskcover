@@ -299,7 +299,7 @@ function Turnstile({ siteKey, content }: { siteKey?: string; content: LeadsConte
     <div className="rounded-2xl border border-line bg-white p-4">
       <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
       <p className="mb-3 text-sm font-semibold text-graphite">{content.common.turnstileLabel}</p>
-      <div className="cf-turnstile" data-sitekey={siteKey} />
+      <div className="cf-turnstile" data-sitekey={siteKey} data-action="lead-submit" />
     </div>
   );
 }

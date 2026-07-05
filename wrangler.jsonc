@@ -1,0 +1,97 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "taskcover",
+  "main": "worker/taskcover-worker.ts",
+  "compatibility_date": "2026-07-05",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "taskcover"
+    }
+  ],
+  "vars": {
+    "NEXTJS_ENV": "production",
+    "APP_URL": "https://taskcover.com",
+    "NEXT_PUBLIC_APP_URL": "https://taskcover.com",
+    "INSIGHTS_PROVIDER": "local",
+    "PUBLISH_SCHEDULER_PROVIDER": "cloudflare-cron",
+    "RATE_LIMIT_PROVIDER": "cloudflare",
+    "AUTH_RATE_LIMIT_PROVIDER": "cloudflare",
+    "RATE_LIMIT_NAMESPACE": "taskcover-leads",
+    "AUTH_RATE_LIMIT_NAMESPACE": "taskcover-admin-auth",
+    "CLOUDINARY_UPLOAD_FOLDER": "taskcover/insights"
+  },
+  "triggers": {
+    "crons": ["*/5 * * * *"]
+  },
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "00000000000000000000000000000000"
+    }
+  ],
+  "ratelimits": [
+    {
+      "name": "LEAD_RATE_LIMITER",
+      "namespace_id": "1001",
+      "simple": {
+        "limit": 20,
+        "period": 60
+      }
+    },
+    {
+      "name": "ADMIN_RATE_LIMITER",
+      "namespace_id": "1002",
+      "simple": {
+        "limit": 20,
+        "period": 60
+      }
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "RATE_LIMIT_COORDINATOR",
+        "class_name": "RateLimitCoordinator"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1_rate_limit_coordinator",
+      "new_sqlite_classes": ["RateLimitCoordinator"]
+    }
+  ],
+  "env": {
+    "staging": {
+      "name": "taskcover-staging",
+      "vars": {
+        "NEXTJS_ENV": "production",
+        "APP_URL": "https://staging.taskcover.com",
+        "NEXT_PUBLIC_APP_URL": "https://staging.taskcover.com",
+        "INSIGHTS_PROVIDER": "local",
+        "PUBLISH_SCHEDULER_PROVIDER": "cloudflare-cron",
+        "RATE_LIMIT_PROVIDER": "cloudflare",
+        "AUTH_RATE_LIMIT_PROVIDER": "cloudflare",
+        "RATE_LIMIT_NAMESPACE": "taskcover-leads-staging",
+        "AUTH_RATE_LIMIT_NAMESPACE": "taskcover-admin-auth-staging",
+        "CLOUDINARY_UPLOAD_FOLDER": "taskcover-staging/insights"
+      },
+      "hyperdrive": [
+        {
+          "binding": "HYPERDRIVE",
+          "id": "00000000000000000000000000000000"
+        }
+      ]
+    }
+  }
+}

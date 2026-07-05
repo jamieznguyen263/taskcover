@@ -77,3 +77,13 @@ This project follows a strict **no fake claims** policy:
 - Until verified data is provided, the UI uses clearly-labeled placeholders.
 
 See [`docs/SEO_STANDARDS.md`](./docs/SEO_STANDARDS.md) for the full policy.
+## Production readiness
+
+Taskcover is prepared for Cloudflare Workers with OpenNext. Start with:
+
+- `docs/CLOUDFLARE_DEPLOYMENT.md`
+- `docs/NEON_HYPERDRIVE_SETUP.md`
+- `docs/LEAD_DELIVERY_ARCHITECTURE.md`
+- `docs/PRODUCTION_ACTIVATION_CHECKLIST.md`
+
+Do not deploy production or apply external database migrations without explicit approval and credentials.

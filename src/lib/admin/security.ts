@@ -1,11 +1,17 @@
 import "server-only";
 
-import argon2 from "argon2";
+import { argon2id, argon2Verify } from "hash-wasm";
 import crypto from "node:crypto";
 
 export const ADMIN_SESSION_COOKIE = "taskcover_admin_session";
 export const MIN_PASSWORD_LENGTH = 12;
 export const MAX_PASSWORD_LENGTH = 256;
+export const ARGON2ID_PARAMS = {
+  memorySize: 19456,
+  iterations: 2,
+  parallelism: 1,
+  hashLength: 32,
+} as const;
 
 const loginBuckets = new Map<string, { count: number; resetsAt: number }>();
 
@@ -21,18 +27,18 @@ export async function hashPassword(password: string) {
   if (!validatePasswordShape(password)) {
     throw new Error("Password does not meet length requirements.");
   }
-  return argon2.hash(password, {
-    type: argon2.argon2id,
-    memoryCost: 19456,
-    timeCost: 2,
-    parallelism: 1,
+  return argon2id({
+    password,
+    salt: crypto.randomBytes(16),
+    ...ARGON2ID_PARAMS,
+    outputType: "encoded",
   });
 }
 
 export async function verifyPassword(hash: string, password: string) {
   if (!validatePasswordShape(password)) return false;
   try {
-    return await argon2.verify(hash, password);
+    return await argon2Verify({ hash, password });
   } catch {
     return false;
   }
