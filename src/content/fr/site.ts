@@ -18,7 +18,6 @@ export const site: SiteContent = {
     { label: "Réalisations", href: "/work" },
     { label: "Preuves", href: "/proof" },
     { label: "Analyses", href: "/insights" },
-    { label: "À propos", href: "/about" },
   ],
   primaryCta: { label: "Audit SEO gratuit", href: "/free-seo-audit" },
   secondaryCta: { label: "Réserver un appel", href: "/book-a-call" },
@@ -84,9 +83,12 @@ export const site: SiteContent = {
       {
         title: "Entreprise",
         links: [
-          { label: "Méthodologie", href: "/methodology" },
-          { label: "Technologie", href: "/technology" },
           { label: "Analyses", href: "/insights" },
+          { label: "Guides SEO", href: "/insights/seo-guides" },
+          { label: "Recherche IA", href: "/insights/ai-search" },
+          { label: "SEO technique", href: "/insights/technical-seo" },
+          { label: "Autorite contenu", href: "/insights/content-authority" },
+          { label: "SEO Mentor", href: "/insights/seo-mentor" },
           { label: "Audit SEO gratuit", href: "/free-seo-audit" },
           { label: "Prendre rendez-vous", href: "/book-a-call" },
           { label: "Contact", href: "/contact" },

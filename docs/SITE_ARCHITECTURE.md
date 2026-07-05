@@ -233,3 +233,18 @@ Indexable funnel pages are included in sitemap. Thank-you pages are built,
 marked `noindex`, and excluded from sitemap. Submissions use
 `src/app/api/leads/route.ts` and require at least one configured delivery
 adapter before redirecting to thank-you. See `docs/LEAD_FUNNEL_STANDARD.md`.
+## Task 10: Insights Engine
+
+The public Insights system lives under `/insights` with localized mirrors under `/fr/insights` and `/es/insights`. Category slugs remain English across locales:
+
+- `/insights/seo-guides`
+- `/insights/ai-search`
+- `/insights/technical-seo`
+- `/insights/content-authority`
+- `/insights/local-international-seo`
+- `/insights/ppc-search-intelligence`
+- `/insights/seo-mentor`
+
+Article routes use `/insights/[categorySlug]/[articleSlug]` and localized equivalents. All routes are statically generated from `InsightsProvider`; public rendering, sitemap, related content, and search/filter metadata use only published articles.
+
+The provider-neutral architecture is documented in `docs/INSIGHTS_CONTENT_STANDARD.md`. Future Admin requirements are documented in `docs/ADMIN_CONTENT_SPEC.md`.

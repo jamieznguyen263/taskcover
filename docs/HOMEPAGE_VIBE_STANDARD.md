@@ -606,3 +606,10 @@ unless a configured adapter accepted it.
 
 *This standard is the source of truth. All future pages must conform to it.
 Update this document if the approved vibe evolves — do not silently diverge.*
+## Task 10: Insights Visual Standard
+
+The homepage remains the Master Vibe Standard. Task 10 does not add an Insights section to the homepage.
+
+Insights pages should inherit the bright premium Taskcover visual language: white, off-white, and light-blue surfaces; green-to-teal-to-blue accents; strong editorial typography; calm long-form readability; restrained depth; accessible tables; practical framework visuals; and clear internal-link pathways.
+
+Insights must not look like a generic WordPress blog grid. The hub uses an editorial dossier, category navigation, topic map, reading paths, and a CTA architecture. Category pages vary their visual treatment by category theme.

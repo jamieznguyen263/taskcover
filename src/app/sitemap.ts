@@ -20,6 +20,8 @@ import {
   getCaseStudySlugs,
   getSampleAuditSlugs,
 } from "@/lib/content";
+import { getInsightArticleSlugs } from "@/lib/insights/content";
+import { insightCategorySlugs } from "@/content/insights.types";
 
 export const dynamic = "force-static";
 
@@ -46,6 +48,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/markets",
     "/proof",
     "/work",
+    "/insights",
     "/work/case-studies",
     "/work/sample-audits",
     "/work/search-growth-frameworks",
@@ -64,6 +67,32 @@ export default function sitemap(): MetadataRoute.Sitemap {
         alternates: { languages: alts(base) },
       });
     }
+  }
+
+  // Insights category pages for each locale.
+  for (const slug of insightCategorySlugs) {
+    const base = `/insights/${slug}`;
+    for (const locale of locales) {
+      entries.push({
+        url: `${siteConfig.url}${localizePath(base, locale as Locale)}`,
+        lastModified: now,
+        changeFrequency: "weekly",
+        priority: 0.78,
+        alternates: { languages: alts(base) },
+      });
+    }
+  }
+
+  // Published insight article pages for each locale.
+  for (const item of getInsightArticleSlugs()) {
+    const base = `/insights/${item.categorySlug}/${item.articleSlug}`;
+    entries.push({
+      url: `${siteConfig.url}${localizePath(base, item.locale as Locale)}`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.74,
+      alternates: { languages: alts(base) },
+    });
   }
 
   // All 11 service detail pages for each locale.

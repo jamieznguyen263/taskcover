@@ -61,7 +61,6 @@ export const sharedNav: NavItem[] = [
   { label: "Work", href: "/work" },
   { label: "Proof", href: "/proof" },
   { label: "Insights", href: "/insights" },
-  { label: "About", href: "/about" },
 ];
 
 export const site: SiteContent = {
@@ -135,9 +134,12 @@ export const site: SiteContent = {
       {
         title: "Company",
         links: [
-          { label: "Methodology", href: "/methodology" },
-          { label: "Technology", href: "/technology" },
           { label: "Insights", href: "/insights" },
+          { label: "SEO Guides", href: "/insights/seo-guides" },
+          { label: "AI Search", href: "/insights/ai-search" },
+          { label: "Technical SEO", href: "/insights/technical-seo" },
+          { label: "Content Authority", href: "/insights/content-authority" },
+          { label: "SEO Mentor", href: "/insights/seo-mentor" },
           { label: "Free SEO Audit", href: "/free-seo-audit" },
           { label: "Book a Call", href: "/book-a-call" },
           { label: "Contact", href: "/contact" },

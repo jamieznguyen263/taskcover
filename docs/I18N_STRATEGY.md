@@ -241,3 +241,8 @@ Language switching preserves safe funnel query values only, including
 `intent=media`, `intent=private-reference`, `intent=partnership`, and safe
 thank-you `type` values. Lead content, field labels, validation messages,
 fallbacks, and thank-you states live in `src/content/*/leads.ts`.
+## Task 10: Insights Localization
+
+Insights content is complete in English, French, and Spanish. English remains unprefixed; French and Spanish use `/fr` and `/es`. Category and article slugs remain English for this phase so language switching can preserve equivalent article and category paths.
+
+Localized content includes article bodies, metadata, breadcrumbs, category labels, filter UI, dates, reading time, source labels, CTA labels, author descriptions, and FAQ schema text. Public routes must not fall back to English for visible French or Spanish Insights UI.

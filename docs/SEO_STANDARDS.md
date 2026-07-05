@@ -207,3 +207,10 @@ submission IDs, conversion values, or fake ContactPoint data in metadata.
 
 Do not add fake Review, AggregateRating, ContactPoint, opening-hours, physical
 location, appointment, or booking schema to the lead funnel.
+## Task 10: Insights SEO Rules
+
+Insights articles use localized metadata, canonical URLs, hreflang alternates for `en`, `fr`, `es`, and `x-default`, Article JSON-LD, BreadcrumbList JSON-LD, and FAQPage JSON-LD only when visible FAQ blocks exist.
+
+Do not add fake review, AggregateRating, Person, HowTo, award, or rating schema. Do not publish fake dates, invented statistics, invented expert quotes, invented rankings, or unsupported client examples.
+
+Source-backed factual claims use the source model in `src/content/insights.types.ts`. Taskcover pages may be internal links, but they are not independent evidence sources. Publish QA intentionally rejects keyword density, arbitrary SEO scores, readability scores, and ranking predictions as publication gates.
