@@ -17,6 +17,7 @@ import * as React from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { siteConfig } from "@/lib/site";
+import { companyAddressLine, companyDetails } from "@/lib/company";
 import { getLocalizedSite } from "@/lib/content";
 import { getLocalePrefix } from "@/lib/i18n";
 import { Container } from "@/components/marketing/shared/container";
@@ -54,6 +55,16 @@ export function SiteFooter() {
             <p className="max-w-sm text-sm text-muted">
               {content.brand.marketsLine}
             </p>
+            <address className="not-italic text-sm leading-relaxed text-secondary">
+              <span className="block font-semibold text-graphite">{companyDetails.formalName}</span>
+              <span className="block">{companyAddressLine()}</span>
+              <a className="block hover:text-brand-teal" href={`tel:${companyDetails.phone.replace(/[^\d+]/g, "")}`}>
+                {companyDetails.phone}
+              </a>
+              <a className="block hover:text-brand-teal" href={`mailto:${companyDetails.email}`}>
+                {companyDetails.email}
+              </a>
+            </address>
             <div className="mt-1 flex flex-col gap-3 sm:flex-row">
               <CTAButton size="md" href={content.primaryCta.href}>
                 {content.primaryCta.label}

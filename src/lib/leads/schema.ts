@@ -92,6 +92,7 @@ const allowedKeys = new Set([
   "topic",
   "deadline",
   "requestedFormat",
+  "requestDetail",
 ]);
 
 const maxLengths: Record<string, number> = {
@@ -109,6 +110,7 @@ const maxLengths: Record<string, number> = {
   topic: 180,
   deadline: 80,
   requestedFormat: 80,
+  requestDetail: 120,
 };
 
 export type LeadRawPayload = Record<string, unknown>;

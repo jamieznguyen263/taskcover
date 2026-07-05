@@ -28,3 +28,10 @@ Do not paste secrets into chat. Store secrets through `.dev.vars`, `.env.local`,
 | 22. Rollback readiness | User | Rollback owner and Neon backup known | `npm run production:check` | Missing values visible | No restore plan | Do not deploy |
 
 Production remains not deployed until step 19 is explicitly approved and completed.
+
+## Task 12 Legal Review Gate
+
+Before launch, Privacy Policy, Cookie Policy, Terms, Accessibility Statement,
+Data Request copy, and cookie preference architecture must receive final legal
+review. Analytics and advertising activation remain deferred to Task 16 and
+must not be enabled during Task 12.

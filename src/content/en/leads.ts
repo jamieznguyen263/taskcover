@@ -29,6 +29,7 @@ export const leads: LeadsContent = {
       "general-contact": "Taskcover contact request",
       "media-inquiry": "Media inquiry for Taskcover",
       "private-reference": "Private reference request",
+      "data-request": "Taskcover data request",
       partnership: "Partnership inquiry",
       "seo-mentor": "SEO Mentor inquiry",
       "ppc-inquiry": "PPC inquiry",
@@ -277,6 +278,15 @@ export const leads: LeadsContent = {
         samples: ["Technical SEO Audit", "90-Day Search Growth Roadmap"],
         primaryCta: "Review Proof Standard",
         secondaryCta: "View Work",
+      },
+      "data-request": {
+        title: "Data request received",
+        message: "Your privacy or data request has been accepted by the configured delivery path.",
+        next: ["Taskcover reviews the request category and provided context.", "Identity verification may be required before action is taken.", "No response time is guaranteed on this page."],
+        studies: ["Privacy Policy", "Cookie Policy"],
+        samples: ["Cookie Preferences", "Data Request"],
+        primaryCta: "Review Privacy Policy",
+        secondaryCta: "Manage Cookie Preferences",
       },
       "general-contact": {
         title: "Contact request received",

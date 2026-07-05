@@ -7,7 +7,7 @@
  */
 export const siteConfig = {
   name: "Taskcover Agency",
-  legalName: "Taskcover Agency",
+  legalName: "Stoa Global Corporation",
   tagline: "Search Growth Agency for Google, AI Search, and Revenue.",
   shortDescription:
     "Search growth agency helping brands in the USA, Canada, and Australia grow organic visibility, build authority, and convert high-intent search demand into measurable business outcomes.",
@@ -18,9 +18,8 @@ export const siteConfig = {
   markets: ["United States", "Canada", "Australia"],
   marketSlugs: ["usa", "canada", "australia"],
   contact: {
-    // TODO: replace with verified contact details before launch
     email: "business@taskcover.com",
-    phone: "", // do not invent
+    phone: "+1 (802) 802-9299",
     formPath: "/book-a-call",
     auditPath: "/free-seo-audit",
   },

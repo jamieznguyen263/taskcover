@@ -29,7 +29,7 @@ function safeQuery(search: string): string {
   const intent = params.get("intent");
   const type = params.get("type");
   const safeIntents = new Set(["media", "private-reference", "partnership"]);
-  const safeTypes = new Set(["seo-audit", "strategy-call", "contact", "media-inquiry", "private-reference"]);
+  const safeTypes = new Set(["seo-audit", "strategy-call", "contact", "media-inquiry", "private-reference", "data-request"]);
   if (intent && safeIntents.has(intent)) next.set("intent", intent);
   if (type && safeTypes.has(type)) next.set("type", type);
   const value = next.toString();

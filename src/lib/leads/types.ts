@@ -6,6 +6,7 @@ export const leadRequestTypes = [
   "general-contact",
   "media-inquiry",
   "private-reference",
+  "data-request",
   "partnership",
   "seo-mentor",
   "ppc-inquiry",

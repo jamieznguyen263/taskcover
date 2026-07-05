@@ -15,6 +15,7 @@
 
 import type { Metadata } from "next";
 import { siteConfig } from "./site";
+import { companyDetails } from "./company";
 import {
   type Locale,
   defaultLocale,
@@ -89,17 +90,26 @@ export function buildMetadata({
 }
 
 /**
- * Safe Organization schema.
- * Intentionally omits phone, address, founder, foundingDate, awards, and
- * aggregateRating until verified data is available. Do not invent values.
+ * Safe Organization schema using only verified public company details.
  */
 export function organizationSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: siteConfig.name,
-    alternateName: "Taskcover",
+    name: companyDetails.brandName,
+    legalName: companyDetails.legalOperator,
+    alternateName: companyDetails.formalName,
     url: siteConfig.url,
+    email: companyDetails.email,
+    telephone: companyDetails.phone,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: companyDetails.address.street,
+      addressLocality: companyDetails.address.city,
+      addressRegion: companyDetails.address.region,
+      postalCode: companyDetails.address.postalCode,
+      addressCountry: companyDetails.address.country,
+    },
     description: siteConfig.description,
     slogan: siteConfig.tagline,
     areaServed: siteConfig.markets.map((country) => ({

@@ -224,3 +224,21 @@ The production canonical origin is `https://taskcover.com`.
 - Metadata, Open Graph URLs, sitemap entries, robots sitemap URL, and hreflang URLs use the canonical origin.
 - Local, preview, staging, and workers.dev hosts must not be redirected to production.
 - Admin and thank-you pages stay noindex and are excluded from the sitemap.
+
+## Task 12 Trust, Legal, and Visitor Readiness
+
+About, Methodology, How We Work, Privacy Policy, Cookie Policy, Terms,
+Accessibility, Data Request, and Cookie Preferences are indexable across
+EN/FR/ES. They emit canonical URLs, hreflang alternates, Open Graph metadata,
+one H1, and BreadcrumbList schema.
+
+Organization schema now includes verified public company details only:
+Taskcover Agency, Stoa Global Corporation, taskcover.com, business@taskcover.com,
++1 (802) 802-9299, and 169 Madison Avenue, New York, NY 10016, United States.
+Do not add founder, founding date, awards, sameAs links, ratings, reviews,
+opening hours, or unverified locations.
+
+Legal pages are website-ready drafts for final legal review. Do not claim
+attorney-reviewed compliance, GDPR/CCPA compliance as a legal conclusion,
+guaranteed SEO/SEM results, certifications, awards, fake testimonials, fake
+reviews, or fake social profiles.

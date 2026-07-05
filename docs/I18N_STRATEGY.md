@@ -257,3 +257,13 @@ Lead confirmation emails and thank-you flows must remain localized for EN/FR/ES.
 - Spanish uses `/es`.
 - Resend visitor confirmations use localized copy.
 - Cal.com CTA display is localized by the page context, but the configured booking URL must not carry PII.
+
+## Trust and Legal Localization (Task 12)
+
+The following routes are localized in English, French, and Spanish while keeping
+English slugs: `/about`, `/methodology`, `/how-we-work`, `/privacy-policy`,
+`/cookie-policy`, `/terms`, `/accessibility`, `/data-request`, and
+`/cookie-preferences`.
+
+The pages use `src/content/trust.ts` and shared trust/legal page components.
+Language switching preserves equivalent paths across all three locales.

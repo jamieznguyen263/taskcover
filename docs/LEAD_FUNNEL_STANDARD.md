@@ -93,3 +93,17 @@ See `.env.example` for documented configuration:
 4. Add durable rate limiting for production.
 5. Add a real `CalendarAdapter` before claiming confirmed bookings.
 6. QA no-PII logging and analytics before launch.
+
+## Task 12 Data Request
+
+Supported lead types now include `data-request`.
+
+Data Request is a privacy/data request pathway for access, correction, deletion,
+marketing opt-out, cookie/preference questions, and other privacy requests. It
+uses the same anti-spam, rate-limit, Turnstile-ready, and database-first lead
+architecture as other public forms.
+
+The form must not collect government ID or sensitive documents by default. It
+may state that Taskcover can require identity verification before acting. If
+providers are unavailable, it must show a direct-email fallback instead of a
+false success.

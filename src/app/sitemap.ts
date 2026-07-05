@@ -22,6 +22,7 @@ import {
 } from "@/lib/content";
 import { getInsightArticleSlugs } from "@/lib/insights/content";
 import { insightCategorySlugs } from "@/content/insights.types";
+import { trustPagePaths } from "@/content/trust";
 
 export const dynamic = "force-static";
 
@@ -56,6 +57,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/free-seo-audit",
     "/book-a-call",
     "/contact",
+    ...Object.values(trustPagePaths),
   ];
   for (const base of staticBases) {
     for (const locale of locales) {

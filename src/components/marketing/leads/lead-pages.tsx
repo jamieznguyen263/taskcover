@@ -3,6 +3,7 @@ import { ArrowRight, CalendarDays, CheckCircle2, ClipboardCheck, Mail, Network, 
 import type { LeadsContent } from "@/content/leads.types";
 import type { Locale } from "@/lib/i18n";
 import { localizePath } from "@/lib/i18n";
+import { companyAddressLine, companyDetails } from "@/lib/company";
 import { Container } from "@/components/marketing/shared/container";
 import { Section } from "@/components/marketing/shared/section";
 import { Eyebrow } from "@/components/marketing/shared/section-header";
@@ -17,6 +18,12 @@ type PageProps = {
 
 function localized(locale: Locale, path: string) {
   return localizePath(path, locale);
+}
+
+function dataRequestLabel(locale: Locale) {
+  if (locale === "fr") return "Demande de donnees / confidentialite";
+  if (locale === "es") return "Solicitud de datos / privacidad";
+  return "Data request / privacy request";
 }
 
 export function FreeSeoAuditPageView({ content, turnstileSiteKey }: PageProps) {
@@ -133,6 +140,7 @@ export function BookCallPageView({ content, turnstileSiteKey }: PageProps) {
 
 export function ContactPageView({
   content,
+  locale,
   initialIntent,
   turnstileSiteKey,
 }: PageProps & { initialIntent: string }) {
@@ -146,6 +154,19 @@ export function ContactPageView({
               {content.contact.h1}
             </h1>
             <p className="text-lg text-secondary">{content.contact.intro}</p>
+            <div className="rounded-3xl border border-line bg-white p-5 text-sm leading-relaxed text-secondary">
+              <p className="font-semibold text-graphite">{companyDetails.formalName}</p>
+              <p>{companyDetails.legalOperator}</p>
+              <p>{companyAddressLine()}</p>
+              <p>
+                <a className="hover:text-brand-teal" href={`mailto:${companyDetails.email}`}>{companyDetails.email}</a>
+                {" | "}
+                <a className="hover:text-brand-teal" href={`tel:${companyDetails.phone.replace(/[^\d+]/g, "")}`}>{companyDetails.phone}</a>
+              </p>
+              <Link href={localizePath("/data-request", locale)} className="mt-3 inline-flex font-semibold text-brand-teal">
+                {dataRequestLabel(locale)}
+              </Link>
+            </div>
             <div className="rounded-3xl border border-line bg-surface-tint p-5">
               <div className="flex items-center gap-3">
                 <Network className="h-8 w-8 text-brand-teal" aria-hidden="true" />

@@ -285,3 +285,21 @@ flowchart LR
 ```
 
 Cloudinary uploads are signed server-side. Admin and preview content stay noindex/private.
+
+## Task 12 Trust, Legal, and Visitor Readiness
+
+Built localized routes:
+
+- `/about`, `/fr/about`, `/es/about`
+- `/methodology`, `/fr/methodology`, `/es/methodology`
+- `/how-we-work`, `/fr/how-we-work`, `/es/how-we-work`
+- `/privacy-policy`, `/fr/privacy-policy`, `/es/privacy-policy`
+- `/cookie-policy`, `/fr/cookie-policy`, `/es/cookie-policy`
+- `/terms`, `/fr/terms`, `/es/terms`
+- `/accessibility`, `/fr/accessibility`, `/es/accessibility`
+- `/data-request`, `/fr/data-request`, `/es/data-request`
+- `/cookie-preferences`, `/fr/cookie-preferences`, `/es/cookie-preferences`
+
+These pages use localized metadata, canonical URLs, hreflang alternates,
+BreadcrumbList schema, and sitemap inclusion. Legal copy is a website-ready
+draft and requires final legal review before launch.

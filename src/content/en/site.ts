@@ -61,6 +61,7 @@ export const sharedNav: NavItem[] = [
   { label: "Work", href: "/work" },
   { label: "Proof", href: "/proof" },
   { label: "Insights", href: "/insights" },
+  { label: "About", href: "/about" },
 ];
 
 export const site: SiteContent = {
@@ -134,15 +135,18 @@ export const site: SiteContent = {
       {
         title: "Company",
         links: [
-          { label: "Insights", href: "/insights" },
-          { label: "SEO Guides", href: "/insights/seo-guides" },
-          { label: "AI Search", href: "/insights/ai-search" },
-          { label: "Technical SEO", href: "/insights/technical-seo" },
-          { label: "Content Authority", href: "/insights/content-authority" },
-          { label: "SEO Mentor", href: "/insights/seo-mentor" },
+          { label: "About", href: "/about" },
+          { label: "Methodology", href: "/methodology" },
+          { label: "How We Work", href: "/how-we-work" },
           { label: "Free SEO Audit", href: "/free-seo-audit" },
           { label: "Book a Call", href: "/book-a-call" },
           { label: "Contact", href: "/contact" },
+          { label: "Privacy Policy", href: "/privacy-policy" },
+          { label: "Cookie Policy", href: "/cookie-policy" },
+          { label: "Cookie Preferences", href: "/cookie-preferences" },
+          { label: "Terms", href: "/terms" },
+          { label: "Accessibility", href: "/accessibility" },
+          { label: "Data Request", href: "/data-request" },
         ],
       },
     ],
