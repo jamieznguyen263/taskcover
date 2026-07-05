@@ -15,3 +15,11 @@ Task 12 readiness items:
 
 Production deployment, DNS changes, provider secret configuration, and external migrations remain out of scope for Task 12.
 
+## Task 13 Commercial SEO Readiness
+
+- Keyword-family ownership documented.
+- URL inventory and cannibalization audit created.
+- No doorway, city, swapped-location, or duplicate commercial pages created.
+- EN/FR/ES route localization preserved with English slugs.
+- Private Admin and thank-you routes excluded from the commercial map.
+- Final Task 13 quality gates still need to pass before launch.

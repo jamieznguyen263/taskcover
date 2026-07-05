@@ -35,3 +35,13 @@ Before launch, Privacy Policy, Cookie Policy, Terms, Accessibility Statement,
 Data Request copy, and cookie preference architecture must receive final legal
 review. Analytics and advertising activation remain deferred to Task 16 and
 must not be enabled during Task 12.
+
+## Task 13 Commercial SEO Prelaunch Notes
+
+- Production remains not deployed by Task 13.
+- DNS remains unchanged by Task 13.
+- No Google Ads, GA4, GTM, or consent banner scripts were added.
+- Future SEM activation should wait for consent/tracking events and launch-ready
+  provider secrets.
+- Commercial SEO docs should be reviewed before adding new pages so future work
+  does not create duplicate or doorway URLs.

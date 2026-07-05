@@ -242,3 +242,25 @@ Legal pages are website-ready drafts for final legal review. Do not claim
 attorney-reviewed compliance, GDPR/CCPA compliance as a legal conclusion,
 guaranteed SEO/SEM results, certifications, awards, fake testimonials, fake
 reviews, or fake social profiles.
+
+## Task 13 Commercial Keyword Ownership
+
+Task 13 adds a qualitative keyword-to-URL map in
+`src/content/seo/url-intent-map.ts` and supporting docs under
+`docs/COMMERCIAL_*`, `docs/KEYWORD_TO_URL_MAP.md`,
+`docs/CANNIBALIZATION_AUDIT.md`, `docs/INTERNAL_LINKING_ARCHITECTURE.md`, and
+`docs/SEM_LANDING_PAGE_READINESS.md`.
+
+Rules:
+
+- Each commercial keyword family has one primary URL.
+- Existing canonical service, industry, and market pages are preferred over new
+  pages.
+- Insights articles are informational support and must not be rewritten into
+  duplicate commercial pages.
+- Proof and Work pages support decision-stage evaluation but do not replace
+  service pages.
+- New SEM landing pages require distinct purpose, consent/tracking readiness,
+  localized copy, proof support, and no overlap with organic pages.
+- No doorway pages, city pages, fake offices, fake local business schema, fake
+  reviews, fake ratings, or ranking guarantees.

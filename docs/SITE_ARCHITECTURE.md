@@ -303,3 +303,22 @@ Built localized routes:
 These pages use localized metadata, canonical URLs, hreflang alternates,
 BreadcrumbList schema, and sitemap inclusion. Legal copy is a website-ready
 draft and requires final legal review before launch.
+
+## Task 13 Commercial SEO Architecture
+
+Commercial SEO ownership is documented in:
+
+- `docs/COMMERCIAL_SEO_ARCHITECTURE.md`
+- `docs/COMMERCIAL_SEO_URL_INVENTORY.md`
+- `docs/KEYWORD_TO_URL_MAP.md`
+- `docs/CANNIBALIZATION_AUDIT.md`
+- `docs/COMMERCIAL_PAGE_GAP_ANALYSIS.md`
+- `docs/INTERNAL_LINKING_ARCHITECTURE.md`
+- `docs/SEM_LANDING_PAGE_READINESS.md`
+- `docs/COMMERCIAL_READINESS_REPORT.md`
+
+The canonical commercial architecture is intentionally conservative: existing
+service, industry, and market pages own the major keyword families. No
+root-level duplicate commercial pages, city pages, doorway pages, or
+swapped-location pages were added. The typed source for future QA is
+`src/content/seo/url-intent-map.ts`.

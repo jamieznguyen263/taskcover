@@ -107,3 +107,11 @@ The form must not collect government ID or sensitive documents by default. It
 may state that Taskcover can require identity verification before acting. If
 providers are unavailable, it must show a direct-email fallback instead of a
 false success.
+
+## Task 13 Commercial SEO CTA Routing
+
+Commercial service, industry, market, proof, and Insights pages should route
+primary conversion intent to `/free-seo-audit` when the visitor needs diagnosis
+and to `/book-a-call` when the visitor is evaluating strategy, market expansion,
+PPC, mentorship, or fit. Task 13 does not add tracking scripts or activate ads;
+future SEM conversion tracking must respect the consent architecture.

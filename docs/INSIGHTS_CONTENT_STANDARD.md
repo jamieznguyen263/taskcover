@@ -65,6 +65,13 @@ Do not invent research, survey data, rankings, traffic results, expert quotes, c
 
 Articles should link naturally to relevant services, industries, markets, case studies, sample audits, and lead funnel pages. Links must support the reader journey and avoid stuffing.
 
+Task 13 clarifies that Insights articles support commercial pages; they do not
+own service, market, or industry commercial intent. Articles should link to the
+canonical service or market page when a reader is ready for implementation, but
+article H1s, metadata, and copy should remain informational and evidence-led.
+The canonical relationships are mapped in `docs/KEYWORD_TO_URL_MAP.md` and
+`docs/INTERNAL_LINKING_ARCHITECTURE.md`.
+
 ## Schema Rules
 
 Allowed schema for Insights:

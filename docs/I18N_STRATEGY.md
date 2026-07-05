@@ -267,3 +267,13 @@ English slugs: `/about`, `/methodology`, `/how-we-work`, `/privacy-policy`,
 
 The pages use `src/content/trust.ts` and shared trust/legal page components.
 Language switching preserves equivalent paths across all three locales.
+
+## Commercial SEO Localization (Task 13)
+
+Task 13 commercial SEO mapping keeps English slugs across locales and maps every
+commercial URL family to EN/FR/ES availability. Public-facing changes must
+localize headings, metadata, CTAs, labels, link text, descriptions, and
+breadcrumb labels. The typed commercial route helper in
+`src/content/seo/url-intent-map.ts` uses `localizePath()` so future QA can verify
+English, French, and Spanish route forms without creating localized slug
+variants.
