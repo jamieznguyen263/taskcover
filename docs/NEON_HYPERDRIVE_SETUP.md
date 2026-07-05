@@ -1,21 +1,37 @@
 # Neon and Hyperdrive Setup
 
-Neon is the source of truth for lead submissions and Admin content.
+Use separate Neon branches or databases for local development, staging, and production.
 
-## URLs
+Local activation:
 
-- `DATABASE_URL`: direct Neon URL for local development, Drizzle generation, migrations, and CLI scripts.
-- `HYPERDRIVE.connectionString`: runtime URL exposed by the Cloudflare binding in production.
+```bash
+DATABASE_TARGET=development npm run db:status
+DATABASE_TARGET=development npm run db:migrate
+npm run db:verify
+npm run insights:import
+npm run insights:verify-database
+```
 
-Do not commit either URL.
+Production migration requires both:
 
-## Setup
+```bash
+DATABASE_TARGET=production
+CONFIRM_PRODUCTION_MIGRATION=YES
+```
 
-1. Create a Neon project and production branch/database.
-2. Create a direct migration connection string with SSL enabled.
-3. Create a Cloudflare Hyperdrive config that points to the Neon pooled/runtime endpoint.
-4. Put the Hyperdrive ID into `wrangler.jsonc`.
-5. Run migrations only after credentials are confirmed.
-6. Verify with `SELECT 1` and `npm run insights:verify-database`.
+Do not rely on the hostname alone for migration safety.
 
-Static public builds do not require database connectivity.
+Hyperdrive:
+
+1. Create a Cloudflare Hyperdrive config pointed at the Neon target.
+2. Put the real ID in `wrangler.jsonc` for the correct environment.
+3. Keep binding name `HYPERDRIVE`.
+4. For local preview only, set `CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE` in `.dev.vars`.
+
+Verification commands:
+
+```bash
+npm run production:check
+npm run db:verify
+npm run insights:verify-database
+```

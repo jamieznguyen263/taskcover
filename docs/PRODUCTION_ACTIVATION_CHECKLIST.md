@@ -1,97 +1,30 @@
 # Production Activation Checklist
 
-Do not run these steps automatically.
+Do not paste secrets into chat. Store secrets through `.dev.vars`, `.env.local`, `wrangler secret put`, Cloudflare Dashboard, Neon Dashboard, or provider dashboards. Production deploy, DNS changes, live CRM writes, live email sends, and production migrations require separate explicit approval.
 
-## 1. Cloudflare
+| Step | Owner | Required value | Exact command | Expected output | Failure condition | Rollback step |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1. Cloudflare account and Workers Paid | User | Workers Paid enabled, account ID known | `npm run production:check` | Cloudflare-related categories listed | Workers Paid unavailable | Stop before deploy |
+| 2. Neon project and branch | User | Development/staging/production branches | `npm run production:check` | Database category reports configured or unavailable | Unknown database target | Do not run migrations |
+| 3. Hyperdrive | User | Binding `HYPERDRIVE`, real Hyperdrive ID | `npm run production:check` | Hyperdrive binding and local variable reported | Placeholder ID remains | Keep `INSIGHTS_PROVIDER=local` |
+| 4. Drizzle migration | Codex/User | `DATABASE_TARGET=development` or `staging` | `npm run db:status` then `npm run db:migrate` | Host/database and pending count only | Missing target or DB URL | Restore Neon branch/backup |
+| 5. First Admin | User | Admin email and password entered interactively | `npm run admin:create -- admin@taskcover.com` | `Admin ready: ...` | Existing Admin without `--update-existing` | Disable Admin row or rotate again |
+| 6. Insights import | Codex/User | Local content and safe DB | `npm run insights:import` | Import completes without secrets | Counts mismatch | Re-import on disposable DB |
+| 7. Database provider verification | Codex/User | 6 groups, 18 localizations | `npm run insights:verify-database` | Counts and visibility checks pass | Duplicate/missing/invalid content | Keep provider local |
+| 8. Resend domain | User | Verified `taskcover.com`, sender values | `npm run integrations:test-resend` | Offline template and format checks pass | Invalid sender or missing key | Disable visitor confirmation |
+| 9. HubSpot Private App | User | Token, pipeline ID, new lead stage ID | `npm run integrations:test-hubspot` | Offline mapping list printed | Missing token/stage/pipeline | Disable HubSpot jobs |
+| 10. Cal.com | User | HTTPS booking URL without PII query params | `npm run integrations:test-calcom` | `safe: true` or hidden when missing | HTTP, bad host, PII params | Hide CTA by unsetting URL |
+| 11. Turnstile | User | Test keys locally, real keys outside local | `npm run integrations:test-turnstile` | Host/action expectations printed | Missing real production host config | Disable lead acceptance or fail closed |
+| 12. Rate Limiting | User | Cloudflare bindings for production | `npm run rate-limits:verify` | Lead/admin limits and expiry pass | Raw IP in key or no expiry | Use memory only in dev |
+| 13. Durable Objects | User | Binding `RATE_LIMIT_COORDINATOR` | `npm run production:check` | Durable Objects configured | Binding missing | Use Cloudflare limiter only |
+| 14. Cloudinary | User | Signed upload credentials and folder | `npm run integrations:test-cloudinary` | Signature shape and restrictions reported | Unsigned upload path required | Disable media uploads |
+| 15. Cron Trigger | User | `*/5 * * * *` or approved schedule | `npm run scheduler:verify` | Scheduler wiring reported | No cron schedule | Keep manual publishing endpoint |
+| 16. Staging deployment | User | Staging Worker and secrets | `npm run production:predeploy` | All local gates pass | Any gate fails | Do not deploy staging |
+| 17. End-to-end lead test | Codex/User | Mock first, test provider next | `npm run leads:smoke` | Seven scenarios pass, no real sends | Validation/idempotency failure | Keep `LEAD_SUBMISSION_MODE=disabled` |
+| 18. Admin publishing test | User | Staging Admin session | `npm run insights:verify-database` | Draft/future/archived not exposed | Content exposure mismatch | Switch provider back to local |
+| 19. Production deployment | User | Explicit approval and secrets configured | `npm run deploy:cloudflare` | Worker deploy succeeds | Unexpected migration/DNS action | Roll back Worker version |
+| 20. DNS and canonical host | User | `taskcover.com`, `www` redirect rule | `npm run smoke:deployment -- --base-url=https://taskcover.com` | Canonical and redirect checks pass | Loop or preview redirected | Disable redirect rule |
+| 21. Post-deploy verification | Codex/User | Production base URL | `npm run smoke:deployment -- --base-url=https://taskcover.com` | No obvious 5xx or loops | Any failed route | Roll back Worker version |
+| 22. Rollback readiness | User | Rollback owner and Neon backup known | `npm run production:check` | Missing values visible | No restore plan | Do not deploy |
 
-1. Activate Workers Paid.
-2. Connect GitHub/project.
-3. Configure `taskcover.com`.
-4. Add permanent `www.taskcover.com` to `taskcover.com` redirect.
-5. Create Hyperdrive.
-6. Create Rate Limiting namespaces.
-7. Deploy Durable Object migration.
-8. Configure Cron Trigger.
-9. Add secrets with `wrangler secret put` or dashboard secrets.
-10. Deploy preview.
-11. Verify preview.
-12. Deploy production only after approval.
-
-## 2. Neon
-
-1. Create project, branch, database, and role.
-2. Obtain direct migration URL.
-3. Configure Hyperdrive connection.
-4. Test connection.
-5. Run migrations.
-6. Verify tables.
-7. Document backup/restore expectations.
-
-## 3. Admin
-
-1. Create first Admin with `npm run admin:create`.
-2. Login.
-3. Change/test password.
-4. Verify session.
-5. Test invite acceptance.
-6. Verify Admin and Editor permissions.
-
-## 4. Insights
-
-1. Import six article groups.
-2. Verify eighteen localizations.
-3. Verify published snapshots.
-4. Test local provider.
-5. Test database provider.
-6. Test draft edit, approval, publish now, and schedule.
-7. Switch `INSIGHTS_PROVIDER=database`.
-
-## 5. Resend
-
-1. Create account.
-2. Add `taskcover.com`.
-3. Copy exact DNS records.
-4. Verify domain.
-5. Configure API key, From, Reply-to.
-6. Test internal and visitor EN/FR/ES emails.
-
-## 6. HubSpot
-
-1. Create Free CRM account.
-2. Create Private App.
-3. Grant minimum scopes.
-4. Identify pipeline and New Lead stage IDs.
-5. Create optional Taskcover custom properties.
-6. Test contact, company, deal, and retry idempotency.
-
-## 7. Cal.com
-
-1. Create account.
-2. Connect Google Calendar.
-3. Create Taskcover Strategy Call event.
-4. Set availability.
-5. Configure `CALCOM_BOOKING_URL`.
-6. Test EN/FR/ES CTA.
-
-## 8. Turnstile
-
-1. Create widget.
-2. Set allowed hostnames.
-3. Configure site key and secret.
-4. Test valid, invalid, and expired tokens.
-5. Verify server-side validation.
-
-## 9. Cloudinary
-
-1. Create account.
-2. Configure cloud name and credentials.
-3. Configure folder.
-4. Test signed upload, metadata, deletion protection, and delivery URL.
-
-## 10. Lead End-to-End
-
-Test SEO Audit EN/FR/ES, Strategy Call, Contact, Media, Private Reference, duplicate submit, provider retry, HubSpot outage, Resend outage, database outage, Turnstile failure, rate limit, thank-you redirect, and Cal.com CTA.
-
-## 11. Production Release
-
-Freeze changes, record commit, backup database, deploy, verify canonical host, crawl priority routes, verify forms, Admin, scheduler, sitemap, robots, logs, and rollback.
+Production remains not deployed until step 19 is explicitly approved and completed.

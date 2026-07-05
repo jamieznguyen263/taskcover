@@ -1,13 +1,33 @@
 # Cron and Retry Runbook
 
-Cloudflare Cron runs every 5 minutes through `worker/taskcover-worker.ts`.
+The Cloudflare scheduled handler in `worker/taskcover-worker.ts` calls:
 
-The scheduled handler calls `runScheduledTasks()` which:
+- due Insights publisher
+- stale lead delivery lock recovery
+- lead retry processor
 
-- Publishes due Insights.
-- Recovers stale lead job locks.
-- Processes a bounded batch of lead delivery jobs.
+Current schedule:
 
-The secure HTTP endpoint `/api/internal/publishing/run` calls the same service and requires `x-taskcover-publish-secret`.
+```text
+*/5 * * * *
+```
 
-Logs include only provider, job type, safe lead reference, result category, duration, retry count, and timestamp.
+Verification:
+
+```bash
+npm run scheduler:verify
+wrangler dev --test-scheduled
+```
+
+Expected behavior:
+
+- UTC scheduled time.
+- Due articles publish once.
+- Future articles remain scheduled.
+- Duplicate triggers are idempotent.
+- Lead retry failure does not stop article publishing.
+- Article publish failure does not stop lead retries.
+- Batch sizes stay bounded.
+- Logs summarize counts without PII.
+
+The secure HTTP publishing endpoint remains available and must not expose scheduler internals publicly.

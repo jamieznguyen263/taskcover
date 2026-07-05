@@ -44,14 +44,35 @@ npm run dev      # http://localhost:3000
 
 ## Scripts
 
-| Script           | Description                          |
-| ---------------- | ------------------------------------ |
-| `npm run dev`    | Start the dev server (Turbopack)     |
-| `npm run build`  | Production build                     |
-| `npm run start`  | Run the production build             |
-| `npm run lint`   | ESLint                               |
-
-Type-check with `npx tsc --noEmit`.
+| Script | Description |
+| --- | --- |
+| `npm run dev` | Start the dev server |
+| `npm run build` | Standard Next.js production build |
+| `npm run build:cloudflare` | OpenNext Cloudflare Worker build |
+| `npm run preview:cloudflare` | Local Worker preview, after Hyperdrive local variable check |
+| `npm run cf:typegen` | Generate Cloudflare environment types |
+| `npm run cf:dry-run` | Wrangler deploy dry-run |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | TypeScript check |
+| `npm test` | Offline Vitest suite |
+| `npm run production:check` | Offline production activation configuration check |
+| `npm run production:predeploy` | Local pre-deploy gate; does not deploy or migrate |
+| `npm run db:status` | Read-only migration/database status |
+| `npm run db:migrate` | Guarded migration; requires `DATABASE_TARGET` |
+| `npm run db:verify` | Read-only schema/index verification |
+| `npm run admin:create` | First Admin bootstrap or explicit credential rotation |
+| `npm run admin:verify` | Read-only Admin account verification |
+| `npm run insights:import` | Import local Insights content into the configured DB |
+| `npm run insights:verify-database` | Verify database-backed Insights counts and visibility |
+| `npm run leads:smoke` | Mock-mode lead submission smoke harness |
+| `npm run integrations:test-resend` | Offline Resend readiness check; `-- --live` sends one test email |
+| `npm run integrations:test-hubspot` | Offline HubSpot readiness check; live writes require explicit flags |
+| `npm run integrations:test-calcom` | Cal.com URL safety check |
+| `npm run integrations:test-turnstile` | Turnstile configuration check |
+| `npm run integrations:test-cloudinary` | Cloudinary signed upload readiness check |
+| `npm run rate-limits:verify` | Lead/admin rate-limit verification |
+| `npm run scheduler:verify` | Cron/scheduler wiring verification |
+| `npm run smoke:deployment` | Safe post-deploy route smoke test |
 
 ## Documentation
 
@@ -83,6 +104,11 @@ Taskcover is prepared for Cloudflare Workers with OpenNext. Start with:
 
 - `docs/CLOUDFLARE_DEPLOYMENT.md`
 - `docs/NEON_HYPERDRIVE_SETUP.md`
+- `docs/PRODUCTION_ENVIRONMENT_MATRIX.md`
+- `docs/STAGING_DEPLOYMENT.md`
+- `docs/PRODUCTION_DEPLOYMENT.md`
+- `docs/PRODUCTION_ROLLBACK.md`
+- `docs/INTEGRATION_TESTING.md`
 - `docs/LEAD_DELIVERY_ARCHITECTURE.md`
 - `docs/PRODUCTION_ACTIVATION_CHECKLIST.md`
 

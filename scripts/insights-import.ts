@@ -12,24 +12,30 @@ if (!databaseUrl) {
   process.exit(1);
 }
 
-const sql = postgres(databaseUrl, { max: 1 });
-const groups = new Map<string, InsightArticle[]>();
-for (const article of [...en.articles, ...fr.articles, ...es.articles]) {
-  const list = groups.get(article.translationGroupId) ?? [];
-  list.push(article);
-  groups.set(article.translationGroupId, list);
-}
+main().catch((error) => {
+  console.error(error instanceof Error ? error.message : "Insights import failed.");
+  process.exit(1);
+});
 
-for (const [translationGroupId, translations] of groups) {
-  const canonical = translations.find((article) => article.locale === "en") ?? translations[0];
-  if (!canonical) continue;
-
-  const qaErrors = translations.flatMap((article) => validateInsightArticle(article, translations).filter((result) => result.severity === "error"));
-  if (qaErrors.length > 0) {
-    throw new Error(`Import rejected for ${translationGroupId}: ${qaErrors.map((error) => error.code).join(", ")}`);
+async function main() {
+  const sql = postgres(databaseUrl as string, { max: 1 });
+  const groups = new Map<string, InsightArticle[]>();
+  for (const article of [...en.articles, ...fr.articles, ...es.articles]) {
+    const list = groups.get(article.translationGroupId) ?? [];
+    list.push(article);
+    groups.set(article.translationGroupId, list);
   }
 
-  const groupRows = await sql<{ id: string }[]>`
+  for (const [translationGroupId, translations] of groups) {
+    const canonical = translations.find((article) => article.locale === "en") ?? translations[0];
+    if (!canonical) continue;
+
+    const qaErrors = translations.flatMap((article) => validateInsightArticle(article, translations).filter((result) => result.severity === "error"));
+    if (qaErrors.length > 0) {
+      throw new Error(`Import rejected for ${translationGroupId}: ${qaErrors.map((error) => error.code).join(", ")}`);
+    }
+
+    const groupRows = await sql<{ id: string }[]>`
     INSERT INTO insight_article_groups (
       translation_group_id, shared_slug, category_slug, author_key, draft_workflow_status, published_at, lock_version
     )
@@ -45,13 +51,13 @@ for (const [translationGroupId, translations] of groups) {
       updated_at = now()
     RETURNING id
   `;
-  const groupId = groupRows[0]!.id;
-  const revisionGroupIdRows = await sql<{ id: string }[]>`SELECT gen_random_uuid()::text AS id`;
-  const revisionGroupId = revisionGroupIdRows[0]!.id;
+    const groupId = groupRows[0]!.id;
+    const revisionGroupIdRows = await sql<{ id: string }[]>`SELECT gen_random_uuid()::text AS id`;
+    const revisionGroupId = revisionGroupIdRows[0]!.id;
 
-  for (const article of translations) {
-    const editorDocument = createStarterTiptapDocument(article.h1);
-    const localizationRows = await sql<{ id: string }[]>`
+    for (const article of translations) {
+      const editorDocument = createStarterTiptapDocument(article.h1);
+      const localizationRows = await sql<{ id: string }[]>`
       INSERT INTO insight_article_localizations (
         article_group_id, locale, slug, internal_title, public_h1, excerpt, editor_document, normalized_blocks,
         published_snapshot, search_strategy, evidence_data, internal_link_data, metadata, social_metadata,
@@ -90,8 +96,8 @@ for (const [translationGroupId, translations] of groups) {
         updated_at = now()
       RETURNING id
     `;
-    const localizationId = localizationRows[0]!.id;
-    await sql`
+      const localizationId = localizationRows[0]!.id;
+      await sql`
       INSERT INTO insight_article_revisions (
         revision_group_id, localization_id, revision_number, editor_document, normalized_blocks, article_snapshot,
         metadata_snapshot, seo_snapshot, evidence_snapshot, revision_reason, workflow_transition, schema_version
@@ -103,8 +109,9 @@ for (const [translationGroupId, translations] of groups) {
       )
       ON CONFLICT (localization_id, revision_number) DO NOTHING
     `;
+    }
   }
-}
 
-await sql.end();
-console.log(`Imported ${groups.size} article groups and ${en.articles.length + fr.articles.length + es.articles.length} localized articles.`);
+  await sql.end();
+  console.log(`Imported ${groups.size} article groups and ${en.articles.length + fr.articles.length + es.articles.length} localized articles.`);
+}
