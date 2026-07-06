@@ -158,7 +158,7 @@ export function SiteHeader() {
       ref={headerRef}
       className="sticky top-0 z-50 border-b border-line bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/75"
     >
-      <Container className="flex h-16 items-center justify-between gap-4">
+      <Container className="flex h-16 items-center justify-between gap-4 lg:h-[4.25rem] lg:px-6 xl:h-[4.5rem] xl:px-8">
         <Link
           href={homeHref}
           className="inline-flex shrink-0 items-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-teal"
@@ -168,7 +168,7 @@ export function SiteHeader() {
           <img
             src={siteConfig.logo.horizontal}
             alt={`${siteConfig.name} logo`}
-            className="h-9 w-auto max-w-[200px] object-contain sm:h-11 sm:max-w-[240px]"
+            className="h-auto w-[clamp(6.75rem,38vw,8.25rem)] object-contain sm:w-[9.25rem] lg:w-[9.75rem] xl:w-[10.375rem]"
             style={{ imageRendering: "auto" }}
           />
         </Link>
@@ -196,7 +196,7 @@ export function SiteHeader() {
                     }}
                     onMouseEnter={() => setOpenMenuState({ pathname, id: item.id })}
                     className={cn(
-                      "inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal",
+                      "inline-flex items-center gap-1.5 rounded-full px-2.5 py-2 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal xl:px-3",
                       expanded
                         ? "bg-surface-tint text-graphite"
                         : "text-secondary hover:bg-surface-tint hover:text-graphite"
@@ -216,7 +216,7 @@ export function SiteHeader() {
                 <Link
                   href={item.href}
                   className={cn(
-                    "inline-flex items-center rounded-full px-3 py-2 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal",
+                    "inline-flex items-center rounded-full px-2.5 py-2 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal xl:px-3",
                     pathname === item.href
                       ? "bg-surface-tint text-graphite"
                       : "text-secondary hover:bg-surface-tint hover:text-graphite"
@@ -229,7 +229,7 @@ export function SiteHeader() {
           </ul>
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden items-center gap-2 lg:flex xl:gap-3">
           <React.Suspense fallback={<div className="h-10 w-20 rounded-full border border-line" />}>
             <LanguageSwitcher />
           </React.Suspense>

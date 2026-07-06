@@ -56,6 +56,21 @@ function classTokens(element: Element | null | undefined) {
 }
 
 describe("SiteHeader mobile navigation", () => {
+  it("renders the brand logo with accessible text and responsive sizing", () => {
+    const container = renderHeader();
+    const logo = container.querySelector<HTMLImageElement>(
+      'a[aria-label="Taskcover Agency Home"] img'
+    );
+
+    expect(logo).not.toBeNull();
+    expect(logo?.getAttribute("alt")).toBe("Taskcover Agency logo");
+    expect(classTokens(logo)).toContain("h-auto");
+    expect(classTokens(logo)).toContain("w-[clamp(6.75rem,38vw,8.25rem)]");
+    expect(classTokens(logo)).toContain("sm:w-[9.25rem]");
+    expect(classTokens(logo)).toContain("lg:w-[9.75rem]");
+    expect(classTokens(logo)).toContain("xl:w-[10.375rem]");
+  });
+
   it("keeps a desktop mega menu open after pointer focus and click", () => {
     const container = renderHeader();
     const servicesTrigger = container.querySelector<HTMLButtonElement>(
