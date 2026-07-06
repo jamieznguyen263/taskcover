@@ -5,6 +5,11 @@ import sitemap from "@/app/sitemap";
 import { getLocalizedSite, getPricingContent } from "@/lib/content";
 import { locales, localizePath, type Locale } from "@/lib/i18n";
 import { siteConfig } from "@/lib/site";
+import {
+  defaultPricingTabId,
+  pricingTabIds,
+  resolvePricingTabId,
+} from "@/content/pricing.types";
 
 function allPlans(locale: Locale) {
   return getPricingContent(locale).tabs.items.flatMap((tab) => tab.plans);
@@ -19,8 +24,17 @@ describe("pricing page content architecture", () => {
       expect(content.scopeNote).toBeTruthy();
       expect(content.tabs.items).toHaveLength(5);
       expect(content.comparison.columns).toHaveLength(6);
+      expect(content.comparison.contextTitle).toBeTruthy();
+      expect(content.comparison.fullComparisonLabel).toBeTruthy();
       expect(content.comparison.rows.length).toBeGreaterThanOrEqual(15);
-      expect(content.decisionGuide.paths).toHaveLength(7);
+      expect(content.decisionGuide.paths).toHaveLength(5);
+      expect(content.decisionGuide.paths.map((path) => path.tabId)).toEqual([
+        "local",
+        "national",
+        "global",
+        "mentor",
+        "audits",
+      ]);
       expect(content.drivers.items).toHaveLength(12);
       expect(content.customScope.useCases).toContain(
         locale === "en"
@@ -31,6 +45,16 @@ describe("pricing page content architecture", () => {
       );
       expect(content.faq.items).toHaveLength(14);
     }
+  });
+
+  it("validates pricing tab query values and falls back safely", () => {
+    for (const tabId of pricingTabIds) {
+      expect(resolvePricingTabId(tabId)).toBe(tabId);
+      expect(resolvePricingTabId([tabId, "local"])).toBe(tabId);
+    }
+
+    expect(resolvePricingTabId("enterprise")).toBe(defaultPricingTabId);
+    expect(resolvePricingTabId(undefined)).toBe(defaultPricingTabId);
   });
 
   it("keeps required commercial positioning in the plan data", () => {
@@ -48,6 +72,9 @@ describe("pricing page content architecture", () => {
     expect(ppc?.price).toContain("10-12% of ad spend");
     expect(ppc?.scopeGuard).toContain("Ad spend is not included");
     expect(content.comparison.exactPricingNote).toContain("free audit");
+    expect(content.recurringNote).toBe(
+      "All pricing is shown in USD. Final pricing depends on market, site complexity, competition, content needs, and execution speed. Contact us or request a free audit for the most accurate scope."
+    );
   });
 
   it("includes the SEO Mentor tab, comparison columns, and custom pricing section", () => {
@@ -63,6 +90,30 @@ describe("pricing page content architecture", () => {
       "enterpriseCustom",
     ]);
     expect(content.customScope.title).toBe("Need a custom scope?");
+  });
+
+  it("keeps pricing CTA hrefs localized without introducing new routes", () => {
+    for (const locale of locales) {
+      const content = getPricingContent(locale);
+      const hrefs = [
+        content.hero.primaryCta.href,
+        content.hero.secondaryCta.href,
+        content.customScope.primaryCta.href,
+        content.customScope.secondaryCta.href,
+        content.finalCta.primaryCta.href,
+        content.finalCta.secondaryCta.href,
+        ...content.tabs.items.flatMap((tab) => [
+          ...(tab.cta ? [tab.cta.href] : []),
+          ...tab.plans.flatMap((plan) => (plan.cta ? [plan.cta.href] : [])),
+        ]),
+      ];
+
+      for (const href of hrefs) {
+        expect(localizePath(href, locale)).toMatch(
+          locale === "en" ? /^\// : new RegExp(`^/${locale}(/|$)`)
+        );
+      }
+    }
   });
 
   it("localizes pricing routes and visible labels across EN/FR/ES", () => {
@@ -115,10 +166,17 @@ describe("pricing page content architecture", () => {
       join(process.cwd(), "src/components/marketing/pricing/pricing-page-view.tsx"),
       "utf8"
     );
+    const interactiveFlow = readFileSync(
+      join(process.cwd(), "src/components/marketing/pricing/pricing-interactive-flow.tsx"),
+      "utf8"
+    );
 
     expect(englishRoute).toContain("faqSchema(content.faq.items)");
     expect(localizedRoute).toContain("faqSchema(content.faq.items)");
     expect(view).toContain("FAQAccordion");
+    expect(view).toContain("custom-pricing-title");
+    expect(interactiveFlow).toContain("content.recurringNote");
+    expect(interactiveFlow).toContain("content.comparison.fullComparisonLabel");
   });
 
   it("creates only the pricing route files needed for this task", () => {

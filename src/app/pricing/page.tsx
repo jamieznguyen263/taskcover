@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PricingPageView } from "@/components/marketing/pricing/pricing-page-view";
 import { getPricingContent } from "@/lib/content";
+import { resolvePricingTabId } from "@/content/pricing.types";
 import {
   breadcrumbSchema,
   faqSchema,
@@ -9,6 +10,9 @@ import {
 } from "@/lib/seo";
 
 const content = getPricingContent("en");
+type PricingPageProps = {
+  searchParams: Promise<{ tab?: string | string[] }>;
+};
 
 export const metadata: Metadata = buildMetadata({
   title: content.metadata.title,
@@ -17,7 +21,9 @@ export const metadata: Metadata = buildMetadata({
   locale: "en",
 });
 
-export default function PricingPage() {
+export default async function PricingPage({ searchParams }: PricingPageProps) {
+  const initialTab = resolvePricingTabId((await searchParams).tab);
+
   return (
     <>
       <script
@@ -40,7 +46,7 @@ export default function PricingPage() {
           __html: serializeJsonLd(faqSchema(content.faq.items)),
         }}
       />
-      <PricingPageView locale="en" />
+      <PricingPageView locale="en" initialTab={initialTab} />
     </>
   );
 }

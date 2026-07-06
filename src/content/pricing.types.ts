@@ -1,9 +1,15 @@
-export type PricingTabId =
-  | "local"
-  | "national"
-  | "global"
-  | "mentor"
-  | "audits";
+export const pricingTabIds = ["local", "national", "global", "mentor", "audits"] as const;
+export type PricingTabId = (typeof pricingTabIds)[number];
+export const defaultPricingTabId: PricingTabId = "local";
+
+export function isPricingTabId(value: unknown): value is PricingTabId {
+  return typeof value === "string" && (pricingTabIds as readonly string[]).includes(value);
+}
+
+export function resolvePricingTabId(value: unknown): PricingTabId {
+  const candidate = Array.isArray(value) ? value[0] : value;
+  return isPricingTabId(candidate) ? candidate : defaultPricingTabId;
+}
 
 export type PricingPlan = {
   id: string;
@@ -56,6 +62,7 @@ export type PricingComparisonRow = {
 
 export type PricingDecisionPath = {
   id: string;
+  tabId: PricingTabId;
   trigger: string;
   planName: string;
   startingPrice: string;
@@ -110,6 +117,10 @@ export type PricingContent = {
     eyebrow: string;
     title: string;
     description: string;
+    contextTitle: string;
+    contextDescription: string;
+    fullComparisonLabel: string;
+    hideFullComparisonLabel: string;
     columns: PricingComparisonColumn[];
     rows: PricingComparisonRow[];
     exactPricingNote: string;

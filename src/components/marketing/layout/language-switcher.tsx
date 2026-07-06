@@ -18,6 +18,7 @@ import { Check, Globe, ChevronDown } from "lucide-react";
 import { getSiteContent } from "@/lib/content";
 import { cn } from "@/lib/utils";
 import { locales, localeLabels, switchLocale, type Locale } from "@/lib/i18n";
+import { isPricingTabId } from "@/content/pricing.types";
 import { useLocalePathname } from "./use-locale";
 
 /**
@@ -29,10 +30,12 @@ function safeQuery(search: string): string {
   const next = new URLSearchParams();
   const intent = params.get("intent");
   const type = params.get("type");
+  const tab = params.get("tab");
   const safeIntents = new Set(["media", "private-reference", "partnership"]);
   const safeTypes = new Set(["seo-audit", "strategy-call", "contact", "media-inquiry", "private-reference", "data-request"]);
   if (intent && safeIntents.has(intent)) next.set("intent", intent);
   if (type && safeTypes.has(type)) next.set("type", type);
+  if (tab && isPricingTabId(tab)) next.set("tab", tab);
   const value = next.toString();
   return value ? `?${value}` : "";
 }

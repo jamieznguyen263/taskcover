@@ -5,36 +5,48 @@ import { ArrowRight, Compass } from "lucide-react";
 import { CTAButton } from "@/components/marketing/shared/cta-button";
 import { cn } from "@/lib/utils";
 import { localizePath, type Locale } from "@/lib/i18n";
-import type { PricingContent } from "@/content/pricing.types";
+import { defaultPricingTabId, type PricingContent, type PricingTabId } from "@/content/pricing.types";
 
 export function PricingDecisionGuide({
   content,
   locale,
+  activeTab,
+  onSelectTab,
 }: {
   content: PricingContent;
   locale: Locale;
+  activeTab?: PricingTabId;
+  onSelectTab?: (id: PricingTabId) => void;
 }) {
-  const [selectedId, setSelectedId] = React.useState(content.decisionGuide.paths[0].id);
+  const [internalTab, setInternalTab] = React.useState<PricingTabId>(
+    content.decisionGuide.paths[0]?.tabId ?? defaultPricingTabId
+  );
+  const selectedTab = activeTab ?? internalTab;
   const selected =
-    content.decisionGuide.paths.find((path) => path.id === selectedId) ??
-    content.decisionGuide.paths[0];
+    content.decisionGuide.paths.find((path) => path.tabId === selectedTab) ??
+    content.decisionGuide.paths[0]!;
+
+  function selectPath(tabId: PricingTabId) {
+    setInternalTab(tabId);
+    onSelectTab?.(tabId);
+  }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+    <div className="grid gap-5 rounded-3xl border border-line bg-white p-4 shadow-sm sm:p-5 lg:grid-cols-[0.9fr_1.1fr]">
       <div
-        className="grid gap-2"
+        className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1"
         role="listbox"
         aria-label={content.decisionGuide.ariaLabel}
       >
         {content.decisionGuide.paths.map((path) => {
-          const active = selected.id === path.id;
+          const active = selected.tabId === path.tabId;
           return (
             <button
               key={path.id}
               type="button"
               role="option"
               aria-selected={active}
-              onClick={() => setSelectedId(path.id)}
+              onClick={() => selectPath(path.tabId)}
               className={cn(
                 "min-h-11 rounded-2xl border px-4 py-3 text-left text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal",
                 active
@@ -48,7 +60,7 @@ export function PricingDecisionGuide({
         })}
       </div>
 
-      <article className="relative overflow-hidden rounded-3xl border border-line bg-white p-6 depth-layered sm:p-8">
+      <article className="relative overflow-hidden rounded-2xl border border-line bg-surface-tint/50 p-5 sm:p-6">
         <div aria-hidden="true" className="absolute -right-20 -top-20 h-56 w-56 rounded-full bg-brand-gradient-soft blur-3xl" />
         <div className="relative flex flex-col gap-5">
           <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-gradient text-white">

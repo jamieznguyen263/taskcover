@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PricingPageView } from "@/components/marketing/pricing/pricing-page-view";
 import { getPricingContent } from "@/lib/content";
+import { resolvePricingTabId } from "@/content/pricing.types";
 import {
   breadcrumbSchema,
   buildMetadata,
@@ -11,6 +12,9 @@ import {
 import { isLocale, locales, type Locale } from "@/lib/i18n";
 
 type Params = { params: Promise<{ locale: string }> };
+type LocalizedPricingPageProps = Params & {
+  searchParams: Promise<{ tab?: string | string[] }>;
+};
 
 export function generateStaticParams() {
   return locales.filter((locale) => locale !== "en").map((locale) => ({ locale }));
@@ -29,11 +33,15 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   });
 }
 
-export default async function LocalizedPricingPage({ params }: Params) {
+export default async function LocalizedPricingPage({
+  params,
+  searchParams,
+}: LocalizedPricingPageProps) {
   const { locale: localeParam } = await params;
   if (!isLocale(localeParam) || localeParam === "en") notFound();
   const locale = localeParam as Locale;
   const content = getPricingContent(locale);
+  const initialTab = resolvePricingTabId((await searchParams).tab);
 
   return (
     <>
@@ -57,7 +65,7 @@ export default async function LocalizedPricingPage({ params }: Params) {
           __html: serializeJsonLd(faqSchema(content.faq.items)),
         }}
       />
-      <PricingPageView locale={locale} />
+      <PricingPageView locale={locale} initialTab={initialTab} />
     </>
   );
 }

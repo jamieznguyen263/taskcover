@@ -14,14 +14,20 @@ import { Section } from "@/components/marketing/shared/section";
 import { SectionHeader, Eyebrow } from "@/components/marketing/shared/section-header";
 import { CTAButton } from "@/components/marketing/shared/cta-button";
 import { FAQAccordion } from "@/components/marketing/shared/faq-accordion";
-import { PricingTabs } from "./pricing-tabs";
-import { PricingDecisionGuide } from "./pricing-decision-guide";
+import { PricingInteractiveFlow } from "./pricing-interactive-flow";
 import { getPricingContent, getCaseStudies } from "@/lib/content";
 import { getPublicClientLogoAssetByCaseStudySlug } from "@/content/client-logo-assets";
 import { localizePath, type Locale } from "@/lib/i18n";
 import type { CaseStudySlug } from "@/content/work.types";
+import type { PricingTabId } from "@/content/pricing.types";
 
-export function PricingPageView({ locale }: { locale: Locale }) {
+export function PricingPageView({
+  locale,
+  initialTab,
+}: {
+  locale: Locale;
+  initialTab: PricingTabId;
+}) {
   const content = getPricingContent(locale);
   const caseStudies = getCaseStudies(locale);
   const loc = (path: string) => localizePath(path, locale);
@@ -104,10 +110,10 @@ export function PricingPageView({ locale }: { locale: Locale }) {
                 ))}
               </div>
               <div className="grid grid-cols-3 gap-2">
-                {["Local", "National", "Global"].map((label, index) => (
-                  <div key={label} className="rounded-2xl border border-line bg-white p-3 text-center">
+                {content.tabs.items.slice(0, 3).map((tab, index) => (
+                  <div key={tab.id} className="rounded-2xl border border-line bg-white p-3 text-center">
                     <div className="mx-auto h-2 rounded-full bg-brand-gradient" style={{ width: `${56 + index * 14}%` }} />
-                    <p className="mt-2 text-[10px] font-semibold uppercase tracking-wide text-muted">{label}</p>
+                    <p className="mt-2 text-[10px] font-semibold uppercase tracking-wide text-muted">{tab.label}</p>
                   </div>
                 ))}
               </div>
@@ -116,94 +122,42 @@ export function PricingPageView({ locale }: { locale: Locale }) {
         </Container>
       </Section>
 
-      <Section background="default" aria-labelledby="pricing-factors-title">
-        <Container className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
-          <SectionHeader
-            align="left"
-            eyebrow={content.factors.eyebrow}
-            titleId="pricing-factors-title"
-            title={content.factors.title}
-            description={content.factors.description}
-          />
-          <div className="grid gap-3">
-            {content.factors.items.map((factor, index) => (
-              <div
-                key={factor.label}
-                className="grid gap-3 rounded-2xl border border-line bg-surface-tint/50 p-4 sm:grid-cols-[44px_1fr]"
-              >
-                <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-gradient text-sm font-bold text-white">
-                  {index + 1}
-                </span>
-                <div>
-                  <h3 className="text-base font-semibold text-graphite">{factor.label}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-secondary">{factor.description}</p>
+      <PricingInteractiveFlow content={content} locale={locale} initialTab={initialTab} />
+
+      <Section background="soft" aria-labelledby="custom-pricing-title">
+        <Container>
+          <div className="relative overflow-hidden rounded-3xl border border-line bg-white p-6 depth-layered sm:p-8 lg:p-10">
+            <div aria-hidden="true" className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-brand-gradient-soft blur-3xl" />
+            <div className="relative grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+              <div className="flex flex-col gap-5">
+                <Eyebrow>{content.customScope.eyebrow}</Eyebrow>
+                <h2 id="custom-pricing-title" className="text-balance text-3xl font-semibold tracking-tight text-graphite sm:text-4xl">
+                  {content.customScope.title}
+                </h2>
+                <p className="text-sm leading-relaxed text-secondary sm:text-base">{content.customScope.description}</p>
+                <p className="rounded-2xl border border-brand-teal/20 bg-surface-tint px-4 py-3 text-sm font-medium text-graphite">
+                  {content.customScope.note}
+                </p>
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <CTAButton href={loc(content.customScope.primaryCta.href)} size="lg">
+                    {content.customScope.primaryCta.label}
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </CTAButton>
+                  <CTAButton href={loc(content.customScope.secondaryCta.href)} variant="secondary" size="lg">
+                    {content.customScope.secondaryCta.label}
+                  </CTAButton>
                 </div>
               </div>
-            ))}
-          </div>
-        </Container>
-      </Section>
-
-      <Section background="soft" aria-labelledby="pricing-tabs-title">
-        <PricingTabs content={content} locale={locale} />
-      </Section>
-
-      <Section background="default" aria-labelledby="compare-all-plans">
-        <Container className="flex flex-col gap-10">
-          <SectionHeader
-            align="left"
-            eyebrow={content.comparison.eyebrow}
-            titleId="compare-all-plans"
-            title={content.comparison.title}
-            description={content.comparison.description}
-          />
-          <div className="overflow-x-auto rounded-2xl border border-line bg-white">
-            <table className="w-full min-w-[980px] border-collapse">
-              <caption className="sr-only">{content.comparison.title}</caption>
-              <thead>
-                <tr className="border-b border-line bg-surface-tint">
-                  <th scope="col" className="sticky left-0 z-10 bg-surface-tint px-4 py-3 text-left text-[10px] font-bold uppercase tracking-wide text-muted">
-                    {content.ui.compareRowHeader}
-                  </th>
-                  {content.comparison.columns.map((column) => (
-                    <th key={column.id} scope="col" className="px-4 py-3 text-left text-[10px] font-bold uppercase tracking-wide text-muted">
-                      {column.label}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {content.comparison.rows.map((row, index) => (
-                  <tr key={row.label} className={index % 2 === 0 ? "bg-white" : "bg-surface-soft/50"}>
-                    <th scope="row" className="sticky left-0 z-10 border-t border-line-soft bg-inherit px-4 py-3 text-left text-sm font-semibold text-graphite">
-                      {row.label}
-                    </th>
-                    {content.comparison.columns.map((column) => (
-                      <td key={column.id} className="border-t border-line-soft px-4 py-3 text-sm leading-relaxed text-secondary">
-                        {row.values[column.id]}
-                      </td>
-                    ))}
-                  </tr>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {content.customScope.useCases.map((item) => (
+                  <div key={item} className="flex items-center gap-3 rounded-2xl border border-line bg-surface-tint/50 p-4 text-sm font-semibold text-graphite">
+                    <Layers3 className="h-4 w-4 shrink-0 text-brand-teal" aria-hidden="true" />
+                    {item}
+                  </div>
                 ))}
-              </tbody>
-            </table>
+              </div>
+            </div>
           </div>
-          <div className="rounded-2xl border border-brand-teal/20 bg-surface-tint px-5 py-4 text-sm font-medium leading-relaxed text-graphite">
-            {content.comparison.exactPricingNote}
-          </div>
-        </Container>
-      </Section>
-
-      <Section background="tint" aria-labelledby="decision-guide-title">
-        <Container className="flex flex-col gap-10">
-          <SectionHeader
-            align="left"
-            eyebrow={content.decisionGuide.eyebrow}
-            titleId="decision-guide-title"
-            title={content.decisionGuide.title}
-            description={content.decisionGuide.description}
-          />
-          <PricingDecisionGuide content={content} locale={locale} />
         </Container>
       </Section>
 
@@ -216,21 +170,53 @@ export function PricingPageView({ locale }: { locale: Locale }) {
             title={content.drivers.title}
             description={content.drivers.description}
           />
-          <div className="grid gap-3">
-            {content.drivers.items.map((driver, index) => (
-              <details key={driver.label} className="group rounded-2xl border border-line bg-white p-4">
-                <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 text-left text-sm font-semibold text-graphite">
-                  <span className="inline-flex items-center gap-3">
-                    <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-surface-tint text-xs font-bold text-brand-teal">
-                      {String(index + 1).padStart(2, "0")}
+          <div className="grid gap-5">
+            <div className="rounded-3xl border border-line bg-surface-tint/50 p-5">
+              <p className="text-[10px] font-semibold uppercase tracking-wide text-brand-teal">
+                {content.factors.eyebrow}
+              </p>
+              <h3 className="mt-2 text-xl font-semibold tracking-tight text-graphite">
+                {content.factors.title}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-secondary">
+                {content.factors.description}
+              </p>
+              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                {content.factors.items.map((factor, index) => (
+                  <details key={factor.label} className="group rounded-2xl border border-line bg-white p-4">
+                    <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 text-left text-sm font-semibold text-graphite">
+                      <span className="inline-flex items-center gap-3">
+                        <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-surface-tint text-xs font-bold text-brand-teal">
+                          {String(index + 1).padStart(2, "0")}
+                        </span>
+                        {factor.label}
+                      </span>
+                      <ChevronDown className="h-4 w-4 shrink-0 text-brand-teal transition group-open:rotate-180" aria-hidden="true" />
+                    </summary>
+                    <p className="pl-11 pt-2 text-sm leading-relaxed text-secondary">
+                      {factor.description}
+                    </p>
+                  </details>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid gap-3">
+              {content.drivers.items.map((driver, index) => (
+                <details key={driver.label} className="group rounded-2xl border border-line bg-white p-4">
+                  <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 text-left text-sm font-semibold text-graphite">
+                    <span className="inline-flex items-center gap-3">
+                      <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-surface-tint text-xs font-bold text-brand-teal">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      {driver.label}
                     </span>
-                    {driver.label}
-                  </span>
-                  <ChevronDown className="h-4 w-4 text-brand-teal transition group-open:rotate-180" aria-hidden="true" />
-                </summary>
-                <p className="pl-11 pt-2 text-sm leading-relaxed text-secondary">{driver.description}</p>
-              </details>
-            ))}
+                    <ChevronDown className="h-4 w-4 shrink-0 text-brand-teal transition group-open:rotate-180" aria-hidden="true" />
+                  </summary>
+                  <p className="pl-11 pt-2 text-sm leading-relaxed text-secondary">{driver.description}</p>
+                </details>
+              ))}
+            </div>
           </div>
         </Container>
       </Section>
@@ -272,43 +258,6 @@ export function PricingPageView({ locale }: { locale: Locale }) {
                   </li>
                 ))}
               </ul>
-            </div>
-          </div>
-        </Container>
-      </Section>
-
-      <Section background="default" aria-labelledby="custom-pricing-title">
-        <Container>
-          <div className="relative overflow-hidden rounded-3xl border border-line bg-white p-6 depth-layered sm:p-8 lg:p-10">
-            <div aria-hidden="true" className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-brand-gradient-soft blur-3xl" />
-            <div className="relative grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-              <div className="flex flex-col gap-5">
-                <Eyebrow>{content.customScope.eyebrow}</Eyebrow>
-                <h2 id="custom-pricing-title" className="text-balance text-3xl font-semibold tracking-tight text-graphite sm:text-4xl">
-                  {content.customScope.title}
-                </h2>
-                <p className="text-sm leading-relaxed text-secondary sm:text-base">{content.customScope.description}</p>
-                <p className="rounded-2xl border border-brand-teal/20 bg-surface-tint px-4 py-3 text-sm font-medium text-graphite">
-                  {content.customScope.note}
-                </p>
-                <div className="flex flex-col gap-3 sm:flex-row">
-                  <CTAButton href={loc(content.customScope.primaryCta.href)} size="lg">
-                    {content.customScope.primaryCta.label}
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                  </CTAButton>
-                  <CTAButton href={loc(content.customScope.secondaryCta.href)} variant="secondary" size="lg">
-                    {content.customScope.secondaryCta.label}
-                  </CTAButton>
-                </div>
-              </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {content.customScope.useCases.map((item) => (
-                  <div key={item} className="flex items-center gap-3 rounded-2xl border border-line bg-surface-tint/50 p-4 text-sm font-semibold text-graphite">
-                    <Layers3 className="h-4 w-4 shrink-0 text-brand-teal" aria-hidden="true" />
-                    {item}
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
         </Container>
