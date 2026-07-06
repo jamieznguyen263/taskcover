@@ -249,16 +249,16 @@ export function NotFoundPage({ locale }: { locale: Locale }) {
   return (
     <Section background="tint" className="relative overflow-hidden pt-16 sm:pt-20">
       <div aria-hidden="true" className="absolute inset-0 bg-line-grid opacity-70" />
-      <Container className="relative grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
-        <div className="flex flex-col gap-5">
+      <Container className="relative grid min-w-0 gap-8 lg:grid-cols-[0.8fr_1.2fr]">
+        <div className="flex min-w-0 flex-col gap-5">
           <Eyebrow>{content.eyebrow}</Eyebrow>
-          <h1 className="text-balance text-4xl font-semibold leading-tight text-graphite sm:text-5xl">{content.h1}</h1>
-          <p className="text-lg leading-relaxed text-secondary">{content.intro}</p>
+          <h1 className="break-words text-balance text-4xl font-semibold leading-tight text-graphite sm:text-5xl">{content.h1}</h1>
+          <p className="break-words text-lg leading-relaxed text-secondary">{content.intro}</p>
         </div>
-        <nav aria-label={content.eyebrow} className="grid gap-3 sm:grid-cols-2">
+        <nav aria-label={content.eyebrow} className="grid min-w-0 gap-3 sm:grid-cols-2">
           {content.links.map((link) => (
-            <Link key={link.href} href={localizePath(link.href, locale)} className="card-lift flex min-h-16 items-center justify-between rounded-2xl border border-line bg-white px-5 py-4 text-sm font-semibold text-graphite">
-              <span>{link.label}</span>
+            <Link key={link.href} href={localizePath(link.href, locale)} className="card-lift flex min-h-16 min-w-0 items-center justify-between gap-3 rounded-2xl border border-line bg-white px-5 py-4 text-sm font-semibold text-graphite">
+              <span className="min-w-0 break-words">{link.label}</span>
               <ArrowRight className="h-4 w-4 text-brand-teal" aria-hidden="true" />
             </Link>
           ))}
@@ -308,4 +308,3 @@ export function GlobalErrorView({ locale, onRetry }: { locale: Locale; onRetry: 
 function idFor(value: string) {
   return value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }
-

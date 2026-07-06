@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { breadcrumbSchema, serializeJsonLd } from "@/lib/seo";
+import { breadcrumbSchema, buildMetadata, serializeJsonLd } from "@/lib/seo";
 import { getInsightCategory, getInsightsByCategory, getInsightsContent } from "@/lib/insights/content";
 import { insightCategorySlugs, type InsightCategorySlug } from "@/content/insights.types";
 import { InsightCategoryView } from "@/components/marketing/insights/insights-views";
-import { isLocale, locales, localizePath, type Locale } from "@/lib/i18n";
-import { siteConfig } from "@/lib/site";
+import { isLocale, locales, type Locale } from "@/lib/i18n";
 
 type Params = { params: Promise<{ locale: string; categorySlug: string }> };
 
@@ -29,19 +28,12 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const content = getInsightCategory(category, locale);
   if (!content) return {};
   const path = `/insights/${category}`;
-  return {
+  return buildMetadata({
     title: content.h1,
     description: content.description,
-    alternates: {
-      canonical: `${siteConfig.url}${localizePath(path, locale)}`,
-      languages: {
-        en: `${siteConfig.url}${path}`,
-        fr: `${siteConfig.url}/fr${path}`,
-        es: `${siteConfig.url}/es${path}`,
-        "x-default": `${siteConfig.url}${path}`,
-      },
-    },
-  };
+    path,
+    locale,
+  });
 }
 
 export default async function LocalizedInsightCategoryPage({ params }: Params) {

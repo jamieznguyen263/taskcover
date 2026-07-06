@@ -639,8 +639,9 @@ export function ServiceOutcomes({ service }: { service: Service }) {
 /* 8. Related services — "next best modules" rail (chips, not cards)         */
 /* -------------------------------------------------------------------------- */
 
-export function RelatedServices({ service }: { service: Service }) {
+export function RelatedServices({ service, locale }: { service: Service; locale: Locale }) {
   const ui = useUI();
+  const loc = (path: string) => localizePath(path, locale);
   const related = getRelatedServices(service);
   if (related.length === 0) return null;
 
@@ -661,7 +662,7 @@ export function RelatedServices({ service }: { service: Service }) {
           {related.map((s) => (
             <Link
               key={s.slug}
-              href={`/services/${s.slug}`}
+              href={loc(`/services/${s.slug}`)}
               className="card-lift group inline-flex items-center gap-3 rounded-2xl border border-line bg-white px-5 py-3 hover:border-brand-teal/40"
             >
               <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-brand-gradient text-white">
@@ -811,7 +812,7 @@ export function ServicePageTemplate({ service, ui, locale = "en" }: { service: S
       <ServiceUseCases service={service} />
       <ServiceProcess service={service} />
       <ServiceOutcomes service={service} />
-      <RelatedServices service={service} />
+      <RelatedServices service={service} locale={locale} />
       <ServiceFAQ service={service} />
       <ServiceCTA service={service} locale={locale} />
     </ServiceUIContext.Provider>

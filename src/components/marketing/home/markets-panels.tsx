@@ -34,6 +34,7 @@ export function MarketsPanels({
   titleId,
   description,
   markets,
+  labels,
   className,
 }: {
   eyebrow: string;
@@ -41,9 +42,11 @@ export function MarketsPanels({
   titleId: string;
   description: React.ReactNode;
   markets: readonly Market[];
+  labels?: { viewMarket: string };
   className?: string;
 }) {
   const reduceMotion = useReducedMotion();
+  const L = labels ?? { viewMarket: "View market" };
 
   return (
     <Container className={cn("flex flex-col gap-10", className)}>
@@ -139,7 +142,7 @@ export function MarketsPanels({
                   ))}
                 </ul>
                 <span className="mt-auto inline-flex items-center gap-1 pt-2 text-sm font-semibold text-brand-teal">
-                  View market
+                  {L.viewMarket}
                   <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                 </span>
               </div>

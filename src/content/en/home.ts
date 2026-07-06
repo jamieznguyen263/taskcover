@@ -395,6 +395,7 @@ export const home: HomeContent = {
     recommendedServices: "Recommended services",
     viewIndustry: "View",
     differentiator: "Differentiator",
+    viewMarket: "View market",
     phasesLabel: "Phases",
     traditionalLabel: "Traditional SEO vendor",
     taskcoverLabel: "Taskcover Agency",

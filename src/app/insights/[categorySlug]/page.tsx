@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { breadcrumbSchema, serializeJsonLd } from "@/lib/seo";
+import { breadcrumbSchema, buildMetadata, serializeJsonLd } from "@/lib/seo";
 import { getInsightCategory, getInsightsByCategory, getInsightsContent } from "@/lib/insights/content";
 import { insightCategorySlugs, type InsightCategorySlug } from "@/content/insights.types";
 import { InsightCategoryView } from "@/components/marketing/insights/insights-views";
-import { siteConfig } from "@/lib/site";
 
 type Params = { params: Promise<{ categorySlug: string }> };
 
@@ -25,19 +24,12 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const content = getInsightCategory(category, "en");
   if (!content) return {};
   const path = `/insights/${category}`;
-  return {
+  return buildMetadata({
     title: content.h1,
     description: content.description,
-    alternates: {
-      canonical: `${siteConfig.url}${path}`,
-      languages: {
-        en: `${siteConfig.url}${path}`,
-        fr: `${siteConfig.url}/fr${path}`,
-        es: `${siteConfig.url}/es${path}`,
-        "x-default": `${siteConfig.url}${path}`,
-      },
-    },
-  };
+    path,
+    locale: "en",
+  });
 }
 
 export default async function InsightCategoryPage({ params }: Params) {

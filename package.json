@@ -14,6 +14,8 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "seo:check": "tsx scripts/seo-check.ts",
+    "seo:crawl": "tsx scripts/seo-crawl.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx scripts/db-migrate.ts",
     "db:status": "tsx scripts/db-status.ts",

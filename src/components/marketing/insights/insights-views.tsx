@@ -239,8 +239,8 @@ export function InsightArticleView({
     <>
       <Section as="article" background="tint" className="relative overflow-hidden pt-12 sm:pt-16 lg:pt-20">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-line-grid opacity-70" />
-        <Container className="relative grid gap-10 lg:grid-cols-[1fr_0.85fr]">
-          <div className="flex flex-col gap-5">
+        <Container className="relative grid min-w-0 gap-10 lg:grid-cols-[1fr_0.85fr]">
+          <div className="flex min-w-0 flex-col gap-5">
             <Breadcrumb
               locale={locale}
               content={content}
@@ -258,7 +258,7 @@ export function InsightArticleView({
                 {article.readingTime} {content.ui.minutes}
               </span>
             </div>
-            <h1 className="max-w-4xl text-balance text-4xl font-semibold leading-[1.06] tracking-tight text-graphite sm:text-5xl lg:text-6xl">
+            <h1 className="max-w-4xl break-words text-balance text-4xl font-semibold leading-[1.06] tracking-tight text-graphite sm:text-5xl lg:text-6xl">
               {article.h1}
             </h1>
             <p className="max-w-3xl text-pretty text-lg leading-8 text-secondary">{article.excerpt}</p>
@@ -268,9 +268,9 @@ export function InsightArticleView({
               <span>{content.ui.updated}: {formatDate(article.updatedAt, locale)}</span>
             </div>
           </div>
-          <figure className="rounded-3xl border border-line bg-white p-5 depth-layered">
+          <figure className="min-w-0 max-w-full overflow-hidden rounded-3xl border border-line bg-white p-5 depth-layered">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={article.coverImage} alt={article.coverImageAlt} className="h-auto w-full rounded-2xl border border-line bg-surface-soft" />
+            <img src={article.coverImage} alt={article.coverImageAlt} className="h-auto w-full min-w-0 rounded-2xl border border-line bg-surface-soft" />
             <figcaption className="mt-3 text-center text-xs leading-5 text-muted">{article.coverImageCaption}</figcaption>
           </figure>
         </Container>

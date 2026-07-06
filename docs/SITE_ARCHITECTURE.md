@@ -373,3 +373,18 @@ origin, 2018 repeatable delivery systems, 2019 commercial direction toward
 Canada and the United States, today's USA/Canada/Australia positioning, and
 the confirmed leadership entries for Jamiez Nguyen and John Edward. See
 `docs/ABOUT_STORY_STANDARD.md`.
+
+## Task 14 Technical SEO Route Inventory
+
+Task 14 confirms the launch sitemap inventory at 243 canonical localized public
+URLs. `npm run build` currently generates 264 static pages, including
+`/robots.txt` and `/sitemap.xml`, plus dynamic Admin, API, contact, pricing, and
+thank-you routes.
+
+Route families and indexability rules are documented in
+`docs/TECHNICAL_SEO_URL_INVENTORY.md`.
+
+`src/app/robots.ts` now emits robots rules for launch crawler guidance. Admin,
+API, preview, thank-you, 404/error, draft, and query URLs remain excluded from
+the sitemap. Pricing query URLs such as `?tab=mentor` remain routable but
+canonicalize to the clean localized pricing route.

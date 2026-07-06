@@ -350,6 +350,7 @@ export type HomeContent = {
     viewIndustry: string;
     /** Markets */
     differentiator: string;
+    viewMarket: string;
     /** Methodology phases */
     phasesLabel: string;
     /** Comparison */

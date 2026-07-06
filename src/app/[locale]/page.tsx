@@ -35,5 +35,5 @@ export default async function LocalizedHomePage({ params }: Params) {
   }
   const locale = localeParam as Locale;
   const home = getHomeContent(locale);
-  return <HomeView home={home} />;
+  return <HomeView home={home} locale={locale} />;
 }

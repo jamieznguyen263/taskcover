@@ -326,3 +326,15 @@ French should remain suitable for Canadian and international professional
 audiences. Spanish should remain suitable for US Hispanic and international
 professional audiences. Do not hardcode English UI labels into `/fr/about` or
 `/es/about`.
+
+## Task 14 Technical SEO Localization
+
+Task 14 verified localized canonical, hreflang, metadata, sitemap, navigation,
+footer, homepage CTAs, service related links, pricing tabs, and language switch
+behavior across EN/FR/ES.
+
+The root layout remains static. Raw server HTML starts with `lang="en"`, then a
+pre-paint script and `HtmlLangSync` set `/fr` and `/es` to the correct rendered
+language before paint and on client navigation. This preserves the 264 static
+page build. Treat a server-only per-locale `<html lang>` as a future layout
+architecture review if static generation requirements change.

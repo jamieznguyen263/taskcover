@@ -32,8 +32,28 @@ import { MethodologyPhases } from "@/components/marketing/home/methodology-phase
 import { TechnologyControlRoom } from "@/components/marketing/home/technology-control-room";
 import { PremiumComparison } from "@/components/marketing/home/premium-comparison";
 import type { HomeContent } from "@/content/home.types";
+import { localizePath, type Locale } from "@/lib/i18n";
 
-export function HomeView({ home }: { home: HomeContent }) {
+export function HomeView({ home, locale = "en" }: { home: HomeContent; locale?: Locale }) {
+  const loc = (path: string) => localizePath(path, locale);
+  const localizeCta = <T extends { href: string }>(item: T): T => ({
+    ...item,
+    href: loc(item.href),
+  });
+  const localizedGrowthFeatured = {
+    ...home.growthPlays.featured,
+    cta: localizeCta(home.growthPlays.featured.cta),
+  };
+  const localizedGrowthPlays = home.growthPlays.plays.map((play) => ({
+    ...play,
+    cta: localizeCta(play.cta),
+  }));
+  const localizedServicesFeature = localizeCta(home.servicesBento.featureCard);
+  const localizedServiceCards = home.servicesBento.cards.map(localizeCta);
+  const localizedIndustryCards = home.industries.cards.map(localizeCta);
+  const localizedMarketCards = home.markets.cards.map(localizeCta);
+  const localizedBrandLogos = home.brandExperience.logos.map(localizeCta);
+
   return (
     <>
       {/* 1. Hero — split layout with video-ready spokesperson module */}
@@ -51,11 +71,11 @@ export function HomeView({ home }: { home: HomeContent }) {
             </p>
             <p className="max-w-full text-sm text-muted sm:max-w-xl">{home.hero.proofLine}</p>
             <div className="mt-2 flex flex-col gap-3 sm:flex-row">
-              <CTAButton size="lg" href={home.hero.primaryCta.href}>
+              <CTAButton size="lg" href={loc(home.hero.primaryCta.href)}>
                 {home.hero.primaryCta.label}
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </CTAButton>
-              <CTAButton variant="secondary" size="lg" href={home.hero.secondaryCta.href}>
+              <CTAButton variant="secondary" size="lg" href={loc(home.hero.secondaryCta.href)}>
                 {home.hero.secondaryCta.label}
               </CTAButton>
             </div>
@@ -70,8 +90,8 @@ export function HomeView({ home }: { home: HomeContent }) {
       <Section background="default" className="py-14 sm:py-16">
         <BrandMarquee
           caption={home.brandExperience.caption}
-          logos={[...home.brandExperience.logos]}
-          cta={home.brandExperience.cta}
+          logos={localizedBrandLogos}
+          cta={localizeCta(home.brandExperience.cta)}
         />
       </Section>
 
@@ -114,8 +134,8 @@ export function HomeView({ home }: { home: HomeContent }) {
           title={home.growthPlays.title}
           titleId="plays-title"
           description={home.growthPlays.description}
-          featured={home.growthPlays.featured}
-          plays={[...home.growthPlays.plays]}
+          featured={localizedGrowthFeatured}
+          plays={localizedGrowthPlays}
           labels={{
             featuredPlay: home.ui.featuredPlay,
             challenge: home.ui.challengeLabel,
@@ -133,8 +153,8 @@ export function HomeView({ home }: { home: HomeContent }) {
           title={home.servicesBento.title}
           titleId="services-title"
           description={home.servicesBento.description}
-          featureCard={home.servicesBento.featureCard}
-          cards={[...home.servicesBento.cards]}
+          featureCard={localizedServicesFeature}
+          cards={localizedServiceCards}
           labels={{
             coreModule: home.ui.coreModule,
             roadmap: home.ui.roadmapLabel,
@@ -151,7 +171,7 @@ export function HomeView({ home }: { home: HomeContent }) {
           title={home.industries.title}
           titleId="industries-title"
           description={home.industries.description}
-          industries={[...home.industries.cards]}
+          industries={localizedIndustryCards}
           labels={{
             activeVertical: home.ui.activeVertical,
             painPoint: home.ui.painPoint,
@@ -172,7 +192,8 @@ export function HomeView({ home }: { home: HomeContent }) {
           title={home.markets.title}
           titleId="markets-title"
           description={home.markets.description}
-          markets={[...home.markets.cards]}
+          markets={localizedMarketCards}
+          labels={{ viewMarket: home.ui.viewMarket }}
         />
       </Section>
 
@@ -202,7 +223,7 @@ export function HomeView({ home }: { home: HomeContent }) {
               <p className="text-sm text-secondary">{home.caseStudyPreview.metricLabel}</p>
               <p className="mt-3 text-sm text-secondary">{home.caseStudyPreview.description}</p>
             </div>
-            <CTAButton href={home.caseStudyPreview.cta.href}>
+            <CTAButton href={loc(home.caseStudyPreview.cta.href)}>
               {home.caseStudyPreview.cta.label}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </CTAButton>
@@ -311,7 +332,7 @@ export function HomeView({ home }: { home: HomeContent }) {
                     </div>
                   ))}
                 </div>
-                <CTAButton size="lg" href={home.audit.primaryCta.href} className="mt-1 w-full">
+                <CTAButton size="lg" href={loc(home.audit.primaryCta.href)} className="mt-1 w-full">
                   {home.audit.primaryCta.label}
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </CTAButton>
@@ -346,11 +367,11 @@ export function HomeView({ home }: { home: HomeContent }) {
               </h2>
               <p className="max-w-2xl text-secondary">{home.finalCta.description}</p>
               <div className="flex flex-col gap-3 sm:flex-row">
-                <CTAButton size="lg" href={home.finalCta.primaryCta.href}>
+                <CTAButton size="lg" href={loc(home.finalCta.primaryCta.href)}>
                   {home.finalCta.primaryCta.label}
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </CTAButton>
-                <CTAButton variant="secondary" size="lg" href={home.finalCta.secondaryCta.href}>
+                <CTAButton variant="secondary" size="lg" href={loc(home.finalCta.secondaryCta.href)}>
                   {home.finalCta.secondaryCta.label}
                 </CTAButton>
               </div>

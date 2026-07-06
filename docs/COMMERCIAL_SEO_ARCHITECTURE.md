@@ -60,3 +60,14 @@ Internal linking should point pricing visitors toward Free SEO Audit, Strategy
 Call, relevant sample audits, and verified case studies. Pricing must not create
 new root-level duplicate pages such as `/local-seo-pricing` or
 `/national-seo-pricing`.
+
+## Task 14 Technical SEO Confirmation
+
+Task 14 did not change commercial keyword-to-URL ownership. The added
+`seo:check` script verifies that each keyword family in
+`src/content/seo/url-intent-map.ts` keeps one primary URL.
+
+Technical SEO fixes were limited to robots, localized internal links, metadata
+helper consistency, crawler/checker tooling, tests, and documentation. No new
+commercial pages, doorway pages, city pages, pricing pages, fake local business
+schema, or keyword ownership changes were introduced.

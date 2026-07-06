@@ -66,3 +66,19 @@ Production deployment, DNS changes, provider secret configuration, and external 
   introduced.
 - Canonical, hreflang, sitemap inclusion, metadata, breadcrumbs, accessibility,
   and mobile behavior remain part of final QA.
+
+## Task 14 Technical SEO Readiness
+
+- `robots.txt` exists, returns 200 locally, references the canonical sitemap,
+  and excludes Admin, API, preview, and thank-you paths.
+- `sitemap.xml` contains 243 canonical localized public URLs and excludes
+  private/noindex/query routes.
+- `npm run seo:check` and `npm run seo:crawl` are available for repeatable local
+  launch checks.
+- Rendered crawl found 0 critical/high technical SEO findings.
+- DevTools viewport QA covered 1440, 1024, 768, and 390 widths with no document
+  horizontal overflow; article tables and mobile TOC remain contained in
+  intended scroll regions.
+- Production deploy, DNS, production secrets, analytics/tracking, legal review,
+  Search Console, and live social preview validation remain separate launch
+  checks.

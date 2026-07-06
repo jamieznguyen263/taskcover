@@ -55,6 +55,8 @@ npm run dev      # http://localhost:3000
 | `npm run lint` | ESLint |
 | `npm run typecheck` | TypeScript check |
 | `npm test` | Offline Vitest suite |
+| `npm run seo:check` | Static technical SEO checks for sitemap, robots, schema, logos, and keyword ownership |
+| `npm run seo:crawl` | Local rendered technical SEO crawler; pass `-- --base-url=http://localhost:3100` |
 | `npm run production:check` | Offline production activation configuration check |
 | `npm run production:predeploy` | Local pre-deploy gate; does not deploy or migrate |
 | `npm run db:status` | Read-only migration/database status |
@@ -81,6 +83,8 @@ npm run dev      # http://localhost:3000
 - [`docs/UI_SOURCES.md`](./docs/UI_SOURCES.md)
 - [`docs/SITE_ARCHITECTURE.md`](./docs/SITE_ARCHITECTURE.md)
 - [`docs/SEO_STANDARDS.md`](./docs/SEO_STANDARDS.md)
+- [`docs/TECHNICAL_SEO_LAUNCH_HARDENING.md`](./docs/TECHNICAL_SEO_LAUNCH_HARDENING.md)
+- [`docs/TECHNICAL_SEO_URL_INVENTORY.md`](./docs/TECHNICAL_SEO_URL_INVENTORY.md)
 
 ## Brand assets
 

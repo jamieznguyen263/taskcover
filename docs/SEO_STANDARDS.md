@@ -311,3 +311,40 @@ awards, alumni, education, or portrait image is invented.
 The visible story may reference verified case-study links as methodology
 influence, but must not assign those case studies to unsupported company
 history years or imply guaranteed SEO outcomes.
+
+## Task 14 Technical SEO Launch Hardening
+
+Before launch, run:
+
+- `npm run seo:check`
+- `npm run seo:crawl -- --base-url=http://localhost:3100`
+
+Current launch standards:
+
+- `robots.txt` must include the canonical sitemap URL and must not block public
+  JS, CSS, image, or brand assets.
+- The sitemap must include only canonical indexable public URLs and exclude
+  Admin, API, preview, thank-you, 404/error, draft, and query URLs.
+- Pricing tab query variants render but canonicalize to the clean pricing route.
+- EN canonicals are unprefixed; FR/ES canonicals use `/fr` and `/es`.
+- Hreflang alternates must include `en`, `fr`, `es`, and `x-default`.
+- Organization schema uses verified fields only and must not add Review,
+  AggregateRating, LocalBusiness, fake social, fake office, or fake rating data.
+- British Council and Skyscanner remain hidden while in `permission-review`.
+
+See the Task 14 audit set:
+
+- `docs/TECHNICAL_SEO_LAUNCH_HARDENING.md`
+- `docs/TECHNICAL_SEO_DEFECT_LOG.md`
+- `docs/INDEXABILITY_AUDIT.md`
+- `docs/ROBOTS_AUDIT.md`
+- `docs/SITEMAP_AUDIT.md`
+- `docs/CANONICAL_AUDIT.md`
+- `docs/HREFLANG_AUDIT.md`
+- `docs/METADATA_AUDIT.md`
+- `docs/INTERNAL_LINK_AUDIT.md`
+- `docs/SCHEMA_AUDIT.md`
+- `docs/IMAGE_SEO_AUDIT.md`
+- `docs/LOCALIZATION_TECHNICAL_AUDIT.md`
+- `docs/ROUTE_STATUS_AUDIT.md`
+- `docs/OPEN_GRAPH_AUDIT.md`

@@ -45,3 +45,30 @@ must not be enabled during Task 12.
   provider secrets.
 - Commercial SEO docs should be reviewed before adding new pages so future work
   does not create duplicate or doorway URLs.
+
+## Task 14 Technical SEO Prelaunch Gate
+
+Run these before any staging or production deployment approval:
+
+```bash
+npm run production:check
+npm test
+npm run lint
+npm run typecheck
+npm run build
+npm run build:cloudflare
+npm run cf:dry-run
+npm run seo:check
+npm run seo:crawl -- --base-url=http://localhost:3100
+```
+
+The SEO crawl requires a locally running production server, for example
+`PORT=3100 npm run start` after `npm run build`.
+
+Post-deployment production-only checks still required:
+
+- Fetch `https://taskcover.com/robots.txt` and `/sitemap.xml`.
+- Verify `taskcover.com` canonical host and `www` redirect after DNS approval.
+- Re-run route smoke checks against the deployed base URL.
+- Validate Search Console, social unfurl previews, CDN cache headers, and legal
+  review status.

@@ -952,6 +952,7 @@ export const home: HomeContent = {
     recommendedServices: "Services recommandés",
     viewIndustry: "Voir",
     differentiator: "Différenciateur",
+    viewMarket: "Voir le marché",
     phasesLabel: "Phases",
     traditionalLabel: "Prestataire SEO traditionnel",
     taskcoverLabel: "Taskcover Agency",
