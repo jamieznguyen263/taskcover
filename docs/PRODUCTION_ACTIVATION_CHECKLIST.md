@@ -58,6 +58,7 @@ npm run typecheck
 npm run build
 npm run build:cloudflare
 npm run cf:dry-run
+npm run launch:qa
 npm run seo:check
 npm run seo:crawl -- --base-url=http://localhost:3100
 ```
@@ -72,3 +73,21 @@ Post-deployment production-only checks still required:
 - Re-run route smoke checks against the deployed base URL.
 - Validate Search Console, social unfurl previews, CDN cache headers, and legal
   review status.
+
+## Task 15 Performance/Accessibility Gate
+
+Task 15 does not deploy production, change DNS, add tracking scripts, configure
+production secrets, or run external migrations.
+
+Before staging approval, also run:
+
+```bash
+npm run perf:check
+npm run a11y:check
+npm run visual:check
+npm run launch:qa -- --base-url=http://localhost:3100
+```
+
+After staging deployment, collect lab Core Web Vitals and responsive screenshots
+for homepage, pricing, representative work/proof pages, Insights article, lead
+forms, trust/legal pages, and FR/ES pricing mentor variants.

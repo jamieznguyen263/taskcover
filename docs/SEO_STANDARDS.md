@@ -348,3 +348,16 @@ See the Task 14 audit set:
 - `docs/LOCALIZATION_TECHNICAL_AUDIT.md`
 - `docs/ROUTE_STATUS_AUDIT.md`
 - `docs/OPEN_GRAPH_AUDIT.md`
+
+## Task 15 Performance And Accessibility Preservation
+
+- Task 15 launch QA must not change canonical, hreflang, sitemap, robots, or
+  Task 13 keyword-to-URL ownership unless fixing a verified bug.
+- Pricing query URLs stay excluded from sitemap and canonicalize to the clean
+  localized `/pricing` route.
+- Public bundle hardening must not remove indexable text, proof context,
+  localized copy, or internal links just to improve lab scores.
+- Media optimization must preserve meaningful alt text and keep decorative
+  images hidden from assistive technology.
+- Technical SEO checks remain `npm run seo:check` and rendered
+  `npm run seo:crawl -- --base-url=http://localhost:3100`.

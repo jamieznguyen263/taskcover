@@ -70,3 +70,14 @@ The pricing page can support SEM traffic, but future dedicated SEM landing
 pages must remain distinct from organic pricing. They need localized copy,
 consent/tracking readiness, proof support, and no fake scarcity, discounts, or
 guaranteed outcomes.
+
+## Task 15 QA Notes
+
+- Query-tab variants remain dynamic and share the clean localized pricing
+  canonical.
+- Language switching preserves safe `tab` values only.
+- Full comparison is collapsed by default with native `details`.
+- Tab rail uses horizontal overflow on mobile and fixed-width tab buttons.
+- Context comparison changes by active tab.
+- SEO Mentor and Audits tabs remain first-class service tabs.
+- Custom Pricing remains outside the tab panel and always visible.

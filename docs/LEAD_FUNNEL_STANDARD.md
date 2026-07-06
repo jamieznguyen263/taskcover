@@ -126,3 +126,16 @@ Pricing uses the existing lead-funnel CTAs:
 
 No new lead form, tracking script, production deployment, DNS change, or
 external database migration is required by the pricing page.
+
+## Task 15 Form QA Notes
+
+- Free SEO Audit, Strategy Call, and Contact retain labels, autocomplete,
+  client validation, server validation, error summaries, first-error focus,
+  disabled pending state, and direct email fallback behavior.
+- Data Request now uses custom accessible validation with no native validation
+  blocking the summary, field-level `aria-invalid`, first-error focus, and the
+  existing direct email fallback.
+- Cookie Preferences remains local-only and does not load analytics or
+  marketing scripts.
+- Turnstile renders only when a site key is configured; Task 15 does not
+  connect live providers.

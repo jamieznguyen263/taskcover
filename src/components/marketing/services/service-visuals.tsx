@@ -42,19 +42,39 @@ const C = {
   white: "#FFFFFF",
 } as const;
 
-const GRAD_ID = "svc-grad";
-const SOFT_GRAD_ID = "svc-grad-soft";
+type VisualIds = {
+  gradId: string;
+  softGradId: string;
+};
 
-function Defs() {
+type ServiceVisualProps = {
+  className?: string;
+  ids: VisualIds;
+};
+
+function normalizeSvgId(id: string) {
+  return id.replace(/[^a-zA-Z0-9_-]/g, "");
+}
+
+function visualIdsFor(scope: string): VisualIds {
+  const safeScope = normalizeSvgId(scope);
+  return {
+    gradId: `svc-grad-${safeScope}`,
+    softGradId: `svc-grad-soft-${safeScope}`,
+  };
+}
+
+function Defs({ ids }: { ids: VisualIds }) {
+  const { gradId, softGradId } = ids;
   return (
     <defs>
-      <linearGradient id={GRAD_ID} x1="0" y1="0" x2="1" y2="1">
+      <linearGradient id={gradId} x1="0" y1="0" x2="1" y2="1">
         <stop offset="0%" stopColor={C.green} />
         <stop offset="30%" stopColor={C.emerald} />
         <stop offset="70%" stopColor={C.teal} />
         <stop offset="100%" stopColor={C.blue} />
       </linearGradient>
-      <linearGradient id={SOFT_GRAD_ID} x1="0" y1="0" x2="1" y2="1">
+      <linearGradient id={softGradId} x1="0" y1="0" x2="1" y2="1">
         <stop offset="0%" stopColor={C.green} stopOpacity="0.14" />
         <stop offset="100%" stopColor={C.blue} stopOpacity="0.14" />
       </linearGradient>
@@ -103,7 +123,8 @@ function Pill({
 /* -------------------------------------------------------------------------- */
 
 /** SEO Strategy — search growth command roadmap. */
-function StrategyHero({ className }: { className?: string }) {
+function StrategyHero({ className, ids }: ServiceVisualProps) {
+  const { gradId, softGradId } = ids;
   const milestones = [
     { x: 60, y: 230, label: "Audit" },
     { x: 150, y: 180, label: "Strategy" },
@@ -112,7 +133,7 @@ function StrategyHero({ className }: { className?: string }) {
   ];
   return (
     <svg viewBox="0 0 400 280" className={className} role="img" aria-label="Search growth command roadmap">
-      <Defs />
+      <Defs ids={ids} />
       <rect x="0" y="0" width="400" height="280" rx={16} fill={C.white} stroke={C.line} />
       <rect x="0" y="0" width="400" height="42" rx={16} fill={C.tint} />
       <rect x="0" y="34" width="400" height="8" fill={C.tint} />
@@ -121,19 +142,19 @@ function StrategyHero({ className }: { className?: string }) {
       <path
         d={`M ${milestones[0].x} ${milestones[0].y} L ${milestones[1].x} ${milestones[1].y} L ${milestones[2].x} ${milestones[2].y} L ${milestones[3].x} ${milestones[3].y}`}
         fill="none"
-        stroke={`url(#${GRAD_ID})`}
+        stroke={`url(#${gradId})`}
         strokeWidth={3}
         strokeLinecap="round"
       />
       {/* area under curve */}
       <path
         d={`M ${milestones[0].x} ${milestones[0].y} L ${milestones[1].x} ${milestones[1].y} L ${milestones[2].x} ${milestones[2].y} L ${milestones[3].x} ${milestones[3].y} L ${milestones[3].x} 250 L ${milestones[0].x} 250 Z`}
-        fill={`url(#${SOFT_GRAD_ID})`}
+        fill={`url(#${softGradId})`}
       />
       {milestones.map((m) => (
         <g key={m.label}>
-          <circle cx={m.x} cy={m.y} r={9} fill={C.white} stroke={`url(#${GRAD_ID})`} strokeWidth={2.5} />
-          <circle cx={m.x} cy={m.y} r={3.5} fill={`url(#${GRAD_ID})`} />
+          <circle cx={m.x} cy={m.y} r={9} fill={C.white} stroke={`url(#${gradId})`} strokeWidth={2.5} />
+          <circle cx={m.x} cy={m.y} r={3.5} fill={`url(#${gradId})`} />
           <text x={m.x} y={m.y + 26} textAnchor="middle" style={{ fontSize: 9, fontWeight: 600 }} fill={C.secondary}>
             {m.label}
           </text>
@@ -147,7 +168,8 @@ function StrategyHero({ className }: { className?: string }) {
 }
 
 /** Technical SEO — crawl / index / site-health diagnostic. */
-function TechnicalHero({ className }: { className?: string }) {
+function TechnicalHero({ className, ids }: ServiceVisualProps) {
+  const { gradId } = ids;
   const pages = [
     { x: 40, y: 90, status: "ok" },
     { x: 100, y: 90, status: "ok" },
@@ -158,11 +180,11 @@ function TechnicalHero({ className }: { className?: string }) {
   ];
   return (
     <svg viewBox="0 0 400 280" className={className} role="img" aria-label="Crawl and index health diagnostic">
-      <Defs />
+      <Defs ids={ids} />
       <rect x="0" y="0" width="400" height="280" rx={16} fill={C.white} stroke={C.line} />
       {/* crawler */}
       <g>
-        <circle cx="200" cy="40" r="16" fill={`url(#${GRAD_ID})`} />
+        <circle cx="200" cy="40" r="16" fill={`url(#${gradId})`} />
         <circle cx="200" cy="40" r="6" fill={C.white} />
         <text x="200" y="44" textAnchor="middle" style={{ fontSize: 8, fontWeight: 700 }} fill={C.teal}>GB</text>
       </g>
@@ -204,7 +226,8 @@ function TechnicalHero({ className }: { className?: string }) {
 }
 
 /** AI Search Optimization — entity graph + answer surface map. */
-function AiHero({ className }: { className?: string }) {
+function AiHero({ className, ids }: ServiceVisualProps) {
+  const { gradId, softGradId } = ids;
   const entities = [
     { x: 90, y: 120, label: "Product" },
     { x: 90, y: 200, label: "Category" },
@@ -213,7 +236,7 @@ function AiHero({ className }: { className?: string }) {
   ];
   return (
     <svg viewBox="0 0 400 280" className={className} role="img" aria-label="Entity graph and AI answer surface">
-      <Defs />
+      <Defs ids={ids} />
       <rect x="0" y="0" width="400" height="280" rx={16} fill={C.white} stroke={C.line} />
       {/* answer card */}
       <rect x="120" y="20" width="160" height="64" rx={10} fill={C.tint} stroke={C.line} />
@@ -223,7 +246,7 @@ function AiHero({ className }: { className?: string }) {
       <rect x="132" y="62" width="100" height={3.5} rx={1.75} fill={C.line} />
       <Pill x={226} y={68} label="Cited source" width={70} fill={C.green} opacity={0.2} stroke={C.green} textFill={C.graphite} />
       {/* brand hub */}
-      <circle cx="200" cy="160" r="26" fill={`url(#${SOFT_GRAD_ID})`} stroke={`url(#${GRAD_ID})`} strokeWidth={2} />
+      <circle cx="200" cy="160" r="26" fill={`url(#${softGradId})`} stroke={`url(#${gradId})`} strokeWidth={2} />
       <text x="200" y="164" textAnchor="middle" style={{ fontSize: 9, fontWeight: 700 }} fill={C.teal}>BRAND</text>
       {entities.map((e) => (
         <g key={e.label}>
@@ -238,7 +261,8 @@ function AiHero({ className }: { className?: string }) {
 }
 
 /** Content Marketing — topic cluster + editorial pipeline. */
-function ContentHero({ className }: { className?: string }) {
+function ContentHero({ className, ids }: ServiceVisualProps) {
+  const { gradId } = ids;
   const spokes = [
     { x: 110, y: 90 },
     { x: 200, y: 70 },
@@ -250,7 +274,7 @@ function ContentHero({ className }: { className?: string }) {
   ];
   return (
     <svg viewBox="0 0 400 280" className={className} role="img" aria-label="Topic cluster and editorial pipeline">
-      <Defs />
+      <Defs ids={ids} />
       <rect x="0" y="0" width="400" height="280" rx={16} fill={C.white} stroke={C.line} />
       {spokes.map((s, i) => (
         <line key={i} x1="200" y1="150" x2={s.x} y2={s.y} stroke={C.line} strokeWidth={1} />
@@ -258,7 +282,7 @@ function ContentHero({ className }: { className?: string }) {
       {spokes.map((s, i) => (
         <circle key={i} cx={s.x} cy={s.y} r="12" fill={C.white} stroke={C.green} strokeWidth={1.5} />
       ))}
-      <circle cx="200" cy="150" r="22" fill={`url(#${GRAD_ID})`} />
+      <circle cx="200" cy="150" r="22" fill={`url(#${gradId})`} />
       <text x="200" y="154" textAnchor="middle" style={{ fontSize: 8, fontWeight: 700 }} fill={C.white}>PILLAR</text>
       {/* pipeline */}
       <g transform="translate(0,250)">
@@ -275,7 +299,8 @@ function ContentHero({ className }: { className?: string }) {
 }
 
 /** Digital PR — authority signal network + mention pipeline. */
-function PrHero({ className }: { className?: string }) {
+function PrHero({ className, ids }: ServiceVisualProps) {
+  const { gradId, softGradId } = ids;
   const pubs = [
     { x: 70, y: 80, label: "Press" },
     { x: 200, y: 60, label: "Media" },
@@ -285,7 +310,7 @@ function PrHero({ className }: { className?: string }) {
   ];
   return (
     <svg viewBox="0 0 400 280" className={className} role="img" aria-label="Authority signal network and mention pipeline">
-      <Defs />
+      <Defs ids={ids} />
       <rect x="0" y="0" width="400" height="280" rx={16} fill={C.white} stroke={C.line} />
       {pubs.map((p, i) => (
         <line key={i} x1="200" y1="150" x2={p.x} y2={p.y} stroke={C.green} strokeWidth={1.5} className="flow-line" opacity={0.5} />
@@ -296,22 +321,23 @@ function PrHero({ className }: { className?: string }) {
           <text x={p.x} y={p.y + 3} textAnchor="middle" style={{ fontSize: 8, fontWeight: 600 }} fill={C.secondary}>{p.label}</text>
         </g>
       ))}
-      <circle cx="200" cy="150" r="28" fill={`url(#${SOFT_GRAD_ID})`} stroke={`url(#${GRAD_ID})`} strokeWidth={2} />
+      <circle cx="200" cy="150" r="28" fill={`url(#${softGradId})`} stroke={`url(#${gradId})`} strokeWidth={2} />
       <text x="200" y="148" textAnchor="middle" style={{ fontSize: 8, fontWeight: 700 }} fill={C.teal}>YOUR</text>
       <text x="200" y="160" textAnchor="middle" style={{ fontSize: 8, fontWeight: 700 }} fill={C.teal}>BRAND</text>
       {/* authority meter */}
       <rect x="140" y="232" width="120" height="8" rx={4} fill={C.tint} />
-      <rect x="140" y="232" width="92" height="8" rx={4} fill={`url(#${GRAD_ID})`} />
+      <rect x="140" y="232" width="92" height="8" rx={4} fill={`url(#${gradId})`} />
       <text x="200" y="256" textAnchor="middle" style={{ fontSize: 8, fontWeight: 600 }} fill={C.muted}>EARNED AUTHORITY SIGNALS</text>
     </svg>
   );
 }
 
 /** Local SEO — local pack / map presence system. */
-function LocalHero({ className }: { className?: string }) {
+function LocalHero({ className, ids }: ServiceVisualProps) {
+  const { gradId } = ids;
   return (
     <svg viewBox="0 0 400 280" className={className} role="img" aria-label="Local pack and map presence">
-      <Defs />
+      <Defs ids={ids} />
       <rect x="0" y="0" width="400" height="280" rx={16} fill={C.white} stroke={C.line} />
       {/* map surface */}
       <rect x="16" y="60" width="240" height="200" rx={10} fill={C.tint} />
@@ -329,7 +355,7 @@ function LocalHero({ className }: { className?: string }) {
         <g key={i}>
           <path
             d={`M ${p.x} ${p.y} C ${p.x - 8} ${p.y - 14}, ${p.x - 8} ${p.y - 24}, ${p.x} ${p.y - 24} C ${p.x + 8} ${p.y - 24}, ${p.x + 8} ${p.y - 14}, ${p.x} ${p.y}`}
-            fill={`url(#${GRAD_ID})`}
+            fill={`url(#${gradId})`}
             stroke={C.teal}
             strokeWidth={1}
           />
@@ -342,7 +368,7 @@ function LocalHero({ className }: { className?: string }) {
       {[0, 1, 2].map((i) => (
         <g key={i}>
           <rect x={288} y={92 + i * 56} width={84} height={46} rx={6} fill={C.tint} />
-          <circle cx={300} cy={106 + i * 56} r={7} fill={`url(#${GRAD_ID})`} />
+          <circle cx={300} cy={106 + i * 56} r={7} fill={`url(#${gradId})`} />
           <rect x={314} y={100 + i * 56} width={50} height={5} rx={2.5} fill={C.teal} />
           <rect x={314} y={110 + i * 56} width={40} height={3.5} rx={1.75} fill={C.line} />
           <rect x={314} y={120 + i * 56} width={30} height={3.5} rx={1.75} fill={C.line} />
@@ -353,13 +379,14 @@ function LocalHero({ className }: { className?: string }) {
 }
 
 /** eCommerce SEO — category / product architecture + buying-intent path. */
-function EcommerceHero({ className }: { className?: string }) {
+function EcommerceHero({ className, ids }: ServiceVisualProps) {
+  const { gradId } = ids;
   return (
     <svg viewBox="0 0 400 280" className={className} role="img" aria-label="Category and product architecture">
-      <Defs />
+      <Defs ids={ids} />
       <rect x="0" y="0" width="400" height="280" rx={16} fill={C.white} stroke={C.line} />
       {/* category root */}
-      <rect x="160" y="30" width="80" height="26" rx={8} fill={`url(#${GRAD_ID})`} />
+      <rect x="160" y="30" width="80" height="26" rx={8} fill={`url(#${gradId})`} />
       <text x="200" y="47" textAnchor="middle" style={{ fontSize: 9, fontWeight: 700 }} fill={C.white}>CATEGORY</text>
       {[
         { x: 70, y: 110 },
@@ -388,7 +415,8 @@ function EcommerceHero({ className }: { className?: string }) {
 }
 
 /** International SEO — market / language / regional expansion map. */
-function InternationalHero({ className }: { className?: string }) {
+function InternationalHero({ className, ids }: ServiceVisualProps) {
+  const { gradId } = ids;
   const markets = [
     { x: 90, y: 90, code: "US" },
     { x: 200, y: 70, code: "CA" },
@@ -396,7 +424,7 @@ function InternationalHero({ className }: { className?: string }) {
   ];
   return (
     <svg viewBox="0 0 400 280" className={className} role="img" aria-label="International market and language map">
-      <Defs />
+      <Defs ids={ids} />
       <rect x="0" y="0" width="400" height="280" rx={16} fill={C.white} stroke={C.line} />
       {/* globe */}
       <circle cx="200" cy="140" r="80" fill="none" stroke={C.teal} strokeWidth={1.5} />
@@ -406,7 +434,7 @@ function InternationalHero({ className }: { className?: string }) {
       <line x1="200" y1="60" x2="200" y2="220" stroke={C.teal} strokeWidth={1} opacity={0.4} />
       {markets.map((m) => (
         <g key={m.code}>
-          <circle cx={m.x} cy={m.y} r="14" fill={`url(#${GRAD_ID})`} />
+          <circle cx={m.x} cy={m.y} r="14" fill={`url(#${gradId})`} />
           <text x={m.x} y={m.y + 4} textAnchor="middle" style={{ fontSize: 9, fontWeight: 700 }} fill={C.white}>{m.code}</text>
           <line x1="200" y1="140" x2={m.x} y2={m.y} stroke={C.green} strokeWidth={1} className="flow-line" opacity={0.5} />
         </g>
@@ -423,7 +451,8 @@ function InternationalHero({ className }: { className?: string }) {
 }
 
 /** SEO Audit — audit report preview + prioritized issue scoring. */
-function AuditHero({ className }: { className?: string }) {
+function AuditHero({ className, ids }: ServiceVisualProps) {
+  const { gradId } = ids;
   const rows = [
     { label: "Technical", level: 78, c: C.green },
     { label: "Content", level: 62, c: C.emerald },
@@ -432,12 +461,12 @@ function AuditHero({ className }: { className?: string }) {
   ];
   return (
     <svg viewBox="0 0 400 280" className={className} role="img" aria-label="Audit report preview with prioritized scoring">
-      <Defs />
+      <Defs ids={ids} />
       <rect x="0" y="0" width="400" height="280" rx={16} fill={C.white} stroke={C.line} />
       <rect x="0" y="0" width="400" height="44" rx={16} fill={C.tint} />
       <rect x="0" y="36" width="400" height="8" fill={C.tint} />
       <text x="20" y="28" style={{ fontSize: 10, fontWeight: 700 }} fill={C.teal}>SEO GROWTH AUDIT</text>
-      <Pill x={300} y={13} label="90-DAY PLAN" width={84} fill={`url(#${GRAD_ID})`} stroke={C.teal} textFill={C.white} />
+      <Pill x={300} y={13} label="90-DAY PLAN" width={84} fill={`url(#${gradId})`} stroke={C.teal} textFill={C.white} />
       {rows.map((r, i) => (
         <g key={r.label}>
           <text x="24" y={84 + i * 40} style={{ fontSize: 10, fontWeight: 600 }} fill={C.secondary}>{r.label}</text>
@@ -455,10 +484,11 @@ function AuditHero({ className }: { className?: string }) {
 }
 
 /** PPC Management — paid search command center. */
-function PpcHero({ className }: { className?: string }) {
+function PpcHero({ className, ids }: ServiceVisualProps) {
+  const { gradId } = ids;
   return (
     <svg viewBox="0 0 400 280" className={className} role="img" aria-label="Paid search command center with local and global PPC">
-      <Defs />
+      <Defs ids={ids} />
       <rect x="0" y="0" width="400" height="280" rx={16} fill={C.white} stroke={C.line} />
       {/* ad block */}
       <rect x="16" y="20" width="180" height="80" rx={10} fill={C.tint} stroke={C.line} />
@@ -466,7 +496,7 @@ function PpcHero({ className }: { className?: string }) {
       <rect x="28" y="44" width="120" height="6" rx={3} fill={C.teal} />
       <rect x="28" y="56" width="90" height="4" rx={2} fill={C.line} />
       <rect x="28" y="66" width="70" height="4" rx={2} fill={C.line} />
-      <rect x="28" y="80" width="40" height="14" rx={7} fill={`url(#${GRAD_ID})`} />
+      <rect x="28" y="80" width="40" height="14" rx={7} fill={`url(#${gradId})`} />
       <text x="48" y="90" textAnchor="middle" style={{ fontSize: 7, fontWeight: 700 }} fill={C.white}>CTA</text>
       {/* local / global toggles */}
       <Pill x={210} y={24} label="LOCAL PPC" width={80} fill={C.white} stroke={C.teal} textFill={C.teal} />
@@ -474,7 +504,7 @@ function PpcHero({ className }: { className?: string }) {
       {/* conversion graph */}
       <rect x="210" y="56" width="174" height="100" rx={10} fill={C.white} stroke={C.line} />
       <text x="222" y="74" style={{ fontSize: 8, fontWeight: 700 }} fill={C.muted}>CONVERSION TRACKING</text>
-      <polyline points="226,140 250,128 274,132 298,112 322,116 346,96 366,84" fill="none" stroke={`url(#${GRAD_ID})`} strokeWidth={2} />
+      <polyline points="226,140 250,128 274,132 298,112 322,116 346,96 366,84" fill="none" stroke={`url(#${gradId})`} strokeWidth={2} />
       {[226, 250, 274, 298, 322, 346, 366].map((x, i) => (
         <circle key={i} cx={x} cy={[140, 128, 132, 112, 116, 96, 84][i]} r={2.5} fill={C.teal} />
       ))}
@@ -493,7 +523,8 @@ function PpcHero({ className }: { className?: string }) {
 }
 
 /** SEO Mentor — advisory roadmap + training curriculum. */
-function MentorHero({ className }: { className?: string }) {
+function MentorHero({ className, ids }: ServiceVisualProps) {
+  const { gradId, softGradId } = ids;
   const sessions = [
     { x: 60, y: 120, label: "S1" },
     { x: 130, y: 100, label: "S2" },
@@ -503,20 +534,20 @@ function MentorHero({ className }: { className?: string }) {
   ];
   return (
     <svg viewBox="0 0 400 280" className={className} role="img" aria-label="Advisory roadmap and training curriculum">
-      <Defs />
+      <Defs ids={ids} />
       <rect x="0" y="0" width="400" height="280" rx={16} fill={C.white} stroke={C.line} />
       <text x="20" y="28" style={{ fontSize: 9, fontWeight: 700 }} fill={C.teal}>ADVISORY ROADMAP</text>
       {/* roadmap line */}
       <path
         d={`M ${sessions[0].x} ${sessions[0].y} ${sessions.slice(1).map((s) => `L ${s.x} ${s.y}`).join(" ")}`}
         fill="none"
-        stroke={`url(#${GRAD_ID})`}
+        stroke={`url(#${gradId})`}
         strokeWidth={2.5}
         strokeLinecap="round"
       />
       {sessions.map((s) => (
         <g key={s.label}>
-          <circle cx={s.x} cy={s.y} r="12" fill={C.white} stroke={`url(#${GRAD_ID})`} strokeWidth={2} />
+          <circle cx={s.x} cy={s.y} r="12" fill={C.white} stroke={`url(#${gradId})`} strokeWidth={2} />
           <text x={s.x} y={s.y + 3} textAnchor="middle" style={{ fontSize: 7, fontWeight: 700 }} fill={C.teal}>{s.label}</text>
         </g>
       ))}
@@ -529,14 +560,14 @@ function MentorHero({ className }: { className?: string }) {
         </g>
       ))}
       {/* office hours */}
-      <rect x="20" y="226" width="360" height="36" rx={8} fill={`url(#${SOFT_GRAD_ID})`} stroke={C.lineSoft} />
+      <rect x="20" y="226" width="360" height="36" rx={8} fill={`url(#${softGradId})`} stroke={C.lineSoft} />
       <circle cx="40" cy="244" r="6" fill={C.green} className="pulse-dot" />
       <text x="56" y="248" style={{ fontSize: 9, fontWeight: 600 }} fill={C.secondary}>Monthly office hours · async support · accountability reviews</text>
     </svg>
   );
 }
 
-const heroVisuals: Record<IconKey, React.ComponentType<{ className?: string }>> = {
+const heroVisuals: Record<IconKey, React.ComponentType<ServiceVisualProps>> = {
   strategy: StrategyHero,
   technical: TechnicalHero,
   ai: AiHero,
@@ -558,15 +589,16 @@ export function ServiceHeroVisual({
   icon: IconKey;
   className?: string;
 }) {
+  const ids = visualIdsFor(`hero-${icon}`);
   const Visual = heroVisuals[icon];
-  return <Visual className={className} />;
+  return <Visual className={className} ids={ids} />;
 }
 
 /* -------------------------------------------------------------------------- */
 /* Deliverable micro-visuals (compact, used inside the deliverables panel)     */
 /* -------------------------------------------------------------------------- */
 
-function MiniChecklist({ className }: { className?: string }) {
+function MiniChecklist({ className }: ServiceVisualProps) {
   return (
     <svg viewBox="0 0 120 80" className={className} role="img" aria-label="Checklist deliverable">
       {[0, 1, 2, 3].map((i) => (
@@ -580,10 +612,12 @@ function MiniChecklist({ className }: { className?: string }) {
   );
 }
 
-function MiniCluster({ className }: { className?: string }) {
+function MiniCluster({ className, ids }: ServiceVisualProps) {
+  const { gradId } = ids;
   return (
     <svg viewBox="0 0 120 80" className={className} role="img" aria-label="Topic cluster deliverable">
-      <circle cx="60" cy="40" r="12" fill={`url(#${GRAD_ID})`} />
+      <Defs ids={ids} />
+      <circle cx="60" cy="40" r="12" fill={`url(#${gradId})`} />
       {[
         { x: 20, y: 20 },
         { x: 100, y: 20 },
@@ -601,10 +635,12 @@ function MiniCluster({ className }: { className?: string }) {
   );
 }
 
-function MiniNetwork({ className }: { className?: string }) {
+function MiniNetwork({ className, ids }: ServiceVisualProps) {
+  const { gradId } = ids;
   return (
     <svg viewBox="0 0 120 80" className={className} role="img" aria-label="Authority network deliverable">
-      <rect x="48" y="30" width="24" height="20" rx="4" fill={`url(#${GRAD_ID})`} />
+      <Defs ids={ids} />
+      <rect x="48" y="30" width="24" height="20" rx="4" fill={`url(#${gradId})`} />
       {[
         { x: 16, y: 16 },
         { x: 104, y: 16 },
@@ -620,7 +656,7 @@ function MiniNetwork({ className }: { className?: string }) {
   );
 }
 
-function MiniMap({ className }: { className?: string }) {
+function MiniMap({ className }: ServiceVisualProps) {
   return (
     <svg viewBox="0 0 120 80" className={className} role="img" aria-label="Local map deliverable">
       <rect x="6" y="10" width="108" height="60" rx={6} fill={C.tint} />
@@ -641,7 +677,7 @@ function MiniMap({ className }: { className?: string }) {
   );
 }
 
-function MiniCatalog({ className }: { className?: string }) {
+function MiniCatalog({ className }: ServiceVisualProps) {
   return (
     <svg viewBox="0 0 120 80" className={className} role="img" aria-label="Product catalog deliverable">
       {[0, 1, 2].map((col) =>
@@ -657,7 +693,7 @@ function MiniCatalog({ className }: { className?: string }) {
   );
 }
 
-function MiniGlobe({ className }: { className?: string }) {
+function MiniGlobe({ className }: ServiceVisualProps) {
   return (
     <svg viewBox="0 0 120 80" className={className} role="img" aria-label="International markets deliverable">
       <circle cx="60" cy="40" r="24" fill="none" stroke={C.teal} strokeWidth={1.5} />
@@ -673,20 +709,22 @@ function MiniGlobe({ className }: { className?: string }) {
   );
 }
 
-function MiniReport({ className }: { className?: string }) {
+function MiniReport({ className, ids }: ServiceVisualProps) {
+  const { gradId } = ids;
   return (
     <svg viewBox="0 0 120 80" className={className} role="img" aria-label="Audit report deliverable">
+      <Defs ids={ids} />
       <rect x="20" y="12" width="80" height="56" rx={6} fill={C.white} stroke={C.line} />
       <rect x="28" y="20" width="50" height="5" rx={2.5} fill={C.teal} />
       {[0, 1, 2].map((i) => (
         <rect key={i} x="28" y={32 + i * 10} width={i === 1 ? 48 : 60} height={4} rx={2} fill={C.line} />
       ))}
-      <rect x="28" y="62" width="24" height="8" rx={4} fill={`url(#${GRAD_ID})`} />
+      <rect x="28" y="62" width="24" height="8" rx={4} fill={`url(#${gradId})`} />
     </svg>
   );
 }
 
-function MiniControlPanel({ className }: { className?: string }) {
+function MiniControlPanel({ className }: ServiceVisualProps) {
   return (
     <svg viewBox="0 0 120 80" className={className} role="img" aria-label="PPC control panel deliverable">
       <rect x="8" y="12" width="104" height="56" rx={6} fill={C.white} stroke={C.line} />
@@ -700,18 +738,20 @@ function MiniControlPanel({ className }: { className?: string }) {
   );
 }
 
-function MiniCurriculum({ className }: { className?: string }) {
+function MiniCurriculum({ className, ids }: ServiceVisualProps) {
+  const { gradId } = ids;
   return (
     <svg viewBox="0 0 120 80" className={className} role="img" aria-label="Mentorship curriculum deliverable">
+      <Defs ids={ids} />
       {[0, 1, 2, 3].map((i) => (
-        <rect key={i} x={10 + i * 27} y={20 + (i % 2) * 8} width={22} height={36} rx={4} fill={i === 1 ? `url(#${GRAD_ID})` : C.tint} stroke={C.lineSoft} />
+        <rect key={i} x={10 + i * 27} y={20 + (i % 2) * 8} width={22} height={36} rx={4} fill={i === 1 ? `url(#${gradId})` : C.tint} stroke={C.lineSoft} />
       ))}
       <line x1="10" y1="68" x2="110" y2="68" stroke={C.line} />
     </svg>
   );
 }
 
-const deliverableVisuals: Record<IconKey, React.ComponentType<{ className?: string }>> = {
+const deliverableVisuals: Record<IconKey, React.ComponentType<ServiceVisualProps>> = {
   strategy: MiniChecklist,
   technical: MiniChecklist,
   ai: MiniCluster,
@@ -733,8 +773,9 @@ export function ServiceDeliverableVisual({
   icon: IconKey;
   className?: string;
 }) {
+  const ids = visualIdsFor(`deliverable-${icon}`);
   const Visual = deliverableVisuals[icon];
-  return <Visual className={className} />;
+  return <Visual className={className} ids={ids} />;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -747,6 +788,8 @@ export function ServiceDeliverableVisual({
  * Used on the `/services` hub. Unique system visual (not a grid).
  */
 export function ServiceConstellation({ className }: { className?: string }) {
+  const ids = visualIdsFor("constellation");
+  const { gradId, softGradId } = ids;
   const nodes = [
     { x: 80, y: 90, label: "Strategy", angle: 200 },
     { x: 60, y: 170, label: "Technical", angle: 160 },
@@ -762,7 +805,7 @@ export function ServiceConstellation({ className }: { className?: string }) {
   ];
   return (
     <svg viewBox="0 0 400 300" className={className} role="img" aria-label="Search growth service constellation">
-      <Defs />
+      <Defs ids={ids} />
       {/* connections to core */}
       {nodes.map((n) => (
         <line
@@ -778,15 +821,15 @@ export function ServiceConstellation({ className }: { className?: string }) {
         />
       ))}
       {/* core */}
-      <circle cx="200" cy="150" r="30" fill={`url(#${SOFT_GRAD_ID})`} />
-      <circle cx="200" cy="150" r="20" fill={`url(#${GRAD_ID})`} opacity={0.15} />
-      <circle cx="200" cy="150" r="12" fill={`url(#${GRAD_ID})`} />
+      <circle cx="200" cy="150" r="30" fill={`url(#${softGradId})`} />
+      <circle cx="200" cy="150" r="20" fill={`url(#${gradId})`} opacity={0.15} />
+      <circle cx="200" cy="150" r="12" fill={`url(#${gradId})`} />
       <text x="200" y="146" textAnchor="middle" style={{ fontSize: 7, fontWeight: 700 }} fill={C.white}>SEARCH</text>
       <text x="200" y="155" textAnchor="middle" style={{ fontSize: 7, fontWeight: 700 }} fill={C.white}>SYSTEM</text>
       {/* nodes */}
       {nodes.map((n) => (
         <g key={n.label}>
-          <circle cx={n.x} cy={n.y} r="14" fill={C.white} stroke={`url(#${GRAD_ID})`} strokeWidth={1.5} />
+          <circle cx={n.x} cy={n.y} r="14" fill={C.white} stroke={`url(#${gradId})`} strokeWidth={1.5} />
           <text x={n.x} y={n.y + 3} textAnchor="middle" style={{ fontSize: 6, fontWeight: 600 }} fill={C.secondary}>
             {n.label.length > 8 ? n.label.slice(0, 7) + "…" : n.label}
           </text>
@@ -807,6 +850,7 @@ export function DecisionPathAccent({
   variant: "visibility" | "capture" | "authority" | "capability";
   className?: string;
 }) {
+  const ids = visualIdsFor(`decision-${variant}`);
   const variants = {
     visibility: { from: "Blind spots", to: "Visible", c: C.green },
     capture: { from: "Leaking demand", to: "Captured", c: C.teal },
@@ -816,7 +860,7 @@ export function DecisionPathAccent({
   const v = variants[variant];
   return (
     <svg viewBox="0 0 120 40" className={className} role="img" aria-label={`${v.from} to ${v.to}`}>
-      <Defs />
+      <Defs ids={ids} />
       <Pill x={4} y={11} label={v.from} width={48} fill={C.tint} stroke={C.line} textFill={C.muted} />
       <path d="M 56 20 L 70 20" stroke={v.c} strokeWidth={1.5} markerEnd="" />
       <path d="M 66 16 L 70 20 L 66 24" fill="none" stroke={v.c} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />

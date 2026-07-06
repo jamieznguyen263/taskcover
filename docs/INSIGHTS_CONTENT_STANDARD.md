@@ -101,3 +101,13 @@ Task 10B adds `INSIGHTS_PROVIDER=database` for published PostgreSQL snapshots. D
 ## Task 13C Article Rail
 
 Article pages now use a desktop layout with a left table of contents, readable center column, and sticky right conversion rail. The rail uses article metadata for the related service and related sample audit. On mobile, the same modules stack after the table of contents before the article body. Article tables must use contained horizontal scroll and must not create body-level overflow.
+
+## Task 15 Article Template QA
+
+- Article cover images must have meaningful alt text and stable dimensions.
+- Comparison tables must remain inside an overflow wrapper and never force
+  body-level horizontal scroll.
+- Desktop table of contents and conversion rail must stay sticky without
+  overlapping article content.
+- Mobile table of contents uses a local horizontal rail.
+- Source lists remain visible, linked, and not replaced by hidden SEO-only text.

@@ -639,3 +639,15 @@ Insights must not look like a generic WordPress blog grid. The hub uses an edito
 ## Task 13C Homepage Standard
 
 The hero should feel calmer and more premium than a dense dashboard. Use the video-ready spokesperson module on the right side until a real permissioned video exists. The brand proof strip must contain verified client/case-study proof assets only, not service capability tags. The radial search-surface section should make interaction obvious with button nodes, localized guidance, visible focus, and a clear active-surface explanation card.
+
+## Task 15 Performance And Motion QA
+
+- Homepage hero text stays server-rendered and indexable.
+- Spokesperson video remains a clearly labeled placeholder until an approved
+  real asset is provided; no video autoload or fake video is allowed.
+- Search-surface radial map remains keyboard accessible and reduced-motion
+  aware.
+- Brand logo strip uses approved case-study assets only and falls back to a
+  static layout for reduced motion/mobile.
+- Do not replace the homepage with generic stock visuals or remove proof
+  content for lab-score gains.

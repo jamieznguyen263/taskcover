@@ -76,20 +76,39 @@ export function DataRequestForm({ locale, turnstileSiteKey }: { locale: Locale; 
   const [pending, setPending] = React.useState(false);
   const [notice, setNotice] = React.useState("");
   const [error, setError] = React.useState("");
+  const [fieldErrors, setFieldErrors] = React.useState<Record<string, string>>({});
   const formRef = React.useRef<HTMLFormElement>(null);
+  const errorSummaryRef = React.useRef<HTMLDivElement>(null);
+
+  function focusValidationError(errors: Record<string, string>) {
+    window.requestAnimationFrame(() => {
+      const firstField = Object.keys(errors)[0];
+      const target = firstField
+        ? formRef.current?.querySelector<HTMLElement>(`[name="${firstField}"]`)
+        : errorSummaryRef.current;
+      (target ?? errorSummaryRef.current)?.focus();
+    });
+  }
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const data = new FormData(form);
-    const required = ["name", "workEmail", "requestDetail", "message"];
-    if (required.some((key) => !String(data.get(key) ?? "").trim()) || data.get("consent") !== "on") {
+    const nextErrors: Record<string, string> = {};
+    for (const key of ["name", "workEmail", "requestDetail", "message"]) {
+      if (!String(data.get(key) ?? "").trim()) nextErrors[key] = t.required as string;
+    }
+    if (data.get("consent") !== "on") nextErrors.consent = t.required as string;
+    if (Object.keys(nextErrors).length > 0) {
+      setFieldErrors(nextErrors);
       setError(t.required as string);
+      focusValidationError(nextErrors);
       return;
     }
     setPending(true);
     setError("");
     setNotice("");
+    setFieldErrors({});
     try {
       const response = await fetch("/api/leads", {
         method: "POST",
@@ -124,29 +143,65 @@ export function DataRequestForm({ locale, turnstileSiteKey }: { locale: Locale; 
   }
 
   return (
-    <form ref={formRef} onSubmit={submit} className="relative rounded-3xl border border-line bg-white p-5 depth-layered" aria-labelledby="data-request-title">
+    <form ref={formRef} noValidate onSubmit={submit} className="relative rounded-3xl border border-line bg-white p-5 depth-layered" aria-labelledby="data-request-title">
       <div aria-hidden="true" className="absolute left-[-10000px] top-auto h-px w-px overflow-hidden">
         <label htmlFor="privacy-website">Website</label>
         <input id="privacy-website" name="website" tabIndex={-1} autoComplete="off" />
       </div>
       <h2 id="data-request-title" className="text-2xl font-semibold text-graphite">{t.title}</h2>
+      {Object.keys(fieldErrors).length > 0 ? (
+        <div
+          ref={errorSummaryRef}
+          id="data-request-error-summary"
+          tabIndex={-1}
+          role="alert"
+          className="mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800"
+        >
+          {t.required}
+        </div>
+      ) : null}
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
-        <Field name="name" label={t.name as string} required autoComplete="name" />
-        <Field name="workEmail" label={t.email as string} type="email" required autoComplete="email" />
+        <Field name="name" label={t.name as string} required autoComplete="name" error={fieldErrors.name} />
+        <Field name="workEmail" label={t.email as string} type="email" required autoComplete="email" error={fieldErrors.workEmail} />
         <Field name="company" label={t.company as string} autoComplete="organization" />
         <Field name="websiteUrl" label={t.website as string} type="url" />
       </div>
       <label className="mt-4 block text-sm font-semibold text-graphite" htmlFor="requestDetail">{t.requestType}</label>
-      <select id="requestDetail" name="requestDetail" required className={inputClass}>
+      <select
+        id="requestDetail"
+        name="requestDetail"
+        required
+        aria-invalid={Boolean(fieldErrors.requestDetail)}
+        aria-describedby={fieldErrors.requestDetail ? "requestDetail-error" : undefined}
+        className={inputClass}
+      >
         <option value="">{t.requestType}</option>
         {options.map((option) => <option key={option} value={option}>{option}</option>)}
       </select>
+      {fieldErrors.requestDetail ? <p id="requestDetail-error" className="mt-2 text-sm font-medium text-red-700">{fieldErrors.requestDetail}</p> : null}
       <label className="mt-4 block text-sm font-semibold text-graphite" htmlFor="message">{t.message}</label>
-      <textarea id="message" name="message" required rows={6} className={`${inputClass} resize-y`} />
+      <textarea
+        id="message"
+        name="message"
+        required
+        rows={6}
+        aria-invalid={Boolean(fieldErrors.message)}
+        aria-describedby={fieldErrors.message ? "message-error" : undefined}
+        className={`${inputClass} resize-y`}
+      />
+      {fieldErrors.message ? <p id="message-error" className="mt-2 text-sm font-medium text-red-700">{fieldErrors.message}</p> : null}
       <label className="mt-4 flex items-start gap-3 rounded-2xl border border-line bg-surface-tint p-4 text-sm text-secondary">
-        <input name="consent" type="checkbox" required className="mt-1 h-4 w-4 accent-brand-teal" />
+        <input
+          name="consent"
+          type="checkbox"
+          required
+          aria-invalid={Boolean(fieldErrors.consent)}
+          aria-describedby={fieldErrors.consent ? "consent-error" : undefined}
+          className="mt-1 h-4 w-4 accent-brand-teal"
+        />
         <span>{t.consent}</span>
       </label>
+      {fieldErrors.consent ? <p id="consent-error" className="mt-2 text-sm font-medium text-red-700">{fieldErrors.consent}</p> : null}
       {turnstileSiteKey ? (
         <div className="mt-4 rounded-2xl border border-line bg-white p-4">
           <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
@@ -172,12 +227,21 @@ export function DataRequestForm({ locale, turnstileSiteKey }: { locale: Locale; 
 
 const inputClass = "mt-2 min-h-11 w-full rounded-xl border border-line bg-white px-4 py-3 text-sm text-graphite shadow-sm focus:border-brand-teal focus:outline-none focus:ring-2 focus:ring-brand-teal/25";
 
-function Field({ name, label, type = "text", required, autoComplete }: { name: string; label: string; type?: string; required?: boolean; autoComplete?: string }) {
+function Field({ name, label, type = "text", required, autoComplete, error }: { name: string; label: string; type?: string; required?: boolean; autoComplete?: string; error?: string }) {
   return (
     <div>
       <label className="text-sm font-semibold text-graphite" htmlFor={name}>{label}</label>
-      <input id={name} name={name} type={type} required={required} autoComplete={autoComplete} className={inputClass} />
+      <input
+        id={name}
+        name={name}
+        type={type}
+        required={required}
+        autoComplete={autoComplete}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? `${name}-error` : undefined}
+        className={inputClass}
+      />
+      {error ? <p id={`${name}-error`} className="mt-2 text-sm font-medium text-red-700">{error}</p> : null}
     </div>
   );
 }
-

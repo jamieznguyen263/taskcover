@@ -270,7 +270,15 @@ export function InsightArticleView({
           </div>
           <figure className="min-w-0 max-w-full overflow-hidden rounded-3xl border border-line bg-white p-5 depth-layered">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={article.coverImage} alt={article.coverImageAlt} className="h-auto w-full min-w-0 rounded-2xl border border-line bg-surface-soft" />
+            <img
+              src={article.coverImage}
+              alt={article.coverImageAlt}
+              width={1200}
+              height={630}
+              loading="lazy"
+              decoding="async"
+              className="h-auto w-full min-w-0 rounded-2xl border border-line bg-surface-soft"
+            />
             <figcaption className="mt-3 text-center text-xs leading-5 text-muted">{article.coverImageCaption}</figcaption>
           </figure>
         </Container>

@@ -168,12 +168,15 @@ export function SiteHeader() {
           <img
             src={siteConfig.logo.horizontal}
             alt={`${siteConfig.name} logo`}
-            className="h-auto w-[clamp(5.75rem,30vw,8.25rem)] object-contain sm:w-[9.25rem] lg:w-[9.75rem] xl:w-[10.375rem]"
+            width={2721}
+            height={1176}
+            decoding="async"
+            className="h-auto w-[clamp(6.25rem,32vw,9rem)] object-contain sm:w-[10rem] lg:w-[10.5rem] xl:w-[11rem]"
             style={{ imageRendering: "auto" }}
           />
         </Link>
 
-        <nav aria-label="Primary" className="hidden lg:block">
+        <nav aria-label="Primary" className="hidden xl:block">
           <ul className="flex items-center gap-1">
             {content.megaMenu.map((item) => {
               const expanded = openMenuId === item.id;
@@ -229,7 +232,7 @@ export function SiteHeader() {
           </ul>
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex xl:gap-3">
+        <div className="hidden items-center gap-2 xl:flex xl:gap-3">
           <React.Suspense fallback={<div className="h-10 w-20 rounded-full border border-line" />}>
             <LanguageSwitcher />
           </React.Suspense>
@@ -238,14 +241,14 @@ export function SiteHeader() {
           </CTAButton>
         </div>
 
-        <div className="flex items-center gap-2 lg:hidden">
+        <div className="flex items-center gap-2 xl:hidden">
           <React.Suspense fallback={<div className="h-10 w-20 rounded-full border border-line" />}>
             <LanguageSwitcher />
           </React.Suspense>
           <button
             ref={mobileTriggerRef}
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-graphite focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal lg:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-graphite focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal xl:hidden"
             aria-label={mobileOpen ? content.ui.closeMenu : content.ui.openMenu}
             aria-expanded={mobileOpen}
             aria-controls="mobile-primary-menu"
@@ -268,7 +271,7 @@ export function SiteHeader() {
       {openMenu && (
         <div
           id={`mega-menu-${openMenu.id}`}
-          className="hidden border-t border-line bg-white shadow-[0_24px_60px_rgba(20,31,36,0.12)] lg:block"
+          className="hidden border-t border-line bg-white shadow-[0_24px_60px_rgba(20,31,36,0.12)] xl:block"
           onMouseEnter={() => setOpenMenuState({ pathname, id: openMenu.id })}
           onMouseLeave={() => setOpenMenuState({ pathname, id: null })}
         >
@@ -350,7 +353,7 @@ export function SiteHeader() {
       <div
         id="mobile-primary-menu"
         className={cn(
-          "lg:hidden",
+          "xl:hidden",
           mobileOpen
             ? "block max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-line bg-white shadow-lg"
             : "hidden"

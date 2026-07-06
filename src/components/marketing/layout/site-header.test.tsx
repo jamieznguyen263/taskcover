@@ -64,19 +64,24 @@ describe("SiteHeader mobile navigation", () => {
 
     expect(logo).not.toBeNull();
     expect(logo?.getAttribute("alt")).toBe("Taskcover Agency logo");
+    expect(logo?.getAttribute("width")).toBe("2721");
+    expect(logo?.getAttribute("height")).toBe("1176");
     expect(classTokens(logo)).toContain("h-auto");
-    expect(classTokens(logo)).toContain("w-[clamp(5.75rem,30vw,8.25rem)]");
-    expect(classTokens(logo)).toContain("sm:w-[9.25rem]");
-    expect(classTokens(logo)).toContain("lg:w-[9.75rem]");
-    expect(classTokens(logo)).toContain("xl:w-[10.375rem]");
+    expect(classTokens(logo)).toContain("w-[clamp(6.25rem,32vw,9rem)]");
+    expect(classTokens(logo)).toContain("sm:w-[10rem]");
+    expect(classTokens(logo)).toContain("lg:w-[10.5rem]");
+    expect(classTokens(logo)).toContain("xl:w-[11rem]");
   });
 
   it("keeps a desktop mega menu open after pointer focus and click", () => {
     const container = renderHeader();
+    const primaryNav = container.querySelector<HTMLElement>('nav[aria-label="Primary"]');
     const servicesTrigger = container.querySelector<HTMLButtonElement>(
       'button[aria-controls="mega-menu-services"]'
     );
 
+    expect(classTokens(primaryNav)).toContain("xl:block");
+    expect(classTokens(primaryNav)).not.toContain("lg:block");
     expect(servicesTrigger).not.toBeNull();
     expect(servicesTrigger?.getAttribute("aria-expanded")).toBe("false");
 
@@ -113,6 +118,7 @@ describe("SiteHeader mobile navigation", () => {
     expect(solutionsGroup).not.toBeNull();
     expect(trigger?.getAttribute("aria-expanded")).toBe("false");
     expect(classTokens(menu)).toContain("hidden");
+    expect(classTokens(menu)).toContain("xl:hidden");
     expect(servicesGroup?.getAttribute("aria-expanded")).toBe("true");
     expect(solutionsGroup?.getAttribute("aria-expanded")).toBe("false");
 

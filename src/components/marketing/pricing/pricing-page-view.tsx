@@ -293,7 +293,15 @@ export function PricingPageView({
                     {logo ? (
                       <div className="flex h-20 items-center justify-center overflow-hidden rounded-2xl border border-line-soft bg-surface-soft p-3">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={logo.logoPath} alt={logo.alt} className="max-h-full w-auto object-contain" />
+                        <img
+                          src={logo.logoPath}
+                          alt={logo.alt}
+                          width={logo.width}
+                          height={logo.height}
+                          loading="lazy"
+                          decoding="async"
+                          className="max-h-full w-auto object-contain"
+                        />
                       </div>
                     ) : null}
                     <div>

@@ -338,3 +338,15 @@ pre-paint script and `HtmlLangSync` set `/fr` and `/es` to the correct rendered
 language before paint and on client navigation. This preserves the 264 static
 page build. Treat a server-only per-locale `<html lang>` as a future layout
 architecture review if static generation requirements change.
+
+## Task 15 Localization QA Notes
+
+- English remains the canonical slug language for EN/FR/ES routes.
+- Language switching preserves safe `intent`, `type`, and pricing `tab` query
+  values only.
+- Pricing mentor variants `/fr/pricing?tab=mentor` and
+  `/es/pricing?tab=mentor` are included in final QA sampling.
+- The documented raw static root `lang="en"` limitation remains acceptable only
+  because pre-paint/client sync corrects rendered FR/ES behavior. Rendered
+  staging behavior must still be checked.
+- FR/ES long labels need viewport review at 390px, 768px, and desktop widths.

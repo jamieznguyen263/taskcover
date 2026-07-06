@@ -34,6 +34,10 @@
     "rate-limits:verify": "tsx scripts/rate-limits-verify.ts",
     "scheduler:verify": "tsx scripts/scheduler-verify.ts",
     "production:check": "tsx scripts/production-check.ts",
+    "perf:check": "tsx scripts/launch-qa.ts --mode=perf",
+    "a11y:check": "tsx scripts/launch-qa.ts --mode=a11y",
+    "visual:check": "tsx scripts/launch-qa.ts --mode=visual",
+    "launch:qa": "tsx scripts/launch-qa.ts --mode=all",
     "production:predeploy": "npm run production:check && npm run test && npm run lint && npm run typecheck && npm run build && npm run build:cloudflare && npm run cf:dry-run",
     "smoke:deployment": "tsx scripts/smoke-deployment.ts"
   },

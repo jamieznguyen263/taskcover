@@ -82,3 +82,20 @@ Production deployment, DNS changes, provider secret configuration, and external 
 - Production deploy, DNS, production secrets, analytics/tracking, legal review,
   Search Console, and live social preview validation remain separate launch
   checks.
+
+## Task 15 Performance, Accessibility, And Visual Readiness
+
+- `npm run perf:check`, `npm run a11y:check`, `npm run visual:check`, and
+  `npm run launch:qa` are available for local launch guardrails.
+- Public bundle checks prevent Admin, Tiptap, database, Cloudinary, and chart
+  code from being imported by public marketing client components.
+- Hero video remains poster/placeholder-first with no default video URL and no
+  autoplay.
+- Data Request now has custom accessible validation, field-level errors,
+  first-error focus, and direct email fallback behavior.
+- Header logo dimensions and responsive brand size were adjusted without
+  increasing header height.
+- Article tables, pricing tabs, sample audit tabs, mobile menu, footer groups,
+  and client logos have source-level overflow/aspect-ratio protections.
+- Browser viewport QA and Core Web Vitals lab checks still need to be repeated
+  against local production/staging output before launch.

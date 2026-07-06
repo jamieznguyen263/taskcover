@@ -388,3 +388,17 @@ Route families and indexability rules are documented in
 API, preview, thank-you, 404/error, draft, and query URLs remain excluded from
 the sitemap. Pricing query URLs such as `?tab=mentor` remain routable but
 canonicalize to the clean localized pricing route.
+
+## Task 15 Launch QA Tooling
+
+Task 15 adds `scripts/launch-qa.ts` and four local scripts:
+
+- `npm run perf:check`
+- `npm run a11y:check`
+- `npm run visual:check`
+- `npm run launch:qa`
+
+The script performs source-level public bundle, media, accessibility, motion,
+and responsive guardrails. It can also sample rendered routes when passed
+`-- --base-url=http://localhost:3100`. These checks supplement, not replace,
+`seo:check`, `seo:crawl`, production build, and Cloudflare dry-run gates.
