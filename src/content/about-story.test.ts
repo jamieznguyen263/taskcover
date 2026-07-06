@@ -1,3 +1,5 @@
+import { existsSync, statSync } from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import sitemap from "@/app/sitemap";
 import { aboutStoryMetadata } from "@/components/marketing/about/about-story-page";
@@ -48,17 +50,20 @@ describe("about story content", () => {
     }
   });
 
-  it("keeps team portrait placeholders safe until real assets are added", () => {
+  it("uses approved team portrait assets across locales", () => {
     for (const locale of locales) {
       const leaders = getAboutStoryContent(locale).leadership.leaders;
       expect(leaders).toHaveLength(2);
-      expect(leaders.map((leader) => leader.futureImagePath)).toEqual([
+      expect(leaders.map((leader) => leader.imagePath)).toEqual([
         "/team/jamiez-nguyen.webp",
         "/team/john-edward.webp",
       ]);
       for (const leader of leaders) {
-        expect(leader.portraitAvailable).toBe(false);
-        expect(leader.initials).toMatch(/^[A-Z]{2}$/);
+        expect(leader.imageWidth).toBe(1200);
+        expect(leader.imageHeight).toBe(1500);
+        const assetPath = path.join(process.cwd(), "public", leader.imagePath.slice(1));
+        expect(existsSync(assetPath)).toBe(true);
+        expect(statSync(assetPath).size).toBeGreaterThan(10_000);
       }
     }
   });

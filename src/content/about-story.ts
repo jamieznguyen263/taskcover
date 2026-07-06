@@ -26,9 +26,9 @@ export type AboutStoryLeader = {
   focusAreas: string[];
   longDescription: string;
   alt: string;
-  initials: string;
-  futureImagePath: `/team/${string}.webp`;
-  portraitAvailable: false;
+  imagePath: `/team/${string}.webp`;
+  imageWidth: number;
+  imageHeight: number;
 };
 
 export type AboutStoryContent = {
@@ -77,8 +77,6 @@ export type AboutStoryContent = {
     title: string;
     intro: string;
     focusLabel: string;
-    placeholderLabel: string;
-    futurePhotoLabel: string;
     leaders: AboutStoryLeader[];
   };
   operatingModel: {
@@ -465,10 +463,8 @@ export const aboutStoryContent = {
       eyebrow: "Leadership",
       title: "The people behind Taskcover",
       intro:
-        "Taskcover is founder-led and technically directed. The public page shows only confirmed leadership details and leaves portrait slots ready for real approved photos.",
+        "Taskcover is founder-led and technically directed. The public page shows confirmed leadership details with approved portraits and no invented awards, certifications, or social profiles.",
       focusLabel: "Focus areas",
-      placeholderLabel: "Portrait slot reserved",
-      futurePhotoLabel: "Real photo expected later",
       leaders: [
         {
           name: "Jamiez Nguyen",
@@ -486,9 +482,9 @@ export const aboutStoryContent = {
           longDescription:
             "Jamiez leads Taskcover's commercial strategy, client growth direction, and search methodology. His focus is turning SEO, AI search, content authority, PPC intelligence, and market expansion into practical systems that clients can understand, execute, and measure.",
           alt: "Jamiez Nguyen, Founder and CEO of Taskcover Agency",
-          initials: "JN",
-          futureImagePath: "/team/jamiez-nguyen.webp",
-          portraitAvailable: false,
+          imagePath: "/team/jamiez-nguyen.webp",
+          imageWidth: 1200,
+          imageHeight: 1500,
         },
         {
           name: "John Edward",
@@ -506,9 +502,9 @@ export const aboutStoryContent = {
           longDescription:
             "John leads the technical layer behind Taskcover's systems: web architecture, technical SEO infrastructure, automation, content operations, performance, and the tooling required to turn strategy into repeatable execution.",
           alt: "John Edward, CTO of Taskcover Agency",
-          initials: "JE",
-          futureImagePath: "/team/john-edward.webp",
-          portraitAvailable: false,
+          imagePath: "/team/john-edward.webp",
+          imageWidth: 1200,
+          imageHeight: 1500,
         },
       ],
     },
@@ -627,10 +623,8 @@ export const aboutStoryContent = {
       eyebrow: "Direction",
       title: "Les personnes derrière Taskcover",
       intro:
-        "Taskcover est dirigée par son fondateur et pilotée techniquement. Cette page publique montre uniquement les informations confirmées et réserve les emplacements portraits à de vraies photos approuvées.",
+        "Taskcover est dirigée par son fondateur et pilotée techniquement. Cette page publique montre les informations confirmées avec des portraits approuvés, sans prix, certifications ou profils sociaux inventés.",
       focusLabel: "Domaines d'attention",
-      placeholderLabel: "Emplacement portrait réservé",
-      futurePhotoLabel: "Photo réelle attendue plus tard",
       leaders: [
         {
           name: "Jamiez Nguyen",
@@ -647,10 +641,10 @@ export const aboutStoryContent = {
           ],
           longDescription:
             "Jamiez dirige la stratégie commerciale, l'orientation de croissance client et la méthodologie search de Taskcover. Son objectif est de transformer SEO, recherche IA, autorité de contenu, intelligence PPC et expansion de marché en systèmes pratiques que les clients peuvent comprendre, exécuter et mesurer.",
-          alt: "Jamiez Nguyen, fondateur et CEO de Taskcover Agency",
-          initials: "JN",
-          futureImagePath: "/team/jamiez-nguyen.webp",
-          portraitAvailable: false,
+          alt: "Jamiez Nguyen, Founder and CEO of Taskcover Agency",
+          imagePath: "/team/jamiez-nguyen.webp",
+          imageWidth: 1200,
+          imageHeight: 1500,
         },
         {
           name: "John Edward",
@@ -667,10 +661,10 @@ export const aboutStoryContent = {
           ],
           longDescription:
             "John dirige la couche technique derrière les systèmes Taskcover : architecture web, infrastructure SEO technique, automatisation, opérations de contenu, performance et outillage nécessaires pour transformer la stratégie en exécution répétable.",
-          alt: "John Edward, CTO de Taskcover Agency",
-          initials: "JE",
-          futureImagePath: "/team/john-edward.webp",
-          portraitAvailable: false,
+          alt: "John Edward, CTO of Taskcover Agency",
+          imagePath: "/team/john-edward.webp",
+          imageWidth: 1200,
+          imageHeight: 1500,
         },
       ],
     },
@@ -789,10 +783,8 @@ export const aboutStoryContent = {
       eyebrow: "Liderazgo",
       title: "Las personas detrás de Taskcover",
       intro:
-        "Taskcover está liderada por su fundador y dirigida técnicamente. La página pública muestra solo información confirmada y deja espacios de retrato listos para fotos reales aprobadas.",
+        "Taskcover está liderada por su fundador y dirigida técnicamente. La página pública muestra información confirmada con retratos aprobados, sin premios, certificaciones ni perfiles sociales inventados.",
       focusLabel: "Áreas de enfoque",
-      placeholderLabel: "Espacio de retrato reservado",
-      futurePhotoLabel: "Foto real prevista más adelante",
       leaders: [
         {
           name: "Jamiez Nguyen",
@@ -809,10 +801,10 @@ export const aboutStoryContent = {
           ],
           longDescription:
             "Jamiez lidera la estrategia comercial, la dirección de crecimiento de clientes y la metodología search de Taskcover. Su foco es convertir SEO, búsqueda con IA, autoridad de contenido, inteligencia PPC y expansión de mercado en sistemas prácticos que los clientes puedan entender, ejecutar y medir.",
-          alt: "Jamiez Nguyen, fundador y CEO de Taskcover Agency",
-          initials: "JN",
-          futureImagePath: "/team/jamiez-nguyen.webp",
-          portraitAvailable: false,
+          alt: "Jamiez Nguyen, Founder and CEO of Taskcover Agency",
+          imagePath: "/team/jamiez-nguyen.webp",
+          imageWidth: 1200,
+          imageHeight: 1500,
         },
         {
           name: "John Edward",
@@ -829,10 +821,10 @@ export const aboutStoryContent = {
           ],
           longDescription:
             "John lidera la capa técnica detrás de los sistemas de Taskcover: arquitectura web, infraestructura de SEO técnico, automatización, operaciones de contenido, rendimiento y herramientas necesarias para convertir estrategia en ejecución repetible.",
-          alt: "John Edward, CTO de Taskcover Agency",
-          initials: "JE",
-          futureImagePath: "/team/john-edward.webp",
-          portraitAvailable: false,
+          alt: "John Edward, CTO of Taskcover Agency",
+          imagePath: "/team/john-edward.webp",
+          imageWidth: 1200,
+          imageHeight: 1500,
         },
       ],
     },

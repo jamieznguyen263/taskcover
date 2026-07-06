@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -311,21 +312,16 @@ function LeaderCard({ leader, locale }: { leader: AboutStoryLeader; locale: Loca
 
   return (
     <article className="grid gap-5 rounded-[2rem] border border-line bg-white p-5 depth-layered sm:grid-cols-[12rem_1fr] sm:p-6">
-      <div className="aspect-[4/5] overflow-hidden rounded-[1.5rem] border border-brand-teal/20 bg-brand-gradient-soft p-3">
-        <div
-          role="img"
-          aria-label={leader.alt}
-          data-portrait-placeholder="true"
-          data-future-src={leader.futureImagePath}
-          className="flex h-full flex-col items-center justify-center rounded-[1.15rem] border border-white/80 bg-white text-center"
-        >
-          <span className="inline-flex h-20 w-20 items-center justify-center rounded-full bg-brand-gradient text-2xl font-semibold text-white">
-            {leader.initials}
-          </span>
-          <span className="mt-4 px-3 text-xs font-semibold uppercase tracking-[0.12em] text-brand-teal">
-            {leadership.placeholderLabel}
-          </span>
-          <span className="mt-2 px-3 text-xs leading-relaxed text-muted">{leadership.futurePhotoLabel}</span>
+      <div className="overflow-hidden rounded-[1.5rem] border border-brand-teal/20 bg-brand-gradient-soft p-3">
+        <div className="aspect-[4/5] overflow-hidden rounded-[1.15rem] border border-white/80 bg-surface-tint">
+          <Image
+            src={leader.imagePath}
+            alt={leader.alt}
+            width={leader.imageWidth}
+            height={leader.imageHeight}
+            sizes="(min-width: 1024px) 12rem, (min-width: 640px) 12rem, calc(100vw - 4rem)"
+            className="h-full w-full object-cover object-center"
+          />
         </div>
       </div>
 
