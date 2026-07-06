@@ -1,8 +1,7 @@
-import { trustMetadata, TrustPage } from "@/components/marketing/trust/trust-pages";
+import { aboutStoryMetadata, AboutStoryPage } from "@/components/marketing/about/about-story-page";
 
-export const metadata = trustMetadata("about", "en");
+export const metadata = aboutStoryMetadata("en");
 
 export default function AboutPage() {
-  return <TrustPage slug="about" locale="en" />;
+  return <AboutStoryPage locale="en" />;
 }
-

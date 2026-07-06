@@ -310,3 +310,19 @@ The route is `/pricing` for English, `/fr/pricing` for French, and
 `/es/pricing` for Spanish. Prices stay in USD across locales, while headings,
 plan descriptions, comparison labels, FAQ, CTAs, breadcrumbs, aria labels, and
 metadata are localized. Slugs remain English.
+
+## About Story Localization
+
+The About story page is localized in `src/content/about-story.ts`, accessed
+through `getAboutStoryContent(locale)`.
+
+The route is `/about` for English, `/fr/about` for French, and `/es/about` for
+Spanish. Slugs remain English, while metadata, breadcrumbs, headings, timeline
+entries, origin-story copy, methodology capability labels, leadership
+descriptions, focus-area chips, CTA labels, company-detail labels, portrait alt
+text, and aria-facing labels are locale-owned.
+
+French should remain suitable for Canadian and international professional
+audiences. Spanish should remain suitable for US Hispanic and international
+professional audiences. Do not hardcode English UI labels into `/fr/about` or
+`/es/about`.

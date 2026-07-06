@@ -51,3 +51,18 @@ Production deployment, DNS changes, provider secret configuration, and external 
   rankings are not included unless scoped.
 - No production deployment, DNS change, tracking script, fake discount, fake
   scarcity, or outcome guarantee is required for pricing readiness.
+
+## About Story Readiness
+
+- About page is available in EN/FR/ES at `/about`, `/fr/about`, and `/es/about`.
+- The page explains the confirmed 2017 Southeast Asia white-label origin, 2018
+  delivery systems, 2019 Canada/US commercial direction, and today's
+  USA/Canada/Australia positioning.
+- Leadership is limited to Jamiez Nguyen — Founder & CEO and John Edward — CTO.
+- Team image slots render intentional placeholders until real approved portrait
+  assets are added at `/team/jamiez-nguyen.webp` and `/team/john-edward.webp`.
+- No social links, fake portraits, invented offices, invented awards,
+  certifications, guaranteed outcomes, or unsupported case-study dates are
+  introduced.
+- Canonical, hreflang, sitemap inclusion, metadata, breadcrumbs, accessibility,
+  and mobile behavior remain part of final QA.

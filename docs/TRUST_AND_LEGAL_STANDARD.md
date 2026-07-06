@@ -28,9 +28,30 @@ The public site must not claim guaranteed rankings, attorney-reviewed legal comp
 
 The legal pages are website-ready drafts and require final legal review before public launch.
 
+## About Story Rules
+
+The About page is governed by `docs/ABOUT_STORY_STANDARD.md`.
+
+Confirmed public story details:
+
+- 2017 Southeast Asia white-label search execution origin.
+- 2018 repeatable SEO delivery systems.
+- 2019 commercial direction toward Canada and the United States led by founder
+  Jamiez Nguyen.
+- Today's public market positioning: USA, Canada, and Australia.
+- Public brand: Taskcover Agency.
+- Formal presentation: Taskcover Agency by Stoa Global Corporation.
+- Legal/operator: Stoa Global Corporation.
+- Leadership: Jamiez Nguyen — Founder & CEO; John Edward — CTO.
+
+The About page must not add social links, fake portraits, stock headshots,
+AI-generated portraits, invented founders, invented staff, invented offices,
+awards, certifications, or guaranteed-result claims. Case studies may shape the
+methodology story, but they must not be assigned to unsupported company-history
+dates.
+
 ## Footer Requirements
 
 The footer must include the formal company line, address, phone, email, About, Methodology, How We Work, Privacy Policy, Cookie Policy, Cookie Preferences, Terms, Accessibility, Data Request, and Contact.
 
 Admin, preview, internal API, and thank-you pages must not appear in public footer legal navigation or sitemap.
-

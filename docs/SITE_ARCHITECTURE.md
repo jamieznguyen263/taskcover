@@ -358,3 +358,18 @@ National / Global / SEO Mentor / Audit / PPC starting prices, and preserves the
 global canonical, hreflang, and sitemap strategy.
 
 See `docs/PRICING_PAGE_STANDARD.md` for the pricing model and scope rules.
+
+## About Story Page
+
+The localized About route lives at `/about`, `/fr/about`, and `/es/about`.
+Slugs remain English for all locales.
+
+The page uses a dedicated story renderer and localized content in
+`src/content/about-story.ts`, while preserving the existing canonical,
+hreflang, sitemap, and BreadcrumbList patterns. It does not create new routes.
+
+The public story is limited to the confirmed 2017 Southeast Asia white-label
+origin, 2018 repeatable delivery systems, 2019 commercial direction toward
+Canada and the United States, today's USA/Canada/Australia positioning, and
+the confirmed leadership entries for Jamiez Nguyen and John Edward. See
+`docs/ABOUT_STORY_STANDARD.md`.

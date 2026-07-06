@@ -55,6 +55,7 @@ import { leads as leadsEs } from "@/content/es/leads";
 import { pricing as pricingEn } from "@/content/en/pricing";
 import { pricing as pricingFr } from "@/content/fr/pricing";
 import { pricing as pricingEs } from "@/content/es/pricing";
+import { aboutStoryContent } from "@/content/about-story";
 import {
   getProofItemsByType,
   getPrivateReferenceAvailability,
@@ -84,6 +85,7 @@ import type {
 } from "@/content/work.types";
 import type { LeadsContent } from "@/content/leads.types";
 import type { PricingContent } from "@/content/pricing.types";
+import type { AboutStoryContent } from "@/content/about-story";
 
 const siteMap: Record<Locale, SiteContent> = {
   en: siteEn,
@@ -138,6 +140,8 @@ const pricingMap: Record<Locale, PricingContent> = {
   fr: pricingFr,
   es: pricingEs,
 };
+
+const aboutStoryMap: Record<Locale, AboutStoryContent> = aboutStoryContent;
 
 /** All industry slugs (shared across locales — English canonical). */
 export const industrySlugs = [
@@ -402,6 +406,10 @@ export function getLeadsContent(locale: Locale): LeadsContent {
 
 export function getPricingContent(locale: Locale): PricingContent {
   return pricingMap[locale] ?? pricingEn;
+}
+
+export function getAboutStoryContent(locale: Locale): AboutStoryContent {
+  return aboutStoryMap[locale] ?? aboutStoryContent.en;
 }
 
 export function getWorkPageContent(

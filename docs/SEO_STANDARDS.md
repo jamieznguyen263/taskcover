@@ -296,3 +296,18 @@ Do not add Review, AggregateRating, LocalBusiness, fake Offer, or unsafe pricing
 schema. Pricing must be described as USD starting points, with final pricing
 dependent on market, site complexity, competition, content needs, and execution
 speed. Do not guarantee rankings, backlinks, placements, traffic, or revenue.
+
+## About Story SEO
+
+The About routes (`/about`, `/fr/about`, `/es/about`) are indexable company
+story pages. They use localized metadata, canonical URLs, hreflang alternates,
+Open Graph metadata, one H1, and BreadcrumbList schema.
+
+Do not add Review, AggregateRating, fake award, fake rating, fake social,
+LocalBusiness, or unsupported Person schema. Person schema may be considered
+only when every field is verified and no social `sameAs`, fake credentials,
+awards, alumni, education, or portrait image is invented.
+
+The visible story may reference verified case-study links as methodology
+influence, but must not assign those case studies to unsupported company
+history years or imply guaranteed SEO outcomes.

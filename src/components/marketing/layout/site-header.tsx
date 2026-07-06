@@ -168,7 +168,7 @@ export function SiteHeader() {
           <img
             src={siteConfig.logo.horizontal}
             alt={`${siteConfig.name} logo`}
-            className="h-auto w-[clamp(6.75rem,38vw,8.25rem)] object-contain sm:w-[9.25rem] lg:w-[9.75rem] xl:w-[10.375rem]"
+            className="h-auto w-[clamp(5.75rem,30vw,8.25rem)] object-contain sm:w-[9.25rem] lg:w-[9.75rem] xl:w-[10.375rem]"
             style={{ imageRendering: "auto" }}
           />
         </Link>

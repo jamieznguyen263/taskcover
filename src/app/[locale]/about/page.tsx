@@ -1,9 +1,25 @@
-import { generateLocalizedTrustStaticParams, localizedTrustMetadata, LocalizedTrustPage, type LocalizedTrustProps } from "../trust-route";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { aboutStoryMetadata, AboutStoryPage } from "@/components/marketing/about/about-story-page";
+import { isLocale, locales, type Locale } from "@/lib/i18n";
 
-export const generateStaticParams = generateLocalizedTrustStaticParams;
-export const generateMetadata = (props: LocalizedTrustProps) => localizedTrustMetadata("about", props);
+type LocalizedAboutProps = { params: Promise<{ locale: string }> };
 
-export default function Page(props: LocalizedTrustProps) {
-  return <LocalizedTrustPage slug="about" props={props} />;
+export function generateStaticParams() {
+  return locales.filter((locale) => locale !== "en").map((locale) => ({ locale }));
 }
 
+export async function generateMetadata(props: LocalizedAboutProps): Promise<Metadata> {
+  return aboutStoryMetadata(await localizedAboutLocale(props));
+}
+
+export default async function Page(props: LocalizedAboutProps) {
+  const locale = await localizedAboutLocale(props);
+  return <AboutStoryPage locale={locale} />;
+}
+
+async function localizedAboutLocale({ params }: LocalizedAboutProps): Promise<Locale> {
+  const { locale } = await params;
+  if (!isLocale(locale) || locale === "en") notFound();
+  return locale;
+}
