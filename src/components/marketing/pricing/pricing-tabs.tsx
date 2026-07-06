@@ -8,6 +8,7 @@ import { CTAButton } from "@/components/marketing/shared/cta-button";
 import { PricingPlanCard } from "./pricing-plan-card";
 import { cn } from "@/lib/utils";
 import { localizePath, type Locale } from "@/lib/i18n";
+import { pushDataLayerEvent } from "@/lib/analytics/data-layer";
 import {
   defaultPricingTabId,
   pricingTabIds,
@@ -35,7 +36,24 @@ export function PricingTabs({
   const activeItem =
     content.tabs.items.find((tab) => tab.id === selectedTab) ?? content.tabs.items[0]!;
 
+  React.useEffect(() => {
+    pushDataLayerEvent("pricing_tab_view", {
+      locale,
+      page_path: typeof window !== "undefined" ? window.location.pathname : "/pricing",
+      page_type: "pricing",
+      pricing_tab: selectedTab,
+    });
+  }, [locale, selectedTab]);
+
   function selectTab(id: PricingTabId) {
+    if (id !== selectedTab) {
+      pushDataLayerEvent("pricing_decision_select", {
+        locale,
+        page_path: typeof window !== "undefined" ? window.location.pathname : "/pricing",
+        page_type: "pricing",
+        pricing_tab: id,
+      });
+    }
     setUncontrolledTab(id);
     onTabChange?.(id);
   }

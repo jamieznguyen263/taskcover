@@ -49,6 +49,7 @@ export function CTAButton({
   ...props
 }: CTAButtonProps) {
   const isOutline = variant === "outline";
+  const analyticsProvider = typeof props.href === "string" && props.href.includes("cal.com") ? "calcom" : undefined;
 
   // Outline variant wraps the anchor with a gradient ring for a premium border.
   if (isOutline) {
@@ -61,6 +62,8 @@ export function CTAButton({
             "rounded-full",
             className
           )}
+          data-analytics="cta"
+          data-analytics-provider={analyticsProvider}
           {...props}
         >
           {children}
@@ -72,6 +75,8 @@ export function CTAButton({
   return (
     <a
       className={cn(ctaButtonVariants({ variant, size }), className)}
+      data-analytics="cta"
+      data-analytics-provider={analyticsProvider}
       {...props}
     >
       {children}

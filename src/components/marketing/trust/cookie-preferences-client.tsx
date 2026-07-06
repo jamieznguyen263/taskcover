@@ -1,14 +1,10 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { RotateCcw, Save } from "lucide-react";
-import type { Locale } from "@/lib/i18n";
-import {
-  readConsentPreferences,
-  resetConsentPreferences,
-  saveConsentPreferences,
-  type ConsentPreferences,
-} from "@/lib/consent/preferences";
+import { defaultConsentPreferences, readConsentPreferences, resetConsentPreferences, saveConsentPreferences, type ConsentPreferences } from "@/lib/consent/preferences";
+import { localizePath, type Locale } from "@/lib/i18n";
 
 const copy = {
   en: {
@@ -17,29 +13,33 @@ const copy = {
     reset: "Preferences reset.",
     save: "Save preferences",
     resetButton: "Reset preferences",
+    policy: "Cookie Policy",
+    privacy: "Privacy Policy",
     necessary: "Strictly necessary",
     necessaryBody: "Always on. Required for security, Admin sessions, preferences, anti-spam protection, and core functionality.",
     preferences: "Preferences",
     preferencesBody: "Stores choices such as this category state in your browser.",
     analytics: "Analytics",
-    analyticsBody: "Reserved for future measurement tools. No analytics tags are loaded in this task.",
+    analyticsBody: "Allows consent-aware GA4/GTM measurement events only when configured.",
     marketing: "Marketing / advertising",
-    marketingBody: "Reserved for future advertising tags. No marketing tags are loaded in this task.",
+    marketingBody: "Allows configured ad conversion measurement only after accepted lead submissions.",
   },
   fr: {
-    title: "Contrôles des préférences",
-    saved: "Préférences enregistrées.",
-    reset: "Préférences réinitialisées.",
-    save: "Enregistrer les préférences",
-    resetButton: "Réinitialiser",
-    necessary: "Strictement nécessaires",
-    necessaryBody: "Toujours actifs. Requis pour la sécurité, les sessions Admin, les préférences, l'anti-spam et les fonctions de base.",
-    preferences: "Préférences",
-    preferencesBody: "Enregistre dans ce navigateur des choix comme l'état des catégories.",
+    title: "Controles des preferences",
+    saved: "Preferences enregistrees.",
+    reset: "Preferences reinitialisees.",
+    save: "Enregistrer les preferences",
+    resetButton: "Reinitialiser",
+    policy: "Politique cookies",
+    privacy: "Politique de confidentialite",
+    necessary: "Strictement necessaires",
+    necessaryBody: "Toujours actifs. Requis pour la securite, les sessions Admin, les preferences, l'anti-spam et les fonctions de base.",
+    preferences: "Preferences",
+    preferencesBody: "Enregistre dans ce navigateur des choix comme l'etat des categories.",
     analytics: "Analytics",
-    analyticsBody: "Réservé aux futurs outils de mesure. Aucune balise analytics n'est chargée dans cette tâche.",
-    marketing: "Marketing / publicité",
-    marketingBody: "Réservé aux futures balises publicitaires. Aucune balise marketing n'est chargée dans cette tâche.",
+    analyticsBody: "Autorise les evenements de mesure GA4/GTM avec consentement uniquement si la configuration existe.",
+    marketing: "Marketing / publicite",
+    marketingBody: "Autorise la mesure publicitaire configuree seulement apres acceptation durable d'un lead.",
   },
   es: {
     title: "Controles de preferencias",
@@ -47,27 +47,22 @@ const copy = {
     reset: "Preferencias reiniciadas.",
     save: "Guardar preferencias",
     resetButton: "Reiniciar",
+    policy: "Politica de cookies",
+    privacy: "Politica de privacidad",
     necessary: "Estrictamente necesarias",
-    necessaryBody: "Siempre activas. Requeridas para seguridad, sesiones Admin, preferencias, anti-spam y funcionalidad básica.",
+    necessaryBody: "Siempre activas. Requeridas para seguridad, sesiones Admin, preferencias, anti-spam y funcionalidad basica.",
     preferences: "Preferencias",
-    preferencesBody: "Guarda en este navegador elecciones como el estado de categorías.",
+    preferencesBody: "Guarda en este navegador elecciones como el estado de categorias.",
     analytics: "Analytics",
-    analyticsBody: "Reservado para futuras herramientas de medición. No se cargan etiquetas analytics en esta tarea.",
+    analyticsBody: "Permite eventos de medicion GA4/GTM con consentimiento solo si existe configuracion.",
     marketing: "Marketing / publicidad",
-    marketingBody: "Reservado para futuras etiquetas publicitarias. No se cargan etiquetas de marketing en esta tarea.",
+    marketingBody: "Permite medicion publicitaria configurada solo despues de leads aceptados.",
   },
 } satisfies Record<Locale, Record<string, string>>;
 
 export function CookiePreferencesPanel({ locale }: { locale: Locale }) {
   const t = copy[locale];
-  const [state, setState] = React.useState<ConsentPreferences>(() => readConsentPreferences() ?? {
-    necessary: true,
-    preferences: false,
-    analytics: false,
-    marketing: false,
-    version: "2026-07-05",
-    updatedAt: "",
-  });
+  const [state, setState] = React.useState<ConsentPreferences>(() => readConsentPreferences() ?? { ...defaultConsentPreferences, locale });
   const [notice, setNotice] = React.useState("");
 
   function update(key: "preferences" | "analytics" | "marketing", checked: boolean) {
@@ -79,6 +74,8 @@ export function CookiePreferencesPanel({ locale }: { locale: Locale }) {
       preferences: state.preferences,
       analytics: state.analytics,
       marketing: state.marketing,
+      locale,
+      source: "preferences_page",
     });
     setState(saved);
     setNotice(t.saved);
@@ -86,13 +83,17 @@ export function CookiePreferencesPanel({ locale }: { locale: Locale }) {
 
   function reset() {
     resetConsentPreferences();
-    setState({ necessary: true, preferences: false, analytics: false, marketing: false, version: "2026-07-05", updatedAt: "" });
+    setState({ ...defaultConsentPreferences, locale });
     setNotice(t.reset);
   }
 
   return (
     <section className="rounded-3xl border border-line bg-white p-5 depth-layered" aria-labelledby="cookie-preference-title">
       <h2 id="cookie-preference-title" className="text-2xl font-semibold text-graphite">{t.title}</h2>
+      <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm">
+        <Link href={localizePath("/cookie-policy", locale)} className="font-semibold text-brand-teal hover:underline">{t.policy}</Link>
+        <Link href={localizePath("/privacy-policy", locale)} className="font-semibold text-brand-teal hover:underline">{t.privacy}</Link>
+      </div>
       <div className="mt-5 grid gap-4">
         <ToggleRow title={t.necessary} body={t.necessaryBody} checked disabled onChange={() => undefined} />
         <ToggleRow title={t.preferences} body={t.preferencesBody} checked={state.preferences} onChange={(checked) => update("preferences", checked)} />

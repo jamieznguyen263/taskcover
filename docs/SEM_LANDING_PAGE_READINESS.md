@@ -1,34 +1,51 @@
 # SEM Landing Page Readiness
 
-This task does not activate ads, Google Ads, GA4, GTM, remarketing, consent banners, or tracking scripts. SEM readiness here means future planning only.
+Task 16 prepares SEM measurement but does not activate campaigns, deploy
+production, change DNS, or configure live provider IDs.
 
-## Readiness Rules
+## Measurement Rules
 
-Do not mark a page SEM-ready if it lacks a clear CTA, proof/supporting content, mobile confidence, non-overlap with other landing pages, ready form flow, or a future tracking/consent plan.
+- Primary conversions are accepted leads, not page views or button clicks.
+- Thank-you page views are supporting events only.
+- Pricing tab engagement is secondary, never a primary conversion.
+- Analytics events require analytics consent.
+- Google Ads conversion readiness requires marketing consent plus configured
+  Google Ads ID and conversion label.
+- No PII, raw click IDs, full query URLs, provider IDs, or CRM deal IDs belong
+  in dataLayer.
 
-| Campaign theme | Primary landing page | Backup landing page | Primary CTA | Proof module | Negative keyword considerations | Required tracking later | Gap before launch | Readiness |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Brand | `/` | `/about` | Book Strategy Call | `/proof`, `/work/case-studies` | jobs, free tools, login, admin | CTA click, form start, form submit | Consent/tracking plan | Needs improvement |
-| SEO Agency | `/services/seo-agency` | `/services` | Get Free SEO Audit | `/work/case-studies`, `/work/sample-audits/90-day-search-growth-roadmap` | cheap, guaranteed rankings, jobs, course | CTA click, audit start, lead accepted | Tracking/consent plan | Ready after tracking |
-| SEO Audit | `/services/seo-audit` | `/free-seo-audit` | Get Free SEO Audit | `/work/sample-audits/technical-seo-audit` | free checker, template, PDF download only | Audit form start, qualified submit | Consent/tracking plan | Ready after tracking |
-| Technical SEO | `/services/technical-seo` | `/work/sample-audits/technical-seo-audit` | Get Free SEO Audit | Technical SEO sample audit | jobs, checklist-only, tutorial | Service CTA, audit submit | More service-specific proof path | Needs improvement |
-| AI Search / GEO | `/services/ai-search-optimization` | `/work/sample-audits/ai-search-visibility-review` | Get Free SEO Audit | AI search sample audit | AI tool, prompt generator, jobs | CTA click, audit submit | Stronger proof/citation examples over time | Needs improvement |
-| International SEO | `/services/international-seo` | `/markets/canada-seo-agency` | Book Strategy Call | International SEO market map | local city agency, visa jobs, translation-only | CTA click, call booking | Tracking/consent plan | Needs improvement |
-| PPC Management | `/services/ppc-management` | `/work/sample-audits/ppc-organic-intelligence` | Book Strategy Call | PPC + organic sample audit | Google Ads login, certification, course | CTA click, call booking | Tracking/consent plan and landing alignment | Needs improvement |
-| SEO Mentor | `/services/seo-mentor-service` | `/insights/seo-mentor` | Book Strategy Call | Search growth frameworks | free course, beginner class, jobs | CTA click, call booking | More mentor-specific proof | Needs improvement |
-| Market-specific SEO | `/markets/usa-seo-agency`, `/markets/canada-seo-agency`, `/markets/australia-seo-agency` | `/services/international-seo` | Book Strategy Call | Relevant case studies and market map | city names, office, near me, jobs | CTA click, call booking | Tracking plan, no fake office claims | Needs improvement |
-| Industry-specific SEO | `/industries/[slug]` | `/services/seo-agency` | Get Free SEO Audit | Relevant case studies/sample audits | jobs, template, unrelated local queries | CTA click, audit submit | More proof for some verticals | Needs improvement |
+## Campaign Measurement Map
 
-## SEM Conclusion
+| Campaign family | Primary landing page | Primary CTA | Primary conversion event | Secondary events | Consent required | UTM convention | Google Ads conversion action | Lead quality follow-up | CRM lifecycle stage | Offline conversion candidate |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Brand | `/` | Book Strategy Call | `strategy_call_request_success` | `cta_click`, `lead_form_start` | analytics for events, marketing for Ads | `utm_campaign=brand-{market}` | Strategy Call request accepted | confirm fit and source quality | New lead -> Contacted | Qualified / call booked |
+| SEO Agency | `/services/seo-agency` | Get Free SEO Audit | `free_audit_request_success` | `cta_click`, `lead_form_start`, `lead_form_step_complete` | analytics, marketing for Ads | `utm_campaign=seo-agency-{market}` | Free SEO Audit accepted | audit quality and service fit | New lead -> Qualified | Qualified / proposal sent |
+| Local SEO | `/services/local-seo` | Get Free SEO Audit | `free_audit_request_success` | `service_slug`, `market_slug`, `cta_click` | analytics, marketing for Ads | `utm_campaign=local-seo-{market}` | Free SEO Audit accepted | validate local footprint and market | New lead -> Qualified | Qualified |
+| National SEO | `/services/seo-agency` | Get Free SEO Audit | `free_audit_request_success` | `cta_click`, `sample_audit_view` | analytics, marketing for Ads | `utm_campaign=national-seo-{market}` | Free SEO Audit accepted | check multi-market scope | New lead -> Qualified | Opportunity |
+| Global SEO | `/services/international-seo` | Book Strategy Call | `strategy_call_request_success` | `cta_click`, `market_slug` | analytics, marketing for Ads | `utm_campaign=global-seo-{market}` | Strategy Call request accepted | verify international markets and resources | New lead -> Qualified | Opportunity |
+| SEO Audit | `/free-seo-audit` | Submit audit request | `free_audit_request_success` | `lead_form_view`, `lead_form_start`, `lead_form_step_complete`, `lead_form_validation_error` | analytics, marketing for Ads | `utm_campaign=seo-audit-{market}` | Free SEO Audit accepted | score audit scope and urgency | New lead -> Qualified | Qualified |
+| Technical SEO | `/services/technical-seo` | Get Free SEO Audit | `free_audit_request_success` | `sample_audit_view`, `cta_click` | analytics, marketing for Ads | `utm_campaign=technical-seo-{market}` | Free SEO Audit accepted | confirm technical access and issue severity | New lead -> Qualified | Opportunity |
+| AI Search / GEO | `/services/ai-search-optimization` | Get Free SEO Audit | `free_audit_request_success` | `sample_audit_view`, `insight_article_view` | analytics, marketing for Ads | `utm_campaign=ai-search-geo-{market}` | Free SEO Audit accepted | assess AI visibility need and authority gap | New lead -> Qualified | Opportunity |
+| PPC Management | `/services/ppc-management` | Book Strategy Call | `strategy_call_request_success` | `cta_click`, `pricing_tab_view` | analytics, marketing for Ads | `utm_campaign=ppc-management-{market}` | Strategy Call request accepted | qualify ad spend, tracking access, and SEO/PPC fit | New lead -> Qualified | Opportunity |
+| SEO Mentor | `/services/seo-mentor-service` | Book Strategy Call | `strategy_call_request_success` | `pricing_tab_view`, `pricing_decision_select`, `cta_click` | analytics, marketing for Ads | `utm_campaign=seo-mentor-{market}` | Strategy Call request accepted | confirm advisory scope and team maturity | New lead -> Contacted | Call booked |
+| Market-specific SEO | `/markets/usa-seo-agency`, `/markets/canada-seo-agency`, `/markets/australia-seo-agency` | Book Strategy Call | `strategy_call_request_success` | `market_slug`, `cta_click`, `lead_form_start` | analytics, marketing for Ads | `utm_campaign=market-seo-{market}` | Strategy Call request accepted | confirm market priority and no fake local-office claims | New lead -> Qualified | Opportunity |
+| Industry-specific SEO | `/industries/[slug]` | Get Free SEO Audit | `free_audit_request_success` | `industry_slug`, `cta_click`, `case_study_view` | analytics, marketing for Ads | `utm_campaign=industry-seo-{industry}-{market}` | Free SEO Audit accepted | confirm vertical fit and proof needs | New lead -> Qualified | Qualified / proposal sent |
 
-The strongest future SEM candidates are `/services/seo-agency`, `/services/seo-audit`, and `/free-seo-audit`, but they should not be activated until consent, tracking, campaign events, and conversion reporting are implemented.
-## Pricing And SEM
+## Readiness Status
 
-The pricing page can be used as a decision-stage destination for high-intent
-paid traffic when the query is about price, plans, audits, PPC management, or
-SEO mentorship. It must keep the USD starting-price disclosure visible.
+Strongest launch candidates after provider activation:
 
-Future SEM-specific pricing variants require a separate readiness review:
-localized copy, consent/tracking plan, proof support, no fake discounts, no fake
-scarcity, no guaranteed outcomes, and no overlap with the organic `/pricing`
-canonical page.
+- `/free-seo-audit`
+- `/services/seo-agency`
+- `/services/seo-audit`
+- `/services/technical-seo`
+- `/pricing` for decision-stage traffic only
+
+Manual steps before go-live:
+
+1. Complete legal review of consent, privacy, cookie, and ad-measurement copy.
+2. Configure GTM, GA4, and Google Ads IDs in environment settings.
+3. Configure conversion labels in Google Ads and GTM.
+4. QA consent denied, analytics-only, marketing-only, and accept-all states.
+5. Validate no PII in browser dataLayer.
+6. Confirm CRM/offline conversion stages before optimizing bids.

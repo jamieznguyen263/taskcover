@@ -6,6 +6,9 @@ import { Check, Mail, RotateCw } from "lucide-react";
 import type { Locale } from "@/lib/i18n";
 import { companyDetails } from "@/lib/company";
 import type { LeadSubmissionResult } from "@/lib/leads/types";
+import { trackAcceptedLeadSuccess, trackLeadEvent } from "@/lib/leads/analytics";
+import { attributionToLeadUtm } from "@/lib/analytics/attribution";
+import { getConsentPreferences } from "@/lib/consent/preferences";
 
 const copy = {
   en: {
@@ -79,6 +82,17 @@ export function DataRequestForm({ locale, turnstileSiteKey }: { locale: Locale; 
   const [fieldErrors, setFieldErrors] = React.useState<Record<string, string>>({});
   const formRef = React.useRef<HTMLFormElement>(null);
   const errorSummaryRef = React.useRef<HTMLDivElement>(null);
+  const startedRef = React.useRef(false);
+
+  React.useEffect(() => {
+    trackLeadEvent("lead_form_view", { formType: "data-request", requestType: "data-request", locale });
+  }, [locale]);
+
+  function markStarted() {
+    if (startedRef.current) return;
+    startedRef.current = true;
+    trackLeadEvent("lead_form_start", { formType: "data-request", requestType: "data-request", locale });
+  }
 
   function focusValidationError(errors: Record<string, string>) {
     window.requestAnimationFrame(() => {
@@ -102,6 +116,7 @@ export function DataRequestForm({ locale, turnstileSiteKey }: { locale: Locale; 
     if (Object.keys(nextErrors).length > 0) {
       setFieldErrors(nextErrors);
       setError(t.required as string);
+      trackLeadEvent("lead_form_validation_error", { formType: "data-request", requestType: "data-request", locale, category: "client" });
       focusValidationError(nextErrors);
       return;
     }
@@ -109,7 +124,9 @@ export function DataRequestForm({ locale, turnstileSiteKey }: { locale: Locale; 
     setError("");
     setNotice("");
     setFieldErrors({});
+    trackLeadEvent("lead_form_submit_attempt", { formType: "data-request", requestType: "data-request", locale });
     try {
+      const utm = attributionToLeadUtm(getConsentPreferences());
       const response = await fetch("/api/leads", {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -125,25 +142,33 @@ export function DataRequestForm({ locale, turnstileSiteKey }: { locale: Locale; 
           sourcePath: window.location.pathname,
           website: data.get("website"),
           turnstileToken: data.get("cf-turnstile-response"),
+          ...(utm ? { utm } : {}),
         }),
       });
       const result = (await response.json()) as LeadSubmissionResult;
       if (result.status === "success") {
+        trackAcceptedLeadSuccess(result, "data-request", locale);
         setNotice(t.success as string);
         form.reset();
         return;
       }
-      if (result.status === "not-configured") setError(t.fallback as string);
-      else setError(t.temporary as string);
+      if (result.status === "not-configured") {
+        setError(t.fallback as string);
+        trackLeadEvent("lead_form_delivery_unavailable", { formType: "data-request", requestType: "data-request", locale, category: "not-configured" });
+      } else {
+        setError(t.temporary as string);
+        trackLeadEvent("lead_form_error", { formType: "data-request", requestType: "data-request", locale, category: result.status });
+      }
     } catch {
       setError(t.temporary as string);
+      trackLeadEvent("lead_form_error", { formType: "data-request", requestType: "data-request", locale, category: "network" });
     } finally {
       setPending(false);
     }
   }
 
   return (
-    <form ref={formRef} noValidate onSubmit={submit} className="relative rounded-3xl border border-line bg-white p-5 depth-layered" aria-labelledby="data-request-title">
+    <form ref={formRef} noValidate onFocusCapture={markStarted} onSubmit={submit} className="relative rounded-3xl border border-line bg-white p-5 depth-layered" aria-labelledby="data-request-title">
       <div aria-hidden="true" className="absolute left-[-10000px] top-auto h-px w-px overflow-hidden">
         <label htmlFor="privacy-website">Website</label>
         <input id="privacy-website" name="website" tabIndex={-1} autoComplete="off" />

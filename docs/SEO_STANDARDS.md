@@ -361,3 +361,18 @@ See the Task 14 audit set:
   images hidden from assistive technology.
 - Technical SEO checks remain `npm run seo:check` and rendered
   `npm run seo:crawl -- --base-url=http://localhost:3100`.
+
+## Task 16 Analytics And SEM Measurement Preservation
+
+- Consent, GTM, GA4, Google Ads, and attribution work must not add or remove
+  indexable public routes.
+- Admin, API, preview, thank-you, 404/error, draft, and query routes remain
+  excluded from sitemap rules where already excluded.
+- Thank-you pages remain `noindex` and excluded from the sitemap.
+- Pricing query variants continue to canonicalize to the clean localized
+  `/pricing` route.
+- Event names and UTM conventions do not redefine keyword-to-URL ownership.
+- No schema is added for fake offers, reviews, ratings, local offices,
+  guarantees, or unsupported conversion claims.
+- SEM launch requires legal/provider review and must not be described as GDPR,
+  CCPA, or other legal compliance certification.

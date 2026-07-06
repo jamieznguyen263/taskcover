@@ -6,7 +6,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, Check, Mail, RotateCw } from "lucide-react";
 import type { LeadsContent, LeadOption } from "@/content/leads.types";
 import type { LeadRequestType, LeadSubmissionResult } from "@/lib/leads/types";
-import { trackLeadEvent } from "@/lib/leads/analytics";
+import { trackAcceptedLeadSuccess, trackLeadEvent } from "@/lib/leads/analytics";
+import { attributionToLeadUtm } from "@/lib/analytics/attribution";
+import { getConsentPreferences } from "@/lib/consent/preferences";
 import { cn } from "@/lib/utils";
 
 type FormState = Record<string, string | string[] | boolean | undefined>;
@@ -306,12 +308,7 @@ function Turnstile({ siteKey, content }: { siteKey?: string; content: LeadsConte
 
 function makePayload(form: HTMLFormElement | null, state: FormState, requestType: LeadRequestType, locale: string, pathname: string) {
   const formData = form ? new FormData(form) : new FormData();
-  const utm = Object.fromEntries(
-    ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"].map((key) => [
-      key.replace("utm_", ""),
-      new URLSearchParams(typeof window !== "undefined" ? window.location.search : "").get(key) ?? "",
-    ])
-  );
+  const utm = attributionToLeadUtm(getConsentPreferences());
   return {
     ...state,
     requestType,
@@ -319,7 +316,7 @@ function makePayload(form: HTMLFormElement | null, state: FormState, requestType
     sourcePath: pathname,
     website: String(formData.get("website") ?? ""),
     turnstileToken: String(formData.get("cf-turnstile-response") ?? ""),
-    utm,
+    ...(utm ? { utm } : {}),
   };
 }
 
@@ -369,12 +366,19 @@ function useSubmitLead(content: LeadsContent, requestType: LeadRequestType, requ
   const [errors, setErrors] = React.useState<Errors>({});
   const [notice, setNotice] = React.useState<string>("");
   const [pending, setPending] = React.useState(false);
+  const startedRef = React.useRef(false);
+
+  function markStarted() {
+    if (startedRef.current) return;
+    startedRef.current = true;
+    trackLeadEvent("lead_form_start", { formType: requestType, requestType, locale: content.locale });
+  }
 
   async function submit(state: FormState) {
     const localErrors = clientValidate(content, state, requiredFields);
     if (Object.keys(localErrors).length > 0) {
       setErrors(localErrors);
-      trackLeadEvent("lead_form_validation_error", { formType: requestType, locale: content.locale, category: "client" });
+      trackLeadEvent("lead_form_validation_error", { formType: requestType, requestType, locale: content.locale, category: "client" });
       focusFirstError(localErrors);
       return;
     }
@@ -382,8 +386,7 @@ function useSubmitLead(content: LeadsContent, requestType: LeadRequestType, requ
     setPending(true);
     setNotice("");
     setErrors({});
-    trackLeadEvent("lead_form_submit_attempt", { formType: requestType, locale: content.locale });
-    if (requestType === "strategy-call") trackLeadEvent("strategy_call_request", { formType: requestType, locale: content.locale });
+    trackLeadEvent("lead_form_submit_attempt", { formType: requestType, requestType, locale: content.locale });
 
     try {
       const response = await fetch("/api/leads", {
@@ -393,37 +396,37 @@ function useSubmitLead(content: LeadsContent, requestType: LeadRequestType, requ
       });
       const result = (await response.json()) as LeadSubmissionResult;
       if (result.status === "success" && result.redirectPath) {
-        trackLeadEvent("lead_form_success", { formType: requestType, locale: content.locale, category: "accepted" });
+        trackAcceptedLeadSuccess(result, requestType, content.locale);
         router.push(result.redirectPath);
         return;
       }
       if (result.status === "validation-error" && result.fieldErrors) {
         setErrors(result.fieldErrors);
-        trackLeadEvent("lead_form_validation_error", { formType: requestType, locale: content.locale, category: "server" });
+        trackLeadEvent("lead_form_validation_error", { formType: requestType, requestType, locale: content.locale, category: "server" });
         focusFirstError(result.fieldErrors);
         return;
       }
       if (result.status === "not-configured") {
         setNotice(content.common.unavailableBody);
-        trackLeadEvent("lead_form_delivery_unavailable", { formType: requestType, locale: content.locale, category: "not-configured" });
+        trackLeadEvent("lead_form_delivery_unavailable", { formType: requestType, requestType, locale: content.locale, category: "not-configured" });
       } else if (result.status === "spam-rejected") {
         setNotice(content.common.spamError);
-        trackLeadEvent("lead_form_error", { formType: requestType, locale: content.locale, category: "spam" });
+        trackLeadEvent("lead_form_error", { formType: requestType, requestType, locale: content.locale, category: "spam" });
       } else {
         setNotice(content.common.temporaryError);
-        trackLeadEvent("lead_form_error", { formType: requestType, locale: content.locale, category: "temporary" });
+        trackLeadEvent("lead_form_error", { formType: requestType, requestType, locale: content.locale, category: "temporary" });
       }
       statusRef.current?.focus();
     } catch {
       setNotice(content.common.temporaryError);
-      trackLeadEvent("lead_form_error", { formType: requestType, locale: content.locale, category: "network" });
+      trackLeadEvent("lead_form_error", { formType: requestType, requestType, locale: content.locale, category: "network" });
       statusRef.current?.focus();
     } finally {
       setPending(false);
     }
   }
 
-  return { formRef, statusRef, errors, setErrors, notice, pending, submit };
+  return { formRef, statusRef, errors, setErrors, notice, pending, submit, markStarted };
 }
 
 function FallbackNotice({ notice, content, requestType, statusRef }: {
@@ -462,27 +465,27 @@ export function FreeSeoAuditForm({ content, turnstileSiteKey }: LeadFormProps) {
     ["primaryChallenge", "goals", "timeline", "consent"],
   ];
   const allRequired = requiredByStep.flat();
-  const { formRef, statusRef, errors, setErrors, notice, pending, submit } = useSubmitLead(content, "seo-audit", allRequired);
+  const { formRef, statusRef, errors, setErrors, notice, pending, submit, markStarted } = useSubmitLead(content, "seo-audit", allRequired);
 
   React.useEffect(() => {
-    trackLeadEvent("lead_form_view", { formType: "seo-audit", locale: content.locale, step: step + 1 });
+    trackLeadEvent("lead_form_view", { formType: "seo-audit", requestType: "seo-audit", locale: content.locale, step: step + 1 });
   }, [content.locale, step]);
 
   function next() {
     const localErrors = clientValidate(content, state, requiredByStep[step]);
     if (Object.keys(localErrors).length > 0) {
       setErrors(localErrors);
-      trackLeadEvent("lead_form_validation_error", { formType: "seo-audit", locale: content.locale, step: step + 1 });
+      trackLeadEvent("lead_form_validation_error", { formType: "seo-audit", requestType: "seo-audit", locale: content.locale, step: step + 1, category: "client" });
       focusFirstError(localErrors);
       return;
     }
-    trackLeadEvent("lead_form_step_complete", { formType: "seo-audit", locale: content.locale, step: step + 1 });
+    trackLeadEvent("lead_form_step_complete", { formType: "seo-audit", requestType: "seo-audit", locale: content.locale, step: step + 1 });
     setErrors({});
     setStep((current) => Math.min(2, current + 1));
   }
 
   return (
-    <form ref={formRef} className="relative flex flex-col gap-6" onSubmit={(event) => { event.preventDefault(); void submit(state); }}>
+    <form ref={formRef} className="relative flex flex-col gap-6" onFocusCapture={markStarted} onSubmit={(event) => { event.preventDefault(); void submit(state); }}>
       <Honeypot content={content} />
       <div className="rounded-3xl border border-line bg-white p-5 depth-layered">
         <div className="mb-5">
@@ -567,10 +570,10 @@ export function FreeSeoAuditForm({ content, turnstileSiteKey }: LeadFormProps) {
 export function StrategyCallForm({ content, turnstileSiteKey }: LeadFormProps) {
   const [state, setState] = React.useState<FormState>({ consent: false, serviceInterests: [], preferredCallWindows: [] });
   const required = ["name", "workEmail", "company", "websiteUrl", "market", "serviceInterests", "preferredTimeZone", "preferredCallWindows", "consent"];
-  const { formRef, statusRef, errors, notice, pending, submit } = useSubmitLead(content, "strategy-call", required);
-  React.useEffect(() => trackLeadEvent("lead_form_view", { formType: "strategy-call", locale: content.locale }), [content.locale]);
+  const { formRef, statusRef, errors, notice, pending, submit, markStarted } = useSubmitLead(content, "strategy-call", required);
+  React.useEffect(() => trackLeadEvent("lead_form_view", { formType: "strategy-call", requestType: "strategy-call", locale: content.locale }), [content.locale]);
   return (
-    <form ref={formRef} className="relative flex flex-col gap-5" onSubmit={(event) => { event.preventDefault(); void submit(state); }}>
+    <form ref={formRef} className="relative flex flex-col gap-5" onFocusCapture={markStarted} onSubmit={(event) => { event.preventDefault(); void submit(state); }}>
       <Honeypot content={content} />
       <ErrorList errors={errors} content={content} />
       <div className="grid gap-4 sm:grid-cols-2">
@@ -615,14 +618,14 @@ export function ContactForm({ content, initialIntent, turnstileSiteKey }: LeadFo
   const [state, setState] = React.useState<FormState>({ consent: false, requestType: initialIntent });
   const requestType = intentToRequestType(intent);
   const required = ["name", "workEmail", "message", "consent"];
-  const { formRef, statusRef, errors, notice, pending, submit } = useSubmitLead(content, requestType, required);
+  const { formRef, statusRef, errors, notice, pending, submit, markStarted } = useSubmitLead(content, requestType, required);
 
   React.useEffect(() => {
-    trackLeadEvent("lead_form_view", { formType: "contact", locale: content.locale, intent });
-  }, [content.locale, intent]);
+    trackLeadEvent("lead_form_view", { formType: "contact", requestType, locale: content.locale, intent });
+  }, [content.locale, intent, requestType]);
 
   return (
-    <form ref={formRef} className="relative flex flex-col gap-5" onSubmit={(event) => { event.preventDefault(); void submit({ ...state, requestType }); }}>
+    <form ref={formRef} className="relative flex flex-col gap-5" onFocusCapture={markStarted} onSubmit={(event) => { event.preventDefault(); void submit({ ...state, requestType }); }}>
       <Honeypot content={content} />
       <ErrorList errors={errors} content={content} />
       <fieldset className="rounded-3xl border border-line bg-white p-4">
@@ -639,7 +642,7 @@ export function ContactForm({ content, initialIntent, turnstileSiteKey }: LeadFo
               onClick={() => {
                 setIntent(option.value);
                 setState((prev) => ({ ...prev, requestType: intentToRequestType(option.value) }));
-                trackLeadEvent("contact_intent_selected", { formType: "contact", locale: content.locale, intent: option.value });
+                trackLeadEvent("lead_form_step_complete", { formType: "contact", requestType: intentToRequestType(option.value), locale: content.locale, step: "intent_select" });
               }}
             >
               {option.label}

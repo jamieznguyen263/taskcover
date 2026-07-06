@@ -50,15 +50,40 @@ Custom TypeScript validation avoids adding a new dependency. It validates requir
 
 Client validation is progressive for usability. Server validation is authoritative.
 
-## Analytics
+## Analytics And Conversion Measurement
 
-`src/lib/leads/analytics.ts` exposes provider-neutral events. Payloads must not include names, emails, full URLs, free-text messages, or PII. Allowed metadata includes form type, locale, step, service category, industry, market, intent, and success/error category.
+`src/lib/leads/analytics.ts` exposes provider-neutral events through the
+central Task 16 dataLayer helper. Payloads must not include names, emails,
+phone numbers, companies, full URLs, website URLs, free-text messages, raw IP,
+user agent, Turnstile tokens, session tokens, provider IDs, CRM deal IDs, or
+raw click IDs.
 
-If `window.dataLayer` exists, sanitized events are pushed there. No GA4 or GTM tag is installed by this task.
+Allowed metadata includes form type, request type, locale, funnel step,
+service/industry/market slug, and success/error category.
+
+Primary success events fire only after durable backend acceptance:
+
+- `lead_form_success`
+- `free_audit_request_success`
+- `strategy_call_request_success`
+- `contact_request_success`
+- `media_inquiry_success`
+- `private_reference_request_success`
+- `data_request_success`
+
+Failed validation, spam rejection, provider unavailable, and temporary errors
+must use validation/error/unavailable events, never success.
+
+Google Ads conversion readiness is gated by marketing consent, configured ID,
+and configured label. GA4/GTM event dispatch is gated by analytics consent and
+configuration.
 
 ## Thank-You Behavior
 
 Thank-you pages are noindex and excluded from sitemap. They support safe request-type query values and never place PII in the URL. They include request-specific confirmation, next steps without response-time promises, relevant case-study and sample-audit pathways, and analytics-ready conversion hooks.
+
+Task 16 emits only the supporting `thank_you_view` event from thank-you pages.
+Direct visits and refreshes do not emit primary conversion success.
 
 ## CTA Routing Standard
 

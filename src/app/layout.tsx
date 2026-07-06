@@ -6,6 +6,7 @@ import { organizationSchema, serializeJsonLd } from "@/lib/seo";
 import { SiteHeader } from "@/components/marketing/layout/site-header";
 import { SiteFooter } from "@/components/marketing/layout/site-footer";
 import { HtmlLangSync } from "@/components/marketing/layout/html-lang-sync";
+import { ConsentAnalyticsManager } from "@/components/marketing/analytics/consent-analytics-manager";
 
 /**
  * Inline pre-paint script that sets `<html lang>` from the URL route prefix
@@ -95,6 +96,7 @@ export default function RootLayout({
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
+        <ConsentAnalyticsManager />
       </body>
     </html>
   );

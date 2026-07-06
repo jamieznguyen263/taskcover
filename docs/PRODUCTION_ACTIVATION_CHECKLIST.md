@@ -29,12 +29,36 @@ Do not paste secrets into chat. Store secrets through `.dev.vars`, `.env.local`,
 
 Production remains not deployed until step 19 is explicitly approved and completed.
 
+## Task 16 Analytics, Consent, And SEM Gate
+
+Task 16 still does not deploy production, modify DNS, run external migrations,
+or activate real ads.
+
+Before SEM go-live:
+
+1. Complete legal review of Privacy Policy, Cookie Policy, banner copy,
+   Cookie Preferences, and ad-measurement disclosures.
+2. Configure `NEXT_PUBLIC_GTM_ID` and set `NEXT_PUBLIC_GTM_ENABLED=true` only
+   after consent QA passes.
+3. Configure GA4 in GTM. Do not hardcode a GA4 measurement ID in source.
+4. Configure `NEXT_PUBLIC_GOOGLE_ADS_ID` and conversion labels for Free SEO
+   Audit, Strategy Call, and Contact only after Google Ads actions exist.
+5. Keep Microsoft UET and LinkedIn Insight disabled until separately reviewed.
+6. QA reject non-essential, analytics-only, marketing-only, and accept-all
+   states.
+7. Confirm no Admin, API, preview, invite, internal, or debug route loads
+   tracking.
+8. Confirm accepted lead success is the primary conversion source and
+   thank-you views remain supporting events only.
+9. Confirm browser dataLayer contains no PII or raw click IDs.
+10. Confirm CRM lifecycle stages before importing offline conversions.
+
 ## Task 12 Legal Review Gate
 
 Before launch, Privacy Policy, Cookie Policy, Terms, Accessibility Statement,
-Data Request copy, and cookie preference architecture must receive final legal
-review. Analytics and advertising activation remain deferred to Task 16 and
-must not be enabled during Task 12.
+Data Request copy, cookie preference architecture, consent banner, analytics
+events, and advertising measurement plan must receive final legal review.
+Provider activation must follow the Task 16 gate above.
 
 ## Task 13 Commercial SEO Prelaunch Notes
 

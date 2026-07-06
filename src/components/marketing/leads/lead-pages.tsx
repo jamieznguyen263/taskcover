@@ -8,6 +8,7 @@ import { Container } from "@/components/marketing/shared/container";
 import { Section } from "@/components/marketing/shared/section";
 import { Eyebrow } from "@/components/marketing/shared/section-header";
 import { CTAButton } from "@/components/marketing/shared/cta-button";
+import { ThankYouAnalytics } from "@/components/marketing/analytics/thank-you-analytics";
 import { FreeSeoAuditForm, StrategyCallForm, ContactForm } from "./lead-form-client";
 
 type PageProps = {
@@ -207,6 +208,7 @@ export function ThankYouPageView({
   const showCall = Boolean(bookingUrl) || type !== "strategy-call";
   return (
     <Section background="tint" className="pt-16 sm:pt-20">
+      <ThankYouAnalytics locale={locale} requestType={type} />
       <Container className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
         <div className="flex flex-col gap-6">
           <span className="inline-flex h-14 w-14 items-center justify-center rounded-3xl bg-brand-gradient text-white depth-layered">

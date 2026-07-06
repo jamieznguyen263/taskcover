@@ -99,3 +99,17 @@ Production deployment, DNS changes, provider secret configuration, and external 
   and client logos have source-level overflow/aspect-ratio protections.
 - Browser viewport QA and Core Web Vitals lab checks still need to be repeated
   against local production/staging output before launch.
+
+## Task 16 Consent And Measurement Readiness
+
+- Localized consent banner exists for EN/FR/ES public routes.
+- Cookie Preferences uses the same consent model as the banner.
+- Strictly necessary is always on; preferences, analytics, and marketing are
+  off by default.
+- GTM and Google Ads are environment-driven and disabled when IDs are missing.
+- Lead success events require durable backend acceptance.
+- UTM/click-id attribution storage requires analytics or marketing consent and
+  expires after 60 days.
+- Debug panel is development/debug-only and exposes no secrets or PII.
+- Production deployment, DNS changes, live ads, and provider activation remain
+  manual post-QA steps.

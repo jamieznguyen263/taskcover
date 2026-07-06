@@ -181,7 +181,7 @@ export const trustContent: Record<Locale, TrustLocaleContent> = {
           },
           {
             title: "What Taskcover will not do",
-            items: ["Promise guaranteed rankings", "Publish fake testimonials", "Invent client metrics", "Activate tracking without the consent architecture planned for Task 16"],
+            items: ["Promise guaranteed rankings", "Publish fake testimonials", "Invent client metrics", "Activate tracking without the required consent and provider configuration"],
           },
         ],
         primaryCta: { label: "Start with a Free SEO Audit", href: "/free-seo-audit" },
@@ -257,7 +257,7 @@ export const trustContent: Record<Locale, TrustLocaleContent> = {
           },
           {
             title: "How information is used",
-            items: ["Respond to inquiries and privacy requests", "Assess fit for SEO, PPC, AI search, or mentorship services", "Operate Admin and publishing workflows", "Protect forms from spam and abuse", "Improve site operations without activating analytics or ads before Task 16"],
+            items: ["Respond to inquiries and privacy requests", "Assess fit for SEO, PPC, AI search, or mentorship services", "Operate Admin and publishing workflows", "Protect forms from spam and abuse", "Run consent-aware measurement only after visitor choice and provider configuration"],
           },
           {
             title: "Retention and requests",
@@ -283,8 +283,8 @@ export const trustContent: Record<Locale, TrustLocaleContent> = {
         eyebrow: "Cookies",
         h1: "Cookie Policy",
         intro:
-          "Taskcover currently uses a conservative cookie architecture. Strictly necessary cookies may support security, Admin sessions, preferences, anti-spam protection, and core site functionality. Analytics and advertising activation is deferred to Task 16.",
-        heroNotes: ["No analytics or ads scripts are activated in this task", "Non-essential categories default off", "Cookie preferences can be changed at any time"],
+          "Taskcover uses a conservative cookie architecture. Strictly necessary storage may support security, Admin sessions, preferences, anti-spam protection, and core site functionality. Analytics and advertising measurement require consent and provider configuration.",
+        heroNotes: ["GTM and ad measurement stay off unless configured and consented", "Non-essential categories default off", "Cookie preferences can be changed at any time"],
         railTitle: "Cookie categories",
         railItems: ["Strictly necessary", "Preferences", "Analytics", "Marketing / advertising"],
         sections: [
@@ -296,17 +296,17 @@ export const trustContent: Record<Locale, TrustLocaleContent> = {
           {
             title: "Preferences",
             body:
-              "Preference storage may remember visitor choices such as cookie category settings. The current preference helper stores choices locally in the browser and does not activate analytics or advertising.",
+              "Preference storage may remember visitor choices such as cookie category settings. The helper stores choices locally in the browser and updates consent-aware analytics or advertising only when configured.",
           },
           {
             title: "Analytics",
             body:
-              "Analytics tools such as GA4 may be connected later only after the consent-aware implementation is completed. This task does not load GA4, Google Tag Manager, or equivalent analytics tags.",
+              "Analytics tools such as GA4 may be connected through GTM only when the public GTM ID is configured and analytics consent is granted.",
           },
           {
             title: "Marketing and advertising",
             body:
-              "Advertising or remarketing tags such as Google Ads may be connected later through Task 16. They must read the saved preference state before any marketing tag is activated.",
+              "Advertising or remarketing tags such as Google Ads must read the saved preference state before any marketing tag or conversion measurement is activated.",
           },
         ],
         primaryCta: { label: "Manage Cookie Preferences", href: "/cookie-preferences" },
@@ -410,21 +410,21 @@ export const trustContent: Record<Locale, TrustLocaleContent> = {
         slug: "cookie-preferences",
         meta: {
           title: "Cookie Preferences",
-          description: "Manage Taskcover cookie categories with a provider-neutral preference helper for future consent-aware analytics and advertising activation.",
+          description: "Manage Taskcover cookie categories with the provider-neutral consent helper used by analytics and advertising measurement.",
         },
         breadcrumb: "Cookie Preferences",
         eyebrow: "Preferences",
         h1: "Manage cookie preferences.",
         intro:
-          "This page stores provider-neutral cookie preferences for future analytics and ads integration. It is not a full consent banner and does not activate tracking scripts.",
+          "This page stores provider-neutral cookie preferences used by the consent banner, analytics readiness, and ads measurement readiness. Provider tags still require configuration and consent.",
         heroNotes: ["Strictly necessary is always on", "Analytics and marketing default off", "Saved locally in this browser"],
-        railTitle: "Task 16 connection point",
+        railTitle: "Consent controls",
         railItems: ["Read saved category state", "Load analytics only if analytics is allowed", "Load advertising only if marketing is allowed", "React to preference-change events"],
         sections: [
           {
             title: "Preference architecture",
             body:
-              "The helper supports reading, saving, resetting, category checks, and a future event dispatch when preferences change. No GTM, GA4, Google Ads, or other marketing scripts are wired in this task.",
+              "The helper supports reading, saving, resetting, category checks, consent-mode mapping, and preference-change events. GTM, GA4, Google Ads, and other marketing scripts still require environment configuration and consent.",
           },
         ],
       },
@@ -577,7 +577,7 @@ function localizeFrenchPages(): Record<TrustPageSlug, TrustPageContent> {
         { title: "Couche stratégie", body: "La feuille de route relie SEO, recherche IA/GEO, apprentissages PPC, autorité de contenu, séquençage technique et priorités de marché." },
         { title: "Couche exécution", body: "L'exécution peut inclure correctifs techniques, systèmes de contenu, travail d'entité et de gain informationnel, architecture locale ou internationale, intelligence paid search et reporting." },
         { title: "Couche mesure", body: "Le reporting observe visibilité, indexation, performance de contenu, signaux payants/organiques, qualité des leads et opportunités d'itération." },
-        { title: "Ce que Taskcover ne fera pas", items: ["Promettre des classements garantis", "Publier de faux témoignages", "Inventer des métriques client", "Activer le tracking avant l'architecture de consentement prévue à la tâche 16"] },
+        { title: "Ce que Taskcover ne fera pas", items: ["Promettre des classements garantis", "Publier de faux témoignages", "Inventer des métriques client", "Activer le tracking sans consentement requis ni configuration fournisseur"] },
       ],
       primaryCta: { label: "Commencer par un audit SEO gratuit", href: "/free-seo-audit" },
     },
@@ -618,13 +618,13 @@ function localizeFrenchPages(): Record<TrustPageSlug, TrustPageContent> {
       "cookie-policy",
       "Politique relative aux cookies",
       "Cookies",
-      "Taskcover utilise une architecture de cookies conservatrice. Les cookies strictement nécessaires peuvent soutenir la sécurité, les sessions Admin, les préférences, la protection anti-spam et les fonctions du site. L'analytics et la publicité sont différés à la tâche 16.",
+      "Taskcover utilise une architecture de cookies conservatrice. Le stockage strictement nécessaire peut soutenir la sécurité, les sessions Admin, les préférences, la protection anti-spam et les fonctions du site. L'analytics et la mesure publicitaire exigent consentement et configuration fournisseur.",
       ["Strictement nécessaires", "Préférences", "Analytics", "Marketing / publicité"],
       [
         { title: "Strictement nécessaires", body: "Ils soutiennent sécurité, sessions Admin, protection des formulaires, préférences, limitation de débit et fonctionnement du site. Ils restent toujours actifs." },
-        { title: "Préférences", body: "Le stockage de préférences peut mémoriser les choix de catégories dans le navigateur, sans activer l'analytics ni la publicité." },
+        { title: "Préférences", body: "Le stockage de préférences peut mémoriser les choix de catégories dans le navigateur et mettre à jour la mesure consentie seulement si elle est configurée." },
         { title: "Analytics", body: "GA4, Google Tag Manager ou outils similaires ne sont pas chargés dans cette tâche. Une activation future devra lire l'état de consentement." },
-        { title: "Marketing et publicité", body: "Les balises publicitaires ou de remarketing ne sont pas activées. Elles devront être connectées via la tâche 16 et respecter les préférences enregistrées." },
+        { title: "Marketing et publicité", body: "Les balises publicitaires ou de remarketing doivent respecter les préférences enregistrées et rester inactives sans configuration et consentement marketing." },
       ]
     ),
     terms: frLegal(
@@ -664,9 +664,9 @@ function localizeFrenchPages(): Record<TrustPageSlug, TrustPageContent> {
       "cookie-preferences",
       "Gérer les préférences de cookies.",
       "Préférences de cookies",
-      "Cette page enregistre des préférences de cookies neutres vis-à-vis des fournisseurs pour une future intégration analytics et publicité. Elle n'est pas une bannière CMP complète et n'active aucun tracking.",
+      "Cette page enregistre les préférences de cookies utilisées par la bannière, la préparation analytics et la préparation publicitaire. Les balises fournisseur exigent encore configuration et consentement.",
       ["Strictement nécessaires toujours actifs", "Analytics et marketing désactivés par défaut", "Enregistré localement dans ce navigateur"],
-      [{ title: "Architecture de préférences", body: "Le helper permet lecture, enregistrement, réinitialisation, vérification par catégorie et événement de changement. Aucun GTM, GA4, Google Ads ou script marketing n'est connecté dans cette tâche." }]
+      [{ title: "Architecture de préférences", body: "Le helper permet lecture, enregistrement, réinitialisation, vérification par catégorie, mapping consent-mode et événement de changement. GTM, GA4, Google Ads et autres scripts marketing exigent configuration et consentement." }]
     ),
   };
 }
@@ -707,7 +707,7 @@ function localizeSpanishPages(): Record<TrustPageSlug, TrustPageContent> {
         { title: "Capa estratégica", body: "La hoja de ruta conecta SEO, búsqueda con IA/GEO, aprendizajes de PPC, autoridad de contenido, secuencia técnica y prioridades de mercado." },
         { title: "Capa de ejecución", body: "La ejecución puede incluir arreglos técnicos, sistemas de contenido, entidad e información diferencial, arquitectura local o internacional, inteligencia paid search y reporting." },
         { title: "Capa de medición", body: "El reporting revisa visibilidad, indexación, desempeño de contenido, señales pagas/orgánicas, calidad de leads y oportunidades de iteración." },
-        { title: "Lo que Taskcover no hará", items: ["Prometer rankings garantizados", "Publicar testimonios falsos", "Inventar métricas de clientes", "Activar tracking antes de la arquitectura de consentimiento de la tarea 16"] },
+        { title: "Lo que Taskcover no hará", items: ["Prometer rankings garantizados", "Publicar testimonios falsos", "Inventar métricas de clientes", "Activar tracking sin consentimiento requerido ni configuración de proveedor"] },
       ],
       primaryCta: { label: "Empezar con auditoría SEO gratuita", href: "/free-seo-audit" },
     },
@@ -748,13 +748,13 @@ function localizeSpanishPages(): Record<TrustPageSlug, TrustPageContent> {
       "cookie-policy",
       "Política de cookies",
       "Cookies",
-      "Taskcover usa una arquitectura de cookies conservadora. Las cookies estrictamente necesarias pueden apoyar seguridad, sesiones Admin, preferencias, protección anti-spam y funciones del sitio. Analytics y publicidad se difieren a la tarea 16.",
+      "Taskcover usa una arquitectura de cookies conservadora. El almacenamiento estrictamente necesario puede apoyar seguridad, sesiones Admin, preferencias, protección anti-spam y funciones del sitio. Analytics y medición publicitaria requieren consentimiento y configuración de proveedor.",
       ["Estrictamente necesarias", "Preferencias", "Analytics", "Marketing / publicidad"],
       [
         { title: "Estrictamente necesarias", body: "Apoyan seguridad, sesiones Admin, protección de formularios, preferencias, rate limiting y funcionamiento del sitio. Permanecen siempre activas." },
-        { title: "Preferencias", body: "El almacenamiento de preferencias puede recordar elecciones de categorías en el navegador, sin activar analytics ni publicidad." },
+        { title: "Preferencias", body: "El almacenamiento de preferencias puede recordar elecciones de categorías en el navegador y actualizar medición consentida solo si está configurada." },
         { title: "Analytics", body: "GA4, Google Tag Manager o herramientas similares no se cargan en esta tarea. Cualquier activación futura debe leer el estado de consentimiento." },
-        { title: "Marketing y publicidad", body: "Las etiquetas publicitarias o de remarketing no están activadas. Deberán conectarse en la tarea 16 y respetar las preferencias guardadas." },
+        { title: "Marketing y publicidad", body: "Las etiquetas publicitarias o de remarketing deben respetar las preferencias guardadas y quedar inactivas sin configuración y consentimiento de marketing." },
       ]
     ),
     terms: esLegal(
@@ -794,9 +794,9 @@ function localizeSpanishPages(): Record<TrustPageSlug, TrustPageContent> {
       "cookie-preferences",
       "Gestiona las preferencias de cookies.",
       "Preferencias de cookies",
-      "Esta página guarda preferencias de cookies neutrales respecto a proveedores para una futura integración de analytics y publicidad. No es un banner CMP completo y no activa tracking.",
+      "Esta página guarda preferencias de cookies usadas por la bandera de consentimiento, la preparación analytics y la preparación publicitaria. Las etiquetas de proveedor requieren configuración y consentimiento.",
       ["Estrictamente necesarias siempre activas", "Analytics y marketing desactivados por defecto", "Guardado localmente en este navegador"],
-      [{ title: "Arquitectura de preferencias", body: "El helper permite leer, guardar, reiniciar, verificar categorías y emitir un evento de cambio. No se conecta GTM, GA4, Google Ads ni scripts de marketing en esta tarea." }]
+      [{ title: "Arquitectura de preferencias", body: "El helper permite leer, guardar, reiniciar, verificar categorías, mapear consent-mode y emitir un evento de cambio. GTM, GA4, Google Ads y otros scripts de marketing requieren configuración y consentimiento." }]
     ),
   };
 }

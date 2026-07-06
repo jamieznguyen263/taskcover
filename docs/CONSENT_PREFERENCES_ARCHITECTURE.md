@@ -1,14 +1,36 @@
 # Consent Preferences Architecture
 
-Task 12 adds a provider-neutral helper at `src/lib/consent/preferences.ts`.
+The provider-neutral helper lives at `src/lib/consent/preferences.ts`.
 
-It supports reading, saving, resetting, category checks, forcing strictly necessary on, defaulting non-essential categories off, and dispatching `taskcover:consent-preferences-change`.
+It supports reading, saving, resetting, category checks, forcing strictly
+necessary on, defaulting non-essential categories off, dispatching
+`taskcover:consent-preferences-change`, and mapping the state to a Google
+Consent Mode-style object.
 
 Preferences are stored in localStorage under `taskcover_cookie_preferences`.
 
-## Task 16 Integration
+## Task 16 Model
 
-Task 16 should load analytics only when `hasConsent("analytics")` is true and marketing or advertising tags only when `hasConsent("marketing")` is true. It should listen for preference changes, avoid PII in analytics payloads, and keep lead events provider-neutral until consent-aware providers are configured.
+Categories:
 
-This is not a full consent banner or CMP. It is the preference architecture that a later banner and tag manager can consume.
+- `strictly_necessary`: always enabled.
+- `preferences`: non-essential UI/browser choices.
+- `analytics`: GA4/GTM measurement.
+- `marketing`: ad conversion measurement and future marketing tags.
 
+Saved state includes category decisions, version, locale, source, region mode,
+timestamp, and updated time. It does not store identity.
+
+## Shared UI
+
+The consent banner and `/cookie-preferences` page use this same helper. The
+banner is now the public first-choice UI; the preferences page remains the
+long-form management UI with save and reset controls.
+
+Analytics loads only when `hasConsent("analytics")` is true. Google Ads
+conversion readiness requires `hasConsent("marketing")`. GTM IDs, conversion
+labels, GA4 setup, and ad providers remain environment-driven and empty by
+default.
+
+This architecture is not a legal compliance certification. Final legal review
+is still required before launch.

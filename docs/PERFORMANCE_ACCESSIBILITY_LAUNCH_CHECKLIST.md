@@ -43,11 +43,16 @@
 - Search Console indexing.
 - Live social unfurl and CDN behavior.
 
-## Requires Task 16
+## Task 16 Measurement QA
 
-- Analytics/consent implementation.
-- SEM conversion measurement.
-- Consent-aware tag loading and event QA.
+- Consent banner, Cookie Preferences integration, consent-mode mapping,
+  consent-aware GTM loading, typed events, attribution capture, Google Ads
+  readiness, and debug panel are implemented.
+- Repeat browser QA for banner mobile layout, keyboard access, focus states,
+  reject non-essential behavior, customize/save/reset behavior, and dataLayer
+  safety before staging.
+- GTM and ad scripts remain dormant unless environment IDs and consent gates
+  allow them.
 
 ## Must Not Happen In Task 15
 
@@ -55,4 +60,5 @@
 - DNS changes.
 - External migrations.
 - Production secrets or provider activation.
-- Analytics, GTM, GA4, ads pixels, or final consent banner.
+- Live ads, hardcoded tracking IDs, DNS changes, external migrations, or
+  provider activation without a separate approval.

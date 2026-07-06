@@ -57,3 +57,11 @@ cookie banner, database migration, or new commercial page was added.
   real social unfurl previews, robots/sitemap fetch from `https://taskcover.com`,
   CDN cache headers, and legal review.
 
+## Task 16 Measurement Preservation
+
+Analytics and consent work does not change canonical URLs, hreflang alternates,
+sitemap generation, robots rules, noindex handling, or static route ownership.
+
+Admin, API, preview, invite, internal, and debug routes are excluded from
+tracking. Thank-you pages remain noindex and excluded from sitemap; they emit
+supporting measurement only and are not the primary conversion source.
