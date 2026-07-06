@@ -20,3 +20,11 @@ npm run smoke:deployment -- --base-url=https://staging.taskcover.com
 ```
 
 Do not deploy staging unless credentials are already configured locally and the user explicitly approves the deploy.
+
+## Task 17 Verification Notes
+
+Task 17 did not deploy staging because no local env files or provider secrets were available. Before running `wrangler deploy --env staging`, complete the blockers listed in `docs/STAGING_VERIFICATION_REPORT.md`.
+
+On Windows, OpenNext emits a compatibility warning. The escalated Task 17 run completed `build:cloudflare`, `cf:typegen`, `cf:dry-run`, and `production:predeploy`, but rerun these commands after replacing staging provider placeholders.
+
+Staging must remain noindex/protected where practical and must not bind `taskcover.com`.

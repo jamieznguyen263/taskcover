@@ -16,3 +16,9 @@ Rollback priority is to preserve lead persistence and prevent duplicate provider
 | Rate-limit binding outage | Prefer fail closed for production submission endpoints; keep memory fallback development-only. |
 
 Do not delete persisted leads during rollback.
+
+## Task 17 Readiness Gap
+
+Rollback procedures are not yet validated against a live staging Worker because staging was not deployed during Task 17. Validate Worker rollback, Hyperdrive failover/rollback, and Neon branch restore on staging before production launch approval.
+
+Keep `INSIGHTS_PROVIDER=local` as the fastest rollback path if database-backed Insights fails during staging.

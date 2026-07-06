@@ -113,3 +113,16 @@ Production deployment, DNS changes, provider secret configuration, and external 
 - Debug panel is development/debug-only and exposes no secrets or PII.
 - Production deployment, DNS changes, live ads, and provider activation remain
   manual post-QA steps.
+
+## Task 17 Provider Activation Readiness
+
+- `production:check` reports the required staging/provider categories and setup
+  locations without printing secret values.
+- Offline Resend, HubSpot, Cal.com, Turnstile, Cloudinary, rate-limit,
+  scheduler, and mock lead smoke checks are available and were run without live
+  side effects.
+- Data Request is included in the mock lead smoke matrix.
+- Staging activation is blocked until Neon, Hyperdrive, Cloudflare Rate
+  Limiting, provider secrets, and Admin bootstrap values are configured outside
+  the repository.
+- Production remains not deployed, and DNS remains unchanged.

@@ -36,3 +36,14 @@ npm run integrations:test-turnstile -- --live --token=<token>
 ```
 
 Do not expose a public reset endpoint.
+
+## Task 17 Status
+
+Turnstile is not activated in this workspace because keys and hostname settings are missing:
+
+- `TURNSTILE_SITE_KEY`
+- `TURNSTILE_SECRET_KEY`
+- `TURNSTILE_EXPECTED_HOSTNAME`
+- `TURNSTILE_EXPECTED_ACTION`
+
+Rate-limit logic passed local verification with privacy-safe hashed keys. Cloudflare bindings are declared, but the namespace IDs in `wrangler.jsonc` must be replaced with real Cloudflare values before staging.

@@ -88,3 +88,12 @@ The debug panel shows only:
 - dataLayer availability
 
 It does not show secrets, IDs, PII, provider references, or raw click IDs.
+
+## Task 17 Status
+
+`production:check` reports Consent Mode readiness as configured and GTM/GA4/Google Ads as not required in the current mode because GTM is disabled and IDs are unset. This is acceptable for staging readiness, but browser QA must still confirm:
+
+- default denied Consent Mode before choice
+- GTM does not load before analytics or marketing consent
+- no tracking on Admin, API, preview, invite, internal, debug, or `_next` routes
+- no PII or raw click IDs in `dataLayer`

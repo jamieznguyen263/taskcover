@@ -122,5 +122,8 @@ Taskcover is prepared for Cloudflare Workers with OpenNext. Start with:
 - `docs/INTEGRATION_TESTING.md`
 - `docs/LEAD_DELIVERY_ARCHITECTURE.md`
 - `docs/PRODUCTION_ACTIVATION_CHECKLIST.md`
+- `docs/PRODUCTION_PROVIDER_ACTIVATION_REPORT.md`
+- `docs/STAGING_VERIFICATION_REPORT.md`
+- `docs/PRODUCTION_GO_LIVE_CHECKLIST.md`
 
 Do not deploy production or apply external database migrations without explicit approval and credentials.

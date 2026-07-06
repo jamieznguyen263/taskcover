@@ -25,6 +25,7 @@ const cases = [
   leadCase("General Contact", "general-contact", "en", "/contact"),
   leadCase("Media inquiry", "media-inquiry", "en", "/contact?intent=media"),
   leadCase("Private reference request", "private-reference", "en", "/contact?intent=private-reference"),
+  leadCase("Data Request", "data-request", "en", "/data-request"),
 ] as const;
 
 const results = cases.map((item) => {

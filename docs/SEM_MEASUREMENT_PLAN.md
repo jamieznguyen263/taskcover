@@ -71,3 +71,7 @@ provider configuration, consent rules, and legal review are complete.
 9. Confirm Admin, API, preview, invite, internal, and debug routes are excluded.
 10. Complete legal and provider review. This plan is not a compliance
     certification.
+
+## Task 17 Status
+
+No GTM, GA4, Google Ads, Microsoft UET, LinkedIn, or ad conversion IDs were configured during Task 17. Staging can pass without live analytics IDs. Do not publish a GTM container, launch ads, or fire conversion events until provider IDs, consent QA, and legal review are complete.

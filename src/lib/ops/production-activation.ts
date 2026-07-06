@@ -3,9 +3,12 @@ import crypto from "node:crypto";
 export type ActivationStatus =
   | "configured"
   | "partially configured"
-  | "unavailable"
+  | "missing"
   | "invalid format"
-  | "not required in current mode";
+  | "not required in current mode"
+  | "live test required"
+  | "staging only"
+  | "production only";
 
 export type ActivationCheck = {
   category: string;
@@ -22,6 +25,7 @@ export type WranglerAudit = {
   hyperdriveBindings: string[];
   hyperdrivePlaceholderIds: string[];
   rateLimitBindings: string[];
+  rateLimitPlaceholderIds: string[];
   durableObjectBindings: string[];
   cronSchedules: string[];
   stagingWorkerName?: string;
@@ -37,6 +41,58 @@ export type SmokeCheck = {
 type EnvMap = Record<string, string | undefined>;
 
 const secretKeyPattern = /(secret|token|password|key|database_url|connection|string|authorization|cookie)/i;
+const allowedActivationStatuses = new Set<ActivationStatus>([
+  "configured",
+  "missing",
+  "partially configured",
+  "invalid format",
+  "not required in current mode",
+  "live test required",
+  "staging only",
+  "production only",
+]);
+
+const setupLocations: Record<string, string> = {
+  APP_URL: "set in .env.local/.dev.vars for local checks or wrangler vars for Workers",
+  NEXT_PUBLIC_APP_URL: "set in .env.local/.dev.vars for local checks or wrangler vars for Workers",
+  LEAD_SUBMISSION_MODE: "set in .env.local/.dev.vars; keep disabled until staging DB and providers are ready",
+  DATABASE_URL: "set only in local env files for scripts; use Hyperdrive for Cloudflare runtime",
+  DATABASE_TARGET: "set to development or staging before migrations",
+  CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE: "set in .dev.vars with a disposable development/staging Neon connection string for local preview",
+  AUTH_SESSION_SECRET: "set via .env.local/.dev.vars or wrangler secret put",
+  PREVIEW_TOKEN_SECRET: "set via .env.local/.dev.vars or wrangler secret put",
+  ADMIN_EMAIL: "pass to npm run admin:verify -- <email> or npm run admin:create -- <email>",
+  RESEND_API_KEY: "set via wrangler secret put or local .dev.vars",
+  RESEND_FROM_EMAIL: "set in environment variables or wrangler vars",
+  RESEND_REPLY_TO_EMAIL: "set in environment variables or wrangler vars",
+  LEAD_NOTIFICATION_EMAIL: "set in environment variables or wrangler vars",
+  HUBSPOT_PRIVATE_APP_TOKEN: "set via wrangler secret put or local .dev.vars",
+  HUBSPOT_PIPELINE_ID: "set from HubSpot dashboard pipeline settings",
+  HUBSPOT_NEW_LEAD_STAGE_ID: "set from HubSpot dashboard pipeline stage settings",
+  CALCOM_BOOKING_URL: "set in environment variables or wrangler vars",
+  TURNSTILE_SITE_KEY: "set in environment variables or wrangler vars",
+  TURNSTILE_SECRET_KEY: "set via wrangler secret put or local .dev.vars",
+  TURNSTILE_EXPECTED_HOSTNAME: "set to the active staging or production hostname",
+  TURNSTILE_EXPECTED_ACTION: "set to lead-submit",
+  CLOUDINARY_CLOUD_NAME: "set in environment variables or wrangler vars",
+  CLOUDINARY_API_KEY: "set via wrangler secret put or local .dev.vars",
+  CLOUDINARY_API_SECRET: "set via wrangler secret put or local .dev.vars",
+  CLOUDINARY_UPLOAD_FOLDER: "set to a staging folder for staging, production folder only after go-live approval",
+  PUBLISH_CRON_SECRET: "set via wrangler secret put or local .dev.vars",
+  INSIGHTS_PROVIDER: "set to local by default; use database only after staging import verification",
+  NEXT_PUBLIC_GTM_ID: "set after GTM container review",
+  NEXT_PUBLIC_GTM_ENABLED: "set to true only after consent QA",
+  NEXT_PUBLIC_GOOGLE_ADS_ID: "set after Google Ads conversion actions are ready",
+  NEXT_PUBLIC_GOOGLE_ADS_FREE_AUDIT_LABEL: "set after Google Ads conversion action creation",
+  NEXT_PUBLIC_GOOGLE_ADS_STRATEGY_CALL_LABEL: "set after Google Ads conversion action creation",
+  NEXT_PUBLIC_GOOGLE_ADS_CONTACT_LABEL: "set after Google Ads conversion action creation",
+  LEAD_RATE_LIMITER: "configure Cloudflare Rate Limiting binding in wrangler.jsonc",
+  ADMIN_RATE_LIMITER: "configure Cloudflare Rate Limiting binding in wrangler.jsonc",
+  RATE_LIMIT_COORDINATOR: "configure Durable Object binding and migration in wrangler.jsonc",
+  "wrangler.hyperdrive.id": "replace placeholder with the real staging Hyperdrive ID",
+  "wrangler.ratelimits.namespace_id": "replace placeholder namespace IDs with real Cloudflare Rate Limiting namespace IDs",
+  "wrangler.triggers.crons": "configure Cloudflare Cron Triggers in wrangler.jsonc",
+};
 
 export function redactValue(name: string, value: string | undefined) {
   if (!value) return "";
@@ -47,6 +103,14 @@ export function redactValue(name: string, value: string | undefined) {
 
 export function valuePresent(value: string | undefined) {
   return Boolean(value && value.trim().length > 0 && !/^<.+>$/.test(value.trim()));
+}
+
+export function setupLocationFor(name: string) {
+  return setupLocations[name] ?? "set in the relevant provider dashboard, local env file, or Cloudflare secret";
+}
+
+export function isActivationStatus(value: string): value is ActivationStatus {
+  return allowedActivationStatuses.has(value as ActivationStatus);
 }
 
 export function validateHttpUrl(value: string | undefined, options: { httpsOnly?: boolean; expectedHosts?: string[] } = {}) {
@@ -96,7 +160,7 @@ export function migrationGuard(env: EnvMap) {
 }
 
 export function buildWranglerAudit(config: Record<string, unknown>): WranglerAudit {
-  const hyperdrive = Array.isArray(config.hyperdrive) ? config.hyperdrive : [];
+  const topLevelHyperdrive = Array.isArray(config.hyperdrive) ? config.hyperdrive : [];
   const ratelimits = Array.isArray(config.ratelimits) ? config.ratelimits : [];
   const durableObjects = config.durable_objects && typeof config.durable_objects === "object" ? config.durable_objects : {};
   const doBindings = Array.isArray((durableObjects as { bindings?: unknown }).bindings)
@@ -105,15 +169,31 @@ export function buildWranglerAudit(config: Record<string, unknown>): WranglerAud
   const triggers = config.triggers && typeof config.triggers === "object" ? config.triggers : {};
   const envConfig = config.env && typeof config.env === "object" ? config.env : {};
   const staging = (envConfig as { staging?: { name?: string } }).staging;
+  const envHyperdrive = Object.entries(envConfig as Record<string, Record<string, unknown>>).flatMap(([envName, item]) => {
+    const hyperdrive = item && Array.isArray(item.hyperdrive) ? item.hyperdrive : [];
+    return hyperdrive.map((entry) => ({ entry, envName }));
+  });
+  const hyperdrive = [
+    ...topLevelHyperdrive.map((entry) => ({ entry, envName: "" })),
+    ...envHyperdrive,
+  ];
 
   return {
     workerName: String(config.name ?? ""),
     compatibilityDate: String(config.compatibility_date ?? ""),
-    hyperdriveBindings: hyperdrive.map((item) => String((item as { binding?: unknown }).binding ?? "")).filter(Boolean),
+    hyperdriveBindings: Array.from(
+      new Set(hyperdrive.map(({ entry }) => String((entry as { binding?: unknown }).binding ?? "")).filter(Boolean))
+    ),
     hyperdrivePlaceholderIds: hyperdrive
-      .filter((item) => /^0+$/.test(String((item as { id?: unknown }).id ?? "")))
-      .map((item) => String((item as { binding?: unknown }).binding ?? "")),
+      .filter(({ entry }) => /^0+$/.test(String((entry as { id?: unknown }).id ?? "")))
+      .map(({ entry, envName }) => {
+        const binding = String((entry as { binding?: unknown }).binding ?? "");
+        return envName ? `${envName}.${binding}` : binding;
+      }),
     rateLimitBindings: ratelimits.map((item) => String((item as { name?: unknown }).name ?? "")).filter(Boolean),
+    rateLimitPlaceholderIds: ratelimits
+      .filter((item) => /^(1001|1002|0+|placeholder)$/i.test(String((item as { namespace_id?: unknown }).namespace_id ?? "")))
+      .map((item) => String((item as { name?: unknown }).name ?? "")),
     durableObjectBindings: doBindings.map((item) => String(item.name ?? "")).filter(Boolean),
     cronSchedules: Array.isArray((triggers as { crons?: unknown }).crons)
       ? ((triggers as { crons: string[] }).crons)
@@ -130,6 +210,16 @@ export function buildProductionChecks(env: EnvMap, audit: WranglerAudit): Activa
   const hyperdriveBinding = audit.hyperdriveBindings[0] ?? "HYPERDRIVE";
   const hyperdriveLocalVar = localHyperdriveVariableFor(hyperdriveBinding);
   const insightsProvider = String(env.INSIGHTS_PROVIDER ?? "local");
+  const leadSubmissionMode = String(env.LEAD_SUBMISSION_MODE ?? "missing");
+  const gtmEnabled = String(env.NEXT_PUBLIC_GTM_ENABLED ?? "false").toLowerCase() === "true";
+  const gtmConfigured = valuePresent(env.NEXT_PUBLIC_GTM_ID);
+  const adsIdConfigured = valuePresent(env.NEXT_PUBLIC_GOOGLE_ADS_ID);
+  const adsLabels = [
+    "NEXT_PUBLIC_GOOGLE_ADS_FREE_AUDIT_LABEL",
+    "NEXT_PUBLIC_GOOGLE_ADS_STRATEGY_CALL_LABEL",
+    "NEXT_PUBLIC_GOOGLE_ADS_CONTACT_LABEL",
+  ];
+  const missingAdsLabels = adsLabels.filter((name) => !valuePresent(env[name]));
   const appUrl = validateHttpUrl(env.APP_URL);
   const publicUrl = validateHttpUrl(env.NEXT_PUBLIC_APP_URL);
   const calcom = validateHttpUrl(env.CALCOM_BOOKING_URL, { httpsOnly: true, expectedHosts: ["cal.com", "www.cal.com", "app.cal.com"] });
@@ -139,25 +229,57 @@ export function buildProductionChecks(env: EnvMap, audit: WranglerAudit): Activa
       invalid: appUrl === "invalid" || publicUrl === "invalid",
       nextAction: "Set APP_URL and NEXT_PUBLIC_APP_URL to the active environment origin.",
     }),
-    checkRequired("Database", ["DATABASE_URL"], env, {
+    {
+      category: "Cloudflare",
+      status: audit.workerName && audit.stagingWorkerName && audit.compatibilityDate ? "partially configured" : "missing",
+      detail: `Worker=${audit.workerName || "missing"}; staging=${audit.stagingWorkerName || "missing"}; compatibility=${audit.compatibilityDate || "missing"}. Hyperdrive IDs still require provider values when placeholders remain.`,
+      required: ["wrangler.name", "wrangler.env.staging.name", "wrangler.compatibility_date", "wrangler.hyperdrive.id"],
+      missing: audit.hyperdrivePlaceholderIds.length ? ["wrangler.hyperdrive.id"] : [],
+      nextAction: "Replace placeholder Cloudflare IDs only with real staging IDs; do not bind the production domain during staging.",
+    },
+    checkRequired("Neon / DATABASE_URL", ["DATABASE_URL", "DATABASE_TARGET"], env, {
       nextAction: "Set DATABASE_URL only for local scripts or use the Hyperdrive binding at runtime.",
     }),
     {
       category: "Hyperdrive",
-      status: audit.hyperdriveBindings.length && valuePresent(env[hyperdriveLocalVar]) ? "configured" : audit.hyperdriveBindings.length ? "partially configured" : "unavailable",
+      status: audit.hyperdriveBindings.length && valuePresent(env[hyperdriveLocalVar]) && audit.hyperdrivePlaceholderIds.length === 0
+        ? "configured"
+        : audit.hyperdriveBindings.length
+          ? "partially configured"
+          : "missing",
       detail: audit.hyperdriveBindings.length
         ? `Wrangler binding ${hyperdriveBinding}; local preview variable ${hyperdriveLocalVar}.`
         : "No Hyperdrive binding found in wrangler.jsonc.",
       required: [hyperdriveLocalVar, "wrangler.hyperdrive.id"],
       missing: [
         ...(valuePresent(env[hyperdriveLocalVar]) ? [] : [hyperdriveLocalVar]),
-        ...(audit.hyperdrivePlaceholderIds.length ? ["real Hyperdrive binding id"] : []),
+        ...(audit.hyperdrivePlaceholderIds.length ? ["wrangler.hyperdrive.id"] : []),
       ],
       nextAction: "Create Hyperdrive in Cloudflare and set the local preview connection string in .dev.vars.",
     },
-    checkRequired("Authentication", ["AUTH_SESSION_SECRET", "PREVIEW_TOKEN_SECRET"], env, {
+    checkRequired("Auth secrets", ["AUTH_SESSION_SECRET", "PREVIEW_TOKEN_SECRET"], env, {
       nextAction: "Generate long random secrets and store them through local env files or Cloudflare secrets.",
     }),
+    {
+      category: "Admin bootstrap readiness",
+      status: valuePresent(env.DATABASE_URL) && valuePresent(env.AUTH_SESSION_SECRET) ? "live test required" : "missing",
+      detail: "First Admin verification requires a configured staging DB, auth secret, and explicit admin email argument.",
+      required: ["DATABASE_URL", "AUTH_SESSION_SECRET", "ADMIN_EMAIL"],
+      missing: [
+        ...(valuePresent(env.DATABASE_URL) ? [] : ["DATABASE_URL"]),
+        ...(valuePresent(env.AUTH_SESSION_SECRET) ? [] : ["AUTH_SESSION_SECRET"]),
+        "ADMIN_EMAIL",
+      ],
+      nextAction: "Run npm run admin:create -- <admin-email> and npm run admin:verify -- <admin-email> only after staging DB is configured.",
+    },
+    {
+      category: "Insights provider mode",
+      status: insightsProvider === "database" && !valuePresent(env.DATABASE_URL) ? "partially configured" : "configured",
+      detail: `INSIGHTS_PROVIDER=${insightsProvider}. Production should remain local until DB import verification passes.`,
+      required: ["INSIGHTS_PROVIDER"],
+      missing: insightsProvider === "database" && !valuePresent(env.DATABASE_URL) ? ["DATABASE_URL"] : [],
+      nextAction: "Switch only staging/preview to database first, compare routes, then separately approve production.",
+    },
     checkRequired("Resend", ["RESEND_API_KEY", "RESEND_FROM_EMAIL", "RESEND_REPLY_TO_EMAIL", "LEAD_NOTIFICATION_EMAIL"], env, {
       invalid:
         validateEmailAddress(env.RESEND_FROM_EMAIL) === "invalid" ||
@@ -179,36 +301,73 @@ export function buildProductionChecks(env: EnvMap, audit: WranglerAudit): Activa
       nextAction: "Configure signed upload credentials and use a staging folder outside production.",
     }),
     {
-      category: "Rate Limiting",
-      status: audit.rateLimitBindings.includes("LEAD_RATE_LIMITER") && audit.rateLimitBindings.includes("ADMIN_RATE_LIMITER") ? "configured" : "partially configured",
+      category: "Rate Limiting binding",
+      status: audit.rateLimitBindings.includes("LEAD_RATE_LIMITER") && audit.rateLimitBindings.includes("ADMIN_RATE_LIMITER") && audit.rateLimitPlaceholderIds.length === 0
+        ? "configured"
+        : "partially configured",
       detail: `Provider=${env.RATE_LIMIT_PROVIDER ?? "memory"}; bindings=${audit.rateLimitBindings.join(", ") || "none"}.`,
-      required: ["LEAD_RATE_LIMITER", "ADMIN_RATE_LIMITER", "RATE_LIMIT_PROVIDER"],
-      missing: ["LEAD_RATE_LIMITER", "ADMIN_RATE_LIMITER"].filter((name) => !audit.rateLimitBindings.includes(name)),
+      required: ["LEAD_RATE_LIMITER", "ADMIN_RATE_LIMITER", "RATE_LIMIT_PROVIDER", "wrangler.ratelimits.namespace_id"],
+      missing: [
+        ...["LEAD_RATE_LIMITER", "ADMIN_RATE_LIMITER"].filter((name) => !audit.rateLimitBindings.includes(name)),
+        ...(audit.rateLimitPlaceholderIds.length ? ["wrangler.ratelimits.namespace_id"] : []),
+      ],
       nextAction: "Create Cloudflare Rate Limiting bindings before production deploy.",
     },
     {
       category: "Durable Objects",
-      status: audit.durableObjectBindings.includes("RATE_LIMIT_COORDINATOR") ? "configured" : "unavailable",
+      status: audit.durableObjectBindings.includes("RATE_LIMIT_COORDINATOR") ? "configured" : "missing",
       detail: `Bindings=${audit.durableObjectBindings.join(", ") || "none"}.`,
       required: ["RATE_LIMIT_COORDINATOR"],
       missing: audit.durableObjectBindings.includes("RATE_LIMIT_COORDINATOR") ? [] : ["RATE_LIMIT_COORDINATOR"],
       nextAction: "Keep the Durable Object migration in wrangler.jsonc and deploy only after review.",
     },
     {
-      category: "Scheduler",
-      status: audit.cronSchedules.length && valuePresent(env.PUBLISH_CRON_SECRET) ? "configured" : audit.cronSchedules.length ? "partially configured" : "unavailable",
+      category: "Cron/scheduler",
+      status: audit.cronSchedules.length && valuePresent(env.PUBLISH_CRON_SECRET) ? "configured" : audit.cronSchedules.length ? "partially configured" : "missing",
       detail: `Cron=${audit.cronSchedules.join(", ") || "none"}; provider=${env.PUBLISH_SCHEDULER_PROVIDER ?? "disabled"}.`,
       required: ["wrangler.triggers.crons", "PUBLISH_CRON_SECRET"],
       missing: [...(audit.cronSchedules.length ? [] : ["wrangler.triggers.crons"]), ...(valuePresent(env.PUBLISH_CRON_SECRET) ? [] : ["PUBLISH_CRON_SECRET"])],
       nextAction: "Configure Cron only after staging validation; keep the secure HTTP publishing endpoint secret.",
     },
     {
-      category: "Insights provider",
-      status: insightsProvider === "database" && !valuePresent(env.DATABASE_URL) ? "partially configured" : "configured",
-      detail: `INSIGHTS_PROVIDER=${insightsProvider}. Production should remain local until DB import verification passes.`,
-      required: ["INSIGHTS_PROVIDER"],
-      missing: insightsProvider === "database" && !valuePresent(env.DATABASE_URL) ? ["DATABASE_URL or Hyperdrive runtime binding"] : [],
-      nextAction: "Switch only staging/preview to database first, compare routes, then separately approve production.",
+      category: "GTM/GA4/Google Ads readiness",
+      status: !gtmEnabled && !gtmConfigured && !adsIdConfigured
+        ? "not required in current mode"
+        : gtmEnabled && gtmConfigured && (!adsIdConfigured || missingAdsLabels.length === 0)
+          ? adsIdConfigured
+            ? "live test required"
+            : "configured"
+          : "partially configured",
+      detail: `GTM enabled=${gtmEnabled}; GTM ID=${gtmConfigured ? "configured" : "missing"}; Google Ads ID=${adsIdConfigured ? "configured" : "missing"}.`,
+      required: ["NEXT_PUBLIC_GTM_ID", "NEXT_PUBLIC_GTM_ENABLED", "NEXT_PUBLIC_GOOGLE_ADS_ID", ...adsLabels],
+      missing: [
+        ...(gtmEnabled && !gtmConfigured ? ["NEXT_PUBLIC_GTM_ID"] : []),
+        ...(adsIdConfigured ? missingAdsLabels : []),
+      ],
+      nextAction: "Keep IDs unset until GTM/GA4/Google Ads containers and consent QA are ready; do not launch ads from code.",
+    },
+    {
+      category: "Consent mode readiness",
+      status: "configured",
+      detail: "Consent defaults deny analytics/marketing storage until the visitor grants consent; tracking exclusions are implemented for Admin/API/preview/internal routes.",
+      required: ["consent helper", "route exclusions", "default denied mapping"],
+      missing: [],
+      nextAction: "Run consent QA with reject, analytics-only, marketing-only, and accept-all states before ads go live.",
+    },
+    {
+      category: "Lead outbox readiness",
+      status: valuePresent(env.DATABASE_URL)
+        ? leadSubmissionMode === "disabled"
+          ? "staging only"
+          : "live test required"
+        : "missing",
+      detail: `LEAD_SUBMISSION_MODE=${leadSubmissionMode}; durable acceptance and provider jobs require the staging database.`,
+      required: ["DATABASE_URL", "LEAD_SUBMISSION_MODE"],
+      missing: [
+        ...(valuePresent(env.DATABASE_URL) ? [] : ["DATABASE_URL"]),
+        ...(valuePresent(env.LEAD_SUBMISSION_MODE) ? [] : ["LEAD_SUBMISSION_MODE"]),
+      ],
+      nextAction: "Keep default smoke tests in mock mode; enable durable staging lead acceptance only after database, Turnstile, and rate limits are configured.",
     },
   ];
 }
@@ -225,7 +384,7 @@ function checkRequired(
     : missing.length === 0
       ? "configured"
       : missing.length === required.length
-        ? "unavailable"
+        ? "missing"
         : "partially configured";
   return {
     category,

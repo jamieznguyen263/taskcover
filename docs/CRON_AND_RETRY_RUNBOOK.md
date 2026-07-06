@@ -31,3 +31,7 @@ Expected behavior:
 - Logs summarize counts without PII.
 
 The secure HTTP publishing endpoint remains available and must not expose scheduler internals publicly.
+
+## Task 17 Status
+
+`npm run scheduler:verify` passed static wiring checks. The cron schedule exists in `wrangler.jsonc`, but `PUBLISH_CRON_SECRET` was not configured locally. Staging still needs an actual scheduled invocation test after Hyperdrive, DB, and secrets are configured.

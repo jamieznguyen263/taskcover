@@ -19,3 +19,7 @@ Verification:
 npm run integrations:test-calcom
 npm run integrations:test-calcom -- --live
 ```
+
+## Task 17 Status
+
+`CALCOM_BOOKING_URL` was not configured during Task 17. The offline check passed because the CTA hides safely when the URL is missing and the site does not claim a booking was confirmed.

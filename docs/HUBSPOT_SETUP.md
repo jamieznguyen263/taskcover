@@ -31,3 +31,13 @@ Optional custom properties to create manually:
 - `taskcover_preferred_timezone`
 
 Do not create live Contacts or Deals by default.
+
+## Task 17 Status
+
+Offline HubSpot mapping verification passed and created no records. Live HubSpot sync is not activated in this workspace. Required missing values:
+
+- `HUBSPOT_PRIVATE_APP_TOKEN`
+- `HUBSPOT_PIPELINE_ID`
+- `HUBSPOT_NEW_LEAD_STAGE_ID`
+
+Do not create test contacts/deals until a live-test flag is intentionally used.

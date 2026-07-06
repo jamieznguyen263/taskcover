@@ -3,10 +3,12 @@ import {
   buildProductionChecks,
   buildWranglerAudit,
   deploymentSmokePlan,
+  isActivationStatus,
   localHyperdriveVariableFor,
   migrationGuard,
   noPiiLogLine,
   redactValue,
+  setupLocationFor,
   validateHttpUrl,
 } from "./production-activation";
 
@@ -32,9 +34,10 @@ describe("production activation safety helpers", () => {
       ratelimits: [{ name: "LEAD_RATE_LIMITER" }, { name: "ADMIN_RATE_LIMITER" }],
       durable_objects: { bindings: [{ name: "RATE_LIMIT_COORDINATOR" }] },
       triggers: { crons: ["*/5 * * * *"] },
+      env: { staging: { name: "taskcover-staging", hyperdrive: [{ binding: "HYPERDRIVE", id: "00000000000000000000000000000000" }] } },
     });
     expect(audit.hyperdriveBindings).toEqual(["HYPERDRIVE"]);
-    expect(audit.hyperdrivePlaceholderIds).toEqual(["HYPERDRIVE"]);
+    expect(audit.hyperdrivePlaceholderIds).toEqual(["HYPERDRIVE", "staging.HYPERDRIVE"]);
     expect(localHyperdriveVariableFor("HYPERDRIVE")).toBe("CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE");
   });
 
@@ -58,6 +61,44 @@ describe("production activation safety helpers", () => {
     );
     expect(checks.find((check) => check.category === "Resend")?.status).toBe("partially configured");
     expect(JSON.stringify(checks)).not.toContain("re_actual_secret_value");
+  });
+
+  it("reports Task 17 readiness categories with approved status values", () => {
+    const audit = buildWranglerAudit({
+      name: "taskcover",
+      compatibility_date: "2026-07-05",
+      hyperdrive: [{ binding: "HYPERDRIVE", id: "00000000000000000000000000000000" }],
+      ratelimits: [{ name: "LEAD_RATE_LIMITER", namespace_id: "1001" }, { name: "ADMIN_RATE_LIMITER", namespace_id: "1002" }],
+      durable_objects: { bindings: [{ name: "RATE_LIMIT_COORDINATOR" }] },
+      triggers: { crons: ["*/5 * * * *"] },
+      env: { staging: { name: "taskcover-staging" } },
+    });
+    const checks = buildProductionChecks({}, audit);
+    const categories = checks.map((check) => check.category);
+    expect(categories).toEqual([
+      "Application",
+      "Cloudflare",
+      "Neon / DATABASE_URL",
+      "Hyperdrive",
+      "Auth secrets",
+      "Admin bootstrap readiness",
+      "Insights provider mode",
+      "Resend",
+      "HubSpot",
+      "Cal.com",
+      "Turnstile",
+      "Cloudinary",
+      "Rate Limiting binding",
+      "Durable Objects",
+      "Cron/scheduler",
+      "GTM/GA4/Google Ads readiness",
+      "Consent mode readiness",
+      "Lead outbox readiness",
+    ]);
+    expect(checks.every((check) => isActivationStatus(check.status))).toBe(true);
+    expect(JSON.stringify(checks)).not.toContain("unavailable");
+    expect(checks.find((check) => check.category === "Rate Limiting binding")?.status).toBe("partially configured");
+    expect(setupLocationFor("RESEND_API_KEY")).toContain("wrangler secret put");
   });
 
   it("validates Cal.com URL host and PII-free smoke output assumptions", () => {

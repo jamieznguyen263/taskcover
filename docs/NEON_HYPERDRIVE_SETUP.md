@@ -12,6 +12,18 @@ npm run insights:import
 npm run insights:verify-database
 ```
 
+## Task 17 Neon Status
+
+No staging database URL was present during Task 17. The DB scripts refused to run without `DATABASE_URL`, which is the expected safe behavior.
+
+Example files now include:
+
+```bash
+DATABASE_TARGET=development
+```
+
+Use `DATABASE_TARGET=staging` for staging activation. Keep `CONFIRM_PRODUCTION_MIGRATION=YES` unset unless a production migration has been separately approved.
+
 Production migration requires both:
 
 ```bash

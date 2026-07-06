@@ -15,3 +15,18 @@ All integration commands are offline by default unless a `--live` or equivalent 
 | Scheduler | `npm run scheduler:verify` | `wrangler dev --test-scheduled` after local Hyperdrive is configured |
 
 Live tests must not print API keys, database URLs, tokens, full provider responses, or lead PII.
+
+## Task 17 Offline Results
+
+The following offline/mock commands passed during Task 17:
+
+- `npm run integrations:test-resend`
+- `npm run integrations:test-hubspot`
+- `npm run integrations:test-calcom`
+- `npm run integrations:test-turnstile`
+- `npm run integrations:test-cloudinary`
+- `npm run leads:smoke`
+- `npm run rate-limits:verify`
+- `npm run scheduler:verify`
+
+No live provider flags were used. No emails, CRM records, bookings, uploads, or real leads were created.

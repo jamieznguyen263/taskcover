@@ -53,3 +53,15 @@ Cloudflare Redirect Rule instructions:
 6. Do not create a rule that matches preview, staging, or localhost hosts.
 
 Do not deploy production or change DNS without explicit approval.
+
+## Task 17 Cloudflare Status
+
+`production:check` currently classifies Cloudflare as partially configured:
+
+- Worker names and compatibility date are present.
+- Durable Object binding and cron schedule are present.
+- Top-level and staging Hyperdrive IDs are still placeholder zero IDs.
+- Rate Limiting bindings exist, but namespace IDs `1001` and `1002` must be replaced with real Cloudflare namespace IDs.
+- `CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE` is required for local preview and must stay out of git.
+
+The escalated Task 17 run completed `cf:typegen`, `build:cloudflare`, `cf:dry-run`, and `production:predeploy`. `cf:dry-run` still shows the Hyperdrive placeholder ID, so replace provider placeholders and rerun the gates before staging deployment.

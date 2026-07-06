@@ -29,6 +29,23 @@ Do not paste secrets into chat. Store secrets through `.dev.vars`, `.env.local`,
 
 Production remains not deployed until step 19 is explicitly approved and completed.
 
+## Task 17 Staging Activation Status
+
+Current Task 17 verification is documented in:
+
+- `docs/PRODUCTION_PROVIDER_ACTIVATION_REPORT.md`
+- `docs/STAGING_VERIFICATION_REPORT.md`
+- `docs/PRODUCTION_GO_LIVE_CHECKLIST.md`
+
+No local `.env`, `.env.local`, or `.dev.vars` file was present during Task 17 verification. Live staging activation remains blocked until the missing provider values are configured outside git. `production:check` now reports the required Task 17 readiness categories and prints setup locations for missing values without printing secret values.
+
+Additional placeholders to resolve before staging deploy:
+
+- top-level and staging Hyperdrive IDs in `wrangler.jsonc`
+- Cloudflare Rate Limiting namespace IDs currently represented by `1001` and `1002`
+- `CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE` for local Worker preview
+- staging `DATABASE_URL` and `DATABASE_TARGET=staging` for DB scripts
+
 ## Task 16 Analytics, Consent, And SEM Gate
 
 Task 16 still does not deploy production, modify DNS, run external migrations,
