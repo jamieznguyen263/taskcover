@@ -20,6 +20,9 @@ const lead = {
 } as const;
 const internal = renderInternalLeadEmail(lead, "resend-test");
 const visitor = renderVisitorLeadEmail(lead, "resend-test");
+const liveTimestamp = new Date().toISOString();
+const liveTraceId = liveTimestamp.replace(/[:.]/g, "-");
+const liveSubject = `[Taskcover activation test] Resend delivery check ${liveTimestamp}`;
 
 const offline = {
   configured,
@@ -47,22 +50,39 @@ async function main() {
     console.error("Resend live test requires RESEND_API_KEY, RESEND_FROM_EMAIL, RESEND_REPLY_TO_EMAIL, and LEAD_NOTIFICATION_EMAIL.");
     process.exit(1);
   }
+  const recipient = process.env.LEAD_NOTIFICATION_EMAIL as string;
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
       authorization: `Bearer ${process.env.RESEND_API_KEY}`,
       "content-type": "application/json",
-      "Idempotency-Key": "taskcover-resend-activation-test-2026-07-05",
+      "Idempotency-Key": `taskcover-resend-activation-test-${liveTraceId}`,
     },
     body: JSON.stringify({
       from: process.env.RESEND_FROM_EMAIL,
-      to: process.env.LEAD_NOTIFICATION_EMAIL,
+      to: recipient,
       reply_to: process.env.RESEND_REPLY_TO_EMAIL,
-      subject: "[Taskcover activation test] Resend delivery check",
+      subject: liveSubject,
       html: visitor.html,
       text: visitor.text,
     }),
   });
-  console.log(JSON.stringify({ mode: "live", sentEmail: response.ok, status: response.status }, null, 2));
+  const data = (await response.json().catch(() => ({}))) as { id?: unknown };
+  const resendEmailId = typeof data.id === "string" ? data.id : null;
+  console.log(
+    JSON.stringify(
+      {
+        mode: "live",
+        testEmailLabel: "Taskcover activation test",
+        sentEmail: response.ok,
+        status: response.status,
+        resendEmailId,
+        recipient,
+        subject: liveSubject,
+      },
+      null,
+      2
+    )
+  );
   if (!response.ok) process.exitCode = 1;
 }
