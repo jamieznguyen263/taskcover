@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment, import/no-anonymous-default-export */
 // @ts-nocheck
 // OpenNext generates .open-next/worker.js during `npm run build:cloudflare`.
+import { DurableObject } from "cloudflare:workers";
 import handler from "../.open-next/worker.js";
 import { runScheduledTasks } from "../src/lib/cloudflare/scheduled";
 
-export class RateLimitCoordinator {
-  constructor(state, env) {
-    this.state = state;
-    this.env = env;
-    this.state.blockConcurrencyWhile(async () => {
-      this.state.storage.sql.exec(`
+export class RateLimitCoordinator extends DurableObject {
+  constructor(ctx, env) {
+    super(ctx, env);
+    ctx.blockConcurrencyWhile(async () => {
+      this.ctx.storage.sql.exec(`
         CREATE TABLE IF NOT EXISTS counters (
           key TEXT PRIMARY KEY,
           count INTEGER NOT NULL,
@@ -23,13 +23,13 @@ export class RateLimitCoordinator {
     const now = input.now ?? Date.now();
     const limit = input.limit ?? 5;
     const windowMs = input.windowMs ?? 600000;
-    const row = this.state.storage.sql
+    const row = this.ctx.storage.sql
       .exec("SELECT count, reset_at FROM counters WHERE key = ?", input.key)
-      .one();
+      .toArray()[0];
 
     if (!row || row.reset_at <= now) {
       const resetAt = now + windowMs;
-      this.state.storage.sql.exec(
+      this.ctx.storage.sql.exec(
         "INSERT OR REPLACE INTO counters (key, count, reset_at) VALUES (?, ?, ?)",
         input.key,
         1,
@@ -43,19 +43,21 @@ export class RateLimitCoordinator {
     }
 
     const nextCount = row.count + 1;
-    this.state.storage.sql.exec("UPDATE counters SET count = ? WHERE key = ?", nextCount, input.key);
+    this.ctx.storage.sql.exec("UPDATE counters SET count = ? WHERE key = ?", nextCount, input.key);
     return { allowed: true, remaining: Math.max(0, limit - nextCount), resetAt: row.reset_at };
   }
 
   async cleanup(now = Date.now()) {
-    this.state.storage.sql.exec("DELETE FROM counters WHERE reset_at <= ?", now);
+    this.ctx.storage.sql.exec("DELETE FROM counters WHERE reset_at <= ?", now);
   }
 }
 
 export default {
-  fetch(request, env, ctx) {
+  async fetch(request, env, ctx) {
     const redirect = canonicalRedirect(request, env);
     if (redirect) return redirect;
+    const previewStaticResponse = await previewPrerenderedStaticResponse(request, env);
+    if (previewStaticResponse) return previewStaticResponse;
     return handler.fetch(request, env, ctx);
   },
   async scheduled(event, env, ctx) {
@@ -79,4 +81,40 @@ function canonicalRedirect(request, env) {
     return Response.redirect(current.toString(), 308);
   }
   return null;
+}
+
+async function previewPrerenderedStaticResponse(request, env) {
+  if (request.method !== "GET" && request.method !== "HEAD") return null;
+  const url = new URL(request.url);
+  if (!isLocalPreviewHost(url.hostname)) return null;
+  if (url.search) return null;
+  if (url.searchParams.has("_rsc") || request.headers.has("rsc")) return null;
+  if (!env.ASSETS) return null;
+
+  const buildIdResponse = await env.ASSETS.fetch("http://assets.local/BUILD_ID");
+  if (!buildIdResponse.ok) return null;
+  const buildId = (await buildIdResponse.text()).trim();
+  if (!buildId) return null;
+
+  const cachePath = `/cdn-cgi/_next_cache/${buildId}${staticCacheKeyForPath(url.pathname)}.cache`;
+  const cacheResponse = await env.ASSETS.fetch(`http://assets.local${cachePath}`);
+  if (!cacheResponse.ok) return null;
+  const entry = await cacheResponse.json();
+  if (!entry?.html) return null;
+
+  const headers = new Headers(entry.meta?.headers ?? {});
+  headers.set("content-type", "text/html; charset=utf-8");
+  headers.set("x-taskcover-preview-static", "prerendered");
+  return new Response(request.method === "HEAD" ? null : entry.html, {
+    status: 200,
+    headers,
+  });
+}
+
+function staticCacheKeyForPath(pathname) {
+  return pathname === "/" ? "/index" : pathname.replace(/\/$/, "");
+}
+
+function isLocalPreviewHost(hostname) {
+  return hostname === "127.0.0.1" || hostname === "localhost" || hostname === "::1";
 }

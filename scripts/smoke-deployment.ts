@@ -1,7 +1,7 @@
 import { deploymentSmokePlan, validateHttpUrl } from "../src/lib/ops/production-activation";
 
 const baseUrl = readArg("--base-url");
-if (!baseUrl || validateHttpUrl(baseUrl, { httpsOnly: !baseUrl.includes("localhost") }) !== "valid") {
+if (!baseUrl || validateHttpUrl(baseUrl, { httpsOnly: !isLoopbackUrl(baseUrl) }) !== "valid") {
   console.error("Usage: npm run smoke:deployment -- --base-url=https://taskcover.com");
   process.exit(1);
 }
@@ -36,4 +36,13 @@ function readArg(name: string) {
   if (prefixed) return prefixed.slice(name.length + 1);
   const index = process.argv.indexOf(name);
   return index >= 0 ? process.argv[index + 1] : undefined;
+}
+
+function isLoopbackUrl(value: string) {
+  try {
+    const hostname = new URL(value).hostname;
+    return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "[::1]";
+  } catch {
+    return false;
+  }
 }

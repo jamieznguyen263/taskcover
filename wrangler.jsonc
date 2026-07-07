@@ -2,6 +2,9 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "taskcover",
   "main": "worker/taskcover-worker.ts",
+  "alias": {
+    "server-only": "./worker/server-only.ts"
+  },
   "compatibility_date": "2026-07-05",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": {
@@ -36,7 +39,7 @@
   "hyperdrive": [
     {
       "binding": "HYPERDRIVE",
-      "id": "00000000000000000000000000000000"
+      "id": "1feebc80ed4541f482c7a0f687682bf8"
     }
   ],
   "ratelimits": [
@@ -89,7 +92,7 @@
       "hyperdrive": [
         {
           "binding": "HYPERDRIVE",
-          "id": "00000000000000000000000000000000"
+          "id": "1feebc80ed4541f482c7a0f687682bf8"
         }
       ]
     }
