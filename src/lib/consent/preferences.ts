@@ -53,6 +53,9 @@ export const defaultConsentPreferences: ConsentPreferences = {
   updatedAt: "",
 };
 
+let cachedRawConsentValue: string | null | undefined;
+let cachedConsentSnapshot: ConsentPreferences | null = null;
+
 export function normalizeConsentPreferences(input: unknown, now = new Date().toISOString()): ConsentPreferences {
   if (!input || typeof input !== "object" || Array.isArray(input)) {
     return { ...defaultConsentPreferences, updatedAt: now };
@@ -91,12 +94,18 @@ export function createConsentPreferences(input: ConsentPreferenceInput, now = ne
 }
 
 export function getConsentPreferences(storage: Pick<Storage, "getItem"> | undefined = browserStorage()): ConsentPreferences | null {
-  if (!storage) return null;
-  const raw = storage.getItem(consentStorageKey);
-  if (!raw) return null;
+  const raw = readRawConsentValue(storage);
+  if (raw === cachedRawConsentValue) return cachedConsentSnapshot;
+  if (!raw) {
+    updateConsentSnapshotCache(null, null);
+    return null;
+  }
   try {
-    return normalizeConsentPreferences(JSON.parse(raw));
+    const preferences = normalizeConsentPreferences(JSON.parse(raw));
+    updateConsentSnapshotCache(raw, preferences);
+    return preferences;
   } catch {
+    updateConsentSnapshotCache(raw, null);
     return null;
   }
 }
@@ -108,13 +117,16 @@ export function saveConsentPreferences(
   storage: Pick<Storage, "setItem"> | undefined = browserStorage()
 ): ConsentPreferences {
   const preferences = createConsentPreferences(input);
-  storage?.setItem(consentStorageKey, JSON.stringify(preferences));
+  const raw = JSON.stringify(preferences);
+  storage?.setItem(consentStorageKey, raw);
+  updateConsentSnapshotCache(raw, preferences);
   dispatchConsentChange(preferences);
   return preferences;
 }
 
 export function resetConsentPreferences(storage: Pick<Storage, "removeItem"> | undefined = browserStorage()) {
   storage?.removeItem(consentStorageKey);
+  updateConsentSnapshotCache(null, null);
   dispatchConsentChange(null);
 }
 
@@ -124,12 +136,23 @@ export function hasConsent(category: ConsentCategory, preferences = readConsentP
 }
 
 export function onConsentChange(callback: (preferences: ConsentPreferences | null) => void) {
-  if (typeof window === "undefined") return () => undefined;
-  const listener = (event: Event) => {
-    callback((event as CustomEvent<ConsentPreferences | null>).detail ?? null);
+  if (typeof window === "undefined") return noopConsentChangeCleanup;
+  const notify = () => {
+    callback(getConsentPreferences());
   };
-  window.addEventListener(consentChangeEventName, listener);
-  return () => window.removeEventListener(consentChangeEventName, listener);
+  const onCustomConsentChange = () => {
+    notify();
+  };
+  const onStorageChange = (event: StorageEvent) => {
+    if (event.key !== null && event.key !== consentStorageKey) return;
+    notify();
+  };
+  window.addEventListener(consentChangeEventName, onCustomConsentChange);
+  window.addEventListener("storage", onStorageChange);
+  return () => {
+    window.removeEventListener(consentChangeEventName, onCustomConsentChange);
+    window.removeEventListener("storage", onStorageChange);
+  };
 }
 
 export function getConsentModeState(preferences = readConsentPreferences()): ConsentModeState {
@@ -153,7 +176,29 @@ export function dispatchConsentChange(preferences: ConsentPreferences | null) {
 
 function browserStorage() {
   if (typeof window === "undefined") return undefined;
-  return window.localStorage;
+  try {
+    return window.localStorage;
+  } catch {
+    return undefined;
+  }
+}
+
+function readRawConsentValue(storage: Pick<Storage, "getItem"> | undefined): string | null {
+  if (!storage) return null;
+  try {
+    return storage.getItem(consentStorageKey);
+  } catch {
+    return null;
+  }
+}
+
+function updateConsentSnapshotCache(raw: string | null, preferences: ConsentPreferences | null) {
+  cachedRawConsentValue = raw;
+  cachedConsentSnapshot = preferences;
+}
+
+function noopConsentChangeCleanup() {
+  return undefined;
 }
 
 function isConsentPreferenceSource(value: unknown): value is ConsentPreferenceSource {

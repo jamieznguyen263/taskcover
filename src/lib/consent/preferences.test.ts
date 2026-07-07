@@ -43,6 +43,31 @@ describe("consent preference helper", () => {
     expect(storage.getItem(consentStorageKey)).toBeNull();
   });
 
+  it("returns the same cached snapshot while the stored raw value is unchanged", () => {
+    const storage = memoryStorage();
+    const saved = saveConsentPreferences({ preferences: true, analytics: false, marketing: true, locale: "fr", source: "banner" }, storage);
+    const firstRead = readConsentPreferences(storage);
+    const secondRead = readConsentPreferences(storage);
+    expect(firstRead).toBe(saved);
+    expect(secondRead).toBe(firstRead);
+
+    storage.setItem(consentStorageKey, JSON.stringify({ ...saved, analytics: true, updatedAt: "2026-07-07T00:00:01.000Z" }));
+    const changedRead = readConsentPreferences(storage);
+    expect(changedRead).not.toBe(firstRead);
+    expect(changedRead?.analytics).toBe(true);
+    expect(readConsentPreferences(storage)).toBe(changedRead);
+  });
+
+  it("caches missing and invalid stored values as null without throwing", () => {
+    const storage = memoryStorage();
+    expect(readConsentPreferences(storage)).toBeNull();
+    expect(readConsentPreferences(storage)).toBeNull();
+
+    storage.setItem(consentStorageKey, "{invalid");
+    expect(readConsentPreferences(storage)).toBeNull();
+    expect(readConsentPreferences(storage)).toBeNull();
+  });
+
   it("creates timestamped preferences from partial input", () => {
     expect(createConsentPreferences({ analytics: true }, "2026-07-07T00:00:00.000Z")).toMatchObject({
       strictly_necessary: true,

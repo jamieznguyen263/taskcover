@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { siteConfig } from "@/lib/site";
 import { organizationSchema, serializeJsonLd } from "@/lib/seo";
@@ -82,7 +83,9 @@ export default function RootLayout({
     >
       <head>
         {/* Set <html lang> from the route prefix before first paint. */}
-        <script dangerouslySetInnerHTML={{ __html: htmlLangPrePaint }} />
+        <Script id="taskcover-html-lang-prepaint" strategy="beforeInteractive">
+          {htmlLangPrePaint}
+        </Script>
       </head>
       <body className="min-h-full flex flex-col bg-white text-graphite">
         <script
