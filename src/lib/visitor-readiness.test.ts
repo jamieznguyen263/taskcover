@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import sitemap from "@/app/sitemap";
 import { trustPagePaths } from "@/content/trust";
 import { getLocalizedSite } from "@/lib/content";
 import { localizePath } from "@/lib/i18n";
 import { companyDetails } from "@/lib/company";
 import { organizationSchema } from "@/lib/seo";
 import { parseLeadPayload } from "@/lib/leads/schema";
+import { buildSitemapEntries as sitemap } from "@/lib/sitemap";
 
 describe("visitor readiness architecture", () => {
   it("maps trust and legal routes across locales with English slugs", () => {
@@ -70,4 +70,3 @@ describe("visitor readiness architecture", () => {
     expect(urls.some((url) => url.includes("/thank-you"))).toBe(false);
   });
 });
-

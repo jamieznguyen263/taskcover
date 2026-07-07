@@ -1,11 +1,11 @@
 import { existsSync, statSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import sitemap from "@/app/sitemap";
 import { aboutStoryMetadata } from "@/components/marketing/about/about-story-page";
 import { getAboutStoryContent, getCaseStudySlugs } from "@/lib/content";
 import { companyAddressLine, companyDetails } from "@/lib/company";
 import { localizePath, locales, type Locale } from "@/lib/i18n";
+import { buildSitemapEntries as sitemap } from "@/lib/sitemap";
 
 describe("about story content", () => {
   it("contains the confirmed founding story across EN/FR/ES", () => {

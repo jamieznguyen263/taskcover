@@ -3,6 +3,7 @@ import { isDatabaseConfigured } from "@/lib/db/client";
 import { parseLeadPayload, thankYouPathFor } from "./schema";
 import { acceptLeadDurably } from "./acceptance";
 import { checkRateLimit, rateLimitKeyFromRequest } from "./rate-limit";
+import { getLeadSubmissionMode, isProductionLeadOrigin } from "./mode";
 import { hasHoneypotSignal, isTurnstileConfigured, verifyTurnstile } from "./spam";
 import type { LeadSubmissionResult } from "./types";
 
@@ -18,6 +19,7 @@ function requestTypeHint(payload: unknown): string {
 }
 
 export async function submitLead({ payload, ip }: SubmissionInput): Promise<LeadSubmissionResult> {
+  const mode = getLeadSubmissionMode();
   const submittedAt = new Date().toISOString();
   const rateLimitKey = rateLimitKeyFromRequest(ip, requestTypeHint(payload));
   const parsed = parseLeadPayload({
@@ -49,12 +51,31 @@ export async function submitLead({ payload, ip }: SubmissionInput): Promise<Lead
     return { status: "validation-error", fieldErrors: parsed.fieldErrors };
   }
 
+  if (mode === "disabled" || (mode === "staging-durable" && isProductionLeadOrigin())) {
+    return {
+      status: "not-configured",
+      requestType: parsed.lead.requestType,
+      messageKey: "delivery-unavailable",
+      delivery: [{ status: "not-configured", adapter: "lead-submission-mode" }],
+    };
+  }
+
   parsed.lead.spamSignals = {
     ...parsed.lead.spamSignals,
     honeypotPresent: false,
     turnstileConfigured: turnstile.configured,
     turnstileVerified: turnstile.verified,
   };
+
+  if (mode === "test") {
+    return {
+      status: "success",
+      requestType: parsed.lead.requestType,
+      redirectPath: thankYouPathFor(parsed.lead.locale as Locale, parsed.lead.requestType),
+      leadReference: `test_${rateLimitKey}`,
+      delivery: [{ status: "accepted", adapter: "safe-test-adapter" }],
+    };
+  }
 
   try {
     const accepted = await acceptLeadDurably(parsed.lead);

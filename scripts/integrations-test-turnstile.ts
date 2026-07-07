@@ -6,7 +6,8 @@ loadEnvConfig(process.cwd());
 const live = process.argv.includes("--live");
 const token = readArg("--token");
 const configured = ["TURNSTILE_SITE_KEY", "TURNSTILE_SECRET_KEY"].every((name) => valuePresent(process.env[name]));
-const expectedHostnames = ["taskcover.com", "www.taskcover.com"];
+const expectedHostname = process.env.TURNSTILE_EXPECTED_HOSTNAME || "not configured";
+const productionHostnames = ["taskcover.com", "www.taskcover.com"];
 const expectedAction = process.env.TURNSTILE_EXPECTED_ACTION ?? "lead-submit";
 
 if (live && (!configured || !token)) {
@@ -40,7 +41,8 @@ async function main() {
         supportedLocalDevelopment: "Cloudflare test keys",
         productionBypass: "not allowed",
         failClosedWhenConfigured: true,
-        expectedHostnames,
+        expectedHostname,
+        productionHostnames,
         expectedAction,
         testCases: ["valid token", "invalid token", "missing token", "expired or reused token", "hostname validation", "action validation"],
         tokenLogged: false,

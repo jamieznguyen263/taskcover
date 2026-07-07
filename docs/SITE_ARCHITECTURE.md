@@ -25,7 +25,7 @@ Route prefix is the source of truth for the active locale. See
 - `app/proof/[slug]/page.tsx` — English proof detail
 - `app/[locale]/proof/page.tsx` — French/Spanish proof hub
 - `app/[locale]/proof/[slug]/page.tsx` — French/Spanish proof detail
-- `app/sitemap.ts` — emits all localized routes with hreflang alternates
+- `app/sitemap.xml/route.ts` — emits all localized routes with hreflang alternates
 
 ## Top-level
 

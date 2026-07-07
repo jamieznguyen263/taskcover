@@ -163,7 +163,7 @@ Examples:
 
 ## 9. Sitemap rules
 
-`src/app/sitemap.ts` emits `/sitemap.xml` including:
+`src/app/sitemap.xml/route.ts` emits `/sitemap.xml` from `src/lib/sitemap.ts` including:
 - Homepage en/fr/es
 - Services hub en/fr/es
 - All 11 service detail pages en/fr/es

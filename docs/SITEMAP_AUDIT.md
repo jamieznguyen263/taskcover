@@ -1,6 +1,6 @@
 # Sitemap Audit
 
-`src/app/sitemap.ts` emits localized canonical routes with hreflang alternates.
+`src/app/sitemap.xml/route.ts` emits localized canonical routes with hreflang alternates from `src/lib/sitemap.ts`. The handler is dynamic so Cloudflare/OpenNext preview does not serve the large XML through the local static response cache. Sitemap URLs use the static local Insights registry instead of live database reads, keeping `/sitemap.xml` independent from Hyperdrive/Postgres during local, staging, and production health checks.
 
 ## Included
 
@@ -27,4 +27,3 @@
 `npm run seo:check` validates 243 sitemap URLs with no duplicate, private, API,
 preview, thank-you, or query URLs. Rendered crawl verified `/sitemap.xml`
 returns 200 locally.
-

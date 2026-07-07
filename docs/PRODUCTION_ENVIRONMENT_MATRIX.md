@@ -16,3 +16,5 @@
 | Secrets | `.env.local` or `.dev.vars` | Cloudflare env secrets | Cloudflare production secrets |
 
 Run `npm run production:check` in every environment. The command is offline by default and redacts secret-like values.
+
+See `docs/PROVIDER_ACTIVATION_CHECKLIST.md` for the owner-facing paste list, lead submission modes, and Windows/OpenNext recovery commands.

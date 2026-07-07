@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { leadIdempotencyKey, deliveryJobIdempotencyKey } from "./acceptance";
 import { renderInternalLeadEmail, renderVisitorLeadEmail, resendIdempotencyKey } from "./email-templates";
+import { getLeadSubmissionMode, isLeadSubmissionMode, isProductionLeadOrigin } from "./mode";
 import { rateLimitKeyFromRequest } from "./rate-limit";
 import { verifyTurnstile } from "./spam";
 import type { NormalizedLead } from "./types";
@@ -65,5 +66,15 @@ describe("lead production readiness helpers", () => {
       vi.fn(async () => Response.json({ success: true, hostname: "evil.example", action: "lead-submit" }))
     );
     await expect(verifyTurnstile("token", "203.0.113.10")).resolves.toEqual({ configured: true, verified: false });
+  });
+
+  it("supports only explicit safe lead submission modes", () => {
+    expect(isLeadSubmissionMode("disabled")).toBe(true);
+    expect(isLeadSubmissionMode("test")).toBe(true);
+    expect(isLeadSubmissionMode("staging-durable")).toBe(true);
+    expect(isLeadSubmissionMode("production")).toBe(false);
+    expect(getLeadSubmissionMode({ LEAD_SUBMISSION_MODE: "production" })).toBe("disabled");
+    expect(isProductionLeadOrigin({ APP_URL: "https://taskcover.com", NEXT_PUBLIC_APP_URL: "" })).toBe(true);
+    expect(isProductionLeadOrigin({ APP_URL: "https://staging.taskcover.com", NEXT_PUBLIC_APP_URL: "" })).toBe(false);
   });
 });

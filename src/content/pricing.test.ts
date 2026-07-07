@@ -1,7 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import sitemap from "@/app/sitemap";
 import { getLocalizedSite, getPricingContent } from "@/lib/content";
 import { locales, localizePath, type Locale } from "@/lib/i18n";
 import { siteConfig } from "@/lib/site";
@@ -10,6 +9,7 @@ import {
   pricingTabIds,
   resolvePricingTabId,
 } from "@/content/pricing.types";
+import { buildSitemapEntries as sitemap } from "@/lib/sitemap";
 
 function allPlans(locale: Locale) {
   return getPricingContent(locale).tabs.items.flatMap((tab) => tab.plans);

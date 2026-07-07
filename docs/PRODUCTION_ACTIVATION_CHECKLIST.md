@@ -2,6 +2,8 @@
 
 Do not paste secrets into chat. Store secrets through `.dev.vars`, `.env.local`, `wrangler secret put`, Cloudflare Dashboard, Neon Dashboard, or provider dashboards. Production deploy, DNS changes, live CRM writes, live email sends, and production migrations require separate explicit approval.
 
+For the provider-by-provider paste list and local/staging workflow, use `docs/PROVIDER_ACTIVATION_CHECKLIST.md`.
+
 | Step | Owner | Required value | Exact command | Expected output | Failure condition | Rollback step |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1. Cloudflare account and Workers Paid | User | Workers Paid enabled, account ID known | `npm run production:check` | Cloudflare-related categories listed | Workers Paid unavailable | Stop before deploy |

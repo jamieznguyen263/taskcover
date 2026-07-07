@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
-import sitemap from "@/app/sitemap";
 import {
   commercialUrlIntentMap,
   keywordFamilyMap,
   localizedCommercialRoute,
   noindexCommercialExclusions,
 } from "./url-intent-map";
+import { buildSitemapEntries as sitemap } from "@/lib/sitemap";
 
 describe("commercial SEO architecture map", () => {
   it("has one primary URL per keyword family", () => {

@@ -191,6 +191,17 @@ function collectDuplicateIds(document: Document) {
   return [...duplicateIds];
 }
 
+function hasHorizontalOverflowRisk(document: Document) {
+  return Array.from(document.querySelectorAll<HTMLElement>("[class], [style]")).some((element) => {
+    const className = element.getAttribute("class") ?? "";
+    const style = element.getAttribute("style") ?? "";
+    return (
+      /\bw-screen\b/.test(className) ||
+      /(?:min-width:\s*(?:9|1\d)\d{2,}px|width:\s*100vw)/i.test(style)
+    );
+  });
+}
+
 function parseRenderedPage(path: string, status: number, html: string): RenderedPage {
   const dom = new JSDOM(html);
   const document = dom.window.document;
@@ -205,7 +216,7 @@ function parseRenderedPage(path: string, status: number, html: string): Rendered
     h1Count: document.querySelectorAll("h1").length,
     duplicateIds: collectDuplicateIds(document),
     missingAlt,
-    hasHorizontalOverflowRisk: /(?:min-width:\s*(?:9|1\d)\d{2,}px|width:\s*100vw|w-screen)/i.test(html),
+    hasHorizontalOverflowRisk: hasHorizontalOverflowRisk(document),
   };
 }
 

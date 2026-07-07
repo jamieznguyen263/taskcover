@@ -2,6 +2,16 @@
 
 Lead acceptance is database-first.
 
+## Submission Modes
+
+`LEAD_SUBMISSION_MODE` is a hard gate:
+
+- `disabled`: default fail-closed mode. The API validates input but does not accept or store a lead.
+- `test`: local UI-only success path. It returns a safe test reference and thank-you redirect without Neon, outbox, Resend, or HubSpot side effects.
+- `staging-durable`: staging-only durable path. It verifies Turnstile when configured, writes the lead and outbox jobs to Neon, and returns success after the transaction commits. It fails closed on `taskcover.com` and `www.taskcover.com`.
+
+No production lead submission mode exists yet.
+
 ## Order
 
 1. Normalize and validate payload.

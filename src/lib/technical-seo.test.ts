@@ -2,7 +2,6 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import robots from "@/app/robots";
-import sitemap from "@/app/sitemap";
 import { clientLogoAssets, publicClientLogoAssets } from "@/content/client-logo-assets";
 import { keywordFamilyMap } from "@/content/seo/url-intent-map";
 import { getHomeContent, getProofPageSlugs } from "@/lib/content";
@@ -15,6 +14,7 @@ import {
 } from "@/lib/i18n";
 import { buildMetadata, organizationSchema } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
+import { buildSitemapEntries as sitemap } from "@/lib/sitemap";
 
 function pathFromUrl(value: string) {
   const url = new URL(value);

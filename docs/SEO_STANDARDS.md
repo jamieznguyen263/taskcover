@@ -114,7 +114,7 @@ The site supports English (default, unprefixed), French (`/fr`), and Spanish
 - Open Graph `locale` is localized (`en_US`, `fr_FR`, `es_ES`).
 - BreadcrumbList JSON-LD uses localized paths and labels.
 - FAQPage JSON-LD uses localized FAQ content where translated.
-- The sitemap (`src/app/sitemap.ts`) includes all localized routes with
+- The sitemap (`src/app/sitemap.xml/route.ts`) includes all localized routes with
   hreflang alternates.
 
 Hard rules:

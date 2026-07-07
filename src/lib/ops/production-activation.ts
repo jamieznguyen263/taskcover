@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import { isLeadSubmissionMode } from "@/lib/leads/mode";
 
 export type ActivationStatus =
   | "configured"
@@ -13,6 +14,11 @@ export type ActivationStatus =
 export type ActivationCheck = {
   category: string;
   status: ActivationStatus;
+  context: {
+    requiredWhen: string;
+    environment: string;
+    exposure: "secret" | "public" | "mixed" | "configuration";
+  };
   detail: string;
   required: string[];
   missing: string[];
@@ -52,6 +58,35 @@ const allowedActivationStatuses = new Set<ActivationStatus>([
   "production only",
 ]);
 
+const activationContexts = {
+  application: context("required now", "local, staging, production", "mixed"),
+  cloudflare: context("required before staging deploy", "staging, production", "configuration"),
+  neon: context("required before migrations/imports and staging lead acceptance", "local scripts, staging", "secret"),
+  hyperdrive: context("required before Cloudflare preview/staging", "local preview, staging, production", "mixed"),
+  auth: context("required before Admin or preview publishing", "local preview, staging, production", "secret"),
+  admin: context("required before Admin QA", "local scripts, staging", "mixed"),
+  insights: context("later unless database insights are enabled", "local, staging, production", "configuration"),
+  resend: context("required before staging lead notification tests", "local preview, staging, production", "mixed"),
+  hubspot: context("later; required before CRM sync", "staging, production", "mixed"),
+  calcom: context("optional before booking CTA is shown", "local, staging, production", "public"),
+  turnstile: context("required before staging public lead acceptance", "local preview, staging, production", "mixed"),
+  cloudinary: context("required before Admin media uploads", "staging, production", "mixed"),
+  rateLimit: context("required before public staging/production lead acceptance", "staging, production", "configuration"),
+  durableObjects: context("required before durable rate-limit coordination", "staging, production", "configuration"),
+  cron: context("required before scheduled publishing and outbox processing", "staging, production", "secret"),
+  analytics: context("later; required before ads/analytics go live", "staging, production", "public"),
+  consent: context("required now", "local, staging, production", "configuration"),
+  leadOutbox: context("required before staging durable lead tests", "local preview, staging", "mixed"),
+} as const;
+
+function context(
+  requiredWhen: string,
+  environment: string,
+  exposure: "secret" | "public" | "mixed" | "configuration"
+) {
+  return { requiredWhen, environment, exposure };
+}
+
 const setupLocations: Record<string, string> = {
   APP_URL: "set in .env.local/.dev.vars for local checks or wrangler vars for Workers",
   NEXT_PUBLIC_APP_URL: "set in .env.local/.dev.vars for local checks or wrangler vars for Workers",
@@ -71,6 +106,7 @@ const setupLocations: Record<string, string> = {
   HUBSPOT_NEW_LEAD_STAGE_ID: "set from HubSpot dashboard pipeline stage settings",
   CALCOM_BOOKING_URL: "set in environment variables or wrangler vars",
   TURNSTILE_SITE_KEY: "set in environment variables or wrangler vars",
+  NEXT_PUBLIC_TURNSTILE_SITE_KEY: "optional alias for public Turnstile site key; prefer TURNSTILE_SITE_KEY in this repo",
   TURNSTILE_SECRET_KEY: "set via wrangler secret put or local .dev.vars",
   TURNSTILE_EXPECTED_HOSTNAME: "set to the active staging or production hostname",
   TURNSTILE_EXPECTED_ACTION: "set to lead-submit",
@@ -222,22 +258,26 @@ export function buildProductionChecks(env: EnvMap, audit: WranglerAudit): Activa
   const missingAdsLabels = adsLabels.filter((name) => !valuePresent(env[name]));
   const appUrl = validateHttpUrl(env.APP_URL);
   const publicUrl = validateHttpUrl(env.NEXT_PUBLIC_APP_URL);
+  const leadModeValid = isLeadSubmissionMode(env.LEAD_SUBMISSION_MODE);
   const calcom = validateHttpUrl(env.CALCOM_BOOKING_URL, { httpsOnly: true, expectedHosts: ["cal.com", "www.cal.com", "app.cal.com"] });
 
   return [
     checkRequired("Application", ["APP_URL", "NEXT_PUBLIC_APP_URL", "LEAD_SUBMISSION_MODE"], env, {
-      invalid: appUrl === "invalid" || publicUrl === "invalid",
-      nextAction: "Set APP_URL and NEXT_PUBLIC_APP_URL to the active environment origin.",
+      context: activationContexts.application,
+      invalid: appUrl === "invalid" || publicUrl === "invalid" || (valuePresent(env.LEAD_SUBMISSION_MODE) && !leadModeValid),
+      nextAction: "Set APP_URL and NEXT_PUBLIC_APP_URL to the active environment origin. Use LEAD_SUBMISSION_MODE=disabled, test, or staging-durable.",
     }),
     {
       category: "Cloudflare",
       status: audit.workerName && audit.stagingWorkerName && audit.compatibilityDate ? "partially configured" : "missing",
+      context: activationContexts.cloudflare,
       detail: `Worker=${audit.workerName || "missing"}; staging=${audit.stagingWorkerName || "missing"}; compatibility=${audit.compatibilityDate || "missing"}. Hyperdrive IDs still require provider values when placeholders remain.`,
       required: ["wrangler.name", "wrangler.env.staging.name", "wrangler.compatibility_date", "wrangler.hyperdrive.id"],
       missing: audit.hyperdrivePlaceholderIds.length ? ["wrangler.hyperdrive.id"] : [],
       nextAction: "Replace placeholder Cloudflare IDs only with real staging IDs; do not bind the production domain during staging.",
     },
     checkRequired("Neon / DATABASE_URL", ["DATABASE_URL", "DATABASE_TARGET"], env, {
+      context: activationContexts.neon,
       nextAction: "Set DATABASE_URL only for local scripts or use the Hyperdrive binding at runtime.",
     }),
     {
@@ -247,8 +287,9 @@ export function buildProductionChecks(env: EnvMap, audit: WranglerAudit): Activa
         : audit.hyperdriveBindings.length
           ? "partially configured"
           : "missing",
+      context: activationContexts.hyperdrive,
       detail: audit.hyperdriveBindings.length
-        ? `Wrangler binding ${hyperdriveBinding}; local preview variable ${hyperdriveLocalVar}.`
+        ? `Wrangler binding ${hyperdriveBinding}; local preview variable ${hyperdriveLocalVar}. production:check loads .env.local and .dev.vars when present; Wrangler also loads .dev.vars during preview.`
         : "No Hyperdrive binding found in wrangler.jsonc.",
       required: [hyperdriveLocalVar, "wrangler.hyperdrive.id"],
       missing: [
@@ -258,11 +299,13 @@ export function buildProductionChecks(env: EnvMap, audit: WranglerAudit): Activa
       nextAction: "Create Hyperdrive in Cloudflare and set the local preview connection string in .dev.vars.",
     },
     checkRequired("Auth secrets", ["AUTH_SESSION_SECRET", "PREVIEW_TOKEN_SECRET"], env, {
+      context: activationContexts.auth,
       nextAction: "Generate long random secrets and store them through local env files or Cloudflare secrets.",
     }),
     {
       category: "Admin bootstrap readiness",
       status: valuePresent(env.DATABASE_URL) && valuePresent(env.AUTH_SESSION_SECRET) ? "live test required" : "missing",
+      context: activationContexts.admin,
       detail: "First Admin verification requires a configured staging DB, auth secret, and explicit admin email argument.",
       required: ["DATABASE_URL", "AUTH_SESSION_SECRET", "ADMIN_EMAIL"],
       missing: [
@@ -275,12 +318,14 @@ export function buildProductionChecks(env: EnvMap, audit: WranglerAudit): Activa
     {
       category: "Insights provider mode",
       status: insightsProvider === "database" && !valuePresent(env.DATABASE_URL) ? "partially configured" : "configured",
+      context: activationContexts.insights,
       detail: `INSIGHTS_PROVIDER=${insightsProvider}. Production should remain local until DB import verification passes.`,
       required: ["INSIGHTS_PROVIDER"],
       missing: insightsProvider === "database" && !valuePresent(env.DATABASE_URL) ? ["DATABASE_URL"] : [],
       nextAction: "Switch only staging/preview to database first, compare routes, then separately approve production.",
     },
     checkRequired("Resend", ["RESEND_API_KEY", "RESEND_FROM_EMAIL", "RESEND_REPLY_TO_EMAIL", "LEAD_NOTIFICATION_EMAIL"], env, {
+      context: activationContexts.resend,
       invalid:
         validateEmailAddress(env.RESEND_FROM_EMAIL) === "invalid" ||
         validateEmailAddress(env.RESEND_REPLY_TO_EMAIL) === "invalid" ||
@@ -288,16 +333,20 @@ export function buildProductionChecks(env: EnvMap, audit: WranglerAudit): Activa
       nextAction: "Verify taskcover.com in Resend and configure sender, reply-to, and notification recipient.",
     }),
     checkRequired("HubSpot", ["HUBSPOT_PRIVATE_APP_TOKEN", "HUBSPOT_PIPELINE_ID", "HUBSPOT_NEW_LEAD_STAGE_ID"], env, {
+      context: activationContexts.hubspot,
       nextAction: "Create a HubSpot Private App token and record the target pipeline and new-lead stage IDs.",
     }),
     checkRequired("Cal.com", ["CALCOM_BOOKING_URL"], env, {
+      context: activationContexts.calcom,
       invalid: calcom === "invalid",
       nextAction: "Set an HTTPS Cal.com booking URL without visitor PII query parameters.",
     }),
     checkRequired("Turnstile", ["TURNSTILE_SITE_KEY", "TURNSTILE_SECRET_KEY", "TURNSTILE_EXPECTED_HOSTNAME", "TURNSTILE_EXPECTED_ACTION"], env, {
+      context: activationContexts.turnstile,
       nextAction: "Use Cloudflare test keys locally and real keys for staging/production hostnames.",
     }),
     checkRequired("Cloudinary", ["CLOUDINARY_CLOUD_NAME", "CLOUDINARY_API_KEY", "CLOUDINARY_API_SECRET", "CLOUDINARY_UPLOAD_FOLDER"], env, {
+      context: activationContexts.cloudinary,
       nextAction: "Configure signed upload credentials and use a staging folder outside production.",
     }),
     {
@@ -305,6 +354,7 @@ export function buildProductionChecks(env: EnvMap, audit: WranglerAudit): Activa
       status: audit.rateLimitBindings.includes("LEAD_RATE_LIMITER") && audit.rateLimitBindings.includes("ADMIN_RATE_LIMITER") && audit.rateLimitPlaceholderIds.length === 0
         ? "configured"
         : "partially configured",
+      context: activationContexts.rateLimit,
       detail: `Provider=${env.RATE_LIMIT_PROVIDER ?? "memory"}; bindings=${audit.rateLimitBindings.join(", ") || "none"}.`,
       required: ["LEAD_RATE_LIMITER", "ADMIN_RATE_LIMITER", "RATE_LIMIT_PROVIDER", "wrangler.ratelimits.namespace_id"],
       missing: [
@@ -316,6 +366,7 @@ export function buildProductionChecks(env: EnvMap, audit: WranglerAudit): Activa
     {
       category: "Durable Objects",
       status: audit.durableObjectBindings.includes("RATE_LIMIT_COORDINATOR") ? "configured" : "missing",
+      context: activationContexts.durableObjects,
       detail: `Bindings=${audit.durableObjectBindings.join(", ") || "none"}.`,
       required: ["RATE_LIMIT_COORDINATOR"],
       missing: audit.durableObjectBindings.includes("RATE_LIMIT_COORDINATOR") ? [] : ["RATE_LIMIT_COORDINATOR"],
@@ -324,6 +375,7 @@ export function buildProductionChecks(env: EnvMap, audit: WranglerAudit): Activa
     {
       category: "Cron/scheduler",
       status: audit.cronSchedules.length && valuePresent(env.PUBLISH_CRON_SECRET) ? "configured" : audit.cronSchedules.length ? "partially configured" : "missing",
+      context: activationContexts.cron,
       detail: `Cron=${audit.cronSchedules.join(", ") || "none"}; provider=${env.PUBLISH_SCHEDULER_PROVIDER ?? "disabled"}.`,
       required: ["wrangler.triggers.crons", "PUBLISH_CRON_SECRET"],
       missing: [...(audit.cronSchedules.length ? [] : ["wrangler.triggers.crons"]), ...(valuePresent(env.PUBLISH_CRON_SECRET) ? [] : ["PUBLISH_CRON_SECRET"])],
@@ -338,6 +390,7 @@ export function buildProductionChecks(env: EnvMap, audit: WranglerAudit): Activa
             ? "live test required"
             : "configured"
           : "partially configured",
+      context: activationContexts.analytics,
       detail: `GTM enabled=${gtmEnabled}; GTM ID=${gtmConfigured ? "configured" : "missing"}; Google Ads ID=${adsIdConfigured ? "configured" : "missing"}.`,
       required: ["NEXT_PUBLIC_GTM_ID", "NEXT_PUBLIC_GTM_ENABLED", "NEXT_PUBLIC_GOOGLE_ADS_ID", ...adsLabels],
       missing: [
@@ -349,6 +402,7 @@ export function buildProductionChecks(env: EnvMap, audit: WranglerAudit): Activa
     {
       category: "Consent mode readiness",
       status: "configured",
+      context: activationContexts.consent,
       detail: "Consent defaults deny analytics/marketing storage until the visitor grants consent; tracking exclusions are implemented for Admin/API/preview/internal routes.",
       required: ["consent helper", "route exclusions", "default denied mapping"],
       missing: [],
@@ -359,9 +413,12 @@ export function buildProductionChecks(env: EnvMap, audit: WranglerAudit): Activa
       status: valuePresent(env.DATABASE_URL)
         ? leadSubmissionMode === "disabled"
           ? "staging only"
-          : "live test required"
+          : leadModeValid
+            ? "live test required"
+            : "invalid format"
         : "missing",
-      detail: `LEAD_SUBMISSION_MODE=${leadSubmissionMode}; durable acceptance and provider jobs require the staging database.`,
+      context: activationContexts.leadOutbox,
+      detail: `LEAD_SUBMISSION_MODE=${leadSubmissionMode}; supported values are disabled, test, staging-durable. Durable acceptance and provider jobs require the staging database.`,
       required: ["DATABASE_URL", "LEAD_SUBMISSION_MODE"],
       missing: [
         ...(valuePresent(env.DATABASE_URL) ? [] : ["DATABASE_URL"]),
@@ -376,7 +433,7 @@ function checkRequired(
   category: string,
   required: string[],
   env: EnvMap,
-  options: { invalid?: boolean; nextAction: string }
+  options: { context: ActivationCheck["context"]; invalid?: boolean; nextAction: string }
 ): ActivationCheck {
   const missing = required.filter((name) => !valuePresent(env[name]));
   const status: ActivationStatus = options.invalid
@@ -389,6 +446,7 @@ function checkRequired(
   return {
     category,
     status,
+    context: options.context,
     detail: required.map((name) => `${name}=${valuePresent(env[name]) ? redactValue(name, env[name]) : "missing"}`).join("; "),
     required,
     missing,
