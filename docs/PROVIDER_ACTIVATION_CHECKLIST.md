@@ -68,13 +68,31 @@ NEXT_PUBLIC_APP_URL=http://localhost:8787
 LEAD_SUBMISSION_MODE=disabled
 ```
 
-Cloudflare staging/production public vars:
+Cloudflare staging public vars:
 
 ```bash
 APP_URL=https://staging.taskcover.com
 NEXT_PUBLIC_APP_URL=https://staging.taskcover.com
 LEAD_SUBMISSION_MODE=disabled
 ```
+
+Cloudflare production public vars for first website publish:
+
+```bash
+APP_URL=https://taskcover.com
+NEXT_PUBLIC_APP_URL=https://taskcover.com
+INSIGHTS_PROVIDER=database
+LEAD_SUBMISSION_MODE=disabled
+RESEND_FROM_EMAIL=Taskcover Agency <business@taskcover.com>
+RESEND_REPLY_TO_EMAIL=business@taskcover.com
+LEAD_NOTIFICATION_EMAIL=business@taskcover.com
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=<production site key>
+TURNSTILE_SITE_KEY=<production site key>
+TURNSTILE_EXPECTED_HOSTNAME=taskcover.com
+TURNSTILE_EXPECTED_ACTION=lead-submit
+```
+
+Use production `INSIGHTS_PROVIDER=database` only after production Neon migration, Insights import, and database verification pass. If production DB is not ready, keep production `INSIGHTS_PROVIDER=local`.
 
 ### Neon / Database
 
@@ -122,6 +140,13 @@ wrangler secret put AUTH_SESSION_SECRET --env staging
 wrangler secret put PREVIEW_TOKEN_SECRET --env staging
 ```
 
+Cloudflare production:
+
+```bash
+wrangler secret put AUTH_SESSION_SECRET
+wrangler secret put PREVIEW_TOKEN_SECRET
+```
+
 The Admin email is passed to the Admin scripts as an argument, not stored by default.
 
 ### Resend
@@ -139,6 +164,12 @@ Cloudflare staging:
 
 ```bash
 wrangler secret put RESEND_API_KEY --env staging
+```
+
+Cloudflare production:
+
+```bash
+wrangler secret put RESEND_API_KEY
 ```
 
 Set sender, reply-to, and notification recipient as Cloudflare vars or dashboard environment variables. Run:
@@ -168,6 +199,12 @@ Cloudflare staging:
 
 ```bash
 wrangler secret put TURNSTILE_SECRET_KEY --env staging
+```
+
+Cloudflare production:
+
+```bash
+wrangler secret put TURNSTILE_SECRET_KEY
 ```
 
 Set `TURNSTILE_SITE_KEY`, `TURNSTILE_EXPECTED_HOSTNAME`, and `TURNSTILE_EXPECTED_ACTION` as Cloudflare vars. Run:
