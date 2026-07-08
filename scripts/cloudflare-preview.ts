@@ -1,6 +1,10 @@
 import { spawnSync } from "node:child_process";
 import { assertCloudflarePreviewEnv, loadCloudflarePreviewEnv } from "./cloudflare-preview-env";
-import { normalizeOpenNextCacheMetadata, patchOpenNextWorker } from "./open-next-postbuild";
+import {
+  normalizeOpenNextCacheMetadata,
+  patchOpenNextWorker,
+  populateOpenNextStaticAssetsCache,
+} from "./open-next-postbuild";
 
 loadCloudflarePreviewEnv();
 
@@ -8,11 +12,10 @@ if (!assertCloudflarePreviewEnv()) {
   process.exit(1);
 }
 
-process.env.OPENNEXT_PREVIEW_STATIC_ASSETS_CACHE = "1";
-
 runOpenNext(["build"]);
 patchOpenNextWorker();
 normalizeOpenNextCacheMetadata();
+populateOpenNextStaticAssetsCache();
 runOpenNext(["preview", ...process.argv.slice(2)]);
 
 function runOpenNext(args: string[]) {

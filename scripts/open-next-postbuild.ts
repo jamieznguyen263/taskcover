@@ -119,7 +119,21 @@ export function normalizeOpenNextCacheMetadata(cwd = process.cwd()) {
   }
 }
 
+export function populateOpenNextStaticAssetsCache(cwd = process.cwd()) {
+  const sourceDir = path.join(cwd, ".open-next", "cache");
+  const targetDir = path.join(cwd, ".open-next", "assets", "cdn-cgi", "_next_cache");
+  if (!fs.existsSync(sourceDir)) {
+    throw new Error(`OpenNext cache output not found at ${sourceDir}. Run opennextjs-cloudflare build first.`);
+  }
+
+  fs.rmSync(targetDir, { recursive: true, force: true });
+  fs.mkdirSync(path.dirname(targetDir), { recursive: true });
+  fs.cpSync(sourceDir, targetDir, { recursive: true });
+  console.log("OpenNext static assets cache populated.");
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   patchOpenNextWorker();
   normalizeOpenNextCacheMetadata();
+  populateOpenNextStaticAssetsCache();
 }
