@@ -89,6 +89,37 @@ export function patchOpenNextWorker(cwd = process.cwd()) {
   console.log("OpenNext worker exports RateLimitCoordinator.");
 }
 
+export function normalizeOpenNextCacheMetadata(cwd = process.cwd()) {
+  const sqlPath = path.join(cwd, ".open-next", "cloudflare", "cache-assets-manifest.sql");
+  if (fs.existsSync(sqlPath)) {
+    const source = fs.readFileSync(sqlPath, "utf8");
+    const normalized = source.replace(/\\+/g, "/");
+    if (normalized !== source) {
+      fs.writeFileSync(sqlPath, normalized);
+      console.log("OpenNext Cloudflare cache asset paths normalized.");
+    }
+  }
+
+  const dynamoPath = path.join(cwd, ".open-next", "dynamodb-provider", "dynamodb-cache.json");
+  if (fs.existsSync(dynamoPath)) {
+    const source = fs.readFileSync(dynamoPath, "utf8");
+    const entries = JSON.parse(source) as Array<{ path?: { S?: string } }>;
+    let changed = false;
+    for (const entry of entries) {
+      const value = entry.path?.S;
+      if (value?.includes("\\")) {
+        entry.path!.S = value.replace(/\\/g, "/");
+        changed = true;
+      }
+    }
+    if (changed) {
+      fs.writeFileSync(dynamoPath, JSON.stringify(entries));
+      console.log("OpenNext DynamoDB cache paths normalized.");
+    }
+  }
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   patchOpenNextWorker();
+  normalizeOpenNextCacheMetadata();
 }

@@ -1,6 +1,6 @@
 import { spawnSync } from "node:child_process";
 import { assertCloudflarePreviewEnv, loadCloudflarePreviewEnv } from "./cloudflare-preview-env";
-import { patchOpenNextWorker } from "./open-next-postbuild";
+import { normalizeOpenNextCacheMetadata, patchOpenNextWorker } from "./open-next-postbuild";
 
 loadCloudflarePreviewEnv();
 
@@ -12,6 +12,7 @@ process.env.OPENNEXT_PREVIEW_STATIC_ASSETS_CACHE = "1";
 
 runOpenNext(["build"]);
 patchOpenNextWorker();
+normalizeOpenNextCacheMetadata();
 runOpenNext(["preview", ...process.argv.slice(2)]);
 
 function runOpenNext(args: string[]) {
