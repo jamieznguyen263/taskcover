@@ -25,7 +25,10 @@
     "NEXTJS_ENV": "production",
     "APP_URL": "https://taskcover.com",
     "NEXT_PUBLIC_APP_URL": "https://taskcover.com",
-    "INSIGHTS_PROVIDER": "local",
+    "LEAD_SUBMISSION_MODE": "disabled",
+    "INSIGHTS_PROVIDER": "database",
+    "TURNSTILE_EXPECTED_HOSTNAME": "taskcover.com",
+    "TURNSTILE_EXPECTED_ACTION": "lead-submit",
     "PUBLISH_SCHEDULER_PROVIDER": "cloudflare-cron",
     "RATE_LIMIT_PROVIDER": "cloudflare",
     "AUTH_RATE_LIMIT_PROVIDER": "cloudflare",
@@ -39,7 +42,7 @@
   "hyperdrive": [
     {
       "binding": "HYPERDRIVE",
-      "id": "1feebc80ed4541f482c7a0f687682bf8"
+      "id": "3a4967f8e714435eb58bda3521531a24"
     }
   ],
   "ratelimits": [
