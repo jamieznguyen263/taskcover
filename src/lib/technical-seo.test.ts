@@ -4,7 +4,12 @@ import { describe, expect, it } from "vitest";
 import robots from "@/app/robots";
 import { clientLogoAssets, publicClientLogoAssets } from "@/content/client-logo-assets";
 import { keywordFamilyMap } from "@/content/seo/url-intent-map";
-import { getHomeContent, getProofPageSlugs } from "@/lib/content";
+import {
+  getCaseStudyBySlug,
+  getHomeContent,
+  getProofPageSlugs,
+  getSampleAuditBySlug,
+} from "@/lib/content";
 import {
   getLocaleFromPathname,
   locales,
@@ -66,6 +71,23 @@ describe("technical SEO launch rules", () => {
     for (const slug of getProofPageSlugs()) {
       for (const locale of locales) {
         expect(paths).toContain(localizePath(`/proof/${slug}`, locale as Locale));
+      }
+    }
+  });
+
+  it("keeps launch-critical work detail routes public across content and sitemap", async () => {
+    const entries = await sitemap();
+    const paths = entries.map((entry) => pathFromUrl(entry.url));
+    const expectedRoutes = [
+      "/work/case-studies/british-university-vietnam",
+      "/work/sample-audits/technical-seo-audit",
+    ];
+
+    for (const locale of locales) {
+      expect(getCaseStudyBySlug("british-university-vietnam", locale as Locale)).toBeTruthy();
+      expect(getSampleAuditBySlug("technical-seo-audit", locale as Locale)).toBeTruthy();
+      for (const route of expectedRoutes) {
+        expect(paths).toContain(localizePath(route, locale as Locale));
       }
     }
   });
