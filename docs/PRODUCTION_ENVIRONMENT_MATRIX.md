@@ -3,10 +3,10 @@
 | Area | Local development | Staging | Production |
 | --- | --- | --- | --- |
 | Host | `localhost` or Wrangler preview | Cloudflare preview/custom staging host, noindex | `https://taskcover.com` |
-| Worker | `npm run preview:cloudflare` | `wrangler deploy --env staging` after approval | `npm run deploy:cloudflare` after approval |
+| Worker | `npm run preview:cloudflare` | `wrangler deploy --env staging` after approval | `npm run deploy:cloudflare:prod-safe` after approval |
 | Database | Direct Neon development URL or disposable DB | Separate Neon branch/database | Production Neon branch/database |
 | Hyperdrive | `CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE` in `.dev.vars` | Staging Hyperdrive ID | Production Hyperdrive ID |
-| Insights | `INSIGHTS_PROVIDER=local` until import is verified | May test `database` | Keep `local` until separate go-live approval |
+| Insights | `INSIGHTS_PROVIDER=local` until import is verified | May test `database` | `INSIGHTS_PROVIDER=database` after production DB verification |
 | Resend | Offline templates by default | Test recipient restriction | Verified `taskcover.com` sender |
 | HubSpot | Offline mapping by default | Test contact only with explicit flag | Live sync only after approval |
 | Cal.com | Optional URL, no PII params | Staging/real booking page link check | Real booking URL |

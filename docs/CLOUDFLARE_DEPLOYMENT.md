@@ -9,7 +9,8 @@ Wrangler values still requiring real Cloudflare values:
 | Worker name | `taskcover` | Cloudflare Workers project name |
 | Staging Worker name | `taskcover-staging` | Cloudflare Workers staging project |
 | Hyperdrive binding | `HYPERDRIVE` | Cloudflare Hyperdrive binding name |
-| Hyperdrive ID | placeholder zeros | Cloudflare Hyperdrive dashboard |
+| Production Hyperdrive ID | `3a4967f8e714435eb58bda3521531a24` | Cloudflare Hyperdrive dashboard |
+| Staging Hyperdrive ID | `1feebc80ed4541f482c7a0f687682bf8` | Cloudflare Hyperdrive dashboard |
 | Rate limiting | `LEAD_RATE_LIMITER`, `ADMIN_RATE_LIMITER` | Cloudflare Rate Limiting bindings |
 | Durable Object | `RATE_LIMIT_COORDINATOR` | Wrangler Durable Object migration |
 | Cron | `*/5 * * * *` | Cloudflare Workers Triggers |
@@ -24,6 +25,16 @@ npm run preview:cloudflare
 ```
 
 The local value belongs in `.dev.vars` only. If it is missing, `npm run preview:cloudflare` fails with a clear message before OpenNext preview starts.
+
+Production deploy on Windows should use:
+
+```bash
+npm run deploy:cloudflare:prod-safe
+```
+
+That command prompts for the production Neon connection string with hidden PowerShell input, sets `CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE` only for the local deploy process, runs `npm run deploy:cloudflare`, and clears the variable after the attempt. This is only for OpenNext/Wrangler local Hyperdrive emulation during deploy packaging; production runtime still uses the configured `HYPERDRIVE` binding.
+
+Never commit the connection string or add `localConnectionString` with a real secret to `wrangler.jsonc`. If the string was ever pasted into chat or logs, rotate the Neon password before deploy.
 
 Safe commands:
 
@@ -60,8 +71,8 @@ Do not deploy production or change DNS without explicit approval.
 
 - Worker names and compatibility date are present.
 - Durable Object binding and cron schedule are present.
-- Top-level and staging Hyperdrive IDs are still placeholder zero IDs.
+- Top-level production and staging Hyperdrive IDs are configured separately.
 - Rate Limiting bindings exist, but namespace IDs `1001` and `1002` must be replaced with real Cloudflare namespace IDs.
 - `CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE` is required for local preview and must stay out of git.
 
-The escalated Task 17 run completed `cf:typegen`, `build:cloudflare`, `cf:dry-run`, and `production:predeploy`. `cf:dry-run` still shows the Hyperdrive placeholder ID, so replace provider placeholders and rerun the gates before staging deployment.
+The escalated Task 17 run completed `cf:typegen`, `build:cloudflare`, `cf:dry-run`, and `production:predeploy`. Rerun the gates after any provider or Cloudflare configuration change.

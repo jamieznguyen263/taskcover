@@ -8,6 +8,7 @@
     "build:cloudflare": "opennextjs-cloudflare build && tsx scripts/open-next-postbuild.ts",
     "preview:cloudflare": "tsx scripts/cloudflare-preview.ts",
     "deploy:cloudflare": "npm run build:cloudflare && opennextjs-cloudflare deploy",
+    "deploy:cloudflare:prod-safe": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/deploy-cloudflare-prod-safe.ps1",
     "cf:typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "cf:dry-run": "wrangler deploy --dry-run --env=\"\" --outdir .wrangler/dry-run",
     "start": "next start",

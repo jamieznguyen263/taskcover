@@ -124,6 +124,14 @@ CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE=<paste-local-preview-ne
 
 Paste real Hyperdrive IDs into the Cloudflare binding configuration for staging/production. If the ID must be written to `wrangler.jsonc`, have Codex make that code change after the ID is available; do not commit secrets.
 
+For the production Worker deploy from Windows, do not paste the production Neon connection string into `.dev.vars` or `wrangler.jsonc`. Run:
+
+```bash
+npm run deploy:cloudflare:prod-safe
+```
+
+The command uses PowerShell `Read-Host -AsSecureString` and sets `CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE` only for the deploy process so OpenNext/Wrangler can emulate Hyperdrive locally. Production runtime still uses the Cloudflare `HYPERDRIVE` binding. If the production connection string was ever pasted into chat or logs, rotate the Neon password before deployment.
+
 ### Auth / Admin
 
 `.env.local` and `.dev.vars`:

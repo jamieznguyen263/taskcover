@@ -10,9 +10,9 @@ Recorded on 2026-07-08 from `main` at `085dd83e4dc2fdd2c40240c4003251b3aa6b0711`
 - Local `npm run production:check -- --json` reports `DATABASE_TARGET=staging`, `LEAD_SUBMISSION_MODE=disabled`, `INSIGHTS_PROVIDER=database` from local env, and configured local secrets without printing values.
 - Local `npm run db:status` connects to a staging database named `taskcover_staging`, with migrations `0000_bored_dark_phoenix.sql` and `0001_lame_the_liberteens.sql` applied.
 - `wrangler.jsonc` has production Worker `taskcover`, staging Worker `taskcover-staging`, Durable Object binding `RATE_LIMIT_COORDINATOR`, cron `*/5 * * * *`, and rate-limit namespace placeholders `1001` / `1002`.
-- `npm run cf:dry-run` currently shows top-level production Worker vars with `INSIGHTS_PROVIDER=local` and no `LEAD_SUBMISSION_MODE`. Apply the production public vars below before production deploy; keep `LEAD_SUBMISSION_MODE=disabled`.
-- `wrangler.jsonc` currently uses the same Hyperdrive ID for top-level production and staging. Treat production database readiness as blocked until the owner confirms a separate production Neon database or branch and a production Hyperdrive binding.
-- This session is not authenticated to Cloudflare Wrangler. `wrangler whoami` reports that `wrangler login` or `CLOUDFLARE_API_TOKEN` is required, so the Cloudflare-side Hyperdrive target could not be verified here.
+- `wrangler.jsonc` keeps production public vars at `APP_URL=https://taskcover.com`, `NEXT_PUBLIC_APP_URL=https://taskcover.com`, `INSIGHTS_PROVIDER=database`, and `LEAD_SUBMISSION_MODE=disabled`.
+- `wrangler.jsonc` preserves production Hyperdrive ID `3a4967f8e714435eb58bda3521531a24` and staging Hyperdrive ID `1feebc80ed4541f482c7a0f687682bf8`.
+- Wrangler login, production DB migration, production Admin verification, and production Insights verification have passed. Do not bind production domains until Worker URL smoke passes.
 
 ## Exact Deployment Commands From Repo Config
 
@@ -28,10 +28,12 @@ wrangler deploy --env staging
 Production Worker command, after production DB/Hyperdrive, secrets, DNS plan, and explicit launch approval:
 
 ```bash
-npm run deploy:cloudflare
+npm run deploy:cloudflare:prod-safe
 ```
 
-`npm run deploy:cloudflare` expands to:
+`npm run deploy:cloudflare:prod-safe` prompts for the production Neon connection string with hidden PowerShell input, sets `CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE` only for the deploy process, runs the existing production deploy command, and clears the variable afterward.
+
+The underlying command still expands to:
 
 ```bash
 npm run build:cloudflare && opennextjs-cloudflare deploy
@@ -57,7 +59,7 @@ TURNSTILE_EXPECTED_HOSTNAME=taskcover.com
 TURNSTILE_EXPECTED_ACTION=lead-submit
 ```
 
-Production `INSIGHTS_PROVIDER=database` is allowed only after production DB migration, import, and verification pass. If production DB is not ready, keep production `INSIGHTS_PROVIDER=local` and do not claim database-backed production readiness.
+Production `INSIGHTS_PROVIDER=database` is allowed because production DB migration, import, and verification have passed. Keep `LEAD_SUBMISSION_MODE=disabled` until a separate production lead capture launch is approved.
 
 ## Production Secrets To Paste
 
@@ -88,7 +90,7 @@ CONFIRM_PRODUCTION_MIGRATION=YES
 ```
 
 4. In Cloudflare, create a production Hyperdrive config pointed at the production Neon target. Keep the Worker binding name `HYPERDRIVE`.
-5. Replace only the top-level production `wrangler.jsonc` Hyperdrive ID with the production Hyperdrive ID. Keep `env.staging.hyperdrive` pointed at staging.
+5. Confirm only the top-level production `wrangler.jsonc` Hyperdrive ID is `3a4967f8e714435eb58bda3521531a24`. Keep `env.staging.hyperdrive` pointed at `1feebc80ed4541f482c7a0f687682bf8`.
 6. Re-run local gates before deployment:
 
 ```bash
@@ -187,15 +189,19 @@ cmd /c npm run cf:dry-run
 Then deploy the Worker before binding custom domains where possible:
 
 ```bash
-cmd /c npm run deploy:cloudflare
+cmd /c npm run deploy:cloudflare:prod-safe
 ```
+
+OpenNext/Wrangler requires `CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE` during the local deploy build to emulate the `HYPERDRIVE` binding. The safe deploy command sets it only in the current PowerShell process and child deploy process. This does not alter the production Hyperdrive binding or Cloudflare runtime behavior.
+
+Never commit or log the production Neon connection string. Do not add it to `wrangler.jsonc` as `localConnectionString`, and do not paste it into chat. If it was ever pasted into chat or logs, rotate the Neon password before deploying.
 
 Smoke the Worker URL or preview URL first. Only after smoke passes, attach custom domains.
 
 Required production smoke paths:
 
 ```bash
-npm run smoke:deployment -- --base-url=https://taskcover.com
+npm run smoke:deployment -- --base-url=<WORKER_URL>
 ```
 
 The smoke plan includes `/`, `/fr`, `/es`, `/insights`, `/free-seo-audit`, `/contact`, `/book-a-call`, `/admin/login`, `/robots.txt`, and `/sitemap.xml`. Also manually confirm `https://www.taskcover.com` redirects to `https://taskcover.com`.

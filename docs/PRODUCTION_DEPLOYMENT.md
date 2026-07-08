@@ -2,7 +2,7 @@
 
 Production deployment is intentionally explicit. It does not run migrations, does not modify DNS, and does not switch `INSIGHTS_PROVIDER` automatically.
 
-Current production blocker as of 2026-07-08: local database status is staging (`DATABASE_TARGET=staging`, database `taskcover_staging`), and the same Hyperdrive ID is configured for top-level production and staging in `wrangler.jsonc`. Do not deploy database-backed production until a separate production Neon database or branch and production Hyperdrive binding are confirmed.
+Current production status as of 2026-07-08: production database migration, Admin verification, Insights verification, and the production Hyperdrive binding have been confirmed. Top-level production Hyperdrive uses `3a4967f8e714435eb58bda3521531a24`; staging remains `1feebc80ed4541f482c7a0f687682bf8`. Keep production lead capture disabled for the first Worker deploy.
 
 Pre-deploy gates:
 
@@ -24,17 +24,21 @@ Combined local gate:
 npm run production:predeploy
 ```
 
-Deploy only after explicit approval:
+Deploy only after explicit approval. On Windows, use the safe prompt wrapper so OpenNext/Wrangler can emulate the Hyperdrive binding during the local deploy build without committing or echoing the production Neon connection string:
 
 ```bash
-npm run deploy:cloudflare
+npm run deploy:cloudflare:prod-safe
 ```
 
-This expands to:
+The wrapper prompts with PowerShell `Read-Host -AsSecureString`, sets only the current process variable `CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE`, runs the existing deploy command, and clears the variable after the deploy attempt. It does not change production Hyperdrive runtime behavior; the deployed Worker still uses the `HYPERDRIVE` binding configured in Cloudflare.
+
+The underlying deploy command remains:
 
 ```bash
 npm run build:cloudflare && opennextjs-cloudflare deploy
 ```
+
+Do not add the production Neon connection string to `wrangler.jsonc`, `.env.local`, `.dev.vars`, `.env`, chat, shell history, or committed docs. If the connection string was ever pasted into chat or logs, rotate the Neon password before deployment.
 
 Staging deploy, after staging provider setup and explicit approval:
 
@@ -46,11 +50,11 @@ wrangler deploy --env staging
 Post-deploy:
 
 ```bash
-npm run smoke:deployment -- --base-url=https://taskcover.com
+npm run smoke:deployment -- --base-url=<WORKER_URL>
 npm run production:check
 ```
 
-If any check fails, roll back the Worker version and keep `INSIGHTS_PROVIDER=local`.
+Smoke test the Worker URL before binding `taskcover.com` or `www.taskcover.com`. If any check fails, roll back the Worker version and keep `LEAD_SUBMISSION_MODE=disabled`.
 
 Initial production launch must keep:
 
