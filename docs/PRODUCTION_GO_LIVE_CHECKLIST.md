@@ -61,6 +61,17 @@ TURNSTILE_EXPECTED_ACTION=lead-submit
 
 Production `INSIGHTS_PROVIDER=database` is allowed because production DB migration, import, and verification have passed. Keep `LEAD_SUBMISSION_MODE=disabled` until a separate production lead capture launch is approved.
 
+For full production lead capture after rate-limit namespace IDs are replaced and the production lead smoke is approved, change only then:
+
+```bash
+LEAD_SUBMISSION_MODE=production-durable
+CALCOM_BOOKING_URL=<production Cal.com booking URL>
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=<production site key>
+TURNSTILE_SITE_KEY=<production site key>
+TURNSTILE_EXPECTED_HOSTNAME=taskcover.com
+TURNSTILE_EXPECTED_ACTION=lead-submit
+```
+
 ## Production Secrets To Paste
 
 Paste these through Cloudflare Dashboard secrets or interactive `wrangler secret put`. Never paste values into chat, commit them, or pass them as command arguments.
@@ -251,7 +262,7 @@ After Worker custom domains are active, remove stale web A/CNAME records that st
 
 ## Lead Capture Launch Boundary
 
-Website is live; production lead capture is intentionally disabled until production lead mode and rate limiting are enabled.
+Website can be deployed with production lead capture disabled until the owner approves the lead launch.
 
 For the first production deploy:
 
@@ -259,7 +270,21 @@ For the first production deploy:
 LEAD_SUBMISSION_MODE=disabled
 ```
 
-Do not set production to `staging-durable`. If real lead capture is required before launch, stop before domain binding and implement a separate `production-durable` mode with production Turnstile hostname validation, production Neon/outbox, Resend notification, Cloudflare rate limiting, no secret logging, tests, and one approved test lead smoke.
+Do not set production to `staging-durable`. Real production lead capture must use `production-durable`, and `npm run production:check` will fail closed if Cloudflare rate-limit namespace IDs are still the example placeholders.
+
+Owner steps to finish rate-limit readiness:
+
+1. Choose two Cloudflare-account-unique positive integer strings for the Worker Rate Limiting API.
+2. Replace `LEAD_RATE_LIMITER.namespace_id` and `ADMIN_RATE_LIMITER.namespace_id` in `wrangler.jsonc`.
+3. Keep `RATE_LIMIT_PROVIDER=cloudflare`.
+4. Run:
+
+```bash
+npm run production:check
+npm run cf:dry-run
+```
+
+Cloudflare's Worker Rate Limiting binding is configured in `wrangler.jsonc`; the binding is not created through a separate visible dashboard namespace.
 
 ## Launch Boundary
 

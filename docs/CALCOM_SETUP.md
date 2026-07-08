@@ -4,6 +4,8 @@ Required value:
 
 - `CALCOM_BOOKING_URL`
 
+Taskcover only uses a public Cal.com booking URL. No Cal.com API key or webhook secret is required for the current lead flow.
+
 Rules:
 
 - URL must be HTTPS.
@@ -12,6 +14,7 @@ Rules:
 - CTA appears only when configured.
 - CTA is localized by the thank-you page copy.
 - The site never shows a false booking confirmation.
+- Production value format: `CALCOM_BOOKING_URL=https://cal.com/...`
 
 Verification:
 

@@ -9,18 +9,19 @@ Lead acceptance is database-first.
 - `disabled`: default fail-closed mode. The API validates input but does not accept or store a lead.
 - `test`: local UI-only success path. It returns a safe test reference and thank-you redirect without Neon, outbox, Resend, or HubSpot side effects.
 - `staging-durable`: staging-only durable path. It verifies Turnstile when configured, writes the lead and outbox jobs to Neon, and returns success after the transaction commits. It fails closed on `taskcover.com` and `www.taskcover.com`.
-
-No production lead submission mode exists yet.
+- `production-durable`: production-only durable path. It fails closed unless `APP_URL` and `NEXT_PUBLIC_APP_URL` are `https://taskcover.com`, production Hyperdrive is bound, Cloudflare `LEAD_RATE_LIMITER` is available, Resend is configured, and Turnstile is configured with hostname `taskcover.com` and action `lead-submit`.
 
 ## Order
 
 1. Normalize and validate payload.
-2. Apply rate limiting.
-3. Verify Turnstile when configured.
-4. Insert or return the lead in `lead_submissions`.
-5. Create deterministic jobs in `lead_delivery_jobs`.
-6. Return success after the database transaction commits.
-7. Retry Resend and HubSpot through the outbox processor.
+2. Reject honeypot spam and malformed payloads.
+3. Verify production durable prerequisites when `LEAD_SUBMISSION_MODE=production-durable`.
+4. Apply rate limiting.
+5. Verify Turnstile when configured.
+6. Insert or return the lead in `lead_submissions`.
+7. Create deterministic jobs in `lead_delivery_jobs`.
+8. Return success after the database transaction commits.
+9. Retry Resend and HubSpot through the outbox processor.
 
 External API calls never run inside the acceptance transaction.
 

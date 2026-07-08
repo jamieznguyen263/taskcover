@@ -37,8 +37,9 @@ Never commit `.env.local` or `.dev.vars`.
 | `disabled` | Fails closed after validation; no lead is accepted. | Default local/staging/production state. |
 | `test` | Allows local UI success and thank-you redirect with a safe test reference; no Neon/outbox/provider side effects. | Local form UX QA only. |
 | `staging-durable` | Verifies Turnstile when configured, writes the lead and provider outbox jobs to Neon, then redirects to thank-you. It fails closed on `taskcover.com`/`www.taskcover.com`. | Staging only after Neon, Turnstile, and rate limits are configured. |
+| `production-durable` | Requires `taskcover.com` origin, production Hyperdrive, Turnstile hostname `taskcover.com`, action `lead-submit`, Cloudflare `LEAD_RATE_LIMITER`, Resend config, and durable Neon/outbox acceptance. | Production lead capture only after rate-limit namespace IDs are replaced and smoke tests pass. |
 
-No production lead submission mode exists yet. Do not set a production Worker to `staging-durable`.
+Do not set a production Worker to `staging-durable`.
 
 For the full staging lead path:
 
@@ -47,6 +48,8 @@ For the full staging lead path:
 3. Submit the Free SEO Audit form against the staging/preview host.
 4. Confirm the Neon lead record and outbox jobs.
 5. Run `npm run leads:process` or trigger the approved Cron path to deliver Resend/HubSpot jobs.
+
+For production lead capture, set `LEAD_SUBMISSION_MODE=production-durable` only after `npm run production:check` passes with non-placeholder Cloudflare Rate Limiting namespace IDs.
 
 ## What To Paste
 

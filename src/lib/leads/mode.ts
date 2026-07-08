@@ -1,4 +1,4 @@
-export const leadSubmissionModes = ["disabled", "test", "staging-durable"] as const;
+export const leadSubmissionModes = ["disabled", "test", "staging-durable", "production-durable"] as const;
 
 export type LeadSubmissionMode = (typeof leadSubmissionModes)[number];
 type LeadSubmissionModeEnv = {
@@ -16,6 +16,17 @@ export function isLeadSubmissionMode(value: string | undefined): value is LeadSu
 export function getLeadSubmissionMode(env: LeadSubmissionModeEnv = process.env as LeadSubmissionModeEnv): LeadSubmissionMode {
   const value = env.LEAD_SUBMISSION_MODE;
   return isLeadSubmissionMode(value) ? value : "disabled";
+}
+
+export function isCanonicalProductionLeadOrigin(env: LeadOriginEnv = process.env as LeadOriginEnv) {
+  return [env.APP_URL, env.NEXT_PUBLIC_APP_URL].every((value) => {
+    if (!value) return false;
+    try {
+      return new URL(value).hostname.toLowerCase() === "taskcover.com";
+    } catch {
+      return false;
+    }
+  });
 }
 
 export function isProductionLeadOrigin(env: LeadOriginEnv = process.env as LeadOriginEnv) {

@@ -64,6 +64,8 @@ LEAD_SUBMISSION_MODE=disabled
 
 Do not use `staging-durable` on `taskcover.com` or `www.taskcover.com`.
 
+Full production lead capture must use `LEAD_SUBMISSION_MODE=production-durable` only after production Turnstile, Hyperdrive, Resend, Cal.com, and non-placeholder Cloudflare Rate Limiting namespace IDs pass `npm run production:check`.
+
 ## Task 17 Production Boundary
 
 Task 17 did not deploy production, did not change DNS, and did not run production migrations. Production remains blocked until staging verification passes and the user gives separate written approval.

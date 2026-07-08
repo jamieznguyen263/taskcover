@@ -101,6 +101,64 @@ describe("production activation safety helpers", () => {
     expect(setupLocationFor("RESEND_API_KEY")).toContain("wrangler secret put");
   });
 
+  it("fails closed when production durable lead mode uses rate-limit placeholder namespace IDs", () => {
+    const audit = buildWranglerAudit({
+      name: "taskcover",
+      compatibility_date: "2026-07-05",
+      hyperdrive: [{ binding: "HYPERDRIVE", id: "3a4967f8e714435eb58bda3521531a24" }],
+      ratelimits: [{ name: "LEAD_RATE_LIMITER", namespace_id: "1001" }, { name: "ADMIN_RATE_LIMITER", namespace_id: "1002" }],
+      durable_objects: { bindings: [{ name: "RATE_LIMIT_COORDINATOR" }] },
+      triggers: { crons: ["*/5 * * * *"] },
+    });
+    const checks = buildProductionChecks(
+      {
+        APP_URL: "https://taskcover.com",
+        NEXT_PUBLIC_APP_URL: "https://taskcover.com",
+        LEAD_SUBMISSION_MODE: "production-durable",
+        RATE_LIMIT_PROVIDER: "cloudflare",
+        RESEND_API_KEY: "re_secret",
+        TURNSTILE_SECRET_KEY: "turnstile_secret",
+        TURNSTILE_SITE_KEY: "site_key",
+        TURNSTILE_EXPECTED_HOSTNAME: "taskcover.com",
+        TURNSTILE_EXPECTED_ACTION: "lead-submit",
+        CALCOM_BOOKING_URL: "https://cal.com/taskcover/strategy",
+      },
+      audit
+    );
+    expect(checks.find((check) => check.category === "Rate Limiting binding")?.status).toBe("invalid format");
+    expect(checks.find((check) => check.category === "Lead outbox readiness")?.status).toBe("invalid format");
+    expect(JSON.stringify(checks)).not.toContain("re_secret");
+    expect(JSON.stringify(checks)).not.toContain("turnstile_secret");
+  });
+
+  it("allows production durable readiness only with non-placeholder rate-limit namespaces", () => {
+    const audit = buildWranglerAudit({
+      name: "taskcover",
+      compatibility_date: "2026-07-05",
+      hyperdrive: [{ binding: "HYPERDRIVE", id: "3a4967f8e714435eb58bda3521531a24" }],
+      ratelimits: [{ name: "LEAD_RATE_LIMITER", namespace_id: "920101" }, { name: "ADMIN_RATE_LIMITER", namespace_id: "920102" }],
+      durable_objects: { bindings: [{ name: "RATE_LIMIT_COORDINATOR" }] },
+      triggers: { crons: ["*/5 * * * *"] },
+    });
+    const checks = buildProductionChecks(
+      {
+        APP_URL: "https://taskcover.com",
+        NEXT_PUBLIC_APP_URL: "https://taskcover.com",
+        LEAD_SUBMISSION_MODE: "production-durable",
+        RATE_LIMIT_PROVIDER: "cloudflare",
+        RESEND_API_KEY: "re_secret",
+        TURNSTILE_SECRET_KEY: "turnstile_secret",
+        TURNSTILE_SITE_KEY: "site_key",
+        TURNSTILE_EXPECTED_HOSTNAME: "taskcover.com",
+        TURNSTILE_EXPECTED_ACTION: "lead-submit",
+        CALCOM_BOOKING_URL: "https://cal.com/taskcover/strategy",
+      },
+      audit
+    );
+    expect(checks.find((check) => check.category === "Rate Limiting binding")?.status).toBe("configured");
+    expect(checks.find((check) => check.category === "Lead outbox readiness")?.status).toBe("live test required");
+  });
+
   it("validates Cal.com URL host and PII-free smoke output assumptions", () => {
     expect(validateHttpUrl("https://cal.com/taskcover/strategy", { httpsOnly: true, expectedHosts: ["cal.com"] })).toBe("valid");
     expect(validateHttpUrl("http://cal.com/taskcover/strategy", { httpsOnly: true, expectedHosts: ["cal.com"] })).toBe("invalid");

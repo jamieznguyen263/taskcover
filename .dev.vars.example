@@ -8,7 +8,8 @@ NEXTJS_ENV=development
 APP_URL=http://localhost:8787
 NEXT_PUBLIC_APP_URL=http://localhost:8787
 
-# Lead funnel mode (config): disabled, test, or staging-durable.
+# Lead funnel mode (config): disabled, test, staging-durable, or production-durable.
+# Keep disabled as the default. production-durable is only for production readiness after real Cloudflare rate-limit namespace IDs are set.
 LEAD_SUBMISSION_MODE=disabled
 
 # Insights and providers (config).
@@ -44,6 +45,7 @@ CALCOM_BOOKING_URL=<paste-https-calcom-booking-url>
 
 # Turnstile (public + secret).
 TURNSTILE_SITE_KEY=<paste-turnstile-site-key>
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=<paste-turnstile-site-key>
 TURNSTILE_SECRET_KEY=<paste-turnstile-secret-key>
 TURNSTILE_EXPECTED_HOSTNAME=localhost
 TURNSTILE_EXPECTED_ACTION=lead-submit

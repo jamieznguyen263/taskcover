@@ -56,6 +56,10 @@ export async function checkRateLimit({
   return { allowed: true, remaining: Math.max(0, limit - existing.count), resetAt: existing.resetAt };
 }
 
+export function isProductionRateLimitConfigured() {
+  return String(process.env.RATE_LIMIT_PROVIDER ?? "memory") === "cloudflare" && Boolean(getRuntimeEnv()?.LEAD_RATE_LIMITER);
+}
+
 export function rateLimitKeyFromRequest(ip: string, formType: string) {
   const namespace = process.env.RATE_LIMIT_NAMESPACE || "taskcover-leads";
   const ipHash = crypto.createHash("sha256").update(ip || "unknown").digest("hex");

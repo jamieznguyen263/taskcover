@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { leadIdempotencyKey, deliveryJobIdempotencyKey } from "./acceptance";
 import { renderInternalLeadEmail, renderVisitorLeadEmail, resendIdempotencyKey } from "./email-templates";
-import { getLeadSubmissionMode, isLeadSubmissionMode, isProductionLeadOrigin } from "./mode";
+import { getLeadSubmissionMode, isCanonicalProductionLeadOrigin, isLeadSubmissionMode, isProductionLeadOrigin } from "./mode";
 import { rateLimitKeyFromRequest } from "./rate-limit";
 import { verifyTurnstile } from "./spam";
 import type { NormalizedLead } from "./types";
@@ -72,9 +72,12 @@ describe("lead production readiness helpers", () => {
     expect(isLeadSubmissionMode("disabled")).toBe(true);
     expect(isLeadSubmissionMode("test")).toBe(true);
     expect(isLeadSubmissionMode("staging-durable")).toBe(true);
+    expect(isLeadSubmissionMode("production-durable")).toBe(true);
     expect(isLeadSubmissionMode("production")).toBe(false);
     expect(getLeadSubmissionMode({ LEAD_SUBMISSION_MODE: "production" })).toBe("disabled");
     expect(isProductionLeadOrigin({ APP_URL: "https://taskcover.com", NEXT_PUBLIC_APP_URL: "" })).toBe(true);
     expect(isProductionLeadOrigin({ APP_URL: "https://staging.taskcover.com", NEXT_PUBLIC_APP_URL: "" })).toBe(false);
+    expect(isCanonicalProductionLeadOrigin({ APP_URL: "https://taskcover.com", NEXT_PUBLIC_APP_URL: "https://taskcover.com" })).toBe(true);
+    expect(isCanonicalProductionLeadOrigin({ APP_URL: "https://www.taskcover.com", NEXT_PUBLIC_APP_URL: "https://taskcover.com" })).toBe(false);
   });
 });

@@ -39,6 +39,10 @@ export function isDatabaseConfigured() {
   }
 }
 
+export function isHyperdriveConfigured() {
+  return Boolean(getRuntimeDatabaseEnv()?.HYPERDRIVE?.connectionString);
+}
+
 function createDb() {
   const client = postgres(getDatabaseUrl(), {
     max: 5,

@@ -90,7 +90,7 @@ function context(
 const setupLocations: Record<string, string> = {
   APP_URL: "set in .env.local/.dev.vars for local checks or wrangler vars for Workers",
   NEXT_PUBLIC_APP_URL: "set in .env.local/.dev.vars for local checks or wrangler vars for Workers",
-  LEAD_SUBMISSION_MODE: "set in .env.local/.dev.vars; keep disabled until staging DB and providers are ready",
+  LEAD_SUBMISSION_MODE: "set in .env.local/.dev.vars; keep disabled until staging or production lead capture is approved",
   DATABASE_URL: "set only in local env files for scripts; use Hyperdrive for Cloudflare runtime",
   DATABASE_TARGET: "set to development or staging before migrations",
   CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE: "set in .dev.vars with a disposable development/staging Neon connection string for local preview",
@@ -126,7 +126,7 @@ const setupLocations: Record<string, string> = {
   ADMIN_RATE_LIMITER: "configure Cloudflare Rate Limiting binding in wrangler.jsonc",
   RATE_LIMIT_COORDINATOR: "configure Durable Object binding and migration in wrangler.jsonc",
   "wrangler.hyperdrive.id": "replace placeholder with the real staging Hyperdrive ID",
-  "wrangler.ratelimits.namespace_id": "replace placeholder namespace IDs with real Cloudflare Rate Limiting namespace IDs",
+  "wrangler.ratelimits.namespace_id": "replace example namespace IDs with account-unique positive integer strings",
   "wrangler.triggers.crons": "configure Cloudflare Cron Triggers in wrangler.jsonc",
 };
 
@@ -158,6 +158,15 @@ export function validateHttpUrl(value: string | undefined, options: { httpsOnly?
     return "valid" as const;
   } catch {
     return "invalid" as const;
+  }
+}
+
+function hostnameEquals(value: string | undefined, expected: string) {
+  if (!valuePresent(value)) return false;
+  try {
+    return new URL(value as string).hostname.toLowerCase() === expected;
+  } catch {
+    return false;
   }
 }
 
@@ -247,6 +256,7 @@ export function buildProductionChecks(env: EnvMap, audit: WranglerAudit): Activa
   const hyperdriveLocalVar = localHyperdriveVariableFor(hyperdriveBinding);
   const insightsProvider = String(env.INSIGHTS_PROVIDER ?? "local");
   const leadSubmissionMode = String(env.LEAD_SUBMISSION_MODE ?? "missing");
+  const productionLeadMode = leadSubmissionMode === "production-durable";
   const gtmEnabled = String(env.NEXT_PUBLIC_GTM_ENABLED ?? "false").toLowerCase() === "true";
   const gtmConfigured = valuePresent(env.NEXT_PUBLIC_GTM_ID);
   const adsIdConfigured = valuePresent(env.NEXT_PUBLIC_GOOGLE_ADS_ID);
@@ -265,7 +275,7 @@ export function buildProductionChecks(env: EnvMap, audit: WranglerAudit): Activa
     checkRequired("Application", ["APP_URL", "NEXT_PUBLIC_APP_URL", "LEAD_SUBMISSION_MODE"], env, {
       context: activationContexts.application,
       invalid: appUrl === "invalid" || publicUrl === "invalid" || (valuePresent(env.LEAD_SUBMISSION_MODE) && !leadModeValid),
-      nextAction: "Set APP_URL and NEXT_PUBLIC_APP_URL to the active environment origin. Use LEAD_SUBMISSION_MODE=disabled, test, or staging-durable.",
+      nextAction: "Set APP_URL and NEXT_PUBLIC_APP_URL to the active environment origin. Use LEAD_SUBMISSION_MODE=disabled, test, staging-durable, or production-durable.",
     }),
     {
       category: "Cloudflare",
@@ -343,7 +353,10 @@ export function buildProductionChecks(env: EnvMap, audit: WranglerAudit): Activa
     }),
     checkRequired("Turnstile", ["TURNSTILE_SITE_KEY", "TURNSTILE_SECRET_KEY", "TURNSTILE_EXPECTED_HOSTNAME", "TURNSTILE_EXPECTED_ACTION"], env, {
       context: activationContexts.turnstile,
-      nextAction: "Use Cloudflare test keys locally and real keys for staging/production hostnames.",
+      invalid:
+        productionLeadMode &&
+        (env.TURNSTILE_EXPECTED_HOSTNAME !== "taskcover.com" || env.TURNSTILE_EXPECTED_ACTION !== "lead-submit"),
+      nextAction: "Use Cloudflare test keys locally and real keys for staging/production hostnames. Production lead capture requires TURNSTILE_EXPECTED_HOSTNAME=taskcover.com and TURNSTILE_EXPECTED_ACTION=lead-submit.",
     }),
     checkRequired("Cloudinary", ["CLOUDINARY_CLOUD_NAME", "CLOUDINARY_API_KEY", "CLOUDINARY_API_SECRET", "CLOUDINARY_UPLOAD_FOLDER"], env, {
       context: activationContexts.cloudinary,
@@ -351,17 +364,25 @@ export function buildProductionChecks(env: EnvMap, audit: WranglerAudit): Activa
     }),
     {
       category: "Rate Limiting binding",
-      status: audit.rateLimitBindings.includes("LEAD_RATE_LIMITER") && audit.rateLimitBindings.includes("ADMIN_RATE_LIMITER") && audit.rateLimitPlaceholderIds.length === 0
-        ? "configured"
-        : "partially configured",
+      status:
+        productionLeadMode &&
+        (!audit.rateLimitBindings.includes("LEAD_RATE_LIMITER") ||
+          !audit.rateLimitBindings.includes("ADMIN_RATE_LIMITER") ||
+          audit.rateLimitPlaceholderIds.length > 0 ||
+          env.RATE_LIMIT_PROVIDER !== "cloudflare")
+          ? "invalid format"
+          : audit.rateLimitBindings.includes("LEAD_RATE_LIMITER") && audit.rateLimitBindings.includes("ADMIN_RATE_LIMITER") && audit.rateLimitPlaceholderIds.length === 0
+            ? "configured"
+            : "partially configured",
       context: activationContexts.rateLimit,
-      detail: `Provider=${env.RATE_LIMIT_PROVIDER ?? "memory"}; bindings=${audit.rateLimitBindings.join(", ") || "none"}.`,
+      detail: `Provider=${env.RATE_LIMIT_PROVIDER ?? "memory"}; bindings=${audit.rateLimitBindings.join(", ") || "none"}; placeholder namespace IDs=${audit.rateLimitPlaceholderIds.join(", ") || "none"}.`,
       required: ["LEAD_RATE_LIMITER", "ADMIN_RATE_LIMITER", "RATE_LIMIT_PROVIDER", "wrangler.ratelimits.namespace_id"],
       missing: [
         ...["LEAD_RATE_LIMITER", "ADMIN_RATE_LIMITER"].filter((name) => !audit.rateLimitBindings.includes(name)),
+        ...(env.RATE_LIMIT_PROVIDER === "cloudflare" ? [] : ["RATE_LIMIT_PROVIDER"]),
         ...(audit.rateLimitPlaceholderIds.length ? ["wrangler.ratelimits.namespace_id"] : []),
       ],
-      nextAction: "Create Cloudflare Rate Limiting bindings before production deploy.",
+      nextAction: "Choose account-unique positive integer namespace IDs for LEAD_RATE_LIMITER and ADMIN_RATE_LIMITER in wrangler.jsonc; do not use the documentation examples 1001/1002 for production lead capture.",
     },
     {
       category: "Durable Objects",
@@ -410,21 +431,60 @@ export function buildProductionChecks(env: EnvMap, audit: WranglerAudit): Activa
     },
     {
       category: "Lead outbox readiness",
-      status: valuePresent(env.DATABASE_URL)
-        ? leadSubmissionMode === "disabled"
-          ? "staging only"
-          : leadModeValid
-            ? "live test required"
-            : "invalid format"
-        : "missing",
+      status: productionLeadMode
+        ? hostnameEquals(env.APP_URL, "taskcover.com") &&
+          hostnameEquals(env.NEXT_PUBLIC_APP_URL, "taskcover.com") &&
+          audit.hyperdriveBindings.includes("HYPERDRIVE") &&
+          audit.hyperdrivePlaceholderIds.length === 0 &&
+          valuePresent(env.RESEND_API_KEY) &&
+          valuePresent(env.TURNSTILE_SECRET_KEY) &&
+          valuePresent(env.CALCOM_BOOKING_URL) &&
+          audit.rateLimitBindings.includes("LEAD_RATE_LIMITER") &&
+          audit.rateLimitBindings.includes("ADMIN_RATE_LIMITER") &&
+          audit.rateLimitPlaceholderIds.length === 0
+          ? "live test required"
+          : "invalid format"
+        : valuePresent(env.DATABASE_URL)
+          ? leadSubmissionMode === "disabled"
+            ? "staging only"
+            : leadModeValid
+              ? "live test required"
+              : "invalid format"
+          : "missing",
       context: activationContexts.leadOutbox,
-      detail: `LEAD_SUBMISSION_MODE=${leadSubmissionMode}; supported values are disabled, test, staging-durable. Durable acceptance and provider jobs require the staging database.`,
-      required: ["DATABASE_URL", "LEAD_SUBMISSION_MODE"],
+      detail: `LEAD_SUBMISSION_MODE=${leadSubmissionMode}; supported values are disabled, test, staging-durable, production-durable. Production durable acceptance requires production origin, Hyperdrive, Turnstile, Cloudflare rate limiting, Resend, and Cal.com readiness.`,
+      required: productionLeadMode
+        ? [
+            "APP_URL",
+            "NEXT_PUBLIC_APP_URL",
+            "HYPERDRIVE",
+            "RESEND_API_KEY",
+            "TURNSTILE_SECRET_KEY",
+            "CALCOM_BOOKING_URL",
+            "LEAD_RATE_LIMITER",
+            "ADMIN_RATE_LIMITER",
+            "wrangler.ratelimits.namespace_id",
+          ]
+        : ["DATABASE_URL", "LEAD_SUBMISSION_MODE"],
       missing: [
-        ...(valuePresent(env.DATABASE_URL) ? [] : ["DATABASE_URL"]),
+        ...(productionLeadMode
+          ? [
+              ...(hostnameEquals(env.APP_URL, "taskcover.com") ? [] : ["APP_URL"]),
+              ...(hostnameEquals(env.NEXT_PUBLIC_APP_URL, "taskcover.com") ? [] : ["NEXT_PUBLIC_APP_URL"]),
+              ...(audit.hyperdriveBindings.includes("HYPERDRIVE") && audit.hyperdrivePlaceholderIds.length === 0 ? [] : ["HYPERDRIVE"]),
+              ...(valuePresent(env.RESEND_API_KEY) ? [] : ["RESEND_API_KEY"]),
+              ...(valuePresent(env.TURNSTILE_SECRET_KEY) ? [] : ["TURNSTILE_SECRET_KEY"]),
+              ...(valuePresent(env.CALCOM_BOOKING_URL) ? [] : ["CALCOM_BOOKING_URL"]),
+              ...(audit.rateLimitBindings.includes("LEAD_RATE_LIMITER") ? [] : ["LEAD_RATE_LIMITER"]),
+              ...(audit.rateLimitBindings.includes("ADMIN_RATE_LIMITER") ? [] : ["ADMIN_RATE_LIMITER"]),
+              ...(audit.rateLimitPlaceholderIds.length ? ["wrangler.ratelimits.namespace_id"] : []),
+            ]
+          : [...(valuePresent(env.DATABASE_URL) ? [] : ["DATABASE_URL"])]),
         ...(valuePresent(env.LEAD_SUBMISSION_MODE) ? [] : ["LEAD_SUBMISSION_MODE"]),
       ],
-      nextAction: "Keep default smoke tests in mock mode; enable durable staging lead acceptance only after database, Turnstile, and rate limits are configured.",
+      nextAction: productionLeadMode
+        ? "Keep production deploy blocked until real Cloudflare Rate Limiting namespace IDs replace placeholders, production Turnstile validates taskcover.com, and a local/preview lead smoke with test data passes."
+        : "Keep default smoke tests in mock mode; enable durable staging lead acceptance only after database, Turnstile, and rate limits are configured.",
     },
   ];
 }
