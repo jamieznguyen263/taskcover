@@ -51,9 +51,12 @@ export const metadata: Metadata = {
   creator: siteConfig.name,
   publisher: siteConfig.name,
   icons: {
-    icon: siteConfig.logo.icon,
-    shortcut: siteConfig.logo.icon,
-    apple: siteConfig.logo.icon,
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: { url: "/apple-touch-icon.png", type: "image/png", sizes: "180x180" },
   },
   openGraph: {
     type: "website",
