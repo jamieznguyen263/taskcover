@@ -41,12 +41,15 @@ describe("Task 13C reviewed UI proof data", () => {
     }
   });
 
-  it("keeps homepage video placeholder and radial-map copy localized", () => {
+  it("keeps homepage Stream video card and radial-map copy localized", () => {
     const english = getHomeContent("en");
     for (const locale of locales) {
       const home = getHomeContent(locale);
-      expect(home.heroVideo.videoUrl).toBeUndefined();
+      expect(home.heroVideo.previewIframeUrl).toContain("cloudflarestream.com");
+      expect(home.heroVideo.playerIframeUrl).toContain("cloudflarestream.com");
+      expect(home.heroVideo.posterUrl).toContain("thumbnail.jpg");
       expect(home.heroVideo.playLabel).toBeTruthy();
+      expect(home.heroVideo.modalTitle).toBeTruthy();
       expect(home.searchHasChanged.surfaces).toHaveLength(9);
       for (const surface of home.searchHasChanged.surfaces) {
         expect(surface.ariaLabel).toBeTruthy();

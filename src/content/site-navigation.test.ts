@@ -89,7 +89,9 @@ describe("global site navigation IA", () => {
 
     expect(french.heroVideo.caption).not.toBe(english.heroVideo.caption);
     expect(spanish.heroVideo.caption).not.toBe(english.heroVideo.caption);
-    expect(english.heroVideo.videoUrl).toBeUndefined();
+    expect(english.heroVideo.previewIframeUrl).toContain("cloudflarestream.com");
+    expect(english.heroVideo.playerIframeUrl).toContain("controls=true");
+    expect(english.heroVideo.playLabel).toBe("Watch video");
     expect(english.brandExperience.logos).toHaveLength(10);
     expect(french.brandExperience.logos).toHaveLength(10);
     expect(spanish.brandExperience.logos).toHaveLength(10);

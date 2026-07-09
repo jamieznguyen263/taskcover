@@ -40,10 +40,14 @@ describe("Task 15 launch QA guardrails", () => {
       expect(asset.publicUsage).toBe(false);
     }
     for (const locale of locales) {
-      expect(getHomeContent(locale as Locale).heroVideo.videoUrl).toBeUndefined();
+      const heroVideo = getHomeContent(locale as Locale).heroVideo;
+      expect(heroVideo.previewIframeUrl).toMatch(/^https:\/\/customer-0tesip1ipnusoino\.cloudflarestream\.com\//);
+      expect(heroVideo.playerIframeUrl).toMatch(/^https:\/\/customer-0tesip1ipnusoino\.cloudflarestream\.com\//);
+      expect(heroVideo.posterUrl).toContain("/thumbnails/thumbnail.jpg");
     }
-    const videoSource = source("src/components/marketing/home/spokesperson-video-card.tsx");
-    expect(videoSource).toContain('preload="none"');
+    const videoSource = source("src/components/marketing/home/hero-video-card.tsx");
+    expect(videoSource).toContain("prefers-reduced-motion: reduce");
+    expect(videoSource).toContain('loading="lazy"');
     expect(videoSource).not.toContain("autoPlay");
   });
 

@@ -110,9 +110,13 @@ export type HeroVideoContent = {
   caption: string;
   playLabel: string;
   unavailableLabel: string;
+  previewTitle: string;
+  modalTitle: string;
+  closeLabel: string;
   fallbackTitle: string;
   fallbackBody: string;
-  videoUrl?: string;
+  previewIframeUrl?: string;
+  playerIframeUrl?: string;
   posterUrl?: string;
   trustChips: readonly string[];
 };

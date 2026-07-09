@@ -4,6 +4,7 @@
  */
 
 import type { HomeContent } from "../home.types";
+import { taskcoverHeroStream } from "../cloudflare-stream";
 import { buildClientLogoProofAssets } from "../home-proof-assets";
 
 const clientLogoProof = buildClientLogoProofAssets({
@@ -188,14 +189,20 @@ export const home: HomeContent = {
   },
   heroVideo: {
     eyebrow: "Introducción del portavoz",
-    title: "Un módulo de vídeo listo para presentar el sistema Taskcover.",
+    title: "Una breve presentación del sistema de crecimiento search de Taskcover.",
     caption:
       "Una breve introducción a cómo Taskcover aborda el SEO, la búsqueda con IA y el crecimiento de ingresos.",
-    playLabel: "Reproducir vídeo de introducción",
-    unavailableLabel: "Vídeo pendiente de carga",
-    fallbackTitle: "El vídeo del portavoz está listo para añadirse",
+    playLabel: "Ver video",
+    unavailableLabel: "Vista previa de video no disponible",
+    previewTitle: "Vista previa del video de presentación de Taskcover",
+    modalTitle: "Video de presentación de Taskcover",
+    closeLabel: "Cerrar video",
+    fallbackTitle: "Video de presentación de Taskcover",
     fallbackBody:
-      "La tarjeta está configurada para un futuro vídeo de introducción de Taskcover. No se carga vídeo falso ni de stock.",
+      "Vea cómo el sistema de Taskcover conecta SEO, búsqueda con IA y resultados de crecimiento.",
+    previewIframeUrl: taskcoverHeroStream.previewIframeUrl,
+    playerIframeUrl: taskcoverHeroStream.playerIframeUrl,
+    posterUrl: taskcoverHeroStream.posterUrl,
     trustChips: ["Casos verificados", "SEO + búsqueda IA + PPC", "USA · Canadá · Australia"],
   },
   searchHasChanged: {

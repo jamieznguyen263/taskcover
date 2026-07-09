@@ -20,7 +20,7 @@ import { GradientBorderCard } from "@/components/marketing/shared/gradient-borde
 import { FAQAccordion } from "@/components/marketing/shared/faq-accordion";
 import { BrandMarquee } from "@/components/marketing/home/brand-marquee";
 import { SearchEcosystemMap } from "@/components/marketing/home/search-ecosystem-map";
-import { SpokespersonVideoCard } from "@/components/marketing/home/spokesperson-video-card";
+import { HeroVideoCard } from "@/components/marketing/home/hero-video-card";
 import { OperatingSystemPipeline } from "@/components/marketing/home/operating-system-pipeline";
 import { GrowthPlaybook } from "@/components/marketing/home/growth-playbook";
 import { ServicesBento } from "@/components/marketing/home/services-bento";
@@ -81,7 +81,7 @@ export function HomeView({ home, locale = "en" }: { home: HomeContent; locale?: 
             </div>
           </div>
           <div className="relative min-w-0">
-            <SpokespersonVideoCard video={home.heroVideo} />
+            <HeroVideoCard video={home.heroVideo} />
           </div>
         </Container>
       </Section>
