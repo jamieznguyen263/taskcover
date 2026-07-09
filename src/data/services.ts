@@ -56,6 +56,53 @@ export type ServiceFaq = {
   a: string;
 };
 
+export type ServiceCta = {
+  label: string;
+  href: string;
+};
+
+export type ServicePricingPreviewPlan = {
+  id: string;
+  name: string;
+  price: string;
+  recommended?: boolean;
+  positioning: string;
+  bestFor: string[];
+  includes: string[];
+  cta?: ServiceCta;
+};
+
+export type WebsiteDevelopmentPage = {
+  whatWeBuild: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    items: { title: string; description: string }[];
+  };
+  foundation: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    groups: { title: string; items: string[] }[];
+  };
+  pricing: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    note: string;
+    plans: ServicePricingPreviewPlan[];
+    addOnsTitle: string;
+    addOns: string[];
+    ctas: ServiceCta[];
+  };
+  internalLinks: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    links: ServiceCta[];
+  };
+};
+
 /** Service-specific leverage points shown in the "Why it matters" opportunity panel. */
 export type ServiceLeveragePoint = {
   /** Short strategic bullet describing the advantage this service creates. */
@@ -89,7 +136,23 @@ export type Service = {
     | "international"
     | "audit"
     | "ppc"
-    | "mentor";
+    | "mentor"
+    | "website";
+  /** Optional service-specific CTAs. Falls back to shared template labels. */
+  heroCtas?: {
+    primary: ServiceCta;
+    secondary: ServiceCta;
+  };
+  /** Optional service-specific final CTA. */
+  finalCta?: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    primary: ServiceCta;
+    secondary: ServiceCta;
+  };
+  /** Extra commercial sections for the Website Development service. */
+  websiteDevelopment?: WebsiteDevelopmentPage;
   /** Meta title (without site suffix — the template appends it). */
   metaTitle: string;
   metaDescription: string;
@@ -900,6 +963,304 @@ export const services: Service[] = [
       { q: "How do you avoid duplicate content across markets?", a: "Through distinct market-specific content, correct architecture, and hreflang — not copied pages with the country name swapped." },
     ],
     related: ["seo-agency", "local-seo", "technical-seo", "content-marketing"],
+  },
+
+  /* ---------------------------------------------------------------------- */
+  {
+    slug: "website-development",
+    title: "Website Development",
+    shortLabel: "Website Development",
+    h1: "Build a website that search engines, AI assistants, and customers can understand.",
+    positioning:
+      "Search-ready website development for businesses that need visibility, trust, and leads.",
+    subheadline:
+      "Taskcover develops fast, conversion-ready websites with SEO architecture, AI visibility foundations, analytics, lead capture, and multilingual growth built in from day one.",
+    summary:
+      "Fast, structured, conversion-ready website development with SEO architecture, AI visibility foundations, analytics, lead capture, and multilingual growth readiness.",
+    outcomePromise:
+      "A search-ready growth engine built for visibility, trust, and qualified leads.",
+    icon: "website",
+    heroCtas: {
+      primary: { label: "Plan My Website", href: "/contact" },
+      secondary: { label: "Get a Free Website Audit", href: "/free-seo-audit" },
+    },
+    finalCta: {
+      eyebrow: "Start a website project",
+      title: "Turn your website into a search-ready growth engine.",
+      description:
+        "Plan a website that launches with clean architecture, conversion paths, analytics readiness, and SEO/GEO foundations already in place.",
+      primary: { label: "Start a Website Project", href: "/contact" },
+      secondary: { label: "Book a Call", href: "/book-a-call" },
+    },
+    metaTitle: "Website Development Services for SEO, AI Visibility & Leads",
+    metaDescription:
+      "Taskcover builds fast, search-ready websites with SEO architecture, AI visibility foundations, analytics, lead capture, and multilingual growth readiness.",
+    problem: {
+      title: "A beautiful website is not enough.",
+      paragraphs: [
+        "A polished site still underperforms if Google cannot crawl it, AI assistants cannot understand it, and visitors do not know what to do next.",
+        "Taskcover does not build websites first and add SEO later. Architecture, structured data, conversion paths, analytics readiness, and multilingual growth are planned before design and development begin.",
+      ],
+      bullets: [
+        "Looks good, but loads slowly",
+        "Pages exist, but no keyword architecture",
+        "Content is published, but internal linking is weak",
+        "Traffic arrives, but leads are not captured",
+        "AI answers mention competitors, not your brand",
+      ],
+      leveragePoints: [
+        { text: "Give search engines a clean structure to crawl and index." },
+        { text: "Give AI systems clearer entities, schema, and source paths." },
+        { text: "Give visitors focused routes to contact, audit, and booking actions." },
+        { text: "Launch with analytics and lead capture readiness instead of retrofitting it later." },
+      ],
+    },
+    approach: {
+      title: "The Taskcover Website Growth System.",
+      paragraphs: [
+        "Website development is handled as a growth system, not a page build. Research shapes information architecture, architecture shapes UX, and development is validated against SEO, conversion, analytics, and launch risk before the site goes live.",
+        "The result is a website that is easier for customers to use, easier for Google and AI assistants to understand, and easier for your team to improve after launch.",
+      ],
+      stages: [
+        { label: "Research", description: "Business goals, audiences, search demand, competitors, and conversion paths." },
+        { label: "Information Architecture", description: "Sitemap, page ownership, clean URLs, and internal linking logic." },
+        { label: "UX/UI", description: "Responsive page systems designed for trust, clarity, and lead generation." },
+        { label: "Development", description: "Fast, maintainable implementation with accessible components and clean routing." },
+        { label: "Technical SEO", description: "Metadata, schema, sitemap, robots, performance, and crawl readiness." },
+        { label: "Content System", description: "Service pages, landing pages, content hubs, and multilingual readiness." },
+        { label: "Analytics", description: "Consent-aware analytics and event readiness for forms, audit CTAs, and bookings." },
+        { label: "Launch QA", description: "Pre-launch checks for routes, redirects, performance, indexation, forms, and tracking." },
+        { label: "Growth Iteration", description: "Post-launch improvement plan tied to search visibility and lead quality." },
+      ],
+    },
+    deliverables: [
+      { title: "Website strategy", description: "Project goals, buyer journeys, launch risk, and growth priorities.", tag: "Strategy" },
+      { title: "Sitemap and page architecture", description: "Clean URL structure, page ownership, and internal linking paths.", tag: "Foundation" },
+      { title: "UX/UI design", description: "Responsive layouts built for trust, clarity, and conversion.", tag: "Conversion" },
+      { title: "Responsive development", description: "Fast, maintainable pages that work across desktop and mobile.", tag: "Technical" },
+      { title: "SEO metadata", description: "Page titles, descriptions, canonical logic, and search-ready structure.", tag: "Technical" },
+      { title: "Schema setup", description: "Structured data for clearer entities, services, breadcrumbs, and FAQs where relevant.", tag: "AI Search" },
+      { title: "Performance optimization", description: "Core Web Vitals and launch-speed priorities built into delivery.", tag: "Technical" },
+      { title: "Lead forms", description: "Contact, audit, and booking-ready conversion paths.", tag: "Conversion" },
+      { title: "Analytics readiness", description: "Consent-aware analytics and event readiness for the conversion layer.", tag: "Analytics" },
+      { title: "Launch QA", description: "Pre-launch checks across routes, metadata, forms, responsiveness, and indexation.", tag: "Priority" },
+      { title: "Post-launch improvement plan", description: "A growth iteration backlog for search, content, and conversion improvements.", tag: "Ongoing" },
+    ],
+    useCases: [
+      { audience: "Local service businesses", detail: "Need a site that turns local search demand into calls, forms, and bookings.", signal: "Your current website looks acceptable but does not generate consistent local leads." },
+      { audience: "B2B companies", detail: "Need service pages, trust proof, analytics, and conversion paths aligned to long sales cycles.", signal: "Buyers research you, but the site does not explain the offer clearly enough." },
+      { audience: "Healthcare and wellness brands", detail: "Need a trust-first site structure with clear service pages and careful conversion paths.", signal: "You need a professional web presence without unsupported health or outcome claims." },
+      { audience: "Education providers", detail: "Need program, admissions, and authority content organized for search and inquiry capture.", signal: "Program pages exist but search intent, internal linking, and forms are fragmented." },
+      { audience: "Consulting firms", detail: "Need authority, service clarity, and lead capture without generic agency positioning.", signal: "Your expertise is strong but the website does not make it easy to evaluate or contact you." },
+      { audience: "Agencies needing white-label support", detail: "Need structured development support that respects SEO, analytics, and launch QA.", signal: "Your team needs senior web execution without diluting your client relationship." },
+      { audience: "Companies rebuilding outdated websites", detail: "Need redesign and migration planning without losing existing search value.", signal: "You want a modern site but cannot afford a traffic drop after launch." },
+    ],
+    process: [
+      { title: "Discovery and website strategy", description: "Clarify goals, buyers, content needs, SEO ownership, and conversion paths.", timing: "Week 1" },
+      { title: "Architecture and scope", description: "Define sitemap, page count, page roles, integrations, languages, and launch risk.", timing: "Weeks 1-2" },
+      { title: "UX/UI system", description: "Design responsive page templates, trust modules, lead paths, and content structure.", timing: "Weeks 2-4" },
+      { title: "Development and SEO foundation", description: "Build pages with clean URLs, metadata, schema, performance, and analytics readiness.", timing: "Weeks 4-8" },
+      { title: "Launch QA and growth iteration", description: "Validate forms, tracking readiness, redirects, responsiveness, indexation, and post-launch priorities.", timing: "Launch" },
+    ],
+    outcomes: [
+      { label: "Cleaner search architecture", description: "Pages mapped to intent, services, and internal linking paths." },
+      { label: "Better AI visibility foundations", description: "Entities, schema, and structured content are easier for AI systems to understand." },
+      { label: "Faster user experience", description: "Performance and Core Web Vitals are addressed during the build." },
+      { label: "Stronger lead capture", description: "Contact, audit, booking, and thank-you paths are planned before launch." },
+      { label: "Lower launch risk", description: "Migration, redirects, analytics continuity, and QA are built into the delivery path." },
+    ],
+    faqs: [
+      { q: "Do you build websites from scratch?", a: "Yes. Taskcover builds new marketing, service, lead generation, and content-driven websites with SEO architecture and conversion paths planned from the start." },
+      { q: "Can you redesign an existing website without losing SEO value?", a: "Yes. Rebuilds can include URL inventory, redirect mapping, metadata preservation, indexation control, analytics continuity, and pre-launch and post-launch QA." },
+      { q: "Do website projects include SEO?", a: "They include SEO/GEO foundations: keyword-to-page mapping, clean URLs, metadata, schema, internal linking paths, performance priorities, and AI visibility foundations. Ongoing SEO execution is scoped separately when needed." },
+      { q: "Can you support multilingual websites?", a: "Yes. Multilingual architecture, hreflang where relevant, and localization readiness can be scoped for English, French, Spanish, or multi-market growth." },
+      { q: "Do you integrate booking, email, or CRM systems?", a: "We can scope Cal.com booking readiness, Resend notification readiness, CRM-ready lead capture, and HubSpot integration readiness depending on project complexity." },
+      { q: "Are the listed prices fixed?", a: "No. They are starting points. Final scope depends on page count, content depth, integrations, migration complexity, multilingual requirements, and timeline." },
+    ],
+    websiteDevelopment: {
+      whatWeBuild: {
+        eyebrow: "What we build",
+        title: "Commercial websites with search, trust, and lead capture built in.",
+        description:
+          "The build can be scoped around a focused launch site, a content-led growth site, a multilingual platform, or a careful SEO rebuild.",
+        items: [
+          { title: "Marketing websites", description: "Clear brand, offer, proof, and conversion paths." },
+          { title: "Service websites", description: "Search-ready service pages mapped to buyer intent." },
+          { title: "SEO landing pages", description: "Focused pages for commercial demand and campaign traffic." },
+          { title: "Multilingual websites", description: "Language and market structure prepared for growth." },
+          { title: "Lead generation websites", description: "Forms, audit CTAs, booking paths, and thank-you flows." },
+          { title: "Technical rebuilds", description: "Redesigns with migration planning and search protection." },
+          { title: "Content hubs / Insights systems", description: "Structured publishing areas that support authority and AI visibility." },
+          { title: "Conversion funnels", description: "Page flows that route visitors toward contact, booking, and audit requests." },
+        ],
+      },
+      foundation: {
+        eyebrow: "Built in from day one",
+        title: "The technical, SEO/GEO, and conversion layers are planned before launch.",
+        description:
+          "A Taskcover website is scoped around more than page count. The foundation covers crawlability, structured understanding, analytics readiness, and lead capture.",
+        groups: [
+          {
+            title: "Technical foundation",
+            items: [
+              "Core Web Vitals",
+              "Clean URLs",
+              "Schema markup",
+              "Sitemap / robots",
+              "Hreflang where relevant",
+              "Consent-aware analytics",
+              "Lead forms",
+              "Cloudflare-ready deployment",
+              "Launch QA",
+            ],
+          },
+          {
+            title: "SEO/GEO built in",
+            items: [
+              "Keyword-to-page mapping",
+              "Service page architecture",
+              "Entity clarity",
+              "AI visibility foundations",
+              "Structured data",
+              "Internal linking paths",
+            ],
+          },
+          {
+            title: "Conversion layer",
+            items: [
+              "Contact forms",
+              "Free audit CTA",
+              "Booking CTA",
+              "Thank-you flow",
+              "Resend notification readiness",
+              "Cal.com booking readiness",
+              "CRM-ready lead capture",
+              "Analytics events",
+            ],
+          },
+        ],
+      },
+      pricing: {
+        eyebrow: "Website Development Pricing",
+        title: "Website development pricing built around growth, not just pages.",
+        description:
+          "Every website project is scoped around page count, content needs, SEO architecture, integrations, language requirements, and launch risk. Clear starting prices help you understand the investment before we define the final scope.",
+        note:
+          "Prices are starting points. Final scope depends on page count, content depth, integrations, migration complexity, multilingual requirements, and timeline.",
+        plans: [
+          {
+            id: "website-launch",
+            name: "Website Launch",
+            price: "From $3,500 one-time",
+            positioning: "New businesses needing a professional search-ready site.",
+            bestFor: ["New businesses needing a professional search-ready site"],
+            includes: [
+              "4-6 core pages",
+              "Website strategy + sitemap",
+              "Responsive UX/UI",
+              "Search-ready page structure",
+              "Basic on-page SEO setup",
+              "Core metadata",
+              "Basic schema",
+              "Contact / lead form",
+              "Analytics + consent readiness",
+              "Launch QA",
+            ],
+            cta: { label: "Plan Website Launch", href: "/contact" },
+          },
+          {
+            id: "growth-website",
+            name: "Growth Website",
+            price: "From $6,500 one-time",
+            recommended: true,
+            positioning:
+              "Businesses that need SEO, AI visibility, and lead generation from day one.",
+            bestFor: ["Businesses that need SEO, AI visibility, and lead generation from day one"],
+            includes: [
+              "8-12 strategic pages",
+              "Keyword-to-page mapping",
+              "Service page architecture",
+              "UX/UI design",
+              "Responsive development",
+              "SEO/GEO foundation",
+              "Schema + internal linking structure",
+              "Lead capture flow",
+              "Cal.com booking readiness",
+              "Resend notification readiness",
+              "Analytics event readiness",
+              "Performance optimization",
+              "Launch QA",
+            ],
+            cta: { label: "Start Growth Website", href: "/book-a-call" },
+          },
+          {
+            id: "seo-rebuild-migration",
+            name: "SEO Rebuild + Migration",
+            price: "From $9,500 one-time",
+            positioning:
+              "Existing websites that need redesign without losing search value.",
+            bestFor: ["Existing websites that need redesign without losing search value"],
+            includes: [
+              "Technical website audit",
+              "URL inventory",
+              "Redirect mapping",
+              "Content structure cleanup",
+              "SEO migration plan",
+              "Rebuild / redesign",
+              "Performance optimization",
+              "Schema cleanup",
+              "Indexation control",
+              "Analytics continuity",
+              "Pre-launch and post-launch QA",
+            ],
+            cta: { label: "Plan SEO Rebuild", href: "/book-a-call" },
+          },
+          {
+            id: "custom-growth-platform",
+            name: "Custom Growth Platform",
+            price: "Custom, from $15,000+",
+            positioning:
+              "Complex, multilingual, CMS, CRM, or multi-location builds.",
+            bestFor: ["Complex, multilingual, CMS, CRM, or multi-location builds"],
+            includes: [
+              "Multilingual website",
+              "Content hub / Insights system",
+              "CMS/admin workflow",
+              "CRM / HubSpot integration readiness",
+              "Advanced lead routing",
+              "Custom dashboards",
+              "Multi-location architecture",
+              "Booking/payment integration",
+              "Complex migration",
+              "Custom Cloudflare/hosting setup",
+            ],
+            cta: { label: "Request Custom Scope", href: "/contact" },
+          },
+        ],
+        addOnsTitle: "Optional add-ons",
+        addOns: ["Website Care: From $199/mo", "Growth Support: From $750/mo"],
+        ctas: [
+          { label: "View Website Pricing", href: "/pricing?tab=websites" },
+          { label: "Get a Free Website Audit", href: "/free-seo-audit" },
+        ],
+      },
+      internalLinks: {
+        eyebrow: "Plan the next step",
+        title: "Connect the website build to the rest of your growth system.",
+        description:
+          "Use these routes to compare pricing, request an audit, book a call, review methodology, or see how insights support the content system.",
+        links: [
+          { label: "Website pricing", href: "/pricing?tab=websites" },
+          { label: "Free website audit", href: "/free-seo-audit" },
+          { label: "Book a call", href: "/book-a-call" },
+          { label: "Contact", href: "/contact" },
+          { label: "All pricing", href: "/pricing" },
+          { label: "Insights", href: "/insights" },
+          { label: "Methodology", href: "/methodology" },
+        ],
+      },
+    },
+    related: ["seo-agency", "technical-seo", "ai-search-optimization", "content-marketing"],
   },
 
   /* ---------------------------------------------------------------------- */

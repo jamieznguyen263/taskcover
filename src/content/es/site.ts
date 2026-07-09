@@ -52,6 +52,12 @@ export const site: SiteContent = {
               description: "Sistemas de contenido experto conectados con intencion de ingresos.",
               chip: "Autoridad",
             },
+            {
+              label: "Desarrollo web",
+              href: "/services/website-development",
+              description: "Sitios listos para busqueda, construidos para SEO, visibilidad IA y generacion de leads.",
+              chip: "Web",
+            },
           ],
         },
         {
@@ -309,6 +315,7 @@ export const site: SiteContent = {
           { label: "SEO tecnico", href: "/services/technical-seo" },
           { label: "Optimizacion busqueda IA", href: "/services/ai-search-optimization" },
           { label: "Marketing de contenidos", href: "/services/content-marketing" },
+          { label: "Desarrollo web", href: "/services/website-development" },
           { label: "RP digitales y enlaces", href: "/services/digital-pr-link-building" },
           { label: "Gestion PPC", href: "/services/ppc-management" },
           { label: "SEO local", href: "/services/local-seo" },

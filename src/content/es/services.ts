@@ -792,6 +792,178 @@ export const services: ServicesContent = {
         { q: "¿Cómo rastrean el rendimiento PPC?", a: "A través del seguimiento de conversiones de extremo a extremo — desde el clic hasta el lead hasta los ingresos — para que vea el retorno real del gasto publicitario." },
       ],
     },
+    "website-development": {
+      title: "Desarrollo web",
+      shortLabel: "Desarrollo web",
+      h1: "Construya un sitio web que motores de busqueda, asistentes IA y clientes puedan entender.",
+      positioning: "Desarrollo web listo para busqueda para empresas que necesitan visibilidad, confianza y leads.",
+      subheadline:
+        "Taskcover desarrolla sitios rapidos y listos para convertir, con arquitectura SEO, bases de visibilidad IA, analytics, captura de leads y crecimiento multilingue desde el primer dia.",
+      summary:
+        "Desarrollo web rapido, estructurado y preparado para conversion, con arquitectura SEO, schema, performance, analytics y captacion de leads integrados.",
+      outcomePromise: "Un sitio web que Google puede rastrear, la IA puede entender y los compradores pueden usar para contactar.",
+      metaTitle: "Desarrollo web para SEO, visibilidad IA y leads",
+      metaDescription:
+        "Desarrollo web listo para busqueda con arquitectura SEO, bases de visibilidad IA, analytics, captacion de leads, performance y preparacion multilingue.",
+      problem: {
+        title: "Un sitio bonito no basta si la busqueda no lo entiende.",
+        paragraphs: [
+          "Muchos sitios se ven bien, pero cargan lento, no tienen arquitectura de palabras clave, enlazado interno debil, analytics incompleto o rutas de conversion poco claras.",
+          "Taskcover planifica arquitectura, datos estructurados, rutas de conversion, analytics y crecimiento multilingue antes de disenar y desarrollar.",
+        ],
+        bullets: [
+          "Se ve bien, pero carga lento",
+          "Hay paginas, pero no arquitectura de palabras clave",
+          "Se publica contenido, pero el enlazado interno es debil",
+          "Llega trafico, pero no se capturan leads",
+          "Las respuestas IA mencionan competidores, no su marca",
+        ],
+        leveragePoints: [
+          { text: "Dar a Google una estructura clara para rastrear e indexar." },
+          { text: "Dar a sistemas IA entidades, schema y fuentes mas faciles de entender." },
+          { text: "Dar a visitantes rutas claras hacia contacto, auditoria y reserva." },
+          { text: "Lanzar con analytics y captura de leads preparados desde el inicio." },
+        ],
+      },
+      approach: {
+        title: "Taskcover Website Growth System",
+        paragraphs: [
+          "No construimos primero el sitio para agregar SEO despues. Investigacion, arquitectura, UX/UI, desarrollo, SEO tecnico, contenido, analytics, QA y mejora continua se conectan desde el inicio.",
+          "El resultado es un sitio mas facil de usar para clientes, mas facil de entender para Google y asistentes IA, y mas facil de mejorar despues del lanzamiento.",
+        ],
+        stages: [
+          { label: "Investigacion", description: "Objetivos comerciales, demanda search, competidores y rutas de conversion." },
+          { label: "Arquitectura de informacion", description: "Sitemap, rol de paginas, URLs limpias y logica de enlazado interno." },
+          { label: "UX/UI", description: "Sistemas de paginas responsive disenados para confianza, claridad y generacion de leads." },
+          { label: "Desarrollo", description: "Implementacion responsive, mantenible y preparada para Cloudflare." },
+          { label: "SEO tecnico", description: "Metadatos, schema, sitemap, robots, performance y preparacion para rastreo." },
+          { label: "Sistema de contenido", description: "Paginas de servicios, landing pages, hubs de contenido y preparacion multilingue." },
+          { label: "Analytics", description: "Analytics respetuoso del consentimiento y eventos para formularios, auditorias y reservas." },
+          { label: "Launch QA", description: "Performance, schema, formularios, analytics, indexacion y enlaces revisados antes de lanzar." },
+          { label: "Iteracion de crecimiento", description: "Plan post-lanzamiento conectado a visibilidad search y calidad de leads." },
+        ],
+      },
+      deliverables: [
+        { title: "Estrategia web", description: "Definicion de objetivos, audiencia, oferta, arquitectura y riesgos de lanzamiento.", tag: "Strategy" },
+        { title: "Sitemap y arquitectura", description: "Paginas, jerarquia, URLs limpias y rutas de enlazado interno.", tag: "Foundation" },
+        { title: "Diseno UX/UI", description: "Interfaces claras, responsive y centradas en conversion sin plantillas genericas.", tag: "Conversion" },
+        { title: "Desarrollo responsive", description: "Paginas rapidas, accesibles y mantenibles en mobile y desktop.", tag: "Technical" },
+        { title: "SEO metadata y schema", description: "Metadatos base, datos estructurados y claridad de entidad cuando aplica.", tag: "Technical" },
+        { title: "Performance y QA", description: "Core Web Vitals, formularios, analytics, sitemap, robots y pruebas de lanzamiento.", tag: "Priority" },
+      ],
+      useCases: [
+        { audience: "Empresas locales de servicios", detail: "Sitios que deben generar llamadas, formularios y confianza local.", signal: "El sitio no convierte demanda local." },
+        { audience: "Empresas B2B", detail: "Arquitectura de servicios, prueba, insights y rutas de contacto para ciclos largos.", signal: "El comprador necesita entender y validar." },
+        { audience: "Salud y wellness", detail: "Paginas claras, confiables y estructuradas para categorias sensibles.", signal: "La confianza es parte de la conversion." },
+        { audience: "Educacion y consultoria", detail: "Programas, servicios, insights y autoridad conectados en un sistema.", signal: "La decision requiere contenido y prueba." },
+        { audience: "Soporte white-label", detail: "Ejecucion web y SEO para agencias que necesitan capacidad senior.", signal: "El equipo necesita apoyo especializado." },
+        { audience: "Rebuilds de sitios antiguos", detail: "Refonte con inventario de URLs, redirecciones y proteccion de valor search.", signal: "El sitio esta obsoleto o arriesga una migracion." },
+      ],
+      process: [
+        { title: "Research e IA", description: "Mapear demanda, compradores, servicios, idiomas y riesgos.", timing: "Semana 1" },
+        { title: "UX/UI y arquitectura", description: "Sitemap, estructura de paginas, wireframes y rutas CTA.", timing: "Semanas 2-3" },
+        { title: "Desarrollo y SEO tecnico", description: "Construir con URLs limpias, metadata, schema, performance y analytics.", timing: "Semanas 4-8" },
+        { title: "Launch QA e iteracion", description: "Validar formularios, rastreo, indexacion, eventos, redirecciones y mejoras post-lanzamiento.", timing: "Lanzamiento" },
+      ],
+      outcomes: [
+        { label: "Arquitectura search mas clara", description: "Paginas mapeadas a intencion, servicios y rutas de enlazado interno." },
+        { label: "Bases de visibilidad IA mas fuertes", description: "Entidades, schema y contenido estructurado mas faciles de entender." },
+        { label: "Experiencia mas rapida", description: "Performance y Core Web Vitals tratados durante la construccion." },
+        { label: "Captura de leads reforzada", description: "Contacto, auditoria, reserva y paginas thank-you planificadas antes del lanzamiento." },
+        { label: "Menor riesgo de lanzamiento", description: "Migracion, redirecciones, analytics y QA integrados al proyecto." },
+      ],
+      faqs: [
+        {
+          q: "Taskcover solo disena sitios web?",
+          a: "No. Taskcover construye sitios preparados para busqueda, IA y captacion de leads. El diseno importa, pero se conecta con arquitectura SEO, performance, schema, analytics y conversion.",
+        },
+        {
+          q: "Los precios son fijos?",
+          a: "No. Son puntos de partida. El scope final depende del numero de paginas, contenido, integraciones, migracion, idiomas y calendario.",
+        },
+        {
+          q: "Pueden reconstruir un sitio existente sin perder SEO?",
+          a: "Si, cuando el proyecto incluye inventario de URLs, mapping de redirecciones, plan de migracion, control de indexacion, continuidad analytics y QA pre/post lanzamiento.",
+        },
+        {
+          q: "Trabajan con sitios multilingues?",
+          a: "Si. Podemos estructurar sitios multilingues con slugs ingleses, hreflang cuando aplica, arquitectura de mercado y readiness de crecimiento en ingles, frances y espanol.",
+        },
+      ],
+      heroCtas: {
+        primary: { label: "Planificar mi sitio web", href: "/contact" },
+        secondary: { label: "Obtener auditoria web gratuita", href: "/free-seo-audit" },
+      },
+      finalCta: {
+        eyebrow: "Proximo paso",
+        title: "Convierta su sitio web en un motor de crecimiento listo para busqueda.",
+        description:
+          "Comparta su sitio, servicios y objetivos de mercado. Taskcover recomendara el scope web mas pequeno que pueda apoyar visibilidad, confianza y leads.",
+        primary: { label: "Empezar un proyecto web", href: "/contact" },
+        secondary: { label: "Reservar llamada", href: "/book-a-call" },
+      },
+      websiteDevelopment: {
+        whatWeBuild: {
+          eyebrow: "Que construimos",
+          title: "Sitios web comerciales conectados al crecimiento search.",
+          description: "Cada build se define por la forma en que los compradores encuentran, entienden, confian y contactan.",
+          items: [
+            { title: "Sitios marketing", description: "Marca, oferta, prueba y conversiones claras." },
+            { title: "Sitios de servicios", description: "Paginas de servicio listas para busqueda e intencion comercial." },
+            { title: "Landing pages SEO", description: "Paginas enfocadas en demanda comercial y campanas." },
+            { title: "Sitios multilingues", description: "Estructura idioma/mercado preparada para crecimiento." },
+            { title: "Sitios de generacion de leads", description: "Formularios, auditoria, reserva y paginas thank-you." },
+            { title: "Rebuilds tecnicos", description: "Redisenos con migracion y proteccion search." },
+            { title: "Content hubs / sistemas Insights", description: "Espacios de publicacion para autoridad y visibilidad IA." },
+            { title: "Funnel de conversion", description: "Recorridos hacia contacto, reserva y solicitudes de auditoria." },
+          ],
+        },
+        foundation: {
+          eyebrow: "Base tecnica",
+          title: "La base que protege visibilidad, confianza y medicion.",
+          description: "Un sitio Taskcover se define mas alla del numero de paginas: rastreabilidad, comprension estructurada, analytics y captacion de leads.",
+          groups: [
+            { title: "Base tecnica", items: ["Core Web Vitals", "URLs limpias", "Schema markup", "Sitemap / robots", "Hreflang cuando aplica", "Deployment preparado para Cloudflare", "Launch QA"] },
+            { title: "SEO/GEO integrado", items: ["Mapeo keyword-a-pagina", "Arquitectura de paginas de servicio", "Claridad de entidad", "Bases de visibilidad IA", "Datos estructurados", "Rutas de enlazado interno"] },
+            { title: "Capa de conversion", items: ["Formularios de contacto", "CTA auditoria gratuita", "CTA reserva", "Flujo thank-you", "Preparacion Resend", "Preparacion Cal.com", "Captura CRM-ready", "Eventos analytics"] },
+          ],
+        },
+        pricing: {
+          eyebrow: "Pricing",
+          title: "Precios de desarrollo web pensados alrededor del crecimiento, no solo paginas.",
+          description:
+            "Cada proyecto se define por paginas, contenido, arquitectura SEO, integraciones, idiomas y riesgo de lanzamiento. Los precios iniciales ayudan a entender la inversion antes del scope final.",
+          note:
+            "Los precios son puntos de partida. El scope final depende de paginas, profundidad de contenido, integraciones, migracion, multilingue y timeline.",
+          plans: [
+            { id: "website-launch", name: "Website Launch", price: "Desde $3,500 one-time", positioning: "Nuevas empresas que necesitan un sitio profesional listo para busqueda.", bestFor: ["Nuevas empresas que necesitan un sitio profesional listo para busqueda"], includes: ["4-6 paginas principales", "Estrategia web + sitemap", "UX/UI responsive", "Estructura lista para busqueda", "SEO on-page basico", "Metadatos core", "Schema basico", "Formulario lead", "Analytics + consentimiento", "QA lanzamiento"], cta: { label: "Start a Website Project", href: "/contact" } },
+            { id: "growth-website", name: "Growth Website", price: "Desde $6,500 one-time", recommended: true, positioning: "Empresas que necesitan SEO, visibilidad IA y leads desde el primer dia.", bestFor: ["Empresas que necesitan SEO, visibilidad IA y leads desde el primer dia"], includes: ["8-12 paginas estrategicas", "Mapping keyword-pagina", "Arquitectura de servicios", "Diseno UX/UI", "Desarrollo responsive", "Base SEO/GEO", "Schema + enlazado interno", "Flujo de leads", "Preparacion Cal.com", "Preparacion Resend", "Eventos analytics", "Performance", "QA lanzamiento"], cta: { label: "Start a Website Project", href: "/contact" } },
+            { id: "seo-rebuild-migration", name: "SEO Rebuild + Migration", price: "Desde $9,500 one-time", positioning: "Sitios existentes que necesitan rediseno sin perder valor search.", bestFor: ["Sitios existentes que necesitan rediseno sin perder valor search"], includes: ["Auditoria tecnica", "Inventario URL", "Mapping redirecciones", "Limpieza estructura contenido", "Plan migracion SEO", "Rebuild / redesign", "Performance", "Schema cleanup", "Control indexacion", "Continuidad analytics", "QA pre/post lanzamiento"], cta: { label: "Plan a rebuild", href: "/book-a-call" } },
+            { id: "custom-growth-platform", name: "Custom Growth Platform", price: "Personalizado, desde $15,000+", positioning: "Builds complejos, multilingues, CMS, CRM o multi-ubicacion.", bestFor: ["Builds complejos, multilingues, CMS, CRM o multi-ubicacion"], includes: ["Sitio multilingue", "Content hub / Insights", "Workflow CMS/admin", "CRM / HubSpot readiness", "Lead routing avanzado", "Dashboards", "Arquitectura multi-ubicacion", "Booking/pagos", "Migracion compleja", "Setup Cloudflare/hosting"], cta: { label: "Request custom scope", href: "/book-a-call" } },
+          ],
+          addOnsTitle: "Add-ons opcionales",
+          addOns: ["Website Care: desde $199/mes", "Growth Support: desde $750/mes"],
+          ctas: [
+            { label: "Ver precios web", href: "/pricing?tab=websites" },
+            { label: "Auditoria gratuita", href: "/free-seo-audit" },
+          ],
+        },
+        internalLinks: {
+          eyebrow: "Proximo paso",
+          title: "Conectar el sitio con el resto del sistema de crecimiento.",
+          description: "Compare precios, solicite auditoria, reserve una llamada o revise metodologia e insights.",
+          links: [
+            { label: "Precios web", href: "/pricing?tab=websites" },
+            { label: "Auditoria gratuita", href: "/free-seo-audit" },
+            { label: "Reservar llamada", href: "/book-a-call" },
+            { label: "Contacto", href: "/contact" },
+            { label: "Todos los precios", href: "/pricing" },
+            { label: "Insights", href: "/insights" },
+            { label: "Metodologia", href: "/methodology" },
+          ],
+        },
+      },
+    },
     "seo-mentor-service": {
       title: "Servicio de mentoría SEO",
       shortLabel: "Mentoría SEO",
@@ -968,7 +1140,7 @@ export const services: ServicesContent = {
     ninetyDayPlan: "Plan a 90 días",
     illustrative: "Ilustrativo — cada auditoría se adapta a su mercado y a sus objetivos.",
     allServices: "Todos los servicios",
-    allServicesTitle: "Once servicios conectados. Un sistema operativo.",
+    allServicesTitle: "Doce servicios conectados. Un sistema operativo.",
     allServicesDesc:
       "Active una capacidad o el sistema completo. En cualquier caso, el trabajo se mide por visibilidad, confianza, prospectos e ingresos.",
     notSureEyebrow: "Empiece con una imagen clara",
@@ -1054,6 +1226,13 @@ export const services: ServicesContent = {
         "Mapa de enlazado interno",
         "Ejemplo de brief editorial",
         "Prioridades de contenido de conversión",
+      ],
+      "website-development": [
+        "Estrategia web y sitemap",
+        "Revisión de arquitectura SEO",
+        "Flujo de captura de leads",
+        "Preparación analytics",
+        "Checklist QA de lanzamiento",
       ],
       "digital-pr-link-building": [
         "Revisión de señales de autoridad",

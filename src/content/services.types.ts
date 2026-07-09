@@ -34,7 +34,15 @@ export type ServiceLocalized = Pick<
   | "metaTitle"
   | "metaDescription"
 > &
-  Partial<ServiceDeepLocalized>;
+  Partial<ServiceDeepLocalized> &
+  Partial<
+    Pick<
+      Service,
+      | "heroCtas"
+      | "finalCta"
+      | "websiteDevelopment"
+    >
+  >;
 
 /** Localized services hub content. */
 export type ServicesHubLocalized = {

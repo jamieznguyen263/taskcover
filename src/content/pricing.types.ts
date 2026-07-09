@@ -1,4 +1,4 @@
-export const pricingTabIds = ["local", "national", "global", "mentor", "audits"] as const;
+export const pricingTabIds = ["local", "national", "global", "websites", "mentor", "audits"] as const;
 export type PricingTabId = (typeof pricingTabIds)[number];
 export const defaultPricingTabId: PricingTabId = "local";
 

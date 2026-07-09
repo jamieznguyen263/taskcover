@@ -122,6 +122,12 @@ export const megaMenu: MegaMenuItem[] = [
             description: "Expert-led content systems mapped to revenue intent.",
             chip: "Authority",
           },
+          {
+            label: "Website Development",
+            href: "/services/website-development",
+            description: "Search-ready websites built for SEO, AI visibility, and lead generation.",
+            chip: "Websites",
+          },
         ],
       },
       {
@@ -268,6 +274,7 @@ export const site: SiteContent = {
           { label: "Technical SEO", href: "/services/technical-seo" },
           { label: "AI Search Optimization", href: "/services/ai-search-optimization" },
           { label: "Content Marketing", href: "/services/content-marketing" },
+          { label: "Website Development", href: "/services/website-development" },
           { label: "Digital PR & Link Building", href: "/services/digital-pr-link-building" },
           { label: "PPC Management", href: "/services/ppc-management" },
           { label: "Local SEO", href: "/services/local-seo" },

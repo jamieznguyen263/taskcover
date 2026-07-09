@@ -94,6 +94,7 @@ export const leads: LeadsContent = {
       { value: "technical-seo", label: "Technical SEO" },
       { value: "ai-search-optimization", label: "AI search optimization" },
       { value: "content-marketing", label: "Content marketing" },
+      { value: "website-development", label: "Website development" },
       { value: "digital-pr-link-building", label: "Digital PR & authority" },
       { value: "local-seo", label: "Local SEO" },
       { value: "ecommerce-seo", label: "eCommerce SEO" },

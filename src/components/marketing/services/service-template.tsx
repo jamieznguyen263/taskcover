@@ -8,10 +8,12 @@ import {
   Target,
   TrendingUp,
   Sparkles,
+  Layers3,
   LayoutGrid,
   ListChecks,
   Gauge,
   Check,
+  ShieldCheck,
   Zap,
   GitBranch,
   Trophy,
@@ -98,6 +100,8 @@ export function ServiceBreadcrumb({
 export function ServicePageHero({ service, locale }: { service: Service; locale: Locale }) {
   const ui = useUI();
   const loc = (path: string) => localizePath(path, locale);
+  const primaryCta = service.heroCtas?.primary ?? { label: ui.heroCtaPrimary, href: "/free-seo-audit" };
+  const secondaryCta = service.heroCtas?.secondary ?? { label: ui.heroCtaSecondary, href: "/book-a-call" };
   return (
     <Section
       background="tint"
@@ -126,12 +130,12 @@ export function ServicePageHero({ service, locale }: { service: Service; locale:
             {service.subheadline}
           </p>
           <div className="mt-1 flex flex-col gap-3 sm:flex-row">
-            <CTAButton size="lg" href={loc("/free-seo-audit")}>
-              {ui.heroCtaPrimary}
+            <CTAButton size="lg" href={loc(primaryCta.href)}>
+              {primaryCta.label}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </CTAButton>
-            <CTAButton variant="secondary" size="lg" href={loc("/book-a-call")}>
-              {ui.heroCtaSecondary}
+            <CTAButton variant="secondary" size="lg" href={loc(secondaryCta.href)}>
+              {secondaryCta.label}
             </CTAButton>
           </div>
         </div>
@@ -639,6 +643,179 @@ export function ServiceOutcomes({ service }: { service: Service }) {
 /* 8. Related services — "next best modules" rail (chips, not cards)         */
 /* -------------------------------------------------------------------------- */
 
+export function WebsiteDevelopmentSections({
+  service,
+  locale,
+}: {
+  service: Service;
+  locale: Locale;
+}) {
+  const website = service.websiteDevelopment;
+  const ui = useUI();
+  const loc = (path: string) => localizePath(path, locale);
+  if (!website) return null;
+
+  return (
+    <>
+      <Section background="soft" aria-labelledby="website-build-types-title">
+        <Container className="flex flex-col gap-8">
+          <SectionHeader
+            align="left"
+            eyebrow={website.whatWeBuild.eyebrow}
+            titleId="website-build-types-title"
+            title={website.whatWeBuild.title}
+            description={website.whatWeBuild.description}
+          />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {website.whatWeBuild.items.map((item, index) => (
+              <article key={item.title} className="card-lift rounded-2xl border border-line bg-white p-5 hover:border-brand-teal/40">
+                <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-surface-tint text-xs font-bold text-brand-teal">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <h3 className="mt-4 text-base font-semibold text-graphite">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-secondary">{item.description}</p>
+              </article>
+            ))}
+          </div>
+        </Container>
+      </Section>
+
+      <Section background="default" aria-labelledby="website-foundation-title">
+        <Container className="flex flex-col gap-8">
+          <SectionHeader
+            align="left"
+            eyebrow={website.foundation.eyebrow}
+            titleId="website-foundation-title"
+            title={website.foundation.title}
+            description={website.foundation.description}
+          />
+          <div className="grid gap-5 lg:grid-cols-3">
+            {website.foundation.groups.map((group) => (
+              <article key={group.title} className="rounded-3xl border border-line bg-white p-6 depth-layered">
+                <div className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-gradient text-white">
+                  <Layers3 className="h-5 w-5" aria-hidden="true" />
+                </div>
+                <h3 className="text-xl font-semibold tracking-tight text-graphite">{group.title}</h3>
+                <ul className="mt-5 grid gap-2">
+                  {group.items.map((item) => (
+                    <li key={item} className="flex gap-2 text-sm leading-relaxed text-secondary">
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand-green" aria-hidden="true" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </Container>
+      </Section>
+
+      <Section background="tint" aria-labelledby="website-pricing-title">
+        <Container className="flex flex-col gap-8">
+          <SectionHeader
+            align="left"
+            eyebrow={website.pricing.eyebrow}
+            titleId="website-pricing-title"
+            title={website.pricing.title}
+            description={website.pricing.description}
+          />
+          <div className="grid gap-4 lg:grid-cols-4">
+            {website.pricing.plans.map((plan) => (
+              <article
+                key={plan.id}
+                className={cn(
+                  "relative flex h-full flex-col rounded-2xl border bg-white p-5 shadow-[0_20px_48px_-34px_rgba(24,138,172,0.45)]",
+                  plan.recommended ? "border-brand-teal/50 ring-2 ring-brand-teal/10" : "border-line"
+                )}
+              >
+                {plan.recommended ? (
+                  <span className="mb-3 inline-flex w-fit items-center gap-1.5 rounded-full bg-brand-gradient px-3 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
+                    <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
+                    {ui.ninetyDayPlan}
+                  </span>
+                ) : null}
+                <h3 className="text-xl font-semibold tracking-tight text-graphite">{plan.name}</h3>
+                <p className="mt-2 text-2xl font-semibold text-brand-teal">{plan.price}</p>
+                <p className="mt-2 text-sm leading-relaxed text-secondary">{plan.positioning}</p>
+                <div className="mt-5 grid gap-4">
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">{ui.useCasesTitle}</p>
+                    <ul className="mt-2 grid gap-1.5">
+                      {plan.bestFor.map((item) => (
+                        <li key={item} className="text-sm leading-relaxed text-secondary">{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted">{ui.deliverablesScope}</p>
+                    <ul className="mt-2 grid gap-1.5">
+                      {plan.includes.map((item) => (
+                        <li key={item} className="flex gap-2 text-sm leading-relaxed text-secondary">
+                          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-teal" aria-hidden="true" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                {plan.cta ? (
+                  <div className="mt-auto pt-5">
+                    <CTAButton href={loc(plan.cta.href)} size="md" variant={plan.recommended ? "primary" : "secondary"} className="w-full">
+                      {plan.cta.label}
+                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    </CTAButton>
+                  </div>
+                ) : null}
+              </article>
+            ))}
+          </div>
+          <div className="grid gap-4 rounded-3xl border border-line bg-white p-5 sm:grid-cols-[1fr_auto] sm:items-center">
+            <div>
+              <p className="text-sm font-semibold text-graphite">{website.pricing.note}</p>
+              <p className="mt-3 text-[10px] font-semibold uppercase tracking-wide text-muted">{website.pricing.addOnsTitle}</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {website.pricing.addOns.map((addOn) => (
+                  <span key={addOn} className="rounded-full border border-brand-teal/20 bg-surface-tint px-3 py-1 text-xs font-semibold text-brand-teal">
+                    {addOn}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-col gap-2 sm:items-end">
+              {website.pricing.ctas.map((cta, index) => (
+                <CTAButton key={`${cta.label}-${cta.href}`} href={loc(cta.href)} size="md" variant={index === 0 ? "primary" : "secondary"}>
+                  {cta.label}
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </CTAButton>
+              ))}
+            </div>
+          </div>
+        </Container>
+      </Section>
+
+      <Section background="soft" aria-labelledby="website-internal-links-title">
+        <Container>
+          <div className="rounded-3xl border border-line bg-white p-6 depth-layered sm:p-8">
+            <Eyebrow>{website.internalLinks.eyebrow}</Eyebrow>
+            <h2 id="website-internal-links-title" className="mt-3 max-w-3xl text-balance text-3xl font-semibold tracking-tight text-graphite sm:text-4xl">
+              {website.internalLinks.title}
+            </h2>
+            <p className="mt-3 max-w-3xl text-secondary">{website.internalLinks.description}</p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              {website.internalLinks.links.map((link) => (
+                <Link key={`${link.label}-${link.href}`} href={loc(link.href)} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-surface-tint px-4 py-2 text-sm font-semibold text-graphite transition hover:border-brand-teal/40 hover:text-brand-teal">
+                  {link.label}
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+              ))}
+            </div>
+          </div>
+        </Container>
+      </Section>
+    </>
+  );
+}
+
 export function RelatedServices({ service, locale }: { service: Service; locale: Locale }) {
   const ui = useUI();
   const loc = (path: string) => localizePath(path, locale);
@@ -719,6 +896,7 @@ const ctaPreviewIconsBySlug: Partial<Record<string, React.ElementType[]>> = {
   "technical-seo": [Search, Gauge, ListChecks, AlertTriangle, GitBranch],
   "ai-search-optimization": [Sparkles, Search, Target, ListChecks, GitBranch],
   "content-marketing": [ListChecks, Check, GitBranch, Target, Zap],
+  "website-development": [Layers3, Gauge, ShieldCheck, GitBranch, Target],
   "digital-pr-link-building": [Gauge, Target, Sparkles, AlertTriangle, GitBranch],
   "local-seo": [ListChecks, Search, Target, Check, GitBranch],
   "ecommerce-seo": [GitBranch, Search, AlertTriangle, Target, ListChecks],
@@ -733,6 +911,9 @@ const ctaPreviewIconsDefault: React.ElementType[] = [ListChecks, Target, Sparkle
 export function ServiceCTA({ service, locale }: { service: Service; locale: Locale }) {
   const ui = useUI();
   const loc = (path: string) => localizePath(path, locale);
+  const cta = service.finalCta;
+  const primaryCta = cta?.primary ?? { label: ui.heroCtaPrimary, href: "/free-seo-audit" };
+  const secondaryCta = cta?.secondary ?? { label: ui.heroCtaSecondary, href: "/book-a-call" };
   const labels = ui.ctaPreviewLabels[service.slug] ?? ui.ctaPreviewDefault;
   const icons = ctaPreviewIconsBySlug[service.slug] ?? ctaPreviewIconsDefault;
   const previewRows = labels.map((label, i) => ({
@@ -750,20 +931,20 @@ export function ServiceCTA({ service, locale }: { service: Service; locale: Loca
           <div className="relative grid gap-8 p-8 sm:p-12 lg:grid-cols-[1.1fr_0.9fr]">
             {/* left: copy + CTA */}
             <div className="flex flex-col items-start gap-5">
-              <Eyebrow>{ui.ctaEyebrow}</Eyebrow>
+              <Eyebrow>{cta?.eyebrow ?? ui.ctaEyebrow}</Eyebrow>
               <h2 className="max-w-xl text-balance text-3xl font-semibold tracking-tight text-graphite sm:text-4xl lg:text-[2.5rem] lg:leading-[1.1]">
-                {ui.ctaTitle.replace("{service}", service.shortLabel.toLowerCase())}
+                {cta?.title ?? ui.ctaTitle.replace("{service}", service.shortLabel.toLowerCase())}
               </h2>
               <p className="max-w-lg text-secondary">
-                {ui.ctaDesc}
+                {cta?.description ?? ui.ctaDesc}
               </p>
               <div className="flex flex-col gap-3 sm:flex-row">
-                <CTAButton size="lg" href={loc("/free-seo-audit")}>
-                  {ui.heroCtaPrimary}
+                <CTAButton size="lg" href={loc(primaryCta.href)}>
+                  {primaryCta.label}
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </CTAButton>
-                <CTAButton variant="secondary" size="lg" href={loc("/book-a-call")}>
-                  {ui.heroCtaSecondary}
+                <CTAButton variant="secondary" size="lg" href={loc(secondaryCta.href)}>
+                  {secondaryCta.label}
                 </CTAButton>
               </div>
             </div>
@@ -807,6 +988,7 @@ export function ServicePageTemplate({ service, ui, locale = "en" }: { service: S
     <ServiceUIContext.Provider value={ui}>
       <ServicePageHero service={service} locale={locale} />
       <ServiceProblemSection service={service} />
+      <WebsiteDevelopmentSections service={service} locale={locale} />
       <ServiceApproachSection service={service} />
       <ServiceDeliverables service={service} />
       <ServiceUseCases service={service} />

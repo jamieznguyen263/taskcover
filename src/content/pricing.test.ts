@@ -22,16 +22,17 @@ describe("pricing page content architecture", () => {
       expect(content.hero.h1).toBeTruthy();
       expect(content.recurringNote).toMatch(/USD/);
       expect(content.scopeNote).toBeTruthy();
-      expect(content.tabs.items).toHaveLength(5);
+      expect(content.tabs.items).toHaveLength(6);
       expect(content.comparison.columns).toHaveLength(6);
       expect(content.comparison.contextTitle).toBeTruthy();
       expect(content.comparison.fullComparisonLabel).toBeTruthy();
       expect(content.comparison.rows.length).toBeGreaterThanOrEqual(15);
-      expect(content.decisionGuide.paths).toHaveLength(5);
+      expect(content.decisionGuide.paths).toHaveLength(6);
       expect(content.decisionGuide.paths.map((path) => path.tabId)).toEqual([
         "local",
         "national",
         "global",
+        "websites",
         "mentor",
         "audits",
       ]);
@@ -43,7 +44,7 @@ describe("pricing page content architecture", () => {
             ? "SEO international"
             : "SEO internacional"
       );
-      expect(content.faq.items).toHaveLength(14);
+      expect(content.faq.items).toHaveLength(15);
     }
   });
 
@@ -62,12 +63,15 @@ describe("pricing page content architecture", () => {
     const plans = allPlans("en");
     const local = plans.find((plan) => plan.id === "local-starter");
     const nationalGrowth = plans.find((plan) => plan.id === "national-growth");
+    const growthWebsite = plans.find((plan) => plan.id === "growth-website");
     const mentorGrowth = plans.find((plan) => plan.id === "mentor-growth-advisory");
     const ppc = plans.find((plan) => plan.id === "ppc-management");
 
     expect(local?.price).toBe("From $1,000/month");
     expect(local?.scopeGuard).toContain("Designed for one location");
     expect(nationalGrowth?.recommended).toBe(true);
+    expect(growthWebsite?.recommended).toBe(true);
+    expect(growthWebsite?.price).toBe("From $6,500 one-time");
     expect(mentorGrowth?.recommended).toBe(true);
     expect(ppc?.price).toContain("10-12% of ad spend");
     expect(ppc?.scopeGuard).toContain("Ad spend is not included");
@@ -80,6 +84,8 @@ describe("pricing page content architecture", () => {
   it("includes the SEO Mentor tab, comparison columns, and custom pricing section", () => {
     const content = getPricingContent("en");
     expect(content.tabs.items.map((tab) => tab.id)).toContain("mentor");
+    expect(content.tabs.items.map((tab) => tab.id)).toContain("websites");
+    expect(content.tabs.items.find((tab) => tab.id === "websites")?.plans).toHaveLength(4);
     expect(content.tabs.items.find((tab) => tab.id === "mentor")?.plans).toHaveLength(5);
     expect(content.comparison.columns.map((column) => column.id)).toEqual([
       "localStarter",

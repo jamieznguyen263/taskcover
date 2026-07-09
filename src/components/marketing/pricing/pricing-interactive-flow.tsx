@@ -21,6 +21,12 @@ const contextPlanIds: Record<PricingTabId, string[]> = {
   local: ["local-starter", "local-growth", "national-foundation"],
   national: ["national-foundation", "national-growth", "global-expansion"],
   global: ["global-expansion", "enterprise-authority"],
+  websites: [
+    "website-launch",
+    "growth-website",
+    "seo-rebuild-migration",
+    "custom-growth-platform",
+  ],
   mentor: [
     "mentor-office-hours",
     "mentor-growth-advisory",

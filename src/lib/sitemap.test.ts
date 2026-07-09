@@ -14,6 +14,9 @@ describe("Taskcover sitemap", () => {
     expect(urls).toContain("https://taskcover.com/services/seo-agency");
     expect(urls).toContain("https://taskcover.com/fr/services/seo-agency");
     expect(urls).toContain("https://taskcover.com/es/services/seo-agency");
+    expect(urls).toContain("https://taskcover.com/services/website-development");
+    expect(urls).toContain("https://taskcover.com/fr/services/website-development");
+    expect(urls).toContain("https://taskcover.com/es/services/website-development");
     expect(urls.every((url) => !url.includes("localhost"))).toBe(true);
 
     const homepage = entries.find((entry) => entry.url === "https://taskcover.com/");
@@ -31,6 +34,7 @@ describe("Taskcover sitemap", () => {
     expect(xml).toContain('<?xml version="1.0" encoding="UTF-8"?>');
     expect(xml).toContain('xmlns:xhtml="http://www.w3.org/1999/xhtml"');
     expect(xml).toContain('<loc>https://taskcover.com/fr/services/seo-agency</loc>');
+    expect(xml).toContain('<loc>https://taskcover.com/services/website-development</loc>');
     expect(xml).toContain('hreflang="es" href="https://taskcover.com/es/services/seo-agency"');
     expect(xml).toContain("<lastmod>2026-07-05T00:00:00.000Z</lastmod>");
   });

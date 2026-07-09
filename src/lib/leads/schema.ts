@@ -24,6 +24,7 @@ export const serviceValues = [
   "technical-seo",
   "ai-search-optimization",
   "content-marketing",
+  "website-development",
   "digital-pr-link-building",
   "local-seo",
   "ecommerce-seo",

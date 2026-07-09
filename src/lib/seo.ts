@@ -121,6 +121,7 @@ export function organizationSchema() {
       "Technical SEO",
       "AI Search Optimization",
       "Content Marketing",
+      "Website Development",
       "Digital PR",
       "Local SEO",
       "eCommerce SEO",
@@ -128,6 +129,34 @@ export function organizationSchema() {
       "Search Analytics",
     ],
     logo: `${siteConfig.url}${siteConfig.logo.horizontal}`,
+  };
+}
+
+export function serviceSchema(
+  service: {
+    title: string;
+    shortLabel: string;
+    summary: string;
+    slug: string;
+  },
+  locale: Locale = defaultLocale
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: service.title,
+    serviceType: service.shortLabel,
+    description: service.summary,
+    url: `${siteConfig.url}${localizePath(`/services/${service.slug}`, locale)}`,
+    provider: {
+      "@type": "Organization",
+      name: companyDetails.brandName,
+      url: siteConfig.url,
+    },
+    areaServed: siteConfig.markets.map((country) => ({
+      "@type": "Country",
+      name: country,
+    })),
   };
 }
 

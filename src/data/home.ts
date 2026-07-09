@@ -240,6 +240,14 @@ export const servicesBento = {
       visual: "cluster",
     },
     {
+      title: "Website Development",
+      outcome: "Search-ready websites built for visibility, trust, and leads.",
+      href: "/services/website-development",
+      icon: "website",
+      span: "wide",
+      visual: "website",
+    },
+    {
       title: "Digital PR & Link Building",
       outcome: "Authority signals from real publications and partners.",
       href: "/services/digital-pr-link-building",

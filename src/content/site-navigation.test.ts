@@ -73,6 +73,7 @@ describe("global site navigation IA", () => {
     }
     expect(footerPaths).toContain("/contact");
     expect(footerPaths).toContain("/pricing");
+    expect(footerPaths).toContain("/services/website-development");
     expect(footerPaths).toContain("/free-seo-audit");
     expect(footerPaths).toContain("/book-a-call");
   });
@@ -130,5 +131,6 @@ describe("global site navigation IA", () => {
     expect(primaryByFamily.get("SEO agency")).toBe("/services/seo-agency");
     expect(primaryByFamily.get("technical SEO")).toBe("/services/technical-seo");
     expect(primaryByFamily.get("SEO services")).toBe("/services");
+    expect(siteHrefs("en").map(pathnameOnly)).toContain("/services/website-development");
   });
 });

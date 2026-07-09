@@ -2,9 +2,9 @@ import type { PricingContent } from "../pricing.types";
 
 export const pricing = {
   metadata: {
-    title: "Pricing | Local, National & Global SEO Plans | Taskcover Agency",
+    title: "Pricing | SEO & Website Development Plans | Taskcover Agency",
     description:
-      "Explore Taskcover Agency pricing for Local SEO, National SEO, Global SEO, SEO Mentor, audits, PPC management, and custom search-growth programs.",
+      "Explore Taskcover Agency pricing for Local SEO, National SEO, Global SEO, Website Development, SEO Mentor, audits, PPC management, and custom search-growth programs.",
   },
   breadcrumbs: {
     home: "Home",
@@ -17,12 +17,13 @@ export const pricing = {
       "Start with a focused local SEO foundation or scale into national and global search growth across SEO, AI Search, PPC, content authority, and technical execution.",
     primaryCta: { label: "Get Free SEO Audit", href: "/free-seo-audit" },
     secondaryCta: { label: "Book Strategy Call", href: "/book-a-call" },
-    signalChips: ["Local", "National", "Global", "Mentor"],
+    signalChips: ["Local", "National", "Global", "Websites", "Mentor"],
     commandPanel: {
       title: "Scope command panel",
       rows: [
         { label: "Entry point", value: "Free SEO Audit" },
         { label: "Recommended execution", value: "National SEO Growth System" },
+        { label: "Website build", value: "Growth Website" },
         { label: "Recommended advisory", value: "SEO Mentor Growth Advisory" },
         { label: "Complex markets", value: "Custom scope required" },
       ],
@@ -259,6 +260,133 @@ export const pricing = {
             cta: { label: "Request custom scope", href: "/book-a-call" },
           },
         ],
+      },
+      {
+        id: "websites",
+        label: "Website Development",
+        eyebrow: "Search-ready builds",
+        title: "Website development pricing",
+        intro:
+          "For businesses that need a fast, structured, conversion-ready website with SEO architecture, AI visibility foundations, analytics, and lead capture built in from day one.",
+        subcopy:
+          "Prices are starting points. Final scope depends on page count, content depth, integrations, migration complexity, multilingual requirements, and timeline.",
+        plans: [
+          {
+            id: "website-launch",
+            name: "Website Launch",
+            price: "From $3,500 one-time",
+            positioning:
+              "A professional search-ready site for new businesses that need the right foundation before scaling content or campaigns.",
+            bestFor: [
+              "New businesses needing a professional search-ready site",
+              "Lean service websites",
+              "Founders replacing a thin starter site",
+            ],
+            includes: [
+              "4-6 core pages",
+              "Website strategy and sitemap",
+              "Responsive UX/UI",
+              "Search-ready page structure",
+              "Basic on-page SEO setup",
+              "Core metadata",
+              "Basic schema",
+              "Contact / lead form",
+              "Analytics and consent readiness",
+              "Launch QA",
+            ],
+            scopeGuard:
+              "Best for focused launches. Larger page counts, custom integrations, multilingual rollout, and migration work require a broader scope.",
+            cta: { label: "Start a Website Project", href: "/contact" },
+          },
+          {
+            id: "growth-website",
+            name: "Growth Website",
+            price: "From $6,500 one-time",
+            recommended: true,
+            positioning:
+              "The recommended website build for businesses that need SEO, AI visibility, and lead generation from day one.",
+            bestFor: [
+              "Businesses that need SEO, AI visibility, and lead generation from day one",
+              "B2B or service brands with multiple offers",
+              "Teams preparing for ongoing SEO growth",
+            ],
+            includes: [
+              "8-12 strategic pages",
+              "Keyword-to-page mapping",
+              "Service page architecture",
+              "UX/UI design",
+              "Responsive development",
+              "SEO/GEO foundation",
+              "Schema and internal linking structure",
+              "Lead capture flow",
+              "Cal.com booking readiness",
+              "Resend notification readiness",
+              "Analytics event readiness",
+              "Performance optimization",
+              "Launch QA",
+            ],
+            cta: { label: "Start a Website Project", href: "/contact" },
+          },
+          {
+            id: "seo-rebuild-migration",
+            name: "SEO Rebuild + Migration",
+            price: "From $9,500 one-time",
+            positioning:
+              "A redesign path for existing websites that need stronger UX and performance without losing search value.",
+            bestFor: [
+              "Existing websites that need redesign without losing search value",
+              "Sites with technical debt or thin architecture",
+              "Teams planning URL, CMS, or framework changes",
+            ],
+            includes: [
+              "Technical website audit",
+              "URL inventory",
+              "Redirect mapping",
+              "Content structure cleanup",
+              "SEO migration plan",
+              "Rebuild / redesign",
+              "Performance optimization",
+              "Schema cleanup",
+              "Indexation control",
+              "Analytics continuity",
+              "Pre-launch and post-launch QA",
+            ],
+            scopeGuard:
+              "Migration risk is scoped after inventory. Large sites, CMS changes, and multilingual redirects may require custom pricing.",
+            cta: { label: "Plan a safe rebuild", href: "/book-a-call" },
+          },
+          {
+            id: "custom-growth-platform",
+            name: "Custom Growth Platform",
+            price: "Custom, from $15,000+",
+            positioning:
+              "Custom website systems for complex multilingual, CMS, CRM, multi-location, or integration-heavy builds.",
+            bestFor: [
+              "Complex, multilingual, CMS, CRM, or multi-location builds",
+              "Content hubs and insights systems",
+              "Companies with advanced workflows or lead routing",
+            ],
+            includes: [
+              "Multilingual website",
+              "Content hub / Insights system",
+              "CMS/admin workflow",
+              "CRM / HubSpot integration readiness",
+              "Advanced lead routing",
+              "Custom dashboards",
+              "Multi-location architecture",
+              "Booking/payment integration",
+              "Complex migration",
+              "Custom Cloudflare/hosting setup",
+            ],
+            cta: { label: "Request custom scope", href: "/book-a-call" },
+          },
+        ],
+        notes: [
+          "Website Care starts from $199/month.",
+          "Growth Support starts from $750/month.",
+          "View the full Website Development service for deliverables, launch QA, and growth-system details.",
+        ],
+        cta: { label: "View Website Development Service", href: "/services/website-development" },
       },
       {
         id: "mentor",
@@ -744,6 +872,15 @@ export const pricing = {
         cta: { label: "Plan global scope", href: "/book-a-call" },
       },
       {
+        id: "search-ready-website",
+        tabId: "websites",
+        trigger: "I need a search-ready website",
+        planName: "Growth Website",
+        startingPrice: "From $6,500 one-time",
+        why: "A growth-ready website should connect page architecture, technical SEO, structured data, lead capture, and analytics before launch.",
+        cta: { label: "Start a Website Project", href: "/contact" },
+      },
+      {
         id: "senior-guidance",
         tabId: "mentor",
         trigger: "I need senior SEO guidance",
@@ -797,6 +934,7 @@ export const pricing = {
       "Content roadmap",
       "AI search readiness",
       "Internal linking",
+      "Website architecture when scoped",
       "Reporting",
       "Monthly review",
     ],
@@ -810,6 +948,7 @@ export const pricing = {
       "Legal/compliance review",
       "Translation production",
       "CRM implementation",
+      "Custom website development",
       "Paid tools owned by client",
     ],
   },
@@ -822,6 +961,7 @@ export const pricing = {
       "Multi-location SEO",
       "Enterprise SEO",
       "Site migration",
+      "Website Development",
       "International SEO",
       "Multilingual SEO",
       "Digital PR",
@@ -860,6 +1000,10 @@ export const pricing = {
       {
         q: "Can I start with Local SEO and upgrade later?",
         a: "Yes. Many businesses start with a focused local scope, then expand into multi-location, national, PPC, content, or technical execution after the first diagnostic and roadmap work.",
+      },
+      {
+        q: "Do website projects include SEO?",
+        a: "Yes. Website Development projects include search-ready architecture, core metadata, schema where relevant, internal linking paths, performance work, lead capture, and analytics readiness. Ongoing SEO content and authority work are scoped separately.",
       },
       {
         q: "Is SEO Mentor different from SEO execution?",

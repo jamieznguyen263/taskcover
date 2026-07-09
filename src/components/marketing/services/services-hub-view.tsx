@@ -25,6 +25,7 @@ import {
   ClipboardCheck,
   Megaphone,
   GraduationCap,
+  MonitorSmartphone,
   type LucideIcon,
 } from "lucide-react";
 import { Container } from "@/components/marketing/shared/container";
@@ -54,6 +55,7 @@ const serviceIconMap: Record<Service["icon"], LucideIcon> = {
   audit: ClipboardCheck,
   ppc: Megaphone,
   mentor: GraduationCap,
+  website: MonitorSmartphone,
 };
 
 export function ServicesHubView({ locale }: { locale: Locale }) {
@@ -74,7 +76,7 @@ export function ServicesHubView({ locale }: { locale: Locale }) {
     {
       layer: content.services["content-marketing"].shortLabel,
       tone: "soft",
-      slugs: ["content-marketing", "digital-pr-link-building", "ai-search-optimization"],
+      slugs: ["content-marketing", "website-development", "digital-pr-link-building", "ai-search-optimization"],
       desc: "",
     },
     {

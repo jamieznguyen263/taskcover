@@ -2,9 +2,9 @@ import type { PricingContent } from "../pricing.types";
 
 export const pricing = {
   metadata: {
-    title: "Precios | Planes de SEO local, nacional y global | Taskcover Agency",
+    title: "Precios | Planes SEO y desarrollo web | Taskcover Agency",
     description:
-      "Explora los precios de Taskcover Agency para SEO local, SEO nacional, SEO global, SEO Mentor, auditorias, gestion PPC y programas de crecimiento search a medida.",
+      "Explora los precios de Taskcover Agency para SEO local, SEO nacional, SEO global, desarrollo web, SEO Mentor, auditorias, gestion PPC y programas de crecimiento search a medida.",
   },
   breadcrumbs: {
     home: "Inicio",
@@ -17,12 +17,13 @@ export const pricing = {
       "Empieza con una base SEO local enfocada o escala hacia crecimiento nacional y global con SEO, AI Search, PPC, autoridad de contenido y ejecucion tecnica.",
     primaryCta: { label: "Auditoria SEO gratuita", href: "/free-seo-audit" },
     secondaryCta: { label: "Reservar llamada", href: "/book-a-call" },
-    signalChips: ["Local", "Nacional", "Global", "Mentor"],
+    signalChips: ["Local", "Nacional", "Global", "Web", "Mentor"],
     commandPanel: {
       title: "Panel de alcance",
       rows: [
         { label: "Punto de entrada", value: "Auditoria SEO gratuita" },
         { label: "Ejecucion recomendada", value: "National SEO Growth System" },
+        { label: "Proyecto web", value: "Growth Website" },
         { label: "Asesoria recomendada", value: "SEO Mentor Growth Advisory" },
         { label: "Mercados complejos", value: "Alcance personalizado requerido" },
       ],
@@ -234,6 +235,133 @@ export const pricing = {
             cta: { label: "Solicitar alcance personalizado", href: "/book-a-call" },
           },
         ],
+      },
+      {
+        id: "websites",
+        label: "Desarrollo web",
+        eyebrow: "Sitios listos para busqueda",
+        title: "Precios de desarrollo web",
+        intro:
+          "Para empresas que necesitan un sitio rapido, estructurado y listo para convertir, con arquitectura SEO, bases de visibilidad IA, analytics y captura de leads desde el primer dia.",
+        subcopy:
+          "Los precios son puntos de partida. El alcance final depende del numero de paginas, profundidad de contenido, integraciones, complejidad de migracion, requisitos multilingues y calendario.",
+        plans: [
+          {
+            id: "website-launch",
+            name: "Website Launch",
+            price: "Desde $3,500 one-time",
+            positioning:
+              "Un sitio profesional listo para busqueda para nuevas empresas que necesitan una base correcta antes de escalar contenido o campanas.",
+            bestFor: [
+              "Nuevas empresas que necesitan un sitio profesional listo para busqueda",
+              "Sitios de servicios enfocados",
+              "Fundadores que reemplazan un sitio inicial limitado",
+            ],
+            includes: [
+              "4-6 paginas principales",
+              "Estrategia web y sitemap",
+              "UX/UI responsive",
+              "Estructura de paginas lista para busqueda",
+              "Setup SEO on-page basico",
+              "Metadatos principales",
+              "Schema basico",
+              "Formulario de contacto / lead",
+              "Analytics y consent readiness",
+              "QA de lanzamiento",
+            ],
+            scopeGuard:
+              "Ideal para lanzamientos enfocados. Mas paginas, integraciones a medida, multilingue y migracion requieren un alcance mayor.",
+            cta: { label: "Empezar un proyecto web", href: "/contact" },
+          },
+          {
+            id: "growth-website",
+            name: "Growth Website",
+            price: "Desde $6,500 one-time",
+            recommended: true,
+            positioning:
+              "El build recomendado para empresas que necesitan SEO, visibilidad IA y generacion de leads desde el primer dia.",
+            bestFor: [
+              "Empresas que necesitan SEO, visibilidad IA y generacion de leads desde el primer dia",
+              "Marcas B2B o de servicios con varias ofertas",
+              "Equipos que preparan crecimiento SEO continuo",
+            ],
+            includes: [
+              "8-12 paginas estrategicas",
+              "Mapeo keyword-a-pagina",
+              "Arquitectura de paginas de servicio",
+              "Diseno UX/UI",
+              "Desarrollo responsive",
+              "Base SEO/GEO",
+              "Schema y estructura de enlazado interno",
+              "Flujo de captura de leads",
+              "Preparacion Cal.com",
+              "Preparacion Resend",
+              "Eventos analytics listos",
+              "Optimizacion de performance",
+              "QA de lanzamiento",
+            ],
+            cta: { label: "Empezar un proyecto web", href: "/contact" },
+          },
+          {
+            id: "seo-rebuild-migration",
+            name: "SEO Rebuild + Migration",
+            price: "Desde $9,500 one-time",
+            positioning:
+              "Un camino de rediseno para sitios existentes que necesitan mejor UX y performance sin perder valor search.",
+            bestFor: [
+              "Sitios existentes que necesitan rediseno sin perder valor search",
+              "Sitios con deuda tecnica o arquitectura debil",
+              "Equipos que preparan cambios de URL, CMS o framework",
+            ],
+            includes: [
+              "Auditoria tecnica del sitio",
+              "Inventario de URLs",
+              "Mapeo de redirecciones",
+              "Limpieza de estructura de contenido",
+              "Plan de migracion SEO",
+              "Rebuild / redesign",
+              "Optimizacion de performance",
+              "Limpieza de schema",
+              "Control de indexacion",
+              "Continuidad analytics",
+              "QA pre-lanzamiento y post-lanzamiento",
+            ],
+            scopeGuard:
+              "El riesgo de migracion se define tras inventario. Sitios grandes, cambios CMS y redirecciones multilingues pueden requerir precio personalizado.",
+            cta: { label: "Planificar un rebuild seguro", href: "/book-a-call" },
+          },
+          {
+            id: "custom-growth-platform",
+            name: "Custom Growth Platform",
+            price: "Personalizado, desde $15,000+",
+            positioning:
+              "Sistemas web personalizados para builds multilingues, CMS, CRM, multi-ubicacion o con integraciones complejas.",
+            bestFor: [
+              "Builds complejos, multilingues, CMS, CRM o multi-ubicacion",
+              "Content hubs y sistemas Insights",
+              "Empresas con workflows o enrutamiento de leads avanzados",
+            ],
+            includes: [
+              "Sitio multilingue",
+              "Content hub / sistema Insights",
+              "Workflow CMS/admin",
+              "Preparacion integracion CRM / HubSpot",
+              "Enrutamiento avanzado de leads",
+              "Dashboards personalizados",
+              "Arquitectura multi-ubicacion",
+              "Integracion booking/pagos",
+              "Migracion compleja",
+              "Setup Cloudflare/hosting personalizado",
+            ],
+            cta: { label: "Solicitar alcance personalizado", href: "/book-a-call" },
+          },
+        ],
+        notes: [
+          "Website Care empieza desde $199/mes.",
+          "Growth Support empieza desde $750/mes.",
+          "Consulta el servicio Desarrollo web para ver entregables, QA de lanzamiento y detalles del sistema de crecimiento.",
+        ],
+        cta: { label: "Ver servicio Desarrollo web", href: "/services/website-development" },
       },
       {
         id: "mentor",
@@ -719,6 +847,15 @@ export const pricing = {
         cta: { label: "Planificar alcance global", href: "/book-a-call" },
       },
       {
+        id: "search-ready-website",
+        tabId: "websites",
+        trigger: "Necesito un sitio listo para busqueda",
+        planName: "Growth Website",
+        startingPrice: "Desde $6,500 one-time",
+        why: "Un sitio listo para crecimiento debe conectar arquitectura de paginas, SEO tecnico, datos estructurados, captura de leads y analytics antes del lanzamiento.",
+        cta: { label: "Empezar un proyecto web", href: "/contact" },
+      },
+      {
         id: "senior-guidance",
         tabId: "mentor",
         trigger: "Necesito guia SEO senior",
@@ -772,6 +909,7 @@ export const pricing = {
       "Roadmap de contenido",
       "Readiness AI Search",
       "Enlazado interno",
+      "Arquitectura web cuando se incluye en el alcance",
       "Reporting",
       "Revision mensual",
     ],
@@ -785,6 +923,7 @@ export const pricing = {
       "Revision legal/compliance",
       "Produccion de traduccion",
       "Implementacion CRM",
+      "Desarrollo web personalizado",
       "Herramientas pagadas propiedad del cliente",
     ],
   },
@@ -797,6 +936,7 @@ export const pricing = {
       "SEO multi-ubicacion",
       "SEO enterprise",
       "Migracion de sitio",
+      "Desarrollo web",
       "SEO internacional",
       "SEO multilingue",
       "Digital PR",
@@ -827,6 +967,7 @@ export const pricing = {
       { q: "Cual es la diferencia entre SEO local, nacional y global?", a: "SEO local se centra en una ciudad, zona de servicio o ubicaciones. SEO nacional apunta a un mercado pais. SEO global gestiona varios paises, idiomas, localizacion y comportamiento search por mercado." },
       { q: "Por que Local SEO empieza en $1,000/mes?", a: "El plan starter es intencionalmente enfocado: una ubicacion o zona, revision local, guia de Google Business Profile, snapshot competitivo y reporting simple. No es una campana SEO full-service." },
       { q: "Puedo empezar con SEO local y subir despues?", a: "Si. Muchas empresas empiezan con alcance local, luego pasan a multi-ubicacion, nacional, PPC, contenido o tecnico despues del diagnostico y roadmap." },
+      { q: "Los proyectos web incluyen SEO?", a: "Si. Los proyectos de Desarrollo web incluyen arquitectura lista para busqueda, metadatos principales, schema cuando aplica, rutas de enlazado interno, performance, captura de leads y preparacion analytics. El contenido SEO continuo y la autoridad se presupuestan aparte." },
       { q: "SEO Mentor es diferente de la ejecucion SEO?", a: "Si. SEO Mentor es asesoria. Ayuda a tu equipo a decidir mejor, revisar prioridades y mejorar proceso. Implementacion, redaccion, desarrollo y gestion de campanas no se incluyen salvo alcance separado." },
       { q: "Para quien es SEO Mentor?", a: "SEO Mentor encaja con fundadores, marketers, equipos SEO internos, equipos de contenido, ejecutivos y empresas con capacidad de ejecucion pero necesidad de direccion SEO senior." },
       { q: "Nuestro equipo interno puede ejecutar mientras Taskcover asesora?", a: "Si. Es el mejor fit para SEO Mentor Growth Advisory y Team Enablement. Taskcover puede revisar roadmaps, briefs, prioridades tecnicas, enlaces internos, AI Search y reporting." },

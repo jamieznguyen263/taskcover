@@ -98,6 +98,29 @@ function ClusterVisual({ className }: { className?: string }) {
   );
 }
 
+function WebsiteVisual({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 200 80" className={className} role="img" aria-label="Website development growth stack">
+      <rect x="12" y="12" width="112" height="56" rx="8" fill="#FFFFFF" stroke="#DDEAF0" strokeWidth="1" />
+      <rect x="22" y="22" width="58" height="6" rx="3" fill="#188AAC" />
+      <rect x="22" y="34" width="82" height="4" rx="2" fill="#DDEAF0" />
+      <rect x="22" y="44" width="54" height="4" rx="2" fill="#DDEAF0" />
+      <rect x="22" y="55" width="42" height="7" rx="3.5" fill="#10E66A" opacity="0.7" />
+      {[
+        { x: 146, y: 20, label: "SEO" },
+        { x: 162, y: 40, label: "AI" },
+        { x: 146, y: 60, label: "Lead" },
+      ].map((item) => (
+        <g key={item.label}>
+          <line x1="124" y1="40" x2={item.x - 18} y2={item.y} stroke="#DDEAF0" strokeWidth="1" />
+          <rect x={item.x - 18} y={item.y - 9} width="36" height="18" rx="6" fill="#F4F8FB" stroke="#10E66A" strokeWidth="1" />
+          <text x={item.x} y={item.y + 3} textAnchor="middle" className="fill-graphite" style={{ fontSize: "7px", fontWeight: "700" }}>{item.label}</text>
+        </g>
+      ))}
+    </svg>
+  );
+}
+
 function AuthorityVisual({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 200 80" className={className} role="img" aria-label="Authority and mention graph">
@@ -262,6 +285,7 @@ const visualMap: Record<string, ({ className }: { className?: string }) => React
   crawl: CrawlVisual,
   citation: CitationVisual,
   cluster: ClusterVisual,
+  website: WebsiteVisual,
   authority: AuthorityVisual,
   pins: PinsVisual,
   products: ProductsVisual,

@@ -16,6 +16,7 @@ import type { Service } from "@/data/services";
  *  - SEO Audit:         audit report preview + prioritized issue scoring
  *  - PPC:               paid search command center (Local / Global / tracking)
  *  - SEO Mentor:        advisory roadmap + training curriculum
+ *  - Website Dev:       growth stack dashboard with SEO, schema, analytics
  *
  * All visuals are illustrative UI only — no fabricated client metrics.
  * Bright-only palette, brand gradient accents, CSS motion via `flow-line`.
@@ -567,6 +568,42 @@ function MentorHero({ className, ids }: ServiceVisualProps) {
   );
 }
 
+/** Website Development — website growth stack dashboard. */
+function WebsiteHero({ className, ids }: ServiceVisualProps) {
+  const { gradId, softGradId } = ids;
+  const cards = [
+    { x: 28, y: 72, label: "UX/UI" },
+    { x: 144, y: 52, label: "SEO Architecture" },
+    { x: 290, y: 72, label: "Schema" },
+    { x: 44, y: 148, label: "Performance" },
+    { x: 168, y: 132, label: "Lead Capture" },
+    { x: 286, y: 148, label: "Analytics" },
+    { x: 88, y: 220, label: "AI Visibility" },
+    { x: 248, y: 220, label: "Multilingual" },
+  ];
+  return (
+    <svg viewBox="0 0 400 280" className={className} role="img" aria-label="Website growth stack dashboard">
+      <Defs ids={ids} />
+      <rect x="0" y="0" width="400" height="280" rx={16} fill={C.white} stroke={C.line} />
+      <rect x="16" y="18" width="368" height="44" rx={12} fill={C.tint} stroke={C.lineSoft} />
+      <text x="32" y="45" style={{ fontSize: 10, fontWeight: 700 }} fill={C.teal}>WEBSITE GROWTH STACK</text>
+      <rect x="250" y="32" width="104" height="10" rx={5} fill={`url(#${gradId})`} opacity={0.9} />
+      <circle cx="200" cy="146" r="42" fill={`url(#${softGradId})`} stroke={`url(#${gradId})`} strokeWidth={2} />
+      <rect x="168" y="126" width="64" height="40" rx={10} fill={C.white} stroke={C.line} />
+      <rect x="178" y="136" width="44" height="6" rx={3} fill={C.teal} />
+      <rect x="178" y="149" width="32" height="4" rx={2} fill={C.line} />
+      <text x="200" y="182" textAnchor="middle" style={{ fontSize: 8, fontWeight: 700 }} fill={C.teal}>SEARCH READY</text>
+      {cards.map((card) => (
+        <g key={card.label}>
+          <line x1="200" y1="146" x2={card.x + 36} y2={card.y + 11} stroke={C.green} strokeWidth={1} className="flow-line" opacity={0.45} />
+          <rect x={card.x} y={card.y} width={72} height={22} rx={8} fill={C.white} stroke={C.teal} strokeWidth={1.2} />
+          <text x={card.x + 36} y={card.y + 14.5} textAnchor="middle" style={{ fontSize: 7.5, fontWeight: 700 }} fill={C.secondary}>{card.label}</text>
+        </g>
+      ))}
+    </svg>
+  );
+}
+
 const heroVisuals: Record<IconKey, React.ComponentType<ServiceVisualProps>> = {
   strategy: StrategyHero,
   technical: TechnicalHero,
@@ -579,6 +616,7 @@ const heroVisuals: Record<IconKey, React.ComponentType<ServiceVisualProps>> = {
   audit: AuditHero,
   ppc: PpcHero,
   mentor: MentorHero,
+  website: WebsiteHero,
 };
 
 /** Render the service-specific hero visual. */
@@ -751,6 +789,22 @@ function MiniCurriculum({ className, ids }: ServiceVisualProps) {
   );
 }
 
+function MiniWebsite({ className, ids }: ServiceVisualProps) {
+  const { gradId } = ids;
+  return (
+    <svg viewBox="0 0 120 80" className={className} role="img" aria-label="Website growth stack deliverable">
+      <Defs ids={ids} />
+      <rect x="10" y="12" width="100" height="56" rx={8} fill={C.white} stroke={C.line} />
+      <rect x="10" y="12" width="100" height="14" rx={8} fill={C.tint} />
+      <rect x="20" y="34" width="36" height="8" rx={4} fill={`url(#${gradId})`} />
+      <rect x="20" y="48" width="72" height="4" rx={2} fill={C.line} />
+      <rect x="20" y="58" width="48" height="4" rx={2} fill={C.line} />
+      <circle cx="92" cy="38" r="8" fill={C.green} opacity={0.8} />
+      <circle cx="92" cy="58" r="5" fill={C.teal} opacity={0.8} />
+    </svg>
+  );
+}
+
 const deliverableVisuals: Record<IconKey, React.ComponentType<ServiceVisualProps>> = {
   strategy: MiniChecklist,
   technical: MiniChecklist,
@@ -763,6 +817,7 @@ const deliverableVisuals: Record<IconKey, React.ComponentType<ServiceVisualProps
   audit: MiniReport,
   ppc: MiniControlPanel,
   mentor: MiniCurriculum,
+  website: MiniWebsite,
 };
 
 /** Render a service-specific compact deliverable visual. */
@@ -801,6 +856,7 @@ export function ServiceConstellation({ className }: { className?: string }) {
     { x: 200, y: 250, label: "PPC", angle: 90 },
     { x: 140, y: 140, label: "PR", angle: 225 },
     { x: 260, y: 140, label: "Mentor", angle: 315 },
+    { x: 200, y: 104, label: "Websites", angle: 270 },
     { x: 200, y: 150, label: "Audit", angle: 0 },
   ];
   return (

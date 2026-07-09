@@ -393,6 +393,14 @@ export const home: HomeContent = {
         visual: "cluster",
       },
       {
+        title: "Développement de site web",
+        outcome: "Sites prêts pour la recherche, construits pour la visibilité, la confiance et les leads.",
+        href: "/services/website-development",
+        icon: "website",
+        span: "wide",
+        visual: "website",
+      },
+      {
         title: "RP numériques et création de liens",
         outcome: "Signaux d'autorité issus de publications et de partenaires réels.",
         href: "/services/digital-pr-link-building",

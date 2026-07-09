@@ -62,7 +62,7 @@ describe("technical SEO launch rules", () => {
     expect(paths.some((path) => path.includes("/thank-you"))).toBe(false);
     expect(paths.some((path) => path.includes("?"))).toBe(false);
 
-    for (const route of ["/pricing", "/about", "/methodology", "/how-we-work", "/work/case-studies", "/work/sample-audits"]) {
+    for (const route of ["/pricing", "/services/website-development", "/about", "/methodology", "/how-we-work", "/work/case-studies", "/work/sample-audits"]) {
       for (const locale of locales) {
         expect(paths).toContain(localizePath(route, locale as Locale));
       }
@@ -136,6 +136,7 @@ describe("technical SEO launch rules", () => {
       },
     });
     expect(serialized).not.toMatch(/Review|AggregateRating|LocalBusiness|sameAs/);
+    expect(serialized).toContain("Website Development");
   });
 
   it("keeps public logo registry safe and permission-review brands hidden", () => {

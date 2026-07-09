@@ -46,7 +46,7 @@ export const services: ServicesContent = {
     ninetyDayPlan: "90-day plan",
     illustrative: "Illustrative — each audit is scoped to your market and goals.",
     allServices: "All services",
-    allServicesTitle: "Eleven connected services. One operating system.",
+    allServicesTitle: "Twelve connected services. One operating system.",
     allServicesDesc:
       "Engage one capability or the full system. Either way, work is measured against visibility, trust, leads, and revenue.",
     notSureEyebrow: "Start with a clear picture",
@@ -132,6 +132,13 @@ export const services: ServicesContent = {
         "Internal linking map",
         "Editorial brief sample",
         "Conversion content priorities",
+      ],
+      "website-development": [
+        "Website strategy and sitemap",
+        "SEO architecture review",
+        "Lead capture flow",
+        "Analytics readiness",
+        "Launch QA checklist",
       ],
       "digital-pr-link-building": [
         "Authority signal review",

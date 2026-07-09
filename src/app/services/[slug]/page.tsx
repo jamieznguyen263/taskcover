@@ -4,6 +4,7 @@ import {
   buildMetadata,
   breadcrumbSchema,
   faqSchema,
+  serviceSchema,
   serializeJsonLd,
 } from "@/lib/seo";
 import { ServicePageTemplate } from "@/components/marketing/services/service-template";
@@ -49,6 +50,7 @@ export default async function ServiceDetailPage({ params }: Params) {
   );
 
   const faq = faqSchema(service.faqs);
+  const serviceStructuredData = serviceSchema(service, "en");
   const content = getServicesContent("en");
 
   return (
@@ -60,6 +62,10 @@ export default async function ServiceDetailPage({ params }: Params) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(faq) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(serviceStructuredData) }}
       />
       <ServicePageTemplate service={service} ui={content.ui} />
     </>
