@@ -5,8 +5,6 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "./schema";
 
-let cached: ReturnType<typeof createDb> | undefined;
-
 export type HyperdriveBinding = {
   connectionString: string;
 };
@@ -43,18 +41,22 @@ export function isHyperdriveConfigured() {
   return Boolean(getRuntimeDatabaseEnv()?.HYPERDRIVE?.connectionString);
 }
 
-function createDb() {
+// Cloudflare Workers cannot reuse I/O objects (sockets, and therefore DB connections) across
+// requests: a connection opened during one request's execution context is torn down once that
+// request finishes, and reusing it from a later request hangs indefinitely instead of erroring
+// (see https://opennext.js.org/cloudflare/troubleshooting). A module-level cached client here
+// caused exactly that: intermittent hung requests whenever a warm isolate reused a connection
+// from a previous request. Hyperdrive already pools the real connections, so a fresh lightweight
+// client per call is the supported pattern, not a regression. The Workers runtime tears down the
+// underlying socket automatically when the request finishes, so there is no explicit client to
+// close here — callers issue queries through the returned instance for the lifetime of one request.
+export function getDb() {
   const client = postgres(getDatabaseUrl(), {
     max: 5,
     prepare: false,
     fetch_types: false,
   });
   return drizzle(client, { schema });
-}
-
-export function getDb() {
-  cached ??= createDb();
-  return cached;
 }
 
 export type AdminDb = ReturnType<typeof getDb>;
