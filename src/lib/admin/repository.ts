@@ -10,6 +10,7 @@ import {
   adminInvites,
   adminSessions,
   adminUsers,
+  contentComments,
   insightArticleGroups,
   insightArticleLocalizations,
   insightArticleRevisions,
@@ -44,6 +45,42 @@ export type ArticleSummary = {
   scheduledAt: Date | null;
   publishedAt: Date | null;
   lockVersion: number;
+  ownerId: string | null;
+  assigneeId: string | null;
+  reviewerId: string | null;
+  createdBy: string | null;
+  dueDate: Date | null;
+  priority: "low" | "normal" | "high" | "urgent";
+};
+
+export type ArticleAssignment = {
+  ownerId: string | null;
+  assigneeId: string | null;
+  reviewerId: string | null;
+  dueDate: string | null;
+  priority: "low" | "normal" | "high" | "urgent";
+};
+
+export type ContentComment = {
+  id: string;
+  articleGroupId: string;
+  authorId: string | null;
+  authorName: string | null;
+  kind: "comment" | "change-request" | "submission-note" | "approval-note";
+  body: string;
+  locale: Locale | null;
+  resolvedAt: Date | null;
+  resolvedByName: string | null;
+  createdAt: Date;
+};
+
+export type WorkflowEventEntry = {
+  id: string;
+  fromStatus: InsightStatus | null;
+  toStatus: InsightStatus;
+  actorName: string | null;
+  note: string | null;
+  createdAt: Date;
 };
 
 export type DashboardStats = {
@@ -256,6 +293,12 @@ export class AdminRepository {
         scheduledAt: insightArticleGroups.scheduledAt,
         publishedAt: insightArticleGroups.publishedAt,
         lockVersion: insightArticleGroups.lockVersion,
+        ownerId: insightArticleGroups.ownerId,
+        assigneeId: insightArticleGroups.assigneeId,
+        reviewerId: insightArticleGroups.reviewerId,
+        createdBy: insightArticleGroups.createdBy,
+        dueDate: insightArticleGroups.dueDate,
+        priority: insightArticleGroups.priority,
       })
       .from(insightArticleGroups)
       .leftJoin(insightArticleLocalizations, eq(insightArticleGroups.id, insightArticleLocalizations.articleGroupId))
@@ -273,6 +316,12 @@ export class AdminRepository {
       scheduledAt: row.scheduledAt,
       publishedAt: row.publishedAt,
       lockVersion: row.lockVersion,
+      ownerId: row.ownerId,
+      assigneeId: row.assigneeId,
+      reviewerId: row.reviewerId,
+      createdBy: row.createdBy,
+      dueDate: row.dueDate,
+      priority: row.priority,
     }));
   }
 
@@ -824,6 +873,194 @@ export class AdminRepository {
     return this.db.query.insightArticleGroups.findMany({
       where: and(eq(insightArticleGroups.draftWorkflowStatus, "scheduled"), lt(insightArticleGroups.scheduledAt, now)),
       limit: 25,
+    });
+  }
+
+  async listComments(articleGroupId: string): Promise<ContentComment[]> {
+    const author = this.db.select({ id: adminUsers.id, displayName: adminUsers.displayName }).from(adminUsers).as("comment_author");
+    const rows = await this.db
+      .select({
+        id: contentComments.id,
+        articleGroupId: contentComments.articleGroupId,
+        authorId: contentComments.authorId,
+        authorName: author.displayName,
+        kind: contentComments.kind,
+        body: contentComments.body,
+        locale: contentComments.locale,
+        resolvedAt: contentComments.resolvedAt,
+        resolvedBy: contentComments.resolvedBy,
+        createdAt: contentComments.createdAt,
+      })
+      .from(contentComments)
+      .leftJoin(author, eq(contentComments.authorId, author.id))
+      .where(eq(contentComments.articleGroupId, articleGroupId))
+      .orderBy(desc(contentComments.createdAt))
+      .limit(200);
+
+    const resolverIds = [...new Set(rows.map((row) => row.resolvedBy).filter((id): id is string => Boolean(id)))];
+    const resolvers = resolverIds.length
+      ? await this.db.select({ id: adminUsers.id, displayName: adminUsers.displayName }).from(adminUsers).where(inArray(adminUsers.id, resolverIds))
+      : [];
+    const resolverName = new Map(resolvers.map((user) => [user.id, user.displayName]));
+
+    return rows.map((row) => ({
+      id: row.id,
+      articleGroupId: row.articleGroupId,
+      authorId: row.authorId,
+      authorName: row.authorName,
+      kind: row.kind,
+      body: row.body,
+      locale: row.locale,
+      resolvedAt: row.resolvedAt,
+      resolvedByName: row.resolvedBy ? (resolverName.get(row.resolvedBy) ?? null) : null,
+      createdAt: row.createdAt,
+    }));
+  }
+
+  async createComment(input: {
+    articleGroupId: string;
+    authorId: string;
+    kind: "comment" | "change-request" | "submission-note" | "approval-note";
+    body: string;
+    locale?: Locale;
+  }) {
+    return this.db.transaction(async (tx) => {
+      const group = await tx.query.insightArticleGroups.findFirst({ where: eq(insightArticleGroups.id, input.articleGroupId), columns: { id: true } });
+      if (!group) throw new ContentStateError("Article does not exist.");
+      const [comment] = await tx
+        .insert(contentComments)
+        .values({ articleGroupId: input.articleGroupId, authorId: input.authorId, kind: input.kind, body: input.body, locale: input.locale })
+        .returning();
+      await tx.insert(adminAuditLogs).values({
+        event: "comment_create",
+        actorId: input.authorId,
+        targetType: "insight_article_group",
+        targetId: input.articleGroupId,
+        summary: `Comment added (${input.kind}).`,
+        metadata: { kind: input.kind, commentId: comment.id },
+      });
+      return comment;
+    });
+  }
+
+  async resolveComment(input: { commentId: string; actorId: string; role: AdminRole }) {
+    return this.db.transaction(async (tx) => {
+      const comment = await tx.query.contentComments.findFirst({ where: eq(contentComments.id, input.commentId) });
+      if (!comment) throw new ContentStateError("Comment does not exist.");
+      if (comment.resolvedAt) return comment;
+      if (input.role !== "admin" && comment.authorId !== input.actorId) {
+        throw new ContentStateError("Only the comment author or an Admin can resolve a comment.");
+      }
+      const [updated] = await tx
+        .update(contentComments)
+        .set({ resolvedAt: new Date(), resolvedBy: input.actorId, updatedAt: new Date() })
+        .where(and(eq(contentComments.id, input.commentId), isNull(contentComments.resolvedAt)))
+        .returning();
+      await tx.insert(adminAuditLogs).values({
+        event: "comment_resolve",
+        actorId: input.actorId,
+        targetType: "insight_article_group",
+        targetId: comment.articleGroupId,
+        summary: "Comment resolved.",
+        metadata: { commentId: comment.id },
+      });
+      return updated ?? comment;
+    });
+  }
+
+  async updateAssignment(input: {
+    articleGroupId: string;
+    actorId: string;
+    ownerId?: string | null;
+    assigneeId?: string | null;
+    reviewerId?: string | null;
+    dueDate?: string | null;
+    priority?: "low" | "normal" | "high" | "urgent";
+  }) {
+    return this.db.transaction(async (tx) => {
+      const group = await tx.query.insightArticleGroups.findFirst({ where: eq(insightArticleGroups.id, input.articleGroupId) });
+      if (!group) throw new ContentStateError("Article does not exist.");
+      const [updated] = await tx
+        .update(insightArticleGroups)
+        .set({
+          ownerId: input.ownerId !== undefined ? input.ownerId : group.ownerId,
+          assigneeId: input.assigneeId !== undefined ? input.assigneeId : group.assigneeId,
+          reviewerId: input.reviewerId !== undefined ? input.reviewerId : group.reviewerId,
+          dueDate: input.dueDate !== undefined ? (input.dueDate ? new Date(input.dueDate) : null) : group.dueDate,
+          priority: input.priority ?? group.priority,
+          updatedAt: new Date(),
+        })
+        .where(eq(insightArticleGroups.id, input.articleGroupId))
+        .returning();
+      await tx.insert(adminAuditLogs).values({
+        event: "assignment_update",
+        actorId: input.actorId,
+        targetType: "insight_article_group",
+        targetId: input.articleGroupId,
+        summary: "Article assignment updated.",
+        metadata: {
+          ownerId: updated.ownerId,
+          assigneeId: updated.assigneeId,
+          reviewerId: updated.reviewerId,
+          dueDate: updated.dueDate?.toISOString() ?? null,
+          priority: updated.priority,
+        },
+      });
+      return updated;
+    });
+  }
+
+  async listWorkflowEvents(articleGroupId: string, limit = 30): Promise<WorkflowEventEntry[]> {
+    const rows = await this.db
+      .select({
+        id: workflowEvents.id,
+        fromStatus: workflowEvents.fromStatus,
+        toStatus: workflowEvents.toStatus,
+        actorName: adminUsers.displayName,
+        note: workflowEvents.note,
+        createdAt: workflowEvents.createdAt,
+      })
+      .from(workflowEvents)
+      .leftJoin(adminUsers, eq(workflowEvents.actorId, adminUsers.id))
+      .where(eq(workflowEvents.articleGroupId, articleGroupId))
+      .orderBy(desc(workflowEvents.createdAt))
+      .limit(limit);
+    return rows;
+  }
+
+  async listOpenChangeRequestGroupIds(): Promise<Set<string>> {
+    const rows = await this.db
+      .selectDistinct({ articleGroupId: contentComments.articleGroupId })
+      .from(contentComments)
+      .where(and(eq(contentComments.kind, "change-request"), isNull(contentComments.resolvedAt)));
+    return new Set(rows.map((row) => row.articleGroupId));
+  }
+
+  async listRecentWorkflowNotes(limit = 20) {
+    return this.db
+      .select({
+        id: workflowEvents.id,
+        articleGroupId: workflowEvents.articleGroupId,
+        title: insightArticleGroups.sharedSlug,
+        fromStatus: workflowEvents.fromStatus,
+        toStatus: workflowEvents.toStatus,
+        note: workflowEvents.note,
+        actorName: adminUsers.displayName,
+        createdAt: workflowEvents.createdAt,
+      })
+      .from(workflowEvents)
+      .innerJoin(insightArticleGroups, eq(workflowEvents.articleGroupId, insightArticleGroups.id))
+      .leftJoin(adminUsers, eq(workflowEvents.actorId, adminUsers.id))
+      .where(isNotNull(workflowEvents.note))
+      .orderBy(desc(workflowEvents.createdAt))
+      .limit(limit);
+  }
+
+  async listAssignableUsers() {
+    return this.db.query.adminUsers.findMany({
+      columns: { id: true, displayName: true, role: true },
+      where: eq(adminUsers.status, "active"),
+      orderBy: desc(adminUsers.createdAt),
     });
   }
 }

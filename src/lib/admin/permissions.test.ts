@@ -18,6 +18,13 @@ describe("admin permissions", () => {
     }
   });
 
+  it("lets both roles comment but only Admin assign", () => {
+    expect(hasPermission("editor", "article:comment")).toBe(true);
+    expect(hasPermission("admin", "article:comment")).toBe(true);
+    expect(hasPermission("editor", "article:assign")).toBe(false);
+    expect(hasPermission("admin", "article:assign")).toBe(true);
+  });
+
   it("allows Admin transitions and blocks Editor approval", () => {
     expect(canTransition("admin", "in-review", "approved")).toBe(true);
     expect(canTransition("editor", "in-review", "approved")).toBe(false);

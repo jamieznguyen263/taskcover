@@ -12,6 +12,8 @@ export type Permission =
   | "article:publish"
   | "article:archive"
   | "article:restore"
+  | "article:comment"
+  | "article:assign"
   | "media:upload"
   | "media:delete"
   | "users:manage"
@@ -22,11 +24,13 @@ const editorPermissions = new Set<Permission>([
   "article:create",
   "article:edit",
   "article:submit-review",
+  "article:comment",
   "media:upload",
 ]);
 
 const adminPermissions = new Set<Permission>([
   ...editorPermissions,
+  "article:assign",
   "article:request-changes",
   "article:approve",
   "article:schedule",

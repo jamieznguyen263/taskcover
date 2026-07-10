@@ -52,6 +52,16 @@ export const auditEventEnum = pgEnum("admin_audit_event", [
   "scheduler_success",
   "scheduler_failure",
   "integration_test",
+  "comment_create",
+  "comment_resolve",
+  "assignment_update",
+]);
+export const contentPriorityEnum = pgEnum("content_priority", ["low", "normal", "high", "urgent"]);
+export const contentCommentKindEnum = pgEnum("content_comment_kind", [
+  "comment",
+  "change-request",
+  "submission-note",
+  "approval-note",
 ]);
 export const leadSubmissionStatusEnum = pgEnum("lead_submission_status", [
   "accepted",
@@ -187,6 +197,11 @@ export const insightArticleGroups = pgTable(
     updatedBy: uuid("updated_by").references(() => adminUsers.id, { onDelete: "set null" }),
     approvedBy: uuid("approved_by").references(() => adminUsers.id, { onDelete: "set null" }),
     approvedAt: timestamp("approved_at", { withTimezone: true }),
+    ownerId: uuid("owner_id").references(() => adminUsers.id, { onDelete: "set null" }),
+    assigneeId: uuid("assignee_id").references(() => adminUsers.id, { onDelete: "set null" }),
+    reviewerId: uuid("reviewer_id").references(() => adminUsers.id, { onDelete: "set null" }),
+    dueDate: timestamp("due_date", { withTimezone: true }),
+    priority: contentPriorityEnum("priority").notNull().default("normal"),
     lockVersion: integer("lock_version").notNull().default(1),
     ...timestamps,
   },
@@ -195,6 +210,29 @@ export const insightArticleGroups = pgTable(
     uniqueIndex("insight_article_groups_creation_key_idx").on(table.creationKey),
     index("insight_article_groups_workflow_idx").on(table.draftWorkflowStatus),
     index("insight_article_groups_scheduled_idx").on(table.scheduledAt),
+    index("insight_article_groups_assignee_idx").on(table.assigneeId),
+    index("insight_article_groups_due_idx").on(table.dueDate),
+  ]
+);
+
+export const contentComments = pgTable(
+  "content_comments",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    articleGroupId: uuid("article_group_id").notNull().references(() => insightArticleGroups.id, { onDelete: "cascade" }),
+    authorId: uuid("author_id").references(() => adminUsers.id, { onDelete: "set null" }),
+    kind: contentCommentKindEnum("kind").notNull().default("comment"),
+    body: text("body").notNull(),
+    locale: localeEnum("locale"),
+    // Reserved for future inline comments: a stable anchor into the document.
+    blockAnchor: text("block_anchor"),
+    resolvedAt: timestamp("resolved_at", { withTimezone: true }),
+    resolvedBy: uuid("resolved_by").references(() => adminUsers.id, { onDelete: "set null" }),
+    ...timestamps,
+  },
+  (table) => [
+    index("content_comments_group_idx").on(table.articleGroupId),
+    index("content_comments_unresolved_idx").on(table.articleGroupId, table.resolvedAt),
   ]
 );
 
