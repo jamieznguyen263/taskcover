@@ -13,8 +13,16 @@ Database setup:
 2. Run `npm run db:migrate`.
 3. Run `npm run admin:create -- admin@example.com`.
 4. Run `npm run insights:import`.
-5. Verify 6 article groups and 18 localizations.
+5. Verify database article groups and localizations against the current source content counts.
 6. Verify published snapshots and public routes in database mode.
+
+Application workflow verification:
+
+1. Run `npm run db:migrate` against a safe staging target.
+2. Run `npm run test:admin-content:integration` with `DATABASE_TARGET=staging`; the test creates isolated QA users/articles and cleans them up.
+3. Verify Editor autosave/reload/conflict behavior and server-side denials.
+4. Verify Admin request-changes, approval, manual publish, revision, archive, and restore behavior.
+5. Keep `INSIGHTS_PROVIDER=local` and `PUBLISH_SCHEDULER_PROVIDER=disabled` in production until the production Neon target, recovery branch, and live workflow are separately approved.
 
 Production publishing setup:
 

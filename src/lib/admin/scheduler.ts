@@ -40,21 +40,16 @@ export class DatabasePublishScheduler implements PublishScheduler {
 
     for (const group of due) {
       try {
-        await this.repo.createWorkflowEvent({
-          articleGroupId: group.id,
-          fromStatus: "scheduled",
-          toStatus: "published",
+        await this.repo.transitionArticle({
+          articleId: group.id,
+          expectedVersion: group.lockVersion,
+          to: "published",
           actorId: null,
+          role: "admin",
+          schedulerConfigured: true,
           note: "Published by scheduler.",
-          metadata: { scheduledAt: group.scheduledAt?.toISOString() },
         });
-        await this.repo.audit({
-          event: "scheduler_success",
-          targetType: "insight_article_group",
-          targetId: group.id,
-          summary: "Scheduled article group processed.",
-          metadata: { result: "published" },
-        });
+        await this.repo.audit({ event: "scheduler_success", targetType: "insight_article_group", targetId: group.id, summary: "Scheduled article group processed." });
         for (const locale of locales) {
           revalidatePath(locale === "en" ? "/insights" : `/${locale}/insights`);
         }
@@ -62,12 +57,7 @@ export class DatabasePublishScheduler implements PublishScheduler {
         result.published += 1;
       } catch {
         result.failed += 1;
-        await this.repo.audit({
-          event: "scheduler_failure",
-          targetType: "insight_article_group",
-          targetId: group.id,
-          summary: "Scheduled article group failed.",
-        });
+        await this.repo.audit({ event: "scheduler_failure", targetType: "insight_article_group", targetId: group.id, summary: "Scheduled article group failed." });
       }
     }
 

@@ -2,12 +2,14 @@ import { connection } from "next/server";
 import { AdminPageHeader, AdminShell, AdminUnavailable } from "@/components/admin/admin-shell";
 import { getAdminIntegrationStatus } from "@/lib/admin/env";
 import { requireAdminSession } from "@/lib/admin/session";
+import { assertPermission } from "@/lib/admin/permissions";
 
 export default async function IntegrationsPage() {
   await connection();
   const status = getAdminIntegrationStatus();
   if (!status.databaseConfigured) return <AdminUnavailable />;
   const session = await requireAdminSession();
+  assertPermission(session.role, "users:manage");
   const rows = [
     integrationRow("Neon", status.databaseConfigured, "Database URL or Hyperdrive runtime binding is available.", "Set DATABASE_URL locally or configure Hyperdrive."),
     integrationRow("Hyperdrive", status.hyperdriveConfigured, "Runtime binding exposes a connection string.", "Set the HYPERDRIVE binding and local preview variable."),

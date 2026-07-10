@@ -1,4 +1,5 @@
 import postgres from "postgres";
+import { loadEnvConfig } from "@next/env";
 import { insights as en } from "../src/content/en/insights";
 import { insights as fr } from "../src/content/fr/insights";
 import { insights as es } from "../src/content/es/insights";
@@ -6,9 +7,19 @@ import type { InsightArticle } from "../src/content/insights.types";
 import { createStarterTiptapDocument } from "../src/lib/admin/normalization";
 import { validateInsightArticle } from "../src/lib/insights/publish-qa";
 
+loadEnvConfig(process.cwd());
+
 const databaseUrl = process.env.DATABASE_URL;
 if (!databaseUrl) {
   console.error("DATABASE_URL is required. Refusing to import into an unknown database.");
+  process.exit(1);
+}
+if (!process.env.DATABASE_TARGET || !["development", "staging", "production"].includes(process.env.DATABASE_TARGET)) {
+  console.error("DATABASE_TARGET must be development, staging, or production. Refusing to import into an unconfirmed database.");
+  process.exit(1);
+}
+if (process.env.DATABASE_TARGET === "production" && process.env.CONFIRM_PRODUCTION_IMPORT !== "YES") {
+  console.error("Production Insights import requires CONFIRM_PRODUCTION_IMPORT=YES.");
   process.exit(1);
 }
 
@@ -54,18 +65,19 @@ async function main() {
     const groupId = groupRows[0]!.id;
     const revisionGroupIdRows = await sql<{ id: string }[]>`SELECT gen_random_uuid()::text AS id`;
     const revisionGroupId = revisionGroupIdRows[0]!.id;
+    await sql`UPDATE insight_article_groups SET published_revision_group_id = ${revisionGroupId}::uuid WHERE id = ${groupId}`;
 
     for (const article of translations) {
       const editorDocument = createStarterTiptapDocument(article.h1);
       const localizationRows = await sql<{ id: string }[]>`
       INSERT INTO insight_article_localizations (
         article_group_id, locale, slug, internal_title, public_h1, excerpt, editor_document, normalized_blocks,
-        published_snapshot, search_strategy, evidence_data, internal_link_data, metadata, social_metadata,
+        draft_snapshot, published_snapshot, search_strategy, evidence_data, internal_link_data, metadata, social_metadata,
         schema_configuration, localization_data, publish_qa_snapshot, draft_version
       )
       VALUES (
         ${groupId}, ${article.locale}, ${article.slug}, ${article.internalTitle}, ${article.h1}, ${article.excerpt},
-        ${sql.json(editorDocument)}, ${sql.json(article.blocks)}, ${sql.json(article)}, ${sql.json(article.searchStrategy)},
+        ${sql.json(editorDocument)}, ${sql.json(article.blocks)}, ${sql.json(article)}, ${sql.json(article)}, ${sql.json(article.searchStrategy)},
         ${sql.json(article.contentEvidence)}, ${sql.json(article.internalLinking)}, ${sql.json(article.metadata)},
         ${sql.json({
           ogTitle: article.metadata.ogTitle,
@@ -84,6 +96,7 @@ async function main() {
         excerpt = EXCLUDED.excerpt,
         editor_document = EXCLUDED.editor_document,
         normalized_blocks = EXCLUDED.normalized_blocks,
+        draft_snapshot = EXCLUDED.draft_snapshot,
         published_snapshot = EXCLUDED.published_snapshot,
         search_strategy = EXCLUDED.search_strategy,
         evidence_data = EXCLUDED.evidence_data,

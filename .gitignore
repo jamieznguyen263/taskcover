@@ -13,6 +13,11 @@
 # testing
 /coverage
 
+# Local generated QA artifacts
+.qa-pricing/
+.qa-search-motion/
+.qa-visual-13c/
+
 # next.js
 /.next/
 /out/

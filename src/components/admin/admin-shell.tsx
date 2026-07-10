@@ -7,10 +7,10 @@ const nav = [
   { href: "/admin", label: "Dashboard", icon: BarChart3 },
   { href: "/admin/insights", label: "Insights", icon: FileText },
   { href: "/admin/media", label: "Media", icon: Image },
-  { href: "/admin/users", label: "Users", icon: Users },
-  { href: "/admin/audit-log", label: "Audit log", icon: Shield },
-  { href: "/admin/settings/integrations", label: "Integrations", icon: Settings },
-  { href: "/admin/settings/publishing", label: "Publishing", icon: ListChecks },
+  { href: "/admin/users", label: "Users", icon: Users, adminOnly: true },
+  { href: "/admin/audit-log", label: "Audit log", icon: Shield, adminOnly: true },
+  { href: "/admin/settings/integrations", label: "Integrations", icon: Settings, adminOnly: true },
+  { href: "/admin/settings/publishing", label: "Publishing", icon: ListChecks, adminOnly: true },
 ];
 
 export function AdminShell({ children, session }: { children: React.ReactNode; session: AdminUserSession }) {
@@ -22,7 +22,7 @@ export function AdminShell({ children, session }: { children: React.ReactNode; s
             <Link href="/admin" className="text-sm font-semibold tracking-tight text-graphite">Taskcover Admin</Link>
           </div>
           <nav className="grid gap-1 p-3" aria-label="Admin">
-            {nav.map((item) => {
+            {nav.filter((item) => !item.adminOnly || session.role === "admin").map((item) => {
               const Icon = item.icon;
               return (
                 <Link key={item.href} href={item.href} className="flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm font-medium text-secondary hover:bg-surface-tint hover:text-brand-teal">

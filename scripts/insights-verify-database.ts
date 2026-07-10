@@ -1,5 +1,7 @@
 import { loadEnvConfig } from "@next/env";
 import postgres from "postgres";
+import { locales } from "../src/lib/i18n";
+import { localInsightsProvider } from "../src/lib/insights/local-provider";
 
 loadEnvConfig(process.cwd());
 
@@ -15,6 +17,13 @@ main().catch((error) => {
 });
 
 async function main() {
+  const sourceByLocale = Object.fromEntries(
+    locales.map((locale) => [locale, localInsightsProvider.getPublishedArticles(locale)] as const)
+  );
+  const expectedGroups = new Set(Object.values(sourceByLocale).flat().map((article) => article.translationGroupId));
+  const expectedLocalizations = Object.values(sourceByLocale).reduce((total, articles) => total + articles.length, 0);
+  const expectedLocaleCounts = Object.fromEntries(locales.map((locale) => [locale, sourceByLocale[locale].length]));
+
   const [counts] = await sql<{
     groups: number;
     localizations: number;
@@ -38,7 +47,7 @@ async function main() {
       SELECT count(*)::int
       FROM insight_article_groups g
       JOIN insight_article_localizations l ON l.article_group_id = g.id
-      WHERE g.draft_workflow_status = 'archived' AND l.published_snapshot IS NOT NULL
+      WHERE g.draft_workflow_status = 'archived' AND l.published_snapshot IS NOT NULL AND g.published_revision_group_id IS NOT NULL AND g.archived_at IS NULL
     ) AS archived_exposed
 `;
   const localeRows = await sql<{ locale: string; value: number }[]>`
@@ -67,16 +76,20 @@ async function main() {
 `;
   await sql.end();
 
-  const locales = Object.fromEntries(localeRows.map((row) => [row.locale, row.value]));
+  const dbLocaleCounts = Object.fromEntries(localeRows.map((row) => [row.locale, row.value]));
   const result = {
     articleGroupCount: counts?.groups ?? 0,
     localizationCount: counts?.localizations ?? 0,
     publishedSnapshotCount: counts?.published_snapshots ?? 0,
     localeCompleteness: {
-      en: locales.en ?? 0,
-      fr: locales.fr ?? 0,
-      es: locales.es ?? 0,
-      complete: (locales.en ?? 0) === 6 && (locales.fr ?? 0) === 6 && (locales.es ?? 0) === 6,
+      en: dbLocaleCounts.en ?? 0,
+      fr: dbLocaleCounts.fr ?? 0,
+      es: dbLocaleCounts.es ?? 0,
+      expected: expectedLocaleCounts,
+      complete:
+        dbLocaleCounts.en === expectedLocaleCounts.en &&
+        dbLocaleCounts.fr === expectedLocaleCounts.fr &&
+        dbLocaleCounts.es === expectedLocaleCounts.es,
     },
     duplicateSlugStatus: duplicateSlugRows.length ? "duplicates found" : "clear",
     duplicateSlugCount: duplicateSlugRows.length,
@@ -88,8 +101,8 @@ async function main() {
       archivedContentExposed: counts?.archived_exposed ?? 0,
     },
     expectedBeforeSwitchingProvider: {
-      articleGroups: 6,
-      localizedVersions: 18,
+      articleGroups: expectedGroups.size,
+      localizedVersions: expectedLocalizations,
       locales: ["en", "fr", "es"],
     },
   };
@@ -97,8 +110,8 @@ async function main() {
   console.log(JSON.stringify(result, null, 2));
 
   if (
-    result.articleGroupCount !== 6 ||
-    result.localizationCount !== 18 ||
+    result.articleGroupCount !== expectedGroups.size ||
+    result.localizationCount !== expectedLocalizations ||
     !result.localeCompleteness.complete ||
     result.duplicateSlugCount ||
     result.missingTranslations ||

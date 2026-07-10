@@ -1,0 +1,1 @@
+ALTER TYPE "public"."admin_audit_event" ADD VALUE 'reopen' BEFORE 'scheduler_success';

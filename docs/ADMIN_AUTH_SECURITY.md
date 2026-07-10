@@ -18,3 +18,5 @@ Required setup:
 4. Sign in at `/admin/login`.
 
 Do not commit credentials, password hashes, session tokens, invite tokens, scheduler secrets, or Cloudinary API secrets.
+
+Admin settings, user management, audit logs, approval, publishing, scheduling, archive, restore, and media management are checked server-side. User invitations store only a hash, expire, can be revoked, and are single-use; the manually displayed invitation URL is returned once to the Admin UI. Role changes and disabling an account revoke active sessions.
