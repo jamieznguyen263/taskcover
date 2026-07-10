@@ -104,4 +104,3 @@ export class ContentConflictError extends Error {
 export class ContentStateError extends Error {
   readonly code = "invalid-state";
 }
-

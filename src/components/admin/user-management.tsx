@@ -24,4 +24,3 @@ export function UserManagement({ users, invites }: { users: UserRow[]; invites: 
     </div>
   </>;
 }
-

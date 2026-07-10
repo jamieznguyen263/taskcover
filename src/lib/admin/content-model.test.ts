@@ -17,4 +17,3 @@ describe("Admin content model", () => {
     expect(published).not.toBe(article);
   });
 });
-

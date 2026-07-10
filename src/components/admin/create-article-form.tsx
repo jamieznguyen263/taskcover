@@ -26,4 +26,3 @@ export function CreateArticleForm({ creationKey }: { creationKey: string }) {
     </form>
   );
 }
-
