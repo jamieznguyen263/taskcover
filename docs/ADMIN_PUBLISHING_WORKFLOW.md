@@ -19,3 +19,5 @@ Scheduled publishing endpoint:
 - Header: `x-taskcover-publish-secret: <PUBLISH_CRON_SECRET>`
 - Returns summarized counts only.
 - No GET publishing.
+
+The workflow is enforced by `AdminRepository.transitionArticle`, not by UI visibility. The live public provider selects only rows with a non-null published revision pointer and no archive timestamp, so draft, review, approved, and future-scheduled changes cannot replace the live snapshot. A published article can be reopened into a new draft without changing its live snapshot. Archive hides the pointer; restore requires an Admin-selected immutable revision and creates a new draft.

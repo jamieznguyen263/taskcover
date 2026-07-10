@@ -64,3 +64,9 @@ Scheduled articles can be previewed by authorized users but must remain absent f
 ## Future CMS Migration
 
 The Admin or CMS should implement the `InsightsProvider` interface rather than changing public page components. This keeps routing, schema, related logic, sitemap behavior, and block rendering stable.
+
+## Implemented persistence contract
+
+Article groups are created transactionally with EN/FR/ES `draft_snapshot` records. A creation UUID is unique, so double-submission returns the existing group. Saves validate the full structured article and Tiptap document, normalize blocks, update the actor and timestamp, and increment `lockVersion` with optimistic concurrency. A stale version returns a conflict and never overwrites newer content.
+
+The `published_snapshot` and `published_revision_id` fields are immutable public state. Draft edits update only `draft_snapshot` until an Admin publication transaction writes every locale snapshot and revision together.

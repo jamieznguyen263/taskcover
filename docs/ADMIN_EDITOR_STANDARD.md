@@ -22,3 +22,5 @@ Autosave requirements:
 - Optimistic concurrency through `lockVersion`/draft versions
 - No database revision for every keystroke
 - Warn before navigation with unsaved changes
+
+The editor sends the complete draft to `POST /api/admin/insights/autosave` after a 1.2 second debounce. `Saved` is shown only after the database returns a new lock version. Network failure remains `Save failed`; a stale lock returns `Conflict detected` and offers reload. The editor accepts structured JSON for the non-document tabs and rejects raw HTML/editor nodes.
