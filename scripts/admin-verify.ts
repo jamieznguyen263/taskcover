@@ -1,5 +1,6 @@
 import { loadEnvConfig } from "@next/env";
 import postgres from "postgres";
+import { isSupportedPasswordHash } from "../src/lib/admin/crypto";
 import { defaultVerificationRole, parseAdminRole, readFlagValue } from "../src/lib/admin/user-bootstrap";
 
 loadEnvConfig(process.cwd());
@@ -41,7 +42,7 @@ async function main() {
     expectedRole,
     roleMatches: admin?.role === expectedRole,
     active: admin?.status === "active",
-    passwordHashFormatValid: admin?.password_hash?.startsWith("$argon2id$") ?? false,
+    passwordHashFormatValid: admin ? isSupportedPasswordHash(admin.password_hash) : false,
     plaintextPasswordFields: "not present in schema",
     sessionRequired: false,
   };

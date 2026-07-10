@@ -29,8 +29,8 @@ describe("Admin Content OS staging database", () => {
     try {
       const users = await sql<{ id: string; role: "admin" | "editor" }[]>`
         INSERT INTO admin_users (email, normalized_email, display_name, role, status, password_hash)
-        VALUES (${editorEmail}, ${editorEmail}, 'QA Editor', 'editor', 'active', '$argon2id$v=19$m=19456,t=2,p=1$placeholder$placeholder'),
-               (${adminEmail}, ${adminEmail}, 'QA Admin', 'admin', 'active', '$argon2id$v=19$m=19456,t=2,p=1$placeholder$placeholder')
+        VALUES (${editorEmail}, ${editorEmail}, 'QA Editor', 'editor', 'active', 'not-used-for-login-in-this-test'),
+               (${adminEmail}, ${adminEmail}, 'QA Admin', 'admin', 'active', 'not-used-for-login-in-this-test')
         RETURNING id, role
       `;
       editorId = users.find((user) => user.role === "editor")!.id;
