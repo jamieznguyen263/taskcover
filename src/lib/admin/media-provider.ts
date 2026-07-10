@@ -91,6 +91,7 @@ function unavailableUploadSignature(): UploadSignature {
 export function validateUploadMetadata(input: { mimeType: string; bytes: number }) {
   const allowed = new Set(["image/webp", "image/avif", "image/png", "image/jpeg"]);
   if (!allowed.has(input.mimeType)) throw new Error("Unsupported image MIME type.");
+  if (!Number.isSafeInteger(input.bytes) || input.bytes <= 0) throw new Error("Image size must be a positive integer.");
   if (input.bytes > 5 * 1024 * 1024) throw new Error("Image exceeds the 5 MB upload limit.");
 }
 

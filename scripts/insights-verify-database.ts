@@ -47,7 +47,7 @@ async function main() {
       SELECT count(*)::int
       FROM insight_article_groups g
       JOIN insight_article_localizations l ON l.article_group_id = g.id
-      WHERE g.draft_workflow_status = 'archived' AND l.published_snapshot IS NOT NULL
+      WHERE g.draft_workflow_status = 'archived' AND l.published_snapshot IS NOT NULL AND g.published_revision_group_id IS NOT NULL AND g.archived_at IS NULL
     ) AS archived_exposed
 `;
   const localeRows = await sql<{ locale: string; value: number }[]>`

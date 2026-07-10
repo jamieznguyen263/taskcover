@@ -4,11 +4,12 @@ import { localInsightsProvider } from "./local-provider";
 import type { ArticleSearchInput } from "./provider";
 import { rankRelatedArticles } from "./related";
 import { getDatabasePublishedInsights } from "./database-provider";
+import { isDatabaseConfigured } from "@/lib/db/client";
 
 export const insightsProvider = localInsightsProvider;
 
 function shouldUseDatabaseProvider() {
-  return String(process.env.INSIGHTS_PROVIDER ?? "local") === "database" && Boolean(process.env.DATABASE_URL);
+  return String(process.env.INSIGHTS_PROVIDER ?? "local") === "database" && isDatabaseConfigured();
 }
 
 export function getInsightsContent(locale: Locale) {

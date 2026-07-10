@@ -53,10 +53,12 @@ export function canTransition(role: AdminRole, from: InsightStatus, to: InsightS
   if (from === "draft" && to === "in-review") return hasPermission(role, "article:submit-review");
   if (from === "in-review" && to === "draft") return hasPermission(role, "article:request-changes");
   if (from === "in-review" && to === "approved") return hasPermission(role, "article:approve");
+  if (from === "approved" && to === "draft") return hasPermission(role, "article:request-changes");
   if (from === "approved" && to === "scheduled") return hasPermission(role, "article:schedule");
   if (from === "approved" && to === "published") return hasPermission(role, "article:publish");
   if (from === "scheduled" && to === "approved") return hasPermission(role, "article:schedule");
   if (from === "scheduled" && to === "published") return hasPermission(role, "scheduler:run");
+  if (from === "published" && to === "draft") return hasPermission(role, "article:edit");
   if (from === "published" && to === "archived") return hasPermission(role, "article:archive");
   if (from === "archived" && (to === "draft" || to === "published")) return hasPermission(role, "article:restore");
   return false;

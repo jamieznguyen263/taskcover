@@ -26,5 +26,8 @@ describe("admin permissions", () => {
     expect(canTransition("editor", "approved", "scheduled")).toBe(false);
     expect(canTransition("editor", "scheduled", "published")).toBe(false);
     expect(canTransition("editor", "published", "archived")).toBe(false);
+    expect(canTransition("editor", "published", "draft")).toBe(true);
+    expect(canTransition("admin", "approved", "draft")).toBe(true);
+    expect(canTransition("editor", "approved", "draft")).toBe(false);
   });
 });

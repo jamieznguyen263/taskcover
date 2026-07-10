@@ -9,8 +9,29 @@ export const localeSchema = z.enum(locales);
 
 export const tiptapDocumentSchema = z.object({
   type: z.literal("doc"),
-  content: z.array(z.unknown()).optional(),
+  content: z.array(z.unknown()).max(5000).optional(),
+}).strict().superRefine((document, context) => {
+  if (containsUnsafeEditorNode(document)) {
+    context.addIssue({ code: "custom", message: "Raw HTML and executable editor nodes are not allowed." });
+  }
 });
+
+const slugSchema = z.string().min(1).max(180).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug must be lowercase kebab-case.");
+const dateStringSchema = z.string().refine((value) => !Number.isNaN(Date.parse(value)), "Expected a valid ISO date or datetime.");
+
+export const createArticleInputSchema = z.object({
+  creationKey: z.string().uuid(),
+  sharedSlug: slugSchema,
+  category: z.enum(insightCategorySlugs),
+}).strict();
+
+export const transitionArticleInputSchema = z.object({
+  articleId: z.string().uuid(),
+  expectedVersion: z.number().int().positive(),
+  to: workflowStatusSchema,
+  note: z.string().trim().max(2000).optional(),
+  scheduledAt: z.string().datetime().optional(),
+}).strict();
 
 const insightLinkSchema = z.object({
   label: z.string().min(1),
@@ -112,6 +133,50 @@ const blocksSchema: z.ZodType<InsightBlock[]> = z.custom<InsightBlock[]>((value)
   message: "Expected InsightBlock[]",
 });
 
+export const articleDraftSchema: z.ZodType<InsightArticle> = z.object({
+  id: z.string().min(1),
+  slug: slugSchema,
+  translationGroupId: z.string().min(1).max(200),
+  locale: localeSchema,
+  internalTitle: z.string().min(1).max(300),
+  h1: z.string().min(1).max(300),
+  excerpt: z.string().max(1000),
+  category: z.enum(insightCategorySlugs),
+  tags: z.array(z.string().max(100)).max(50),
+  author: z.string().min(1).max(200),
+  expertReviewer: z.string().max(200).optional(),
+  editor: z.string().max(200).optional(),
+  status: workflowStatusSchema,
+  publishedAt: dateStringSchema,
+  updatedAt: dateStringSchema,
+  lastFactCheckedAt: dateStringSchema,
+  scheduledAt: z.string().datetime().optional(),
+  readingTime: z.number().int().nonnegative().max(1000),
+  coverImage: z.string().max(2000),
+  coverImageAlt: z.string().max(500),
+  coverImageCaption: z.string().max(1000),
+  blocks: blocksSchema,
+  searchStrategy: searchStrategySchema,
+  contentEvidence: contentEvidenceSchema,
+  internalLinking: internalLinkingSchema,
+  metadata: metadataSchema,
+  schema: schemaConfigurationSchema,
+  localization: localizationDataSchema,
+  publishQa: z.object({ summary: z.string().max(2000), checkedAt: dateStringSchema }),
+}).strict();
+
+export const saveArticleInputSchema = z.object({
+  articleId: z.string().uuid(),
+  locale: localeSchema,
+  expectedVersion: z.number().int().positive(),
+  editorDocument: tiptapDocumentSchema,
+  article: articleDraftSchema,
+}).strict().superRefine((input, context) => {
+  if (input.article.id !== input.articleId || input.article.locale !== input.locale) {
+    context.addIssue({ code: "custom", message: "Article identity does not match the save target." });
+  }
+});
+
 export const publishedArticleSnapshotSchema: z.ZodType<InsightArticle> = z.custom<InsightArticle>((value) => {
   const article = value as Partial<InsightArticle>;
   return Boolean(
@@ -133,24 +198,11 @@ export function validateJsonPayload<T>(schema: z.ZodType<T>, payload: unknown, l
   return result.data;
 }
 
-export function validatePublishPayload(payload: {
-  editorDocument: unknown;
-  normalizedBlocks: unknown;
-  searchStrategy: unknown;
-  evidenceData: unknown;
-  internalLinkData: unknown;
-  metadata: unknown;
-  schemaConfiguration: unknown;
-  localizationData: unknown;
-}) {
-  return {
-    editorDocument: validateJsonPayload(tiptapDocumentSchema, payload.editorDocument, "Editor document"),
-    normalizedBlocks: validateJsonPayload(blocksSchema, payload.normalizedBlocks, "Normalized blocks"),
-    searchStrategy: validateJsonPayload(searchStrategySchema, payload.searchStrategy, "Search strategy"),
-    evidenceData: validateJsonPayload(contentEvidenceSchema, payload.evidenceData, "Evidence"),
-    internalLinkData: validateJsonPayload(internalLinkingSchema, payload.internalLinkData, "Internal linking"),
-    metadata: validateJsonPayload(metadataSchema, payload.metadata, "Metadata"),
-    schemaConfiguration: validateJsonPayload(schemaConfigurationSchema, payload.schemaConfiguration, "Schema"),
-    localizationData: validateJsonPayload(localizationDataSchema, payload.localizationData, "Localization"),
-  };
+function containsUnsafeEditorNode(value: unknown): boolean {
+  if (Array.isArray(value)) return value.some(containsUnsafeEditorNode);
+  if (!value || typeof value !== "object") return false;
+  const record = value as Record<string, unknown>;
+  if (typeof record.type === "string" && ["html", "script", "iframe"].includes(record.type.toLowerCase())) return true;
+  if ("html" in record) return true;
+  return Object.values(record).some(containsUnsafeEditorNode);
 }
