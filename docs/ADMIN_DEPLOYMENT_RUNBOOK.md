@@ -45,6 +45,6 @@ Back up PostgreSQL before migrations and before bulk imports. Published revision
 - Admin remains under `/admin` on `https://taskcover.com/admin`.
 - Configure Neon and Hyperdrive before creating real Admin users.
 - Run Drizzle migrations only after the user provides the direct Neon migration URL and approval.
-- Verify Argon2id password hashing in Cloudflare Worker preview.
+- Verify PBKDF2 password hashing against the actual deployed Cloudflare Worker, not just Node.js/Vitest — Argon2id previously passed every local/CI test while silently failing on every real login, because the WASM step it relied on only fails inside the Workers runtime.
 - Keep `INSIGHTS_PROVIDER=local` until database import and publish verification pass.
 - Configure secrets through `.env.local`, `.dev.vars`, `wrangler secret put`, or Cloudflare dashboard secrets.

@@ -2,14 +2,15 @@ import "server-only";
 
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 export {
-  ARGON2ID_PARAMS,
   MAX_PASSWORD_LENGTH,
   MIN_PASSWORD_LENGTH,
+  PBKDF2_PARAMS,
   constantTimeEqual,
   createOpaqueToken,
   hashPassword,
   hashSecurityIdentifier,
   hashToken,
+  isSupportedPasswordHash,
   normalizeEmail,
   summarizeUserAgent,
   validatePasswordShape,
