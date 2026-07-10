@@ -5,24 +5,25 @@ import { ArticleEditor } from "@/components/admin/article-editor";
 import { getAdminIntegrationStatus } from "@/lib/admin/env";
 import { AdminRepository } from "@/lib/admin/repository";
 import { requireAdminSession } from "@/lib/admin/session";
-import { getPublishedInsights } from "@/lib/insights/content";
-import type { InsightArticle } from "@/content/insights.types";
+import { asLocale } from "@/lib/i18n";
 
-export default async function AdminInsightEditorPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function AdminInsightEditorPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ locale?: string }> }) {
   await connection();
   if (!getAdminIntegrationStatus().databaseConfigured) return <AdminUnavailable />;
   const session = await requireAdminSession();
-  const articleGroup = await new AdminRepository().getArticleGroup((await params).id);
+  const repo = new AdminRepository();
+  const articleGroup = await repo.getEditableArticleGroup((await params).id);
   if (!articleGroup) notFound();
-
-  const fallbackArticle = (await getPublishedInsights("en"))[0] as InsightArticle;
-  const published = articleGroup.localizations.find((item) => item.locale === "en")?.publishedSnapshot as InsightArticle | null;
-  const article = published ?? { ...fallbackArticle, id: articleGroup.group.id, slug: articleGroup.group.sharedSlug, h1: articleGroup.group.sharedSlug };
+  const locale = asLocale((await searchParams).locale);
+  const localization = articleGroup.localizations.find((item) => item.locale === locale) ?? articleGroup.localizations[0];
+  if (!localization) notFound();
+  const raw = await repo.getArticleGroup(articleGroup.id);
+  const restoreRevisionId = raw?.revisions.find((revision) => revision.articleSnapshot)?.id;
 
   return (
     <AdminShell session={session}>
-      <AdminPageHeader eyebrow="Editor" title={article.h1} description="Structured Tiptap editing with eight SEO/content tabs, autosave states, conflict detection, and preview through the public block renderer." />
-      <ArticleEditor article={article} />
+      <AdminPageHeader eyebrow="Editor" title={localization.article.h1} description="Persistent multilingual editing with optimistic concurrency, accurate autosave state, authenticated preview, and server-enforced workflow transitions." />
+      <ArticleEditor articleId={articleGroup.id} article={localization.article} editorDocument={localization.editorDocument} lockVersion={articleGroup.lockVersion} status={articleGroup.status} role={session.role} schedulerConfigured={getAdminIntegrationStatus().schedulerConfigured} availableLocales={articleGroup.localizations.map((item) => item.locale)} restoreRevisionId={restoreRevisionId} />
     </AdminShell>
   );
 }

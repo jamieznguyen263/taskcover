@@ -15,8 +15,10 @@ import {
   verifyPassword,
 } from "./security";
 import { assertPermission } from "./permissions";
+import { revalidatePath } from "next/cache";
 
 export type LoginState = { error?: string };
+export type InviteState = { error?: string; inviteUrl?: string };
 
 export async function loginAction(_state: LoginState, formData: FormData): Promise<LoginState> {
   const email = String(formData.get("email") ?? "");
@@ -68,7 +70,7 @@ export async function logoutAction() {
   redirect("/admin/login");
 }
 
-export async function createInviteAction(formData: FormData) {
+export async function createInviteAction(_state: InviteState, formData: FormData): Promise<InviteState> {
   const session = await requireAdminSession();
   assertPermission(session.role, "users:manage");
 
@@ -76,21 +78,37 @@ export async function createInviteAction(formData: FormData) {
   const role = String(formData.get("role") ?? "editor") === "admin" ? "admin" : "editor";
   const token = createOpaqueToken();
   const repo = new AdminRepository();
-  await repo.createInvite({
-    email,
-    role,
-    token,
-    invitedBy: session.userId,
-    expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
-  });
-  await repo.audit({
-    event: "user_invite",
+  try {
+    if (!/^\S+@\S+\.\S+$/.test(email)) return { error: "A valid email address is required." };
+    await repo.createInvite({ email, role, token, invitedBy: session.userId, expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7) });
+    await repo.audit({ event: "user_invite", actorId: session.userId, targetType: "admin_user", targetId: normalizeEmail(email), summary: `Invitation created for ${normalizeEmail(email)}.`, metadata: { role } });
+    revalidatePath("/admin/users");
+    const appUrl = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    return { inviteUrl: `${appUrl}/admin/accept-invite?token=${encodeURIComponent(token)}` };
+  } catch {
+    return { error: "Invitation could not be created." };
+  }
+}
+
+export async function revokeInviteAction(formData: FormData) {
+  const session = await requireAdminSession();
+  assertPermission(session.role, "users:manage");
+  await new AdminRepository().revokeInvite({ inviteId: String(formData.get("inviteId") ?? ""), actorId: session.userId });
+  revalidatePath("/admin/users");
+}
+
+export async function updateUserAccessAction(formData: FormData) {
+  const session = await requireAdminSession();
+  assertPermission(session.role, "users:manage");
+  const roleValue = String(formData.get("role") ?? "");
+  const statusValue = String(formData.get("status") ?? "");
+  await new AdminRepository().updateUserAccess({
+    targetUserId: String(formData.get("userId") ?? ""),
     actorId: session.userId,
-    targetType: "admin_user",
-    targetId: normalizeEmail(email),
-    summary: `Invitation created for ${normalizeEmail(email)}.`,
-    metadata: { role },
+    role: roleValue === "admin" || roleValue === "editor" ? roleValue : undefined,
+    status: statusValue === "active" || statusValue === "disabled" ? statusValue : undefined,
   });
+  revalidatePath("/admin/users");
 }
 
 export async function acceptInviteAction(_state: LoginState, formData: FormData): Promise<LoginState> {
