@@ -55,7 +55,7 @@ export type InsightFaqItem = {
 
 export type InsightBlock =
   | { type: "paragraph"; text: string }
-  | { type: "heading"; level: 2 | 3; text: string; id?: string }
+  | { type: "heading"; level: 2 | 3 | 4; text: string; id?: string }
   | { type: "bullet-list"; items: string[] }
   | { type: "numbered-list"; items: string[] }
   | { type: "quote"; quote: string; attribution?: string }
@@ -84,6 +84,9 @@ export type InsightBlock =
   | { type: "sample-audit-reference"; title: string; href: string; summary: string }
   | { type: "related-service"; title: string; href: string; summary: string }
   | { type: "cta"; title: string; body: string; primary: InsightLink; secondary?: InsightLink }
+  | { type: "statistic"; value: string; label: string; sourceId?: string; note?: string }
+  | { type: "code"; code: string; language?: string }
+  | { type: "image"; src: string; alt: string; caption?: string; credit?: string }
   | { type: "divider" };
 
 export type InsightArticle = {
@@ -127,6 +130,7 @@ export type InsightArticle = {
     aiCitationOpportunity: string;
     uniqueInformationGain: string;
     refreshTrigger: string;
+    excludedEntities?: string[];
   };
   contentEvidence: {
     sources: InsightSource[];
@@ -172,6 +176,11 @@ export type InsightArticle = {
     xDefaultSlug: string;
     translationStatus: "complete" | "needs-review";
     translationNotes: string;
+    sourceLocale?: Locale;
+    assignedTranslator?: string;
+    localeReviewStatus?: "pending" | "approved" | "changes-requested";
+    syncedFromSourceVersion?: number;
+    localeKeyword?: string;
   };
   publishQa: {
     summary: string;

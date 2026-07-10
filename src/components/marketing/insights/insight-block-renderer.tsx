@@ -33,9 +33,9 @@ function InsightBlockView({ block, locale }: { block: InsightBlock; locale: Loca
       return <p className="text-pretty text-base leading-8 text-secondary sm:text-lg">{block.text}</p>;
     case "heading": {
       const id = block.id ?? slugify(block.text);
-      const Tag = block.level === 2 ? "h2" : "h3";
+      const Tag = block.level === 2 ? "h2" : block.level === 3 ? "h3" : "h4";
       return (
-        <Tag id={id} className={cn("group scroll-mt-24 font-semibold tracking-tight text-graphite", block.level === 2 ? "text-3xl" : "text-2xl")}>
+        <Tag id={id} className={cn("group scroll-mt-24 font-semibold tracking-tight text-graphite", block.level === 2 ? "text-3xl" : block.level === 3 ? "text-2xl" : "text-xl")}>
           <a href={`#${id}`} className="outline-none">
             {block.text}
             <span className="ml-2 text-brand-teal opacity-0 transition-opacity group-hover:opacity-100" aria-hidden="true">
@@ -253,6 +253,33 @@ function InsightBlockView({ block, locale }: { block: InsightBlock; locale: Loca
             </div>
           </div>
         </section>
+      );
+    case "statistic":
+      return (
+        <section className="rounded-2xl border border-line bg-white p-5 text-center">
+          <p className="text-4xl font-semibold tracking-tight text-brand-teal">{block.value}</p>
+          <p className="mt-2 text-sm font-medium text-graphite">{block.label}</p>
+          {block.note ? <p className="mt-1 text-xs text-muted">{block.note}</p> : null}
+        </section>
+      );
+    case "code":
+      return (
+        <pre className="max-w-full overflow-x-auto rounded-2xl border border-line bg-graphite p-5 text-sm leading-6 text-white">
+          <code>{block.code}</code>
+        </pre>
+      );
+    case "image":
+      return (
+        <figure className="overflow-hidden rounded-2xl border border-line bg-white">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={block.src} alt={block.alt} loading="lazy" className="w-full object-cover" />
+          {block.caption || block.credit ? (
+            <figcaption className="border-t border-line px-4 py-3 text-xs text-muted">
+              {block.caption}
+              {block.credit ? <span className="ml-2 text-muted">({block.credit})</span> : null}
+            </figcaption>
+          ) : null}
+        </figure>
       );
     case "divider":
       return <hr className="border-line" />;
