@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   checkLoginRateLimit,
   constantTimeEqual,
@@ -12,6 +12,9 @@ import {
 } from "./security";
 
 describe("admin security", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
   it("hashes and verifies passwords with generic false on invalid password", async () => {
     const hash = await hashPassword("correct horse battery staple");
     expect(hash).not.toContain("correct horse");
@@ -33,10 +36,16 @@ describe("admin security", () => {
     expect(constantTimeEqual("abc", "abcd")).toBe(false);
   });
 
-  it("rate limits repeated login attempts", () => {
+  it("rate limits repeated login attempts", async () => {
     resetLoginRateLimit("test");
-    for (let index = 0; index < 8; index += 1) expect(checkLoginRateLimit("test")).toBe(true);
-    expect(checkLoginRateLimit("test")).toBe(false);
+    for (let index = 0; index < 8; index += 1) expect(await checkLoginRateLimit("test")).toBe(true);
+    expect(await checkLoginRateLimit("test")).toBe(false);
     resetLoginRateLimit("test");
+  });
+
+  it("fails closed in production when the configured Cloudflare binding is unavailable", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("AUTH_RATE_LIMIT_PROVIDER", "cloudflare");
+    expect(await checkLoginRateLimit("missing-binding")).toBe(false);
   });
 });

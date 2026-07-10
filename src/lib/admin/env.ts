@@ -3,6 +3,7 @@ import { getCloudflareContext } from "@opennextjs/cloudflare";
 type RuntimeEnv = {
   HYPERDRIVE?: { connectionString?: string };
   LEAD_RATE_LIMITER?: unknown;
+  ADMIN_RATE_LIMITER?: unknown;
   RATE_LIMIT_COORDINATOR?: unknown;
 };
 
@@ -26,6 +27,7 @@ export function getAdminIntegrationStatus(): AdminIntegrationStatus {
   const schedulerProvider = String(process.env.PUBLISH_SCHEDULER_PROVIDER ?? "disabled") as AdminIntegrationStatus["schedulerProvider"];
   const insightsProvider = String(process.env.INSIGHTS_PROVIDER ?? "local");
   const rateLimitProvider = String(process.env.RATE_LIMIT_PROVIDER ?? "memory");
+  const authRateLimitProvider = String(process.env.AUTH_RATE_LIMIT_PROVIDER ?? "memory");
   const runtimeEnv = getRuntimeEnv();
 
   return {
@@ -49,7 +51,9 @@ export function getAdminIntegrationStatus(): AdminIntegrationStatus {
         process.env.CLOUDINARY_API_KEY &&
         process.env.CLOUDINARY_API_SECRET
     ),
-    rateLimitingConfigured: Boolean(runtimeEnv?.LEAD_RATE_LIMITER) || ["durable-object", "memory"].includes(rateLimitProvider),
+    rateLimitingConfigured:
+      (Boolean(runtimeEnv?.LEAD_RATE_LIMITER) || ["durable-object", "memory"].includes(rateLimitProvider)) &&
+      (Boolean(runtimeEnv?.ADMIN_RATE_LIMITER) || ["durable-object", "memory"].includes(authRateLimitProvider)),
     durableObjectConfigured: Boolean(runtimeEnv?.RATE_LIMIT_COORDINATOR),
     schedulerConfigured: Boolean(process.env.PUBLISH_CRON_SECRET && schedulerProvider !== "disabled"),
     provider: insightsProvider === "database" ? "database" : "local",

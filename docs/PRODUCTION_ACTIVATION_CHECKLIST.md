@@ -12,7 +12,7 @@ For the provider-by-provider paste list and local/staging workflow, use `docs/PR
 | 4. Drizzle migration | Codex/User | `DATABASE_TARGET=development` or `staging` | `npm run db:status` then `npm run db:migrate` | Host/database and pending count only | Missing target or DB URL | Restore Neon branch/backup |
 | 5. First Admin | User | Admin email and password entered interactively | `npm run admin:create -- admin@taskcover.com` | `Admin ready: ...` | Existing Admin without `--update-existing` | Disable Admin row or rotate again |
 | 6. Insights import | Codex/User | Local content and safe DB | `npm run insights:import` | Import completes without secrets | Counts mismatch | Re-import on disposable DB |
-| 7. Database provider verification | Codex/User | 6 groups, 18 localizations | `npm run insights:verify-database` | Counts and visibility checks pass | Duplicate/missing/invalid content | Keep provider local |
+| 7. Database provider verification | Codex/User | Source-derived article/localization counts | `npm run insights:verify-database` | Counts and visibility checks pass | Duplicate/missing/invalid content | Keep provider local |
 | 8. Resend domain | User | Verified `taskcover.com`, sender values | `npm run integrations:test-resend` | Offline template and format checks pass | Invalid sender or missing key | Disable visitor confirmation |
 | 9. HubSpot Private App | User | Token, pipeline ID, new lead stage ID | `npm run integrations:test-hubspot` | Offline mapping list printed | Missing token/stage/pipeline | Disable HubSpot jobs |
 | 10. Cal.com | User | HTTPS booking URL without PII query params | `npm run integrations:test-calcom` | `safe: true` or hidden when missing | HTTP, bad host, PII params | Hide CTA by unsetting URL |

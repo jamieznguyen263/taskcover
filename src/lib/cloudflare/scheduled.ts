@@ -19,14 +19,17 @@ export async function runScheduledTasks(_env?: unknown, scheduledTime = Date.now
   }
 
   await recoverStaleLeadDeliveryLocks();
+  const scheduler = getPublishScheduler();
+  if (!scheduler.isConfigured()) skipped.push("publishing-scheduler-disabled");
+
   const [published, leads] = await Promise.all([
-    getPublishScheduler().publishDueArticles(new Date(scheduledTime)),
+    scheduler.isConfigured() ? scheduler.publishDueArticles(new Date(scheduledTime)) : Promise.resolve(null),
     processLeadDeliveryJobs(undefined, new Date(scheduledTime), 10),
   ]);
 
   logOperationalEvent({
     event: "scheduled_tasks",
-    result: `published:${published.published};lead_jobs:${leads.processed}`,
+    result: `published:${published?.published ?? 0};lead_jobs:${leads.processed}`,
   });
 
   return { published, leads, skipped };

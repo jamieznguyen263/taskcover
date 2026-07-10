@@ -13,7 +13,7 @@ Database setup:
 2. Run `npm run db:migrate`.
 3. Run `npm run admin:create -- admin@example.com`.
 4. Run `npm run insights:import`.
-5. Verify 6 article groups and 18 localizations.
+5. Verify database article groups and localizations against the current source content counts.
 6. Verify published snapshots and public routes in database mode.
 
 Production publishing setup:

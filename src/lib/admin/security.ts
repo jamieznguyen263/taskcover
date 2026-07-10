@@ -1,75 +1,47 @@
 import "server-only";
 
-import { argon2id, argon2Verify } from "hash-wasm";
-import crypto from "node:crypto";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
+export {
+  ARGON2ID_PARAMS,
+  MAX_PASSWORD_LENGTH,
+  MIN_PASSWORD_LENGTH,
+  constantTimeEqual,
+  createOpaqueToken,
+  hashPassword,
+  hashSecurityIdentifier,
+  hashToken,
+  normalizeEmail,
+  summarizeUserAgent,
+  validatePasswordShape,
+  verifyPassword,
+} from "./crypto";
 
 export const ADMIN_SESSION_COOKIE = "taskcover_admin_session";
-export const MIN_PASSWORD_LENGTH = 12;
-export const MAX_PASSWORD_LENGTH = 256;
-export const ARGON2ID_PARAMS = {
-  memorySize: 19456,
-  iterations: 2,
-  parallelism: 1,
-  hashLength: 32,
-} as const;
 
 const loginBuckets = new Map<string, { count: number; resetsAt: number }>();
 
-export function normalizeEmail(email: string) {
-  return email.trim().toLowerCase();
-}
+type RuntimeEnv = {
+  ADMIN_RATE_LIMITER?: { limit(input: { key: string }): Promise<{ success: boolean }> };
+  RATE_LIMIT_COORDINATOR?: { getByName(name: string): { check(input: { key: string; limit?: number; windowMs?: number; now?: number }): Promise<{ allowed: boolean }> } };
+};
 
-export function validatePasswordShape(password: string) {
-  return password.length >= MIN_PASSWORD_LENGTH && password.length <= MAX_PASSWORD_LENGTH;
-}
-
-export async function hashPassword(password: string) {
-  if (!validatePasswordShape(password)) {
-    throw new Error("Password does not meet length requirements.");
+export async function checkLoginRateLimit(key: string, now = Date.now()) {
+  const provider = String(process.env.AUTH_RATE_LIMIT_PROVIDER ?? "memory");
+  const runtimeEnv = getRuntimeEnv();
+  if (provider === "cloudflare" && runtimeEnv?.ADMIN_RATE_LIMITER) {
+    const result = await runtimeEnv.ADMIN_RATE_LIMITER.limit({ key });
+    return result.success;
   }
-  return argon2id({
-    password,
-    salt: crypto.randomBytes(16),
-    ...ARGON2ID_PARAMS,
-    outputType: "encoded",
-  });
-}
-
-export async function verifyPassword(hash: string, password: string) {
-  if (!validatePasswordShape(password)) return false;
-  try {
-    return await argon2Verify({ hash, password });
-  } catch {
+  if (provider === "durable-object" && runtimeEnv?.RATE_LIMIT_COORDINATOR) {
+    const namespace = process.env.AUTH_RATE_LIMIT_NAMESPACE || "taskcover-admin-auth";
+    const stub = runtimeEnv.RATE_LIMIT_COORDINATOR.getByName(`${namespace}:${key}`);
+    const result = await stub.check({ key, limit: 8, windowMs: 15 * 60 * 1000, now });
+    return result.allowed;
+  }
+  if (provider !== "memory" && process.env.NODE_ENV === "production") {
     return false;
   }
-}
 
-export function createOpaqueToken() {
-  return crypto.randomBytes(32).toString("base64url");
-}
-
-export function hashToken(token: string) {
-  return crypto.createHash("sha256").update(token).digest("hex");
-}
-
-export function hashSecurityIdentifier(value: string | null | undefined) {
-  if (!value) return null;
-  return crypto.createHash("sha256").update(value).digest("hex");
-}
-
-export function constantTimeEqual(a: string, b: string) {
-  const left = Buffer.from(a);
-  const right = Buffer.from(b);
-  if (left.length !== right.length) return false;
-  return crypto.timingSafeEqual(left, right);
-}
-
-export function summarizeUserAgent(userAgent: string | null) {
-  if (!userAgent) return null;
-  return userAgent.slice(0, 180);
-}
-
-export function checkLoginRateLimit(key: string, now = Date.now()) {
   const bucket = loginBuckets.get(key);
   if (!bucket || bucket.resetsAt <= now) {
     loginBuckets.set(key, { count: 1, resetsAt: now + 15 * 60 * 1000 });
@@ -81,4 +53,12 @@ export function checkLoginRateLimit(key: string, now = Date.now()) {
 
 export function resetLoginRateLimit(key: string) {
   loginBuckets.delete(key);
+}
+
+function getRuntimeEnv(): RuntimeEnv | undefined {
+  try {
+    return getCloudflareContext().env as RuntimeEnv;
+  } catch {
+    return undefined;
+  }
 }

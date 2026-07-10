@@ -26,7 +26,7 @@ export async function loginAction(_state: LoginState, formData: FormData): Promi
   const rateLimitKey = `${normalizeEmail(email)}:${ipHash ?? "unknown"}`;
   const repo = new AdminRepository();
 
-  if (!checkLoginRateLimit(rateLimitKey)) {
+  if (!(await checkLoginRateLimit(rateLimitKey))) {
     await repo.audit({
       event: "login_failure",
       summary: "Login rate limit exceeded.",

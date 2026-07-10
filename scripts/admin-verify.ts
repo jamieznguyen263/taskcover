@@ -1,13 +1,18 @@
 import { loadEnvConfig } from "@next/env";
 import postgres from "postgres";
+import { defaultVerificationRole, parseAdminRole, readFlagValue } from "../src/lib/admin/user-bootstrap";
 
 loadEnvConfig(process.cwd());
 
-const email = process.argv[2];
+const args = process.argv.slice(2);
+const email = args.find((arg, index) => !arg.startsWith("--") && args[index - 1] !== "--role");
+const defaultRole = defaultVerificationRole(process.env.npm_lifecycle_event);
+const expectedRole = parseAdminRole(readFlagValue(args, "--role"), defaultRole);
 if (!email) {
-  console.error("Usage: npm run admin:verify -- admin@example.com");
+  console.error("Usage: npm run admin:verify -- admin@example.com [--role admin|editor]");
   process.exit(1);
 }
+const normalizedEmail = email.trim().toLowerCase();
 if (!process.env.DATABASE_URL) {
   console.error("DATABASE_URL is required for admin:verify.");
   process.exit(1);
@@ -20,20 +25,26 @@ main().catch((error) => {
 
 async function main() {
   const sql = postgres(process.env.DATABASE_URL as string, { max: 1, prepare: false });
-  const rows = await sql<{ role: string; status: string; password_hash: string; plaintext_password?: string }[]>`
-  SELECT role, status, password_hash FROM admin_users WHERE normalized_email = ${email.trim().toLowerCase()} LIMIT 1
-`;
-  await sql.end();
+  let rows: { role: string; status: string; password_hash: string }[];
+  try {
+    rows = await sql<{ role: string; status: string; password_hash: string }[]>`
+      SELECT role, status, password_hash FROM admin_users WHERE normalized_email = ${normalizedEmail} LIMIT 1
+    `;
+  } finally {
+    await sql.end();
+  }
 
   const admin = rows[0];
   const result = {
     exists: Boolean(admin),
-    roleAdmin: admin?.role === "admin",
+    role: admin?.role ?? null,
+    expectedRole,
+    roleMatches: admin?.role === expectedRole,
     active: admin?.status === "active",
     passwordHashFormatValid: admin?.password_hash?.startsWith("$argon2id$") ?? false,
     plaintextPasswordFields: "not present in schema",
     sessionRequired: false,
   };
   console.log(JSON.stringify(result, null, 2));
-  if (!result.exists || !result.roleAdmin || !result.active || !result.passwordHashFormatValid) process.exitCode = 1;
+  if (!result.exists || !result.roleMatches || !result.active || !result.passwordHashFormatValid) process.exitCode = 1;
 }
