@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Node, mergeAttributes } from "@tiptap/core";
 import { NodeViewWrapper, ReactNodeViewRenderer, type NodeViewProps } from "@tiptap/react";
-import { ChevronDown, ChevronUp, Pencil, Trash2 } from "lucide-react";
+import { ChevronUp, Pencil, Trash2 } from "lucide-react";
 import type { InsightBlock } from "@/content/insights.types";
 import { STRUCTURED_BLOCK_NODE, structuredBlockTypes, type StructuredBlockType } from "@/lib/admin/normalization";
 import { insightBlockSchema } from "@/lib/admin/validation";
