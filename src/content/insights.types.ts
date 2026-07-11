@@ -87,6 +87,7 @@ export type InsightBlock =
   | { type: "statistic"; value: string; label: string; sourceId?: string; note?: string }
   | { type: "code"; code: string; language?: string }
   | { type: "image"; src: string; alt: string; caption?: string; credit?: string; width?: number; height?: number; mediaAssetId?: string; lqip?: string }
+  | { type: "video"; provider: "youtube"; videoId: string; title: string; caption?: string }
   | { type: "divider" };
 
 export type InsightArticle = {

@@ -258,6 +258,23 @@ function InsightBlockView({ block, locale, priority }: { block: InsightBlock; lo
           </div>
         </section>
       );
+    case "video":
+      return (
+        <figure className="overflow-hidden rounded-2xl border border-line bg-white">
+          <div className="relative aspect-video">
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${block.videoId}`}
+              title={block.title}
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+              className="absolute inset-0 h-full w-full"
+            />
+          </div>
+          {block.caption ? <figcaption className="border-t border-line px-4 py-3 text-xs text-muted">{block.caption}</figcaption> : null}
+        </figure>
+      );
     case "statistic":
       return (
         <section className="rounded-2xl border border-line bg-white p-5 text-center">

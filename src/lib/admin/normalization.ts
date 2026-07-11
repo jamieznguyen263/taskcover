@@ -27,6 +27,11 @@ export const structuredBlockTypes = [
   "expert-insight",
   "cta",
   "image",
+  "video",
+  "decision-framework",
+  "case-study-reference",
+  "sample-audit-reference",
+  "related-service",
 ] as const;
 
 export type StructuredBlockType = (typeof structuredBlockTypes)[number];

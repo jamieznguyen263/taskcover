@@ -56,6 +56,20 @@ describe("Tiptap normalization", () => {
     expect(blocks).toEqual([{ type: "image", src: "https://example.com/a.png", alt: "Chart" }]);
   });
 
+  it("normalizes a YouTube video structured block", () => {
+    const blocks = normalizeTiptapToInsightBlocks(
+      doc([{ type: STRUCTURED_BLOCK_NODE, attrs: { blockType: "video", data: { type: "video", provider: "youtube", videoId: "dQw4w9WgXcQ", title: "Demo" } } }])
+    );
+    expect(blocks).toEqual([{ type: "video", provider: "youtube", videoId: "dQw4w9WgXcQ", title: "Demo" }]);
+  });
+
+  it("drops a video block with an invalid video ID", () => {
+    const blocks = normalizeTiptapToInsightBlocks(
+      doc([{ type: STRUCTURED_BLOCK_NODE, attrs: { blockType: "video", data: { type: "video", provider: "youtube", videoId: "bad", title: "Demo" } } }])
+    );
+    expect(blocks).toEqual([]);
+  });
+
   it("still rejects unsafe editor nodes", () => {
     expect(() => normalizeTiptapToInsightBlocks(doc([{ type: "iframe" }]))).toThrow();
   });

@@ -24,6 +24,7 @@ import { createDraftArticle, ContentConflictError, ContentStateError, materializ
 import { articleDraftSchema, createArticleInputSchema, publishedArticleSnapshotSchema, saveArticleInputSchema, transitionArticleInputSchema, validateJsonPayload } from "./validation";
 import type { AdminRole } from "./permissions";
 import { normalizeTiptapToInsightBlocks } from "./normalization";
+import { computeReadingTime } from "./geo-analysis";
 import { validateInsightArticle, type PublishQaResult } from "@/lib/insights/publish-qa";
 
 export type AdminUserSession = {
@@ -468,6 +469,7 @@ export class AdminRepository {
       ...parsed.article,
       status: "draft",
       blocks: normalizedBlocks,
+      readingTime: computeReadingTime(normalizedBlocks),
       updatedAt: now.toISOString(),
     });
 

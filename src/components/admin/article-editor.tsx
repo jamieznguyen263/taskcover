@@ -33,6 +33,7 @@ import { normalizeTiptapToInsightBlocks } from "@/lib/admin/normalization";
 import { BlockEditorSurface, buildEditorExtensions, DocumentOutline } from "./editor/block-editor";
 import { CollaborationPanel } from "./editor/collaboration-panel";
 import { Field, TextArea, TextInput } from "./editor/controls";
+import { ImagePicker } from "./editor/image-picker";
 import type { SiblingLocalization } from "./editor/localization-panel";
 
 // Section panels only mount when their tab is active, so they are code-split
@@ -390,10 +391,15 @@ export function ArticleEditor(props: {
               <Field label="Excerpt"><TextArea value={article.excerpt} disabled={!editable} rows={2} onChange={(excerpt) => updateArticle({ excerpt })} /></Field>
               <details className="rounded-lg border border-line-soft bg-surface-soft p-3">
                 <summary className="cursor-pointer text-sm font-medium text-graphite">Cover image</summary>
-                <div className="mt-3 grid gap-3 md:grid-cols-2">
-                  <Field label="Cover image URL"><TextInput value={article.coverImage} disabled={!editable} onChange={(coverImage) => updateArticle({ coverImage })} /></Field>
-                  <Field label="Cover image alt" hint="Required for publishing."><TextInput value={article.coverImageAlt} disabled={!editable} onChange={(coverImageAlt) => updateArticle({ coverImageAlt })} /></Field>
-                  <div className="md:col-span-2">
+                <div className="mt-3 grid gap-3">
+                  {editable ? (
+                    <ImagePicker value={article.coverImage} onChange={(picked) => updateArticle({ coverImage: picked.src })} />
+                  ) : article.coverImage ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={article.coverImage} alt={article.coverImageAlt} className="max-h-40 rounded-lg border border-line object-contain" />
+                  ) : null}
+                  <div className="grid gap-3 md:grid-cols-2">
+                    <Field label="Cover image alt" hint="Required for publishing."><TextInput value={article.coverImageAlt} disabled={!editable} onChange={(coverImageAlt) => updateArticle({ coverImageAlt })} /></Field>
                     <Field label="Cover image caption"><TextInput value={article.coverImageCaption} disabled={!editable} onChange={(coverImageCaption) => updateArticle({ coverImageCaption })} /></Field>
                   </div>
                 </div>
