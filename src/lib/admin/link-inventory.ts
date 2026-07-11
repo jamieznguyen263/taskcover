@@ -41,12 +41,20 @@ function meaningfulTokens(values: string[]): Set<string> {
   return tokens;
 }
 
+/** A route is safe to suggest only if it is a concrete public path. */
+export function isConcretePublicRoute(route: string): boolean {
+  if (!route.startsWith("/")) return false;
+  if (route.includes("[")) return false; // dynamic template segment, not a real URL
+  const lower = route.toLowerCase();
+  return !["/admin", "/api", "/preview", "/login", "/accept-invite"].some((prefix) => lower === prefix || lower.startsWith(`${prefix}/`));
+}
+
 export class LocalInventoryLinkProvider implements InternalLinkSuggestionProvider {
   constructor(private readonly publishedArticles: { slug: string; category: string; h1: string; focusKeyword: string }[] = []) {}
 
   listTargets(): InternalLinkTarget[] {
     const routes = commercialUrlIntentMap
-      .filter((entry) => entry.indexable && (entry.recommendation === "keep" || entry.recommendation === "improve"))
+      .filter((entry) => entry.indexable && (entry.recommendation === "keep" || entry.recommendation === "improve") && isConcretePublicRoute(entry.route))
       .map((entry) => ({
         href: entry.route,
         label: entry.primaryKeywordFamily,

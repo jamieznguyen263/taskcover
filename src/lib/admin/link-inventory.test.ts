@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createDraftArticle } from "./content-model";
-import { collectExistingHrefs, duplicateAnchorWarnings, LocalInventoryLinkProvider } from "./link-inventory";
+import { collectExistingHrefs, duplicateAnchorWarnings, isConcretePublicRoute, LocalInventoryLinkProvider } from "./link-inventory";
 
 function draft() {
   return createDraftArticle({ groupId: "group", translationGroupId: "translation", slug: "links-test", category: "seo-guides", locale: "en", author: "Editor" }).article;
@@ -13,6 +13,21 @@ describe("Local internal-link inventory", () => {
     expect(targets.length).toBeGreaterThan(5);
     expect(targets.some((target) => target.href === "/insights/seo-guides/a")).toBe(true);
     expect(targets.every((target) => target.href.startsWith("/"))).toBe(true);
+  });
+
+  it("never surfaces dynamic template routes or non-public paths as link targets", () => {
+    const targets = new LocalInventoryLinkProvider().listTargets();
+    expect(targets.some((target) => target.href.includes("["))).toBe(false);
+    expect(targets.some((target) => /^\/(admin|api|preview|login|accept-invite)(\/|$)/.test(target.href))).toBe(false);
+  });
+
+  it("classifies concrete public routes correctly", () => {
+    expect(isConcretePublicRoute("/services/seo-audit")).toBe(true);
+    expect(isConcretePublicRoute("/industries/[slug]")).toBe(false);
+    expect(isConcretePublicRoute("/insights/[categorySlug]/[articleSlug]")).toBe(false);
+    expect(isConcretePublicRoute("/admin/insights")).toBe(false);
+    expect(isConcretePublicRoute("/api/admin/insights/autosave")).toBe(false);
+    expect(isConcretePublicRoute("https://example.com/x")).toBe(false);
   });
 
   it("always proposes the funnel-stage conversion path and never the article itself", () => {
