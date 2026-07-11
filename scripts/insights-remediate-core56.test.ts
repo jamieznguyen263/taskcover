@@ -88,11 +88,11 @@ describe("parseArgs", () => {
 
   it("parses --write, --target, --confirm-staging-host, --ids, --limit", () => {
     expect(
-      parseArgs(["--write", "--target=staging", "--confirm-staging-host=ep-raspy-mud", "--ids=tc-001,tc-002", "--limit=5"])
+      parseArgs(["--write", "--target=staging", "--confirm-staging-host=staging-example-host", "--ids=tc-001,tc-002", "--limit=5"])
     ).toEqual({
       write: true,
       target: "staging",
-      confirmStagingHost: "ep-raspy-mud",
+      confirmStagingHost: "staging-example-host",
       ids: ["TC-001", "TC-002"],
       limit: 5,
     });
@@ -105,7 +105,7 @@ describe("parseArgs", () => {
 
 describe("resolveWriteAuthorization", () => {
   it("refuses by default (dry-run, no --write)", () => {
-    const result = resolveWriteAuthorization({ databaseTargetEnv: "staging", args: { write: false }, resolvedHost: "ep-raspy-mud.example.neon.tech" });
+    const result = resolveWriteAuthorization({ databaseTargetEnv: "staging", args: { write: false }, resolvedHost: "staging-example-host.example.neon.tech" });
     expect(result.authorized).toBe(false);
   });
 
@@ -113,7 +113,7 @@ describe("resolveWriteAuthorization", () => {
     const result = resolveWriteAuthorization({
       databaseTargetEnv: "production",
       args: { write: true, target: "production", confirmStagingHost: "prod" },
-      resolvedHost: "ep-young-frost.example.neon.tech",
+      resolvedHost: "prod-example-host.example.neon.tech",
     });
     expect(result.authorized).toBe(false);
     if (!result.authorized) expect(result.reason).toMatch(/production/i);
@@ -122,8 +122,8 @@ describe("resolveWriteAuthorization", () => {
   it("refuses when DATABASE_TARGET and --target disagree", () => {
     const result = resolveWriteAuthorization({
       databaseTargetEnv: "development",
-      args: { write: true, target: "staging", confirmStagingHost: "ep-raspy-mud" },
-      resolvedHost: "ep-raspy-mud.example.neon.tech",
+      args: { write: true, target: "staging", confirmStagingHost: "staging-example-host" },
+      resolvedHost: "staging-example-host.example.neon.tech",
     });
     expect(result.authorized).toBe(false);
   });
@@ -131,8 +131,8 @@ describe("resolveWriteAuthorization", () => {
   it("refuses when --confirm-staging-host does not match the resolved DB host (the exact .env.local ambiguity found in orientation)", () => {
     const result = resolveWriteAuthorization({
       databaseTargetEnv: "staging",
-      args: { write: true, target: "staging", confirmStagingHost: "ep-raspy-mud" },
-      resolvedHost: "ep-young-frost.example.neon.tech", // actually the production host
+      args: { write: true, target: "staging", confirmStagingHost: "staging-example-host" },
+      resolvedHost: "prod-example-host.example.neon.tech", // actually the production host
     });
     expect(result.authorized).toBe(false);
     if (!result.authorized) expect(result.reason).toMatch(/does not match/i);
@@ -141,8 +141,8 @@ describe("resolveWriteAuthorization", () => {
   it("authorizes only when every gate agrees on staging", () => {
     const result = resolveWriteAuthorization({
       databaseTargetEnv: "staging",
-      args: { write: true, target: "staging", confirmStagingHost: "ep-raspy-mud" },
-      resolvedHost: "ep-raspy-mud-atfoy40p.us-east-1.aws.neon.tech",
+      args: { write: true, target: "staging", confirmStagingHost: "staging-example-host" },
+      resolvedHost: "staging-example-host-abc123.us-east-1.aws.neon.tech",
     });
     expect(result.authorized).toBe(true);
   });

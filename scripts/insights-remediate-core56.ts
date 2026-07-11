@@ -191,10 +191,15 @@ async function main() {
 
   const authorization = resolveWriteAuthorization({ databaseTargetEnv: process.env.DATABASE_TARGET, args, resolvedHost });
 
+  // The real host is only ever printed to the operator's own terminal, never
+  // persisted to a file (this report is meant to be committed for review,
+  // and the DB host is an infrastructure secret that shouldn't leak there).
+  if (useDb) console.log(`Resolved database host: ${resolvedHost ?? "unknown"}`);
+
   const summary = {
     mode: authorization.authorized ? "write" : "dry-run",
     authorization,
-    dataSource: useDb ? `database (${resolvedHost ?? "unknown host"})` : "backfill-files-only",
+    dataSource: useDb ? `database (host fingerprint ${resolvedHost ? checksum(resolvedHost) : "unknown"})` : "backfill-files-only",
     articleGroupsInspected: plans.length,
     counts: countBy(plans, (p) => p.status),
     noPublishedSnapshotWasChanged: true,
