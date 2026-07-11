@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { loadEnvConfig } from "@next/env";
-import postgres, { type Sql } from "postgres";
+import postgres from "postgres";
 import type { InsightArticle } from "../src/content/insights.types";
 import type { Locale } from "../src/lib/i18n";
 import { contentImportPayloadSchema, prepareContentImport, type PreparedContentImport } from "../src/lib/admin/content-import";
@@ -24,7 +24,6 @@ type GroupRow = {
   lock_version: number;
 };
 type LocalizationRow = { locale: Locale; draft_snapshot: unknown; editor_document: unknown };
-
 type ActorRow = { id: string; email: string; status: string };
 
 async function main() {
@@ -67,13 +66,7 @@ async function main() {
     assertImportScope(payload.publicationLocales, existingRows.map((row) => row.locale));
     if (existingGroup) assertEditableGroup(existingGroup, payload.sharedSlug, payload.category);
 
-    const existingLocalizations = Object.fromEntries(
-      existingRows.map((row) => [
-        row.locale,
-        { article: articleDraftSchema.parse(row.draft_snapshot), editorDocument: row.editor_document },
-      ])
-    ) as Partial<Record<Locale, { article: InsightArticle; editorDocument: unknown }>>;
-
+    const existingLocalizations = toExistingLocalizations(existingRows);
     const prepared = prepareContentImport(payload, {
       groupId: existingGroup?.id,
       translationGroupId: existingGroup?.translation_group_id,
@@ -87,22 +80,18 @@ async function main() {
 
     const result = await sql.begin(async (tx) => {
       const currentGroup = await findGroup(tx, payload.creationKey);
-      const created = !currentGroup;
-      const group = currentGroup ?? await createGroup(tx, payload, actor.id);
+      const groupResult = currentGroup
+        ? { group: currentGroup, created: false }
+        : await createGroup(tx, payload, actor.id);
+      const { group, created } = groupResult;
       assertEditableGroup(group, payload.sharedSlug, payload.category);
 
       const currentRows = await listLocalizations(tx, group.id);
       assertImportScope(payload.publicationLocales, currentRows.map((row) => row.locale));
-      const currentLocalizations = Object.fromEntries(
-        currentRows.map((row) => [
-          row.locale,
-          { article: articleDraftSchema.parse(row.draft_snapshot), editorDocument: row.editor_document },
-        ])
-      ) as Partial<Record<Locale, { article: InsightArticle; editorDocument: unknown }>>;
       const finalPrepared = prepareContentImport(payload, {
         groupId: group.id,
         translationGroupId: group.translation_group_id,
-        existingLocalizations: currentLocalizations,
+        existingLocalizations: toExistingLocalizations(currentRows),
       });
 
       for (const localization of finalPrepared.localizations) {
@@ -154,7 +143,11 @@ async function main() {
   }
 }
 
-async function createGroup(sql: Sql, payload: ReturnType<typeof contentImportPayloadSchema.parse>, actorId: string): Promise<GroupRow> {
+async function createGroup(
+  sql: postgres.Sql,
+  payload: ReturnType<typeof contentImportPayloadSchema.parse>,
+  actorId: string
+): Promise<{ group: GroupRow; created: boolean }> {
   const rows = await sql<GroupRow[]>`
     INSERT INTO insight_article_groups (
       translation_group_id, shared_slug, category_slug, author_key, creation_key,
@@ -164,13 +157,20 @@ async function createGroup(sql: Sql, payload: ReturnType<typeof contentImportPay
       ${`insight-${payload.creationKey}`}, ${payload.sharedSlug}, ${payload.category}, ${payload.author}, ${payload.creationKey},
       'draft', ${actorId}, ${actorId}, 0
     )
+    ON CONFLICT (creation_key) DO NOTHING
     RETURNING id, translation_group_id, shared_slug, category_slug, draft_workflow_status, lock_version
   `;
-  if (!rows[0]) throw new Error("Article group creation did not return a row.");
-  return rows[0];
+  if (rows[0]) return { group: rows[0], created: true };
+  const concurrent = await findGroup(sql, payload.creationKey);
+  if (!concurrent) throw new Error("Concurrent draft creation conflict could not be resolved.");
+  return { group: concurrent, created: false };
 }
 
-async function upsertLocalization(sql: Sql, groupId: string, localization: PreparedContentImport["localizations"][number]) {
+async function upsertLocalization(
+  sql: postgres.Sql,
+  groupId: string,
+  localization: PreparedContentImport["localizations"][number]
+) {
   const article = localization.article;
   const socialMetadata = {
     ogTitle: article.metadata.ogTitle,
@@ -214,7 +214,7 @@ async function upsertLocalization(sql: Sql, groupId: string, localization: Prepa
   `;
 }
 
-async function findActiveUser(sql: Sql, email: string): Promise<ActorRow> {
+async function findActiveUser(sql: postgres.Sql, email: string): Promise<ActorRow> {
   const rows = await sql<ActorRow[]>`
     SELECT id, email, status FROM admin_users WHERE normalized_email = ${email} LIMIT 1
   `;
@@ -223,7 +223,7 @@ async function findActiveUser(sql: Sql, email: string): Promise<ActorRow> {
   return user;
 }
 
-async function findGroup(sql: Sql, creationKey: string): Promise<GroupRow | null> {
+async function findGroup(sql: postgres.Sql, creationKey: string): Promise<GroupRow | null> {
   const rows = await sql<GroupRow[]>`
     SELECT id, translation_group_id, shared_slug, category_slug, draft_workflow_status, lock_version
     FROM insight_article_groups WHERE creation_key = ${creationKey} LIMIT 1
@@ -231,13 +231,22 @@ async function findGroup(sql: Sql, creationKey: string): Promise<GroupRow | null
   return rows[0] ?? null;
 }
 
-async function listLocalizations(sql: Sql, articleGroupId: string): Promise<LocalizationRow[]> {
+async function listLocalizations(sql: postgres.Sql, articleGroupId: string): Promise<LocalizationRow[]> {
   return sql<LocalizationRow[]>`
     SELECT locale, draft_snapshot, editor_document
     FROM insight_article_localizations
     WHERE article_group_id = ${articleGroupId}
     ORDER BY locale
   `;
+}
+
+function toExistingLocalizations(rows: LocalizationRow[]) {
+  return Object.fromEntries(
+    rows.map((row) => [
+      row.locale,
+      { article: articleDraftSchema.parse(row.draft_snapshot), editorDocument: row.editor_document },
+    ])
+  ) as Partial<Record<Locale, { article: InsightArticle; editorDocument: unknown }>>;
 }
 
 function assertEditableGroup(group: GroupRow, sharedSlug: string, category: string) {
@@ -257,7 +266,10 @@ function assertImportScope(requested: Locale[], existing: Locale[]) {
   }
 }
 
-async function resolveAssignment(sql: Sql, assignment: ReturnType<typeof contentImportPayloadSchema.parse>["assignment"]) {
+async function resolveAssignment(
+  sql: postgres.Sql,
+  assignment: ReturnType<typeof contentImportPayloadSchema.parse>["assignment"]
+) {
   const resolve = async (email?: string) => email ? (await findActiveUser(sql, email)).id : null;
   return {
     ownerId: await resolve(assignment?.ownerEmail),
@@ -269,7 +281,13 @@ async function resolveAssignment(sql: Sql, assignment: ReturnType<typeof content
   };
 }
 
-function printReport(input: { mode: "dry-run" | "write"; target: DatabaseTarget; action: "create" | "update"; articleId: string | null; prepared: PreparedContentImport }) {
+function printReport(input: {
+  mode: "dry-run" | "write";
+  target: DatabaseTarget;
+  action: "create" | "update";
+  articleId: string | null;
+  prepared: PreparedContentImport;
+}) {
   console.log(JSON.stringify({
     mode: input.mode,
     target: input.target,
