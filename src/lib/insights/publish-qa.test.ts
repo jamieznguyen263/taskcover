@@ -61,6 +61,16 @@ describe("Publish QA", () => {
     expect(results.some((result) => result.code === "geo-direct-answer" && result.severity === "warning")).toBe(true);
   });
 
+  it("blocks image blocks that are missing alt text", () => {
+    const drafts = publishable();
+    const article = { ...drafts[0], blocks: [...drafts[0].blocks, { type: "image" as const, src: "https://res.cloudinary.com/x/image/upload/a.jpg", alt: "" }] };
+    const results = validateInsightArticle(article, drafts);
+    expect(results.some((result) => result.code === "image-missing-alt" && result.severity === "error")).toBe(true);
+
+    const withAlt = { ...article, blocks: [...drafts[0].blocks, { type: "image" as const, src: "https://res.cloudinary.com/x/image/upload/a.jpg", alt: "A chart" }] };
+    expect(validateInsightArticle(withAlt, drafts).some((result) => result.code === "image-missing-alt")).toBe(false);
+  });
+
   it("blocks claims that require evidence but have none", () => {
     const drafts = publishable();
     const article = {

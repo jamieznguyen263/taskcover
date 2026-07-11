@@ -16,7 +16,7 @@ export type UploadSignature = {
 
 export interface MediaProvider {
   isConfigured(): boolean;
-  createUploadSignature(userId: string): Promise<UploadSignature>;
+  createUploadSignature(): Promise<UploadSignature>;
   getStatus(): { provider: string; configured: boolean; productionSafe: boolean; message: string };
   getDeliveryUrl(asset: { deliveryUrl: string; secureUrl: string }): string;
 }
@@ -26,12 +26,13 @@ export class CloudinaryMediaProvider implements MediaProvider {
     return getAdminIntegrationStatus().cloudinaryConfigured;
   }
 
-  async createUploadSignature(userId: string): Promise<UploadSignature> {
+  async createUploadSignature(): Promise<UploadSignature> {
     if (!this.isConfigured()) return unavailableUploadSignature();
     const timestamp = Math.floor(Date.now() / 1000);
     const folder = process.env.CLOUDINARY_UPLOAD_FOLDER ?? "taskcover/insights";
-    const context = `uploaded_by=${userId}`;
-    const signature = signCloudinaryParams({ context, folder, timestamp }, process.env.CLOUDINARY_API_SECRET!);
+    // Only folder + timestamp are signed, so the browser can replay exactly
+    // those params. Uploader identity is recorded in our own media_assets row.
+    const signature = signCloudinaryParams({ folder, timestamp }, process.env.CLOUDINARY_API_SECRET!);
     return {
       provider: "cloudinary",
       timestamp,

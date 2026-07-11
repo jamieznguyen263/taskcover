@@ -3,6 +3,7 @@ import { ArrowRight, Check, Quote, Sparkles } from "lucide-react";
 import type { InsightArticle, InsightBlock } from "@/content/insights.types";
 import type { Locale } from "@/lib/i18n";
 import { localizePath } from "@/lib/i18n";
+import { buildImageSources } from "@/lib/insights/image";
 import { cn } from "@/lib/utils";
 import { CTAButton } from "@/components/marketing/shared/cta-button";
 
@@ -16,16 +17,19 @@ export function getArticleToc(article: InsightArticle) {
 }
 
 export function InsightBlockRenderer({ article, locale }: { article: InsightArticle; locale: Locale }) {
+  // The first image is the likely LCP element and should load eagerly with high
+  // priority; every later image stays lazy.
+  const firstImageIndex = article.blocks.findIndex((block) => block.type === "image");
   return (
     <div className="flex flex-col gap-7">
       {article.blocks.map((block, index) => (
-        <InsightBlockView key={`${block.type}-${index}`} block={block} locale={locale} />
+        <InsightBlockView key={`${block.type}-${index}`} block={block} locale={locale} priority={index === firstImageIndex} />
       ))}
     </div>
   );
 }
 
-function InsightBlockView({ block, locale }: { block: InsightBlock; locale: Locale }) {
+function InsightBlockView({ block, locale, priority }: { block: InsightBlock; locale: Locale; priority?: boolean }) {
   const loc = (href: string) => (href.startsWith("/") ? localizePath(href, locale) : href);
 
   switch (block.type) {
@@ -268,11 +272,23 @@ function InsightBlockView({ block, locale }: { block: InsightBlock; locale: Loca
           <code>{block.code}</code>
         </pre>
       );
-    case "image":
+    case "image": {
+      const sources = buildImageSources(block.src);
       return (
         <figure className="overflow-hidden rounded-2xl border border-line bg-white">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={block.src} alt={block.alt} loading="lazy" className="w-full object-cover" />
+          <img
+            src={sources.fallbackSrc}
+            srcSet={sources.srcSet}
+            sizes={sources.sizes}
+            alt={block.alt}
+            width={block.width}
+            height={block.height}
+            loading={priority ? "eager" : "lazy"}
+            fetchPriority={priority ? "high" : undefined}
+            decoding="async"
+            className="h-auto w-full"
+          />
           {block.caption || block.credit ? (
             <figcaption className="border-t border-line px-4 py-3 text-xs text-muted">
               {block.caption}
@@ -281,6 +297,7 @@ function InsightBlockView({ block, locale }: { block: InsightBlock; locale: Loca
           ) : null}
         </figure>
       );
+    }
     case "divider":
       return <hr className="border-line" />;
     default:

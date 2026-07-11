@@ -182,7 +182,7 @@ export const insightBlockSchema: z.ZodType<InsightBlock> = z.discriminatedUnion(
   z.object({ type: z.literal("cta"), title: z.string(), body: z.string(), primary: linkForBlockSchema, secondary: linkForBlockSchema.optional() }),
   z.object({ type: z.literal("statistic"), value: z.string(), label: z.string(), sourceId: z.string().optional(), note: z.string().optional() }),
   z.object({ type: z.literal("code"), code: z.string(), language: z.string().optional() }),
-  z.object({ type: z.literal("image"), src: z.string(), alt: z.string(), caption: z.string().optional(), credit: z.string().optional() }),
+  z.object({ type: z.literal("image"), src: z.string(), alt: z.string(), caption: z.string().optional(), credit: z.string().optional(), width: z.number().int().positive().optional(), height: z.number().int().positive().optional(), mediaAssetId: z.string().optional(), lqip: z.string().optional() }),
   z.object({ type: z.literal("divider") }),
 ]) as z.ZodType<InsightBlock>;
 

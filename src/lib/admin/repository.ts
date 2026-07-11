@@ -893,6 +893,51 @@ export class AdminRepository {
     });
   }
 
+  /** Persist an uploaded asset. Idempotent on (provider, providerAssetId). */
+  async recordMediaAsset(input: {
+    provider: string;
+    providerAssetId: string;
+    secureUrl: string;
+    deliveryUrl: string;
+    altText?: string;
+    width?: number;
+    height?: number;
+    bytes?: number;
+    format?: string;
+    folder?: string;
+    uploadedBy: string;
+  }) {
+    const [asset] = await this.db
+      .insert(mediaAssets)
+      .values({
+        provider: input.provider,
+        providerAssetId: input.providerAssetId,
+        secureUrl: input.secureUrl,
+        deliveryUrl: input.deliveryUrl,
+        altText: input.altText ?? "",
+        width: input.width,
+        height: input.height,
+        bytes: input.bytes,
+        format: input.format,
+        folder: input.folder,
+        uploadedBy: input.uploadedBy,
+      })
+      .onConflictDoUpdate({
+        target: [mediaAssets.provider, mediaAssets.providerAssetId],
+        set: { secureUrl: input.secureUrl, deliveryUrl: input.deliveryUrl, width: input.width, height: input.height, bytes: input.bytes, format: input.format, updatedAt: new Date() },
+      })
+      .returning();
+    await this.db.insert(adminAuditLogs).values({
+      event: "media_upload",
+      actorId: input.uploadedBy,
+      targetType: "media_asset",
+      targetId: asset.id,
+      summary: "Media asset uploaded.",
+      metadata: { provider: input.provider, format: input.format, width: input.width, height: input.height },
+    });
+    return asset;
+  }
+
   async canDeleteMedia(id: string) {
     const usage = await this.db.select({ value: count() }).from(mediaUsages).where(eq(mediaUsages.mediaAssetId, id));
     return (usage[0]?.value ?? 0) === 0;

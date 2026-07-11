@@ -2,6 +2,7 @@
 
 import type { InsightBlock } from "@/content/insights.types";
 import { Field, SelectInput, SmallButton, StringListEditor, TextArea, TextInput } from "./controls";
+import { ImagePicker } from "./image-picker";
 import { Plus, X } from "lucide-react";
 
 type BlockOf<T extends InsightBlock["type"]> = Extract<InsightBlock, { type: T }>;
@@ -116,10 +117,18 @@ export function StructuredBlockDataForm({ value, onChange }: { value: InsightBlo
     case "image":
       return (
         <div className="grid gap-3">
-          <Field label="Image URL"><TextInput value={value.src} onChange={(src) => onChange({ ...value, src })} placeholder="https://…" /></Field>
-          <Field label="Alt text" hint="Required for accessibility and image search."><TextInput value={value.alt} onChange={(alt) => onChange({ ...value, alt })} /></Field>
-          <Field label="Caption"><TextInput value={value.caption ?? ""} onChange={(caption) => onChange({ ...value, caption: caption || undefined })} /></Field>
-          <Field label="Credit"><TextInput value={value.credit ?? ""} onChange={(credit) => onChange({ ...value, credit: credit || undefined })} /></Field>
+          <ImagePicker
+            value={value.src}
+            onChange={(picked) => onChange({ ...value, src: picked.src, width: picked.width, height: picked.height, mediaAssetId: picked.mediaAssetId })}
+          />
+          <Field label="Alt text" hint="Required for accessibility and image search. Publish QA blocks images without alt.">
+            <TextInput value={value.alt} onChange={(alt) => onChange({ ...value, alt })} />
+          </Field>
+          <div className="grid gap-3 md:grid-cols-2">
+            <Field label="Caption"><TextInput value={value.caption ?? ""} onChange={(caption) => onChange({ ...value, caption: caption || undefined })} /></Field>
+            <Field label="Credit"><TextInput value={value.credit ?? ""} onChange={(credit) => onChange({ ...value, credit: credit || undefined })} /></Field>
+          </div>
+          {value.width && value.height ? <p className="text-xs text-muted">Dimensions {value.width}×{value.height}px captured — layout shift (CLS) prevented.</p> : value.src ? <p className="text-xs text-amber-700">No dimensions captured (pasted URL). Upload via Cloudinary to prevent layout shift.</p> : null}
         </div>
       );
     default:
