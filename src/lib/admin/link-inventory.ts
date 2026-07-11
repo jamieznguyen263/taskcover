@@ -1,5 +1,6 @@
 import type { InsightArticle } from "@/content/insights.types";
 import { commercialUrlIntentMap } from "@/content/seo/url-intent-map";
+import { richTextLinks } from "@/lib/insights/rich-text";
 
 export type InternalLinkTarget = {
   href: string;
@@ -114,16 +115,25 @@ export class LocalInventoryLinkProvider implements InternalLinkSuggestionProvide
 
 export function collectExistingHrefs(article: InsightArticle): Set<string> {
   const linking = article.internalLinking;
+  const bodyHrefs = article.blocks.flatMap((block) => {
+    if (block.type === "paragraph") return richTextLinks(block.text);
+    if (block.type === "bullet-list" || block.type === "numbered-list") return block.items.flatMap(richTextLinks);
+    if (block.type === "quote") return richTextLinks(block.quote);
+    return [];
+  });
   return new Set(
     [
-      ...linking.requiredInternalLinks,
-      ...linking.suggestedInternalLinks,
-      ...linking.serviceLinks,
-      ...linking.industryLinks,
-      ...linking.marketLinks,
-      ...linking.caseStudyLinks,
-      ...linking.sampleAuditLinks,
-    ].map((link) => link.href)
+      ...bodyHrefs,
+      ...[
+        ...linking.requiredInternalLinks,
+        ...linking.suggestedInternalLinks,
+        ...linking.serviceLinks,
+        ...linking.industryLinks,
+        ...linking.marketLinks,
+        ...linking.caseStudyLinks,
+        ...linking.sampleAuditLinks,
+      ].map((link) => link.href),
+    ]
   );
 }
 

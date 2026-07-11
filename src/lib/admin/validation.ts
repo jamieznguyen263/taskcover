@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { insightCategorySlugs, insightStatuses, type InsightArticle, type InsightBlock } from "@/content/insights.types";
+import { insightCategorySlugs, insightStatuses, type InsightArticle, type InsightBlock, type InsightRichText } from "@/content/insights.types";
 import { locales } from "@/lib/i18n";
 
 export const adminRoleSchema = z.enum(["admin", "editor"]);
@@ -157,13 +157,24 @@ export const localizationDataSchema = z.object({
 
 const linkForBlockSchema = z.object({ label: z.string().min(1), href: z.string().min(1), note: z.string().optional() });
 const faqItemSchema = z.object({ question: z.string().min(1), answer: z.string().min(1) });
+const inlineMarkSchema = z.discriminatedUnion("type", [
+  z.object({ type: z.literal("bold") }),
+  z.object({ type: z.literal("italic") }),
+  z.object({ type: z.literal("code") }),
+  z.object({ type: z.literal("link"), href: z.string().min(1).max(2000) }),
+]);
+const richTextSegmentSchema = z.object({
+  text: z.string(),
+  marks: z.array(inlineMarkSchema).max(12).optional(),
+});
+const richTextSchema: z.ZodType<InsightRichText> = z.union([z.string(), z.array(richTextSegmentSchema).max(2000)]) as z.ZodType<InsightRichText>;
 
 export const insightBlockSchema: z.ZodType<InsightBlock> = z.discriminatedUnion("type", [
-  z.object({ type: z.literal("paragraph"), text: z.string() }),
+  z.object({ type: z.literal("paragraph"), text: richTextSchema }),
   z.object({ type: z.literal("heading"), level: z.union([z.literal(2), z.literal(3), z.literal(4)]), text: z.string(), id: z.string().optional() }),
-  z.object({ type: z.literal("bullet-list"), items: z.array(z.string()) }),
-  z.object({ type: z.literal("numbered-list"), items: z.array(z.string()) }),
-  z.object({ type: z.literal("quote"), quote: z.string(), attribution: z.string().optional() }),
+  z.object({ type: z.literal("bullet-list"), items: z.array(richTextSchema) }),
+  z.object({ type: z.literal("numbered-list"), items: z.array(richTextSchema) }),
+  z.object({ type: z.literal("quote"), quote: richTextSchema, attribution: z.string().optional() }),
   z.object({ type: z.literal("direct-answer"), title: z.string(), answer: z.string() }),
   z.object({ type: z.literal("key-takeaways"), title: z.string(), items: z.array(z.string()) }),
   z.object({ type: z.literal("definition"), term: z.string(), definition: z.string() }),

@@ -48,17 +48,30 @@ export type InsightLink = {
   note?: string;
 };
 
+export type InsightInlineMark =
+  | { type: "bold" }
+  | { type: "italic" }
+  | { type: "code" }
+  | { type: "link"; href: string };
+
+export type InsightRichTextSegment = {
+  text: string;
+  marks?: InsightInlineMark[];
+};
+
+export type InsightRichText = string | InsightRichTextSegment[];
+
 export type InsightFaqItem = {
   question: string;
   answer: string;
 };
 
 export type InsightBlock =
-  | { type: "paragraph"; text: string }
+  | { type: "paragraph"; text: InsightRichText }
   | { type: "heading"; level: 2 | 3 | 4; text: string; id?: string }
-  | { type: "bullet-list"; items: string[] }
-  | { type: "numbered-list"; items: string[] }
-  | { type: "quote"; quote: string; attribution?: string }
+  | { type: "bullet-list"; items: InsightRichText[] }
+  | { type: "numbered-list"; items: InsightRichText[] }
+  | { type: "quote"; quote: InsightRichText; attribution?: string }
   | { type: "direct-answer"; title: string; answer: string }
   | { type: "key-takeaways"; title: string; items: string[] }
   | { type: "definition"; term: string; definition: string }

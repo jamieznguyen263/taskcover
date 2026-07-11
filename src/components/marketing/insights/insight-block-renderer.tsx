@@ -1,9 +1,11 @@
+import { Fragment, type ReactNode } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, Quote, Sparkles } from "lucide-react";
-import type { InsightArticle, InsightBlock } from "@/content/insights.types";
+import type { InsightArticle, InsightBlock, InsightInlineMark, InsightRichText } from "@/content/insights.types";
 import type { Locale } from "@/lib/i18n";
 import { localizePath } from "@/lib/i18n";
 import { buildImageSources } from "@/lib/insights/image";
+import { richTextKey } from "@/lib/insights/rich-text";
 import { cn } from "@/lib/utils";
 import { CTAButton } from "@/components/marketing/shared/cta-button";
 
@@ -34,7 +36,7 @@ function InsightBlockView({ block, locale, priority }: { block: InsightBlock; lo
 
   switch (block.type) {
     case "paragraph":
-      return <p className="text-pretty text-base leading-8 text-secondary sm:text-lg">{block.text}</p>;
+      return <p className="text-pretty text-base leading-8 text-secondary sm:text-lg">{renderRichText(block.text, locale)}</p>;
     case "heading": {
       const id = block.id ?? slugify(block.text);
       const Tag = block.level === 2 ? "h2" : block.level === 3 ? "h3" : "h4";
@@ -53,9 +55,9 @@ function InsightBlockView({ block, locale, priority }: { block: InsightBlock; lo
       return (
         <ul className="flex flex-col gap-3">
           {block.items.map((item) => (
-            <li key={item} className="flex gap-3 text-base leading-7 text-secondary">
+            <li key={richTextKey(item)} className="flex gap-3 text-base leading-7 text-secondary">
               <Check className="mt-1 h-5 w-5 shrink-0 text-brand-green" aria-hidden="true" />
-              <span>{item}</span>
+              <span>{renderRichText(item, locale)}</span>
             </li>
           ))}
         </ul>
@@ -64,7 +66,7 @@ function InsightBlockView({ block, locale, priority }: { block: InsightBlock; lo
       return (
         <ol className="flex list-decimal flex-col gap-3 pl-5 text-base leading-7 text-secondary">
           {block.items.map((item) => (
-            <li key={item}>{item}</li>
+            <li key={richTextKey(item)}>{renderRichText(item, locale)}</li>
           ))}
         </ol>
       );
@@ -72,7 +74,7 @@ function InsightBlockView({ block, locale, priority }: { block: InsightBlock; lo
       return (
         <figure className="rounded-2xl border-l-4 border-brand-teal bg-surface-tint p-5">
           <Quote className="mb-3 h-5 w-5 text-brand-teal" aria-hidden="true" />
-          <blockquote className="text-lg font-medium leading-8 text-graphite">{block.quote}</blockquote>
+          <blockquote className="text-lg font-medium leading-8 text-graphite">{renderRichText(block.quote, locale)}</blockquote>
           {block.attribution ? <figcaption className="mt-3 text-sm text-muted">{block.attribution}</figcaption> : null}
         </figure>
       );
@@ -335,6 +337,33 @@ function List({ title, items }: { title: string; items: string[] }) {
       </ul>
     </div>
   );
+}
+
+function renderRichText(value: InsightRichText, locale: Locale): ReactNode {
+  if (typeof value === "string") return value;
+  return value.map((segment, index) => {
+    let node: ReactNode = segment.text;
+    for (const mark of segment.marks ?? []) node = renderMark(mark, node, locale);
+    return <Fragment key={`${segment.text}-${index}`}>{node}</Fragment>;
+  });
+}
+
+function renderMark(mark: InsightInlineMark, children: ReactNode, locale: Locale): ReactNode {
+  if (mark.type === "bold") return <strong className="font-semibold text-graphite">{children}</strong>;
+  if (mark.type === "italic") return <em>{children}</em>;
+  if (mark.type === "code") return <code className="rounded bg-surface-soft px-1 py-0.5 font-mono text-[0.9em] text-graphite">{children}</code>;
+  if (!isRenderableHref(mark.href)) return children;
+  const className = "font-medium text-brand-teal underline underline-offset-4 transition-colors hover:text-brand-green";
+  if (mark.href.startsWith("/")) return <Link href={localizePath(mark.href, locale)} className={className}>{children}</Link>;
+  return (
+    <a href={mark.href} className={className} target={mark.href.startsWith("http") ? "_blank" : undefined} rel={mark.href.startsWith("http") ? "noopener noreferrer" : undefined}>
+      {children}
+    </a>
+  );
+}
+
+function isRenderableHref(href: string): boolean {
+  return href.startsWith("/") || /^https?:\/\/[^\s]+$/i.test(href) || /^mailto:[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(href);
 }
 
 function slugify(value: string) {

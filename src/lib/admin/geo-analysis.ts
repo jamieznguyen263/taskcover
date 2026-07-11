@@ -1,4 +1,5 @@
 import type { InsightArticle, InsightBlock } from "@/content/insights.types";
+import { richTextToPlainText } from "@/lib/insights/rich-text";
 
 /**
  * GEO (generative engine optimization) analysis derived entirely from the
@@ -43,14 +44,14 @@ export type GeoAnalysis = {
 export function blockText(block: InsightBlock): string {
   switch (block.type) {
     case "paragraph":
-      return block.text;
+      return richTextToPlainText(block.text);
     case "heading":
       return block.text;
     case "bullet-list":
     case "numbered-list":
-      return block.items.join(" ");
+      return block.items.map(richTextToPlainText).join(" ");
     case "quote":
-      return [block.quote, block.attribution ?? ""].join(" ");
+      return [richTextToPlainText(block.quote), block.attribution ?? ""].join(" ");
     case "direct-answer":
       return [block.title, block.answer].join(" ");
     case "key-takeaways":
