@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { breadcrumbSchema, serializeJsonLd } from "@/lib/seo";
-import { getInsightBySlug, getInsightCategory, getInsightArticleSlugs, getInsightsContent, getRelatedInsights } from "@/lib/insights/content";
-import { articleJsonLd, faqJsonLd, getInsightPath } from "@/lib/insights/seo";
+import { getInsightBySlug, getInsightCategory, getInsightArticleSlugs, getInsightsContent, getInsightTranslations, getRelatedInsights, usesDatabaseInsightsProvider } from "@/lib/insights/content";
+import { articleJsonLd, articleLanguageAlternates, faqJsonLd, getInsightPath } from "@/lib/insights/seo";
 import { InsightArticleView } from "@/components/marketing/insights/insights-views";
 import { isLocale, localizePath, type Locale } from "@/lib/i18n";
 import { siteConfig } from "@/lib/site";
@@ -10,6 +10,7 @@ import { siteConfig } from "@/lib/site";
 type Params = { params: Promise<{ locale: string; categorySlug: string; articleSlug: string }> };
 
 export async function generateStaticParams() {
+  if (usesDatabaseInsightsProvider()) return [];
   return (await getInsightArticleSlugs())
     .filter((item) => item.locale !== "en")
     .map((item) => ({
@@ -26,17 +27,13 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const article = await getInsightBySlug(articleSlug, locale);
   if (!article || article.category !== categorySlug) return {};
   const path = getInsightPath(article);
+  const translations = await getInsightTranslations(article);
   return {
     title: article.metadata.metaTitle,
     description: article.metadata.metaDescription,
     alternates: {
       canonical: `${siteConfig.url}${localizePath(path, locale)}`,
-      languages: {
-        en: `${siteConfig.url}${path}`,
-        fr: `${siteConfig.url}/fr${path}`,
-        es: `${siteConfig.url}/es${path}`,
-        "x-default": `${siteConfig.url}${path}`,
-      },
+      languages: articleLanguageAlternates(translations),
     },
     openGraph: {
       type: "article",

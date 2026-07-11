@@ -26,7 +26,7 @@
     "APP_URL": "https://taskcover.com",
     "NEXT_PUBLIC_APP_URL": "https://taskcover.com",
     "LEAD_SUBMISSION_MODE": "production-durable",
-    "INSIGHTS_PROVIDER": "local",
+    "INSIGHTS_PROVIDER": "database",
     "TURNSTILE_EXPECTED_HOSTNAME": "taskcover.com",
     "TURNSTILE_EXPECTED_ACTION": "lead-submit",
     "PUBLISH_SCHEDULER_PROVIDER": "disabled",

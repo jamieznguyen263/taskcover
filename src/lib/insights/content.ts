@@ -1,5 +1,5 @@
-import type { Locale } from "@/lib/i18n";
-import type { InsightCategorySlug } from "@/content/insights.types";
+import { locales, type Locale } from "@/lib/i18n";
+import type { InsightArticle, InsightCategorySlug } from "@/content/insights.types";
 import { localInsightsProvider } from "./local-provider";
 import type { ArticleSearchInput } from "./provider";
 import { rankRelatedArticles } from "./related";
@@ -10,6 +10,10 @@ export const insightsProvider = localInsightsProvider;
 
 function shouldUseDatabaseProvider() {
   return String(process.env.INSIGHTS_PROVIDER ?? "local") === "database" && isDatabaseConfigured();
+}
+
+export function usesDatabaseInsightsProvider() {
+  return shouldUseDatabaseProvider();
 }
 
 export function getInsightsContent(locale: Locale) {
@@ -61,4 +65,30 @@ export async function getInsightArticleSlugs() {
     return locales.flat();
   }
   return insightsProvider.getArticleSlugs();
+}
+
+export async function getInsightTranslations(article: InsightArticle) {
+  const localizedArticles = await Promise.all(locales.map((locale) => getPublishedInsights(locale)));
+  return localizedArticles.flat().filter((candidate) => candidate.translationGroupId === article.translationGroupId);
+}
+
+export type InsightSitemapRecord = {
+  locale: Locale;
+  translationGroupId: string;
+  categorySlug: InsightCategorySlug;
+  articleSlug: string;
+  updatedAt: string;
+};
+
+export async function getInsightSitemapRecords(): Promise<InsightSitemapRecord[]> {
+  const localizedArticles = await Promise.all(locales.map((locale) => getPublishedInsights(locale)));
+  return localizedArticles.flatMap((articles, index) =>
+    articles.map((article) => ({
+      locale: locales[index],
+      translationGroupId: article.translationGroupId,
+      categorySlug: article.category,
+      articleSlug: article.slug,
+      updatedAt: article.updatedAt,
+    }))
+  );
 }

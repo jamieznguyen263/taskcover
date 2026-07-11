@@ -1,5 +1,5 @@
-import { locales } from "@/lib/i18n";
 import { insightCategorySlugs, type InsightArticle } from "@/content/insights.types";
+import { richTextLinks } from "./rich-text";
 
 export type PublishQaSeverity = "pass" | "warning" | "error";
 
@@ -37,6 +37,18 @@ function isInsightsCanonical(canonical: string) {
   return /^\/(?:fr\/|es\/)?insights\//.test(canonical) || /^https?:\/\/[^/]+\/(?:fr\/|es\/)?insights\//.test(canonical);
 }
 
+function bodyHrefs(article: InsightArticle): Set<string> {
+  const hrefs = article.blocks.flatMap((block) => {
+    if (block.type === "paragraph") return richTextLinks(block.text);
+    if (block.type === "bullet-list" || block.type === "numbered-list") return block.items.flatMap((item) => richTextLinks(item));
+    if (block.type === "quote") return richTextLinks(block.quote);
+    if ("href" in block && typeof block.href === "string") return [block.href];
+    if (block.type === "cta") return [block.primary.href, block.secondary?.href].filter((href): href is string => Boolean(href));
+    return [];
+  });
+  return new Set(hrefs.filter(Boolean));
+}
+
 export function validateInsightArticle(
   article: InsightArticle,
   translations: InsightArticle[]
@@ -62,6 +74,9 @@ export function validateInsightArticle(
   if (!article.h1) add("error", "missing-h1", "Article must have one H1.", "content", "document", "Set the Public H1 in the document header.");
   if (!article.metadata.metaTitle) add("error", "missing-meta-title", "Meta title is required.", "metadata", "metadata", "Write an SEO title in Metadata & Social.");
   if (!article.metadata.metaDescription) add("error", "missing-meta-description", "Meta description is required.", "metadata", "metadata", "Write a meta description in Metadata & Social.");
+  if (!article.searchStrategy.focusKeyword.trim()) add("error", "missing-focus-keyword", "Primary keyword / query is required.", "seo", "strategy", "Set the single query this article is built to win.");
+  if (!article.searchStrategy.coreQuestion.trim()) add("error", "missing-core-question", "Core question is required.", "seo", "strategy", "Write the main question this article must answer.");
+  if (!article.searchStrategy.targetAudience.trim()) add("error", "missing-target-audience", "Target audience is required.", "seo", "strategy", "Define the reader so the article can match intent and depth.");
   if (!slugPattern.test(article.slug)) add("error", "invalid-slug", "Slug must be lowercase kebab-case.", "seo", "metadata", "Fix the slug format in Metadata & Social.");
   if (!isInsightsCanonical(article.metadata.canonical)) add("error", "invalid-canonical", "Canonical must be an insights path.", "seo", "metadata", "Point the canonical to this article's insights URL.");
   if (!article.author) add("error", "missing-author", "Author is required.", "content", "metadata", "Set the author in Metadata & Social.");
@@ -74,11 +89,11 @@ export function validateInsightArticle(
   if (article.blocks.length === 0) add("error", "empty-blocks", "Article blocks must not be empty.", "content", "document", "Write the article body.");
   if (article.metadata.robots.includes("noindex")) add("error", "accidental-noindex", "Published articles must not be noindex.", "seo", "metadata", "Set robots to index,follow in Metadata & Social.");
 
-  const translationLocales = new Set(translations.map((item) => item.locale));
-  for (const locale of locales) {
-    if (!translationLocales.has(locale)) {
-      add("error", "missing-translation", `Missing ${locale} translation in hreflang group.`, "localization", "localization");
-    }
+  if (!translations.some((item) => item.locale === "en")) {
+    add("error", "missing-source-localization", "The English source localization is required.", "localization", "localization", "Create and approve the English source article before publishing localized versions.");
+  }
+  if (article.localization.translationStatus !== "complete") {
+    add("error", "localization-incomplete", `The ${article.locale} localization is not marked complete.`, "localization", "localization", "Complete the current localization review before publishing it.");
   }
 
   for (const sibling of translations) {
@@ -120,6 +135,32 @@ export function validateInsightArticle(
   ].filter((link) => link.href).length;
   if (internalLinkCount === 0) {
     add("warning", "no-internal-links", "No internal links are planned for this article.", "internal-links", "linking", "Add at least the standard conversion path and one related page in Internal Linking.");
+  }
+
+  const hrefsInBody = bodyHrefs(article);
+  const requiredLinksMissingFromBody = article.internalLinking.requiredInternalLinks.filter((link) => link.href && !hrefsInBody.has(link.href));
+  if (requiredLinksMissingFromBody.length > 0) {
+    add(
+      "error",
+      "required-links-missing-from-body",
+      `${requiredLinksMissingFromBody.length} required internal link(s) are planned but not placed in the article body.`,
+      "internal-links",
+      "document",
+      "Insert each required link as an inline link or structured reference block in the document."
+    );
+  }
+
+  if (article.contentEvidence.claims.length === 0) {
+    add("warning", "no-claims-tracked", "No factual claims are tracked for evidence review.", "evidence", "evidence", "Record the important claims this article makes and attach sources.");
+  }
+  if (article.contentEvidence.sources.filter((source) => !source.primarySource).length === 0) {
+    add("warning", "no-independent-sources", "No independent external sources are recorded.", "evidence", "evidence", "Add credible independent sources for factual and comparative claims.");
+  }
+  if (!article.searchStrategy.uniqueInformationGain.trim()) {
+    add("warning", "missing-information-gain", "Unique information gain is not defined.", "seo", "strategy", "Document what this article adds beyond existing ranking pages.");
+  }
+  if (article.contentEvidence.sources.some((source) => !source.primarySource) && article.schema.citationReferences.length === 0) {
+    add("warning", "schema-citations-empty", "Independent sources exist but schema citation references are empty.", "schema", "schema", "Import independent source URLs into Schema citations.");
   }
 
   const related = new Set(article.internalLinking.relatedArticleSlugs);
