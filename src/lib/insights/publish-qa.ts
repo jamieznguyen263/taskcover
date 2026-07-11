@@ -68,6 +68,8 @@ export function validateInsightArticle(
   if (Number.isNaN(Date.parse(article.publishedAt))) add("error", "invalid-published-date", "Published date must be valid.", "workflow", "metadata");
   if (Number.isNaN(Date.parse(article.updatedAt))) add("error", "invalid-updated-date", "Updated date must be valid.", "workflow", "metadata");
   if (!article.coverImageAlt) add("error", "missing-cover-alt", "Cover image alt text is required.", "media", "document", "Add alt text for the cover image in the document header.");
+  const imagesWithoutAlt = article.blocks.filter((block) => block.type === "image" && !block.alt.trim()).length;
+  if (imagesWithoutAlt > 0) add("error", "image-missing-alt", `${imagesWithoutAlt} image block(s) are missing alt text.`, "media", "document", "Add alt text to every image for accessibility and image search.");
   if (!insightCategorySlugs.includes(article.category)) add("error", "invalid-category", "Category is not registered.", "content", "document");
   if (article.blocks.length === 0) add("error", "empty-blocks", "Article blocks must not be empty.", "content", "document", "Write the article body.");
   if (article.metadata.robots.includes("noindex")) add("error", "accidental-noindex", "Published articles must not be noindex.", "seo", "metadata", "Set robots to index,follow in Metadata & Social.");

@@ -2,6 +2,8 @@
 
 import type { InsightBlock } from "@/content/insights.types";
 import { Field, SelectInput, SmallButton, StringListEditor, TextArea, TextInput } from "./controls";
+import { ImagePicker } from "./image-picker";
+import { extractYouTubeId } from "@/lib/insights/youtube";
 import { Plus, X } from "lucide-react";
 
 type BlockOf<T extends InsightBlock["type"]> = Extract<InsightBlock, { type: T }>;
@@ -116,10 +118,55 @@ export function StructuredBlockDataForm({ value, onChange }: { value: InsightBlo
     case "image":
       return (
         <div className="grid gap-3">
-          <Field label="Image URL"><TextInput value={value.src} onChange={(src) => onChange({ ...value, src })} placeholder="https://…" /></Field>
-          <Field label="Alt text" hint="Required for accessibility and image search."><TextInput value={value.alt} onChange={(alt) => onChange({ ...value, alt })} /></Field>
+          <ImagePicker
+            value={value.src}
+            onChange={(picked) => onChange({ ...value, src: picked.src, width: picked.width, height: picked.height, mediaAssetId: picked.mediaAssetId })}
+          />
+          <Field label="Alt text" hint="Required for accessibility and image search. Publish QA blocks images without alt.">
+            <TextInput value={value.alt} onChange={(alt) => onChange({ ...value, alt })} />
+          </Field>
+          <div className="grid gap-3 md:grid-cols-2">
+            <Field label="Caption"><TextInput value={value.caption ?? ""} onChange={(caption) => onChange({ ...value, caption: caption || undefined })} /></Field>
+            <Field label="Credit"><TextInput value={value.credit ?? ""} onChange={(credit) => onChange({ ...value, credit: credit || undefined })} /></Field>
+          </div>
+          {value.width && value.height ? <p className="text-xs text-muted">Dimensions {value.width}×{value.height}px captured — layout shift (CLS) prevented.</p> : value.src ? <p className="text-xs text-amber-700">No dimensions captured (pasted URL). Upload via Cloudinary to prevent layout shift.</p> : null}
+        </div>
+      );
+    case "video":
+      return (
+        <div className="grid gap-3">
+          <Field label="YouTube URL or video ID" hint="Paste a YouTube link or the 11-character video ID.">
+            <TextInput value={value.videoId} onChange={(input) => onChange({ ...value, videoId: extractYouTubeId(input) })} placeholder="https://www.youtube.com/watch?v=…" />
+          </Field>
+          {value.videoId && !/^[A-Za-z0-9_-]{11}$/.test(value.videoId) ? <p className="text-xs text-amber-700">This does not look like a valid YouTube video ID yet.</p> : null}
+          <Field label="Title" hint="Used for the iframe title (accessibility)."><TextInput value={value.title} onChange={(title) => onChange({ ...value, title })} /></Field>
           <Field label="Caption"><TextInput value={value.caption ?? ""} onChange={(caption) => onChange({ ...value, caption: caption || undefined })} /></Field>
-          <Field label="Credit"><TextInput value={value.credit ?? ""} onChange={(credit) => onChange({ ...value, credit: credit || undefined })} /></Field>
+          {/^[A-Za-z0-9_-]{11}$/.test(value.videoId) ? (
+            <div className="relative aspect-video overflow-hidden rounded-lg border border-line">
+              <iframe src={`https://www.youtube-nocookie.com/embed/${value.videoId}`} title={value.title || "YouTube preview"} className="absolute inset-0 h-full w-full" allowFullScreen />
+            </div>
+          ) : null}
+        </div>
+      );
+    case "decision-framework":
+      return (
+        <div className="grid gap-3">
+          <Field label="Title"><TextInput value={value.title} onChange={(title) => onChange({ ...value, title })} /></Field>
+          <PairListEditor
+            rows={value.criteria.map((item) => [item.signal, item.action] as [string, string])}
+            labels={["Signal / situation", "Recommended action"]}
+            onChange={(rows) => onChange({ ...value, criteria: rows.map(([signal, action]) => ({ signal, action })) })}
+          />
+        </div>
+      );
+    case "case-study-reference":
+    case "sample-audit-reference":
+    case "related-service":
+      return (
+        <div className="grid gap-3">
+          <Field label="Title"><TextInput value={value.title} onChange={(title) => onChange({ ...value, title })} /></Field>
+          <Field label="Link (path or URL)"><TextInput value={value.href} onChange={(href) => onChange({ ...value, href })} placeholder="/work/case-studies/…" /></Field>
+          <Field label="Summary"><TextArea value={value.summary} onChange={(summary) => onChange({ ...value, summary })} rows={2} /></Field>
         </div>
       );
     default:

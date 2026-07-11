@@ -142,6 +142,14 @@ function StructuredBlockPreview({ block }: { block: InsightBlock }) {
       ) : (
         <Preview title="Image" body="No image URL yet." />
       );
+    case "video":
+      return <Preview title={block.title || "YouTube video"} body={block.videoId ? `youtube.com/watch?v=${block.videoId}` : "No video selected yet."} />;
+    case "decision-framework":
+      return <Preview title={block.title} list={block.criteria.map((item) => [item.signal, item.action].filter(Boolean).join(" → "))} />;
+    case "case-study-reference":
+    case "sample-audit-reference":
+    case "related-service":
+      return <Preview title={block.title || "Reference"} body={block.href ? `${block.href} — ${block.summary}` : block.summary} />;
     default:
       return <Preview title={block.type} body="" />;
   }

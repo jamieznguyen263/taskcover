@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
   const body = (await request.json().catch(() => null)) as { mimeType?: unknown; bytes?: unknown } | null;
   try {
     validateUploadMetadata({ mimeType: String(body?.mimeType ?? ""), bytes: Number(body?.bytes ?? 0) });
-    const signature = await getMediaProvider().createUploadSignature(session.userId);
+    const signature = await getMediaProvider().createUploadSignature();
     return NextResponse.json(signature, { headers: { "cache-control": "no-store" } });
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : "Upload rejected." }, { status: 400 });

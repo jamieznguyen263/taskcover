@@ -1,12 +1,21 @@
 import { describe, expect, it } from "vitest";
 import type { InsightArticle, InsightBlock } from "@/content/insights.types";
 import { createDraftArticle } from "./content-model";
-import { analyzeAnswerability, analyzeCitationReadiness, analyzeEntityCoverage } from "./geo-analysis";
+import { analyzeAnswerability, analyzeCitationReadiness, analyzeEntityCoverage, computeReadingTime } from "./geo-analysis";
 
 function draft(overrides: Partial<InsightArticle> = {}): InsightArticle {
   const { article } = createDraftArticle({ groupId: "group", translationGroupId: "translation", slug: "geo-test", category: "seo-guides", locale: "en", author: "Editor" });
   return { ...article, ...overrides };
 }
+
+describe("reading time", () => {
+  it("estimates at least 1 minute and scales with word count", () => {
+    expect(computeReadingTime([{ type: "paragraph", text: "one two three" }])).toBe(1);
+    const long = "word ".repeat(660).trim();
+    expect(computeReadingTime([{ type: "paragraph", text: long }])).toBe(3);
+    expect(computeReadingTime([])).toBe(1);
+  });
+});
 
 describe("GEO answerability", () => {
   it("flags a missing direct answer and detects one near the top", () => {

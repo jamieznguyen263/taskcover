@@ -6,6 +6,27 @@ export function getInsightPath(article: InsightArticle) {
   return `/insights/${article.category}/${article.slug}`;
 }
 
+function absoluteUrl(src: string) {
+  return /^https?:\/\//.test(src) ? src : `${siteConfig.url}${src}`;
+}
+
+function articleImages(article: InsightArticle) {
+  const images: (string | Record<string, unknown>)[] = [];
+  if (article.coverImage) images.push(absoluteUrl(article.coverImage));
+  for (const block of article.blocks) {
+    if (block.type === "image" && block.src) {
+      images.push({
+        "@type": "ImageObject",
+        url: absoluteUrl(block.src),
+        ...(block.width ? { width: block.width } : {}),
+        ...(block.height ? { height: block.height } : {}),
+        ...(block.caption ? { caption: block.caption } : {}),
+      });
+    }
+  }
+  return images.length ? images : absoluteUrl(article.coverImage);
+}
+
 export function articleJsonLd(article: InsightArticle, locale: Locale) {
   const path = getInsightPath(article);
   const url = `${siteConfig.url}${localizePath(path, locale)}`;
@@ -14,7 +35,7 @@ export function articleJsonLd(article: InsightArticle, locale: Locale) {
     "@type": article.schema.schemaType,
     headline: article.h1,
     description: article.excerpt,
-    image: `${siteConfig.url}${article.coverImage}`,
+    image: articleImages(article),
     datePublished: article.publishedAt,
     dateModified: article.updatedAt,
     inLanguage: locale,

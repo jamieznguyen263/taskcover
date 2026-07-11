@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useEditor } from "@tiptap/react";
@@ -32,15 +33,21 @@ import { normalizeTiptapToInsightBlocks } from "@/lib/admin/normalization";
 import { BlockEditorSurface, buildEditorExtensions, DocumentOutline } from "./editor/block-editor";
 import { CollaborationPanel } from "./editor/collaboration-panel";
 import { Field, TextArea, TextInput } from "./editor/controls";
-import { EvidenceManager } from "./editor/evidence-manager";
-import { GeoPanel } from "./editor/geo-panel";
-import { InternalLinkingPanel } from "./editor/internal-linking-panel";
-import { LocalizationPanel, type SiblingLocalization } from "./editor/localization-panel";
-import { MetadataSocialForm } from "./editor/metadata-social-form";
-import { PublishQaPanel } from "./editor/publish-qa-panel";
-import { RawJsonPanel } from "./editor/raw-json-panel";
-import { SchemaBuilder } from "./editor/schema-builder";
-import { SearchStrategyForm } from "./editor/search-strategy-form";
+import { ImagePicker } from "./editor/image-picker";
+import type { SiblingLocalization } from "./editor/localization-panel";
+
+// Section panels only mount when their tab is active, so they are code-split
+// out of the initial editor chunk to cut the editor route's JS and TTI.
+const panelLoading = () => <div className="p-6 text-sm text-muted">Loading section…</div>;
+const SearchStrategyForm = dynamic(() => import("./editor/search-strategy-form").then((m) => m.SearchStrategyForm), { loading: panelLoading });
+const EvidenceManager = dynamic(() => import("./editor/evidence-manager").then((m) => m.EvidenceManager), { loading: panelLoading });
+const InternalLinkingPanel = dynamic(() => import("./editor/internal-linking-panel").then((m) => m.InternalLinkingPanel), { loading: panelLoading });
+const MetadataSocialForm = dynamic(() => import("./editor/metadata-social-form").then((m) => m.MetadataSocialForm), { loading: panelLoading });
+const SchemaBuilder = dynamic(() => import("./editor/schema-builder").then((m) => m.SchemaBuilder), { loading: panelLoading });
+const GeoPanel = dynamic(() => import("./editor/geo-panel").then((m) => m.GeoPanel), { loading: panelLoading });
+const LocalizationPanel = dynamic(() => import("./editor/localization-panel").then((m) => m.LocalizationPanel), { loading: panelLoading });
+const PublishQaPanel = dynamic(() => import("./editor/publish-qa-panel").then((m) => m.PublishQaPanel), { loading: panelLoading });
+const RawJsonPanel = dynamic(() => import("./editor/raw-json-panel").then((m) => m.RawJsonPanel), { loading: panelLoading });
 
 type SectionId = "document" | "strategy" | "evidence" | "linking" | "metadata" | "schema" | "geo" | "localization" | "qa" | "json";
 type SaveState = "Saved" | "Unsaved changes" | "Saving" | "Save failed" | "Conflict detected";
@@ -100,9 +107,16 @@ export function ArticleEditor(props: {
   const dirtyRevision = useRef(0);
   const saveInFlight = useRef(false);
   const transitionInFlight = useRef(false);
+  const blockSyncTimer = useRef<number | undefined>(undefined);
   const initialDocument = useMemo(() => props.editorDocument, [props.editorDocument]);
   const editable = status === "draft";
 
+  // Normalizing the whole Tiptap document through the block schema is the
+  // expensive part of an edit, so we don't run it on every keystroke. onUpdate
+  // only marks the draft dirty (cheap); the normalize that keeps article.blocks
+  // in sync for the side panels/preview is debounced (400ms). Saving
+  // re-normalizes from the live editor JSON directly, so persistence is never
+  // stale even if a debounced sync hasn't run yet.
   const editor = useEditor({
     extensions: buildEditorExtensions(),
     content: initialDocument as never,
@@ -115,17 +129,37 @@ export function ArticleEditor(props: {
       },
     },
     onUpdate: ({ editor: current }) => {
-      const next = { ...articleRef.current, blocks: normalizeTiptapToInsightBlocks(current.getJSON()) };
-      articleRef.current = next;
-      setArticle(next);
       dirtyRevision.current += 1;
       setSaveState("Unsaved changes");
+      if (blockSyncTimer.current !== undefined) window.clearTimeout(blockSyncTimer.current);
+      blockSyncTimer.current = window.setTimeout(() => {
+        const next = { ...articleRef.current, blocks: normalizeTiptapToInsightBlocks(current.getJSON()) };
+        articleRef.current = next;
+        setArticle(next);
+      }, 400);
     },
   });
+
+  const flushBlockSync = useCallback(() => {
+    if (blockSyncTimer.current !== undefined) {
+      window.clearTimeout(blockSyncTimer.current);
+      blockSyncTimer.current = undefined;
+    }
+    if (!editor) return;
+    const next = { ...articleRef.current, blocks: normalizeTiptapToInsightBlocks(editor.getJSON()) };
+    articleRef.current = next;
+    setArticle(next);
+  }, [editor]);
 
   useEffect(() => {
     editor?.setEditable(editable);
   }, [editor, editable]);
+
+  // Side panels and the rendered preview read article.blocks; make sure any
+  // debounced normalize is flushed the moment the writer opens one of them.
+  useEffect(() => {
+    if (activeSection !== "document" || showPreview) flushBlockSync();
+  }, [activeSection, showPreview, flushBlockSync]);
 
   const updateArticle = useCallback((update: Partial<InsightArticle>) => {
     const next = { ...articleRef.current, ...update };
@@ -357,10 +391,15 @@ export function ArticleEditor(props: {
               <Field label="Excerpt"><TextArea value={article.excerpt} disabled={!editable} rows={2} onChange={(excerpt) => updateArticle({ excerpt })} /></Field>
               <details className="rounded-lg border border-line-soft bg-surface-soft p-3">
                 <summary className="cursor-pointer text-sm font-medium text-graphite">Cover image</summary>
-                <div className="mt-3 grid gap-3 md:grid-cols-2">
-                  <Field label="Cover image URL"><TextInput value={article.coverImage} disabled={!editable} onChange={(coverImage) => updateArticle({ coverImage })} /></Field>
-                  <Field label="Cover image alt" hint="Required for publishing."><TextInput value={article.coverImageAlt} disabled={!editable} onChange={(coverImageAlt) => updateArticle({ coverImageAlt })} /></Field>
-                  <div className="md:col-span-2">
+                <div className="mt-3 grid gap-3">
+                  {editable ? (
+                    <ImagePicker value={article.coverImage} onChange={(picked) => updateArticle({ coverImage: picked.src })} />
+                  ) : article.coverImage ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={article.coverImage} alt={article.coverImageAlt} className="max-h-40 rounded-lg border border-line object-contain" />
+                  ) : null}
+                  <div className="grid gap-3 md:grid-cols-2">
+                    <Field label="Cover image alt" hint="Required for publishing."><TextInput value={article.coverImageAlt} disabled={!editable} onChange={(coverImageAlt) => updateArticle({ coverImageAlt })} /></Field>
                     <Field label="Cover image caption"><TextInput value={article.coverImageCaption} disabled={!editable} onChange={(coverImageCaption) => updateArticle({ coverImageCaption })} /></Field>
                   </div>
                 </div>

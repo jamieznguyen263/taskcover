@@ -86,9 +86,20 @@ export function blockText(block: InsightBlock): string {
       return block.code;
     case "image":
       return [block.alt, block.caption ?? ""].join(" ");
+    case "video":
+      return [block.title, block.caption ?? ""].join(" ");
     case "divider":
       return "";
   }
+}
+
+/** Estimated reading time in minutes from all block text at ~220 wpm (min 1). */
+export function computeReadingTime(blocks: InsightBlock[]): number {
+  const words = blocks.reduce((sum, block) => {
+    const text = blockText(block).trim();
+    return sum + (text ? text.split(/\s+/).length : 0);
+  }, 0);
+  return Math.max(1, Math.round(words / 220));
 }
 
 const QUESTION_STARTERS = /^(how|what|why|when|where|which|who|should|can|do|does|is|are)\b/i;

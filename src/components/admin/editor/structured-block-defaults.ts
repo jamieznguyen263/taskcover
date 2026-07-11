@@ -15,6 +15,11 @@ export const structuredBlockMeta: Record<StructuredBlockType, { label: string; d
   "expert-insight": { label: "Expert insight", description: "First-party experience or practitioner commentary." },
   cta: { label: "Call to action", description: "Primary conversion prompt with buttons." },
   image: { label: "Image", description: "Image with required alt text and optional caption." },
+  video: { label: "YouTube video", description: "Embed a YouTube video (privacy-friendly, lazy-loaded)." },
+  "decision-framework": { label: "Decision framework", description: "Signal → recommended action pairs." },
+  "case-study-reference": { label: "Case study reference", description: "Link to a Taskcover case study." },
+  "sample-audit-reference": { label: "Sample audit reference", description: "Link to a Taskcover sample audit." },
+  "related-service": { label: "Related service", description: "Link to a related Taskcover service." },
 };
 
 export function defaultStructuredBlockData(type: StructuredBlockType): InsightBlock {
@@ -45,5 +50,13 @@ export function defaultStructuredBlockData(type: StructuredBlockType): InsightBl
       return { type, title: "", body: "", primary: { label: "", href: "" } };
     case "image":
       return { type, src: "", alt: "" };
+    case "video":
+      return { type, provider: "youtube", videoId: "", title: "" };
+    case "decision-framework":
+      return { type, title: "Decision framework", criteria: [{ signal: "", action: "" }] };
+    case "case-study-reference":
+    case "sample-audit-reference":
+    case "related-service":
+      return { type, title: "", href: "", summary: "" };
   }
 }
