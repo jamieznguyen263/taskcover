@@ -9,6 +9,7 @@ import {
   hashSecurityIdentifier,
   summarizeUserAgent,
 } from "./security";
+import { adminSessionCookieOptions } from "./session-cookie";
 
 export async function createAdminSession(userId: string) {
   const token = createOpaqueToken();
@@ -24,13 +25,7 @@ export async function createAdminSession(userId: string) {
   });
 
   const cookieStore = await cookies();
-  cookieStore.set(ADMIN_SESSION_COOKIE, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/admin",
-    expires: expiresAt,
-  });
+  cookieStore.set(ADMIN_SESSION_COOKIE, token, adminSessionCookieOptions(expiresAt));
 }
 
 export async function getAdminSession() {
@@ -55,5 +50,5 @@ export async function clearAdminSession() {
     const session = await new AdminRepository().resolveSession(token);
     if (session) await new AdminRepository().revokeSession(session.sessionId);
   }
-  (await cookies()).delete(ADMIN_SESSION_COOKIE);
+  (await cookies()).delete({ name: ADMIN_SESSION_COOKIE, path: "/" });
 }
