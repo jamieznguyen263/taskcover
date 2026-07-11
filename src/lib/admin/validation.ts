@@ -25,6 +25,26 @@ export const createArticleInputSchema = z.object({
   category: z.enum(insightCategorySlugs),
 }).strict();
 
+export const createCommentInputSchema = z.object({
+  articleGroupId: z.string().uuid(),
+  kind: z.enum(["comment", "change-request", "submission-note", "approval-note"]),
+  body: z.string().trim().min(1).max(5000),
+  locale: localeSchema.optional(),
+}).strict();
+
+export const resolveCommentInputSchema = z.object({
+  commentId: z.string().uuid(),
+}).strict();
+
+export const updateAssignmentInputSchema = z.object({
+  articleGroupId: z.string().uuid(),
+  ownerId: z.string().uuid().nullable().optional(),
+  assigneeId: z.string().uuid().nullable().optional(),
+  reviewerId: z.string().uuid().nullable().optional(),
+  dueDate: z.string().datetime().nullable().optional(),
+  priority: z.enum(["low", "normal", "high", "urgent"]).optional(),
+}).strict();
+
 export const transitionArticleInputSchema = z.object({
   articleId: z.string().uuid(),
   expectedVersion: z.number().int().positive(),
@@ -77,6 +97,7 @@ export const searchStrategySchema = z.object({
   aiCitationOpportunity: z.string(),
   uniqueInformationGain: z.string(),
   refreshTrigger: z.string(),
+  excludedEntities: z.array(z.string()).optional(),
 });
 
 export const contentEvidenceSchema = z.object({
@@ -127,11 +148,45 @@ export const localizationDataSchema = z.object({
   xDefaultSlug: z.string(),
   translationStatus: z.enum(["complete", "needs-review"]),
   translationNotes: z.string(),
+  sourceLocale: localeSchema.optional(),
+  assignedTranslator: z.string().max(200).optional(),
+  localeReviewStatus: z.enum(["pending", "approved", "changes-requested"]).optional(),
+  syncedFromSourceVersion: z.number().int().nonnegative().optional(),
+  localeKeyword: z.string().max(300).optional(),
 });
 
-const blocksSchema: z.ZodType<InsightBlock[]> = z.custom<InsightBlock[]>((value) => Array.isArray(value), {
-  message: "Expected InsightBlock[]",
-});
+const linkForBlockSchema = z.object({ label: z.string().min(1), href: z.string().min(1), note: z.string().optional() });
+const faqItemSchema = z.object({ question: z.string().min(1), answer: z.string().min(1) });
+
+export const insightBlockSchema: z.ZodType<InsightBlock> = z.discriminatedUnion("type", [
+  z.object({ type: z.literal("paragraph"), text: z.string() }),
+  z.object({ type: z.literal("heading"), level: z.union([z.literal(2), z.literal(3), z.literal(4)]), text: z.string(), id: z.string().optional() }),
+  z.object({ type: z.literal("bullet-list"), items: z.array(z.string()) }),
+  z.object({ type: z.literal("numbered-list"), items: z.array(z.string()) }),
+  z.object({ type: z.literal("quote"), quote: z.string(), attribution: z.string().optional() }),
+  z.object({ type: z.literal("direct-answer"), title: z.string(), answer: z.string() }),
+  z.object({ type: z.literal("key-takeaways"), title: z.string(), items: z.array(z.string()) }),
+  z.object({ type: z.literal("definition"), term: z.string(), definition: z.string() }),
+  z.object({ type: z.literal("callout"), title: z.string(), body: z.string(), tone: z.enum(["green", "blue", "amber"]).optional() }),
+  z.object({ type: z.literal("comparison-table"), caption: z.string(), columns: z.array(z.string()), rows: z.array(z.array(z.string())) }),
+  z.object({ type: z.literal("checklist"), title: z.string(), items: z.array(z.object({ label: z.string(), detail: z.string() })) }),
+  z.object({ type: z.literal("steps"), title: z.string(), steps: z.array(z.object({ title: z.string(), body: z.string() })) }),
+  z.object({ type: z.literal("evidence"), claimId: z.string(), summary: z.string(), sourceIds: z.array(z.string()) }),
+  z.object({ type: z.literal("expert-insight"), title: z.string(), body: z.string() }),
+  z.object({ type: z.literal("faq"), items: z.array(faqItemSchema) }),
+  z.object({ type: z.literal("pros-cons"), title: z.string(), pros: z.array(z.string()), cons: z.array(z.string()) }),
+  z.object({ type: z.literal("decision-framework"), title: z.string(), criteria: z.array(z.object({ signal: z.string(), action: z.string() })) }),
+  z.object({ type: z.literal("case-study-reference"), title: z.string(), href: z.string(), summary: z.string() }),
+  z.object({ type: z.literal("sample-audit-reference"), title: z.string(), href: z.string(), summary: z.string() }),
+  z.object({ type: z.literal("related-service"), title: z.string(), href: z.string(), summary: z.string() }),
+  z.object({ type: z.literal("cta"), title: z.string(), body: z.string(), primary: linkForBlockSchema, secondary: linkForBlockSchema.optional() }),
+  z.object({ type: z.literal("statistic"), value: z.string(), label: z.string(), sourceId: z.string().optional(), note: z.string().optional() }),
+  z.object({ type: z.literal("code"), code: z.string(), language: z.string().optional() }),
+  z.object({ type: z.literal("image"), src: z.string(), alt: z.string(), caption: z.string().optional(), credit: z.string().optional() }),
+  z.object({ type: z.literal("divider") }),
+]) as z.ZodType<InsightBlock>;
+
+const blocksSchema: z.ZodType<InsightBlock[]> = z.array(insightBlockSchema).max(2000) as z.ZodType<InsightBlock[]>;
 
 export const articleDraftSchema: z.ZodType<InsightArticle> = z.object({
   id: z.string().min(1),
