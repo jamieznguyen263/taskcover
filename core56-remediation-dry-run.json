@@ -1,0 +1,793 @@
+{
+  "generatedAt": "2026-07-11T16:56:40.424Z",
+  "mode": "dry-run",
+  "authorization": {
+    "authorized": false,
+    "reason": "Dry-run mode (pass --write to enable staging writes)."
+  },
+  "dataSource": "database (ep-young-frost-at1o7sks.c-9.us-east-1.aws.neon.tech)",
+  "articleGroupsInspected": 56,
+  "counts": {
+    "no-change": 2,
+    "auto-write": 51,
+    "hard-stop": 3
+  },
+  "noPublishedSnapshotWasChanged": true,
+  "plans": [
+    {
+      "articleId": "TC-001",
+      "groupId": "27477b14-6eca-425a-8e8f-b4d457c7a63b",
+      "status": "no-change",
+      "workflowStatus": "published",
+      "beforeBlockCount": 31,
+      "afterBlockCount": 31,
+      "reasons": []
+    },
+    {
+      "articleId": "TC-006",
+      "groupId": "f49c1905-6c08-41e4-b219-07b8abb07379",
+      "status": "no-change",
+      "workflowStatus": "published",
+      "beforeBlockCount": 33,
+      "afterBlockCount": 33,
+      "reasons": []
+    },
+    {
+      "articleId": "TC-007",
+      "groupId": "b23b72e6-8f04-4198-a24c-a8de16266775",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 53,
+      "afterBlockCount": 40,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 46.",
+        "Converted markdown pipe-table at blocks 13-14-15-16-17-18-19-20 into a comparison-table block.",
+        "Converted markdown pipe-table at blocks 32-33-34-35-36 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 39 with a neutral CTA pointing to /services/ai-search-optimization."
+      ]
+    },
+    {
+      "articleId": "TC-002",
+      "groupId": "0d6cdf05-37f7-4f0a-9052-254ebb2d73fc",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 49,
+      "afterBlockCount": 39,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 42.",
+        "Converted markdown pipe-table at blocks 7-8-9-10-11-12-13-14-15 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 38 with a neutral CTA pointing to /services/ai-search-optimization."
+      ]
+    },
+    {
+      "articleId": "TC-008",
+      "groupId": "191ff4c9-4ca4-41cf-8d33-13192b666c10",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 51,
+      "afterBlockCount": 38,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 45.",
+        "Converted markdown pipe-table at blocks 11-12-13-14-15-16-17 into a comparison-table block.",
+        "Converted markdown pipe-table at blocks 24-25-26-27-28-29 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 37 with a neutral CTA pointing to /services/ai-search-optimization."
+      ]
+    },
+    {
+      "articleId": "TC-009",
+      "groupId": "e1f2545d-e74c-4555-9722-3bf978c41480",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 41,
+      "afterBlockCount": 39,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 34.",
+        "Replaced draft-oriented CTA at block 38 with a neutral CTA pointing to /services/ai-search-optimization."
+      ]
+    },
+    {
+      "articleId": "TC-010",
+      "groupId": "b06db6be-6bdb-4242-900f-948cf206b3d2",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 52,
+      "afterBlockCount": 43,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 46.",
+        "Converted markdown pipe-table at blocks 23-24-25-26-27-28-29-30 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 42 with a neutral CTA pointing to /services/seo-audit."
+      ]
+    },
+    {
+      "articleId": "TC-003",
+      "groupId": "a308a3ee-353e-4bab-a3fb-cf6dc4805f6d",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 51,
+      "afterBlockCount": 38,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 45.",
+        "Converted markdown pipe-table at blocks 17-18-19-20-21-22-23-24 into a comparison-table block.",
+        "Converted markdown pipe-table at blocks 31-32-33-34-35 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 37 with a neutral CTA pointing to /services/technical-seo."
+      ]
+    },
+    {
+      "articleId": "TC-004",
+      "groupId": "310b6da0-b325-4b92-9d4f-4876b29a108c",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 45,
+      "afterBlockCount": 36,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 39.",
+        "Converted markdown pipe-table at blocks 3-4-5-6-7-8-9-10 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 35 with a neutral CTA pointing to /services/seo-agency."
+      ]
+    },
+    {
+      "articleId": "TC-005",
+      "groupId": "9a5c1073-7689-4bca-a30d-9a736cb9b2ca",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 42,
+      "afterBlockCount": 36,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 34.",
+        "Converted markdown pipe-table at blocks 14-15-16-17-18 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 35 with a neutral CTA pointing to /services/international-seo."
+      ]
+    },
+    {
+      "articleId": "TC-011",
+      "groupId": "1fc69168-1be0-4b7c-ae15-bc724c4906d8",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 47,
+      "afterBlockCount": 38,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 40.",
+        "Converted markdown pipe-table at blocks 15-16-17-18-19-20-21-22 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 37 with a neutral CTA pointing to /services/seo-agency."
+      ]
+    },
+    {
+      "articleId": "TC-012",
+      "groupId": "3196e8c3-d700-4169-bdec-f2cf143dad2e",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 46,
+      "afterBlockCount": 39,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 38.",
+        "Converted markdown pipe-table at blocks 7-8-9-10-11-12 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 38 with a neutral CTA pointing to /services/seo-agency."
+      ]
+    },
+    {
+      "articleId": "TC-013",
+      "groupId": "9dd1645c-4c19-40d8-8192-b0d8fefb52da",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 49,
+      "afterBlockCount": 40,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 42.",
+        "Converted markdown pipe-table at blocks 19-20-21-22-23-24-25-26 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 39 with a neutral CTA pointing to /services/seo-agency."
+      ]
+    },
+    {
+      "articleId": "TC-014",
+      "groupId": "171596c3-ecf6-4a11-b66d-96925da3cc68",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 46,
+      "afterBlockCount": 37,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 39.",
+        "Converted markdown pipe-table at blocks 4-5-6-7-8-9-10-11 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 36 with a neutral CTA pointing to /services/seo-agency."
+      ]
+    },
+    {
+      "articleId": "TC-016",
+      "groupId": "95765c5f-fbf4-4a3e-b2ff-26a20ac0ee96",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 43,
+      "afterBlockCount": 36,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 37.",
+        "Converted markdown pipe-table at blocks 8-9-10-11-12-13 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 35 with a neutral CTA pointing to /services/technical-seo."
+      ]
+    },
+    {
+      "articleId": "TC-017",
+      "groupId": "0d898aef-75a6-4be1-953a-aba241a462cc",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 41,
+      "afterBlockCount": 34,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 35.",
+        "Converted markdown pipe-table at blocks 14-15-16-17-18-19 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 33 with a neutral CTA pointing to /services/technical-seo."
+      ]
+    },
+    {
+      "articleId": "TC-018",
+      "groupId": "e9fe128c-d368-4b3b-bf9e-ca52216bbcdc",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 37,
+      "afterBlockCount": 35,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 31.",
+        "Replaced draft-oriented CTA at block 34 with a neutral CTA pointing to /services/technical-seo."
+      ]
+    },
+    {
+      "articleId": "TC-031",
+      "groupId": "25671955-b913-4c81-9929-fb52b1c55c05",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 44,
+      "afterBlockCount": 36,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 38.",
+        "Converted markdown pipe-table at blocks 4-5-6-7-8-9-10 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 35 with a neutral CTA pointing to /services/technical-seo."
+      ]
+    },
+    {
+      "articleId": "TC-032",
+      "groupId": "377c25f4-64d0-45bb-a9bd-300cae8a1a78",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 44,
+      "afterBlockCount": 36,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 37.",
+        "Converted markdown pipe-table at blocks 7-8-9-10-11-12-13 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 35 with a neutral CTA pointing to /services/technical-seo."
+      ]
+    },
+    {
+      "articleId": "TC-033",
+      "groupId": "58e36331-ed51-48a6-a4cf-644a3de29ee0",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 40,
+      "afterBlockCount": 32,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 34.",
+        "Converted markdown pipe-table at blocks 12-13-14-15-16-17-18 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 31 with a neutral CTA pointing to /services/technical-seo."
+      ]
+    },
+    {
+      "articleId": "TC-034",
+      "groupId": "91c1a86f-6118-42d6-b42f-9b305784fea9",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 43,
+      "afterBlockCount": 37,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 36.",
+        "Converted markdown pipe-table at blocks 16-17-18-19-20 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 36 with a neutral CTA pointing to /services/seo-audit."
+      ]
+    },
+    {
+      "articleId": "TC-019",
+      "groupId": "e2be1836-f41d-42cb-95c2-4a8326373fa9",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 44,
+      "afterBlockCount": 38,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 38.",
+        "Converted markdown pipe-table at blocks 12-13-14-15-16 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 37 with a neutral CTA pointing to /services/content-marketing."
+      ]
+    },
+    {
+      "articleId": "TC-020",
+      "groupId": "a09a37e3-7dcf-4593-a6b7-71042da23124",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 45,
+      "afterBlockCount": 36,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 39.",
+        "Converted markdown pipe-table at blocks 11-12-13-14-15-16-17-18 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 35 with a neutral CTA pointing to /services/content-marketing."
+      ]
+    },
+    {
+      "articleId": "TC-035",
+      "groupId": "95ea21db-ebd3-43b8-aea3-bef2fca7ff42",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 47,
+      "afterBlockCount": 37,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 41.",
+        "Converted markdown pipe-table at blocks 11-12-13-14-15-16-17-18-19 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 36 with a neutral CTA pointing to /services/content-marketing."
+      ]
+    },
+    {
+      "articleId": "TC-036",
+      "groupId": "ed654631-ab31-4ba2-877c-d816dd8a537c",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 40,
+      "afterBlockCount": 38,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 34.",
+        "Replaced draft-oriented CTA at block 37 with a neutral CTA pointing to /services/content-marketing."
+      ]
+    },
+    {
+      "articleId": "TC-037",
+      "groupId": "34327c3e-acf6-4840-8254-2c4087788f12",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 44,
+      "afterBlockCount": 36,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 37.",
+        "Converted markdown pipe-table at blocks 14-15-16-17-18-19-20 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 35 with a neutral CTA pointing to /services/content-marketing."
+      ]
+    },
+    {
+      "articleId": "TC-021",
+      "groupId": "d84ffa3a-ebd7-4d39-bce2-4eb7968b83b7",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 50,
+      "afterBlockCount": 36,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 44.",
+        "Converted markdown pipe-table at blocks 6-7-8-9-10-11-12 into a comparison-table block.",
+        "Converted markdown pipe-table at blocks 19-20-21-22-23-24-25 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 35 with a neutral CTA pointing to /services/digital-pr-link-building."
+      ]
+    },
+    {
+      "articleId": "TC-038",
+      "groupId": "fe907e09-7c5b-4486-8802-c17c2c8ab515",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 45,
+      "afterBlockCount": 37,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 39.",
+        "Converted markdown pipe-table at blocks 8-9-10-11-12-13-14 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 36 with a neutral CTA pointing to /services/digital-pr-link-building."
+      ]
+    },
+    {
+      "articleId": "TC-039",
+      "groupId": "d55fb4e6-9a24-4a27-9372-41c052219f51",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 43,
+      "afterBlockCount": 34,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 37.",
+        "Converted markdown pipe-table at blocks 12-13-14-15-16-17-18-19 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 33 with a neutral CTA pointing to /services/digital-pr-link-building."
+      ]
+    },
+    {
+      "articleId": "TC-040",
+      "groupId": "c6175e72-9ef5-4f5a-9891-b830c08aa1a8",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 46,
+      "afterBlockCount": 37,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 40.",
+        "Converted markdown pipe-table at blocks 12-13-14-15-16-17-18-19 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 36 with a neutral CTA pointing to /services/digital-pr-link-building."
+      ]
+    },
+    {
+      "articleId": "TC-022",
+      "groupId": "3a88bb2a-12fd-4a38-b0d9-7923b4c5871d",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 45,
+      "afterBlockCount": 37,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 39.",
+        "Converted markdown pipe-table at blocks 17-18-19-20-21-22-23 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 36 with a neutral CTA pointing to /services/local-seo."
+      ]
+    },
+    {
+      "articleId": "TC-023",
+      "groupId": "03c30674-7944-4da0-b603-242ae231c0ea",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 43,
+      "afterBlockCount": 36,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 37.",
+        "Converted markdown pipe-table at blocks 7-8-9-10-11-12 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 35 with a neutral CTA pointing to /services/international-seo."
+      ]
+    },
+    {
+      "articleId": "TC-024",
+      "groupId": "6ea5054e-3afc-4692-add1-c5fe8c6fd7c2",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 42,
+      "afterBlockCount": 34,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 36.",
+        "Converted markdown pipe-table at blocks 15-16-17-18-19-20-21 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 33 with a neutral CTA pointing to /services/local-seo."
+      ]
+    },
+    {
+      "articleId": "TC-044",
+      "groupId": "a50d2abf-1675-433d-a687-7aa01e191640",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 42,
+      "afterBlockCount": 35,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 36.",
+        "Converted markdown pipe-table at blocks 16-17-18-19-20-21 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 34 with a neutral CTA pointing to /services/local-seo."
+      ]
+    },
+    {
+      "articleId": "TC-045",
+      "groupId": "9a2a7649-7c18-4c37-9e9b-409b0729df20",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 45,
+      "afterBlockCount": 37,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 39.",
+        "Converted markdown pipe-table at blocks 17-18-19-20-21-22-23 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 36 with a neutral CTA pointing to /services/local-seo."
+      ]
+    },
+    {
+      "articleId": "TC-046",
+      "groupId": "640882b1-60a0-4787-83f1-3a67c809d2b9",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 41,
+      "afterBlockCount": 33,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 35.",
+        "Converted markdown pipe-table at blocks 13-14-15-16-17-18-19 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 32 with a neutral CTA pointing to /services/international-seo."
+      ]
+    },
+    {
+      "articleId": "TC-047",
+      "groupId": "47b9dc0c-b575-4ee5-89f9-51a0cbaeac16",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 37,
+      "afterBlockCount": 35,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 29.",
+        "Replaced draft-oriented CTA at block 34 with a neutral CTA pointing to /services/international-seo."
+      ]
+    },
+    {
+      "articleId": "TC-025",
+      "groupId": "6d604332-f3c3-40a9-98aa-b54cbc3d2891",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 47,
+      "afterBlockCount": 39,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 40.",
+        "Converted markdown pipe-table at blocks 18-19-20-21-22-23-24 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 38 with a neutral CTA pointing to /services/international-seo."
+      ]
+    },
+    {
+      "articleId": "TC-026",
+      "groupId": "63feb387-1991-43c9-897b-704dd501d4c1",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 42,
+      "afterBlockCount": 34,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 35.",
+        "Converted markdown pipe-table at blocks 14-15-16-17-18-19-20 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 33 with a neutral CTA pointing to /services/content-marketing."
+      ]
+    },
+    {
+      "articleId": "TC-027",
+      "groupId": "21643ed5-8b5d-4bdf-8790-3f72fda5f66c",
+      "status": "hard-stop",
+      "workflowStatus": "published",
+      "beforeBlockCount": null,
+      "afterBlockCount": null,
+      "reasons": [
+        "Hard-stop article (YMYL/benchmark) — requires a named human reviewer, never auto-remediated."
+      ]
+    },
+    {
+      "articleId": "TC-028",
+      "groupId": "61df4620-ef25-4bea-b48f-85bed6e29779",
+      "status": "hard-stop",
+      "workflowStatus": "published",
+      "beforeBlockCount": null,
+      "afterBlockCount": null,
+      "reasons": [
+        "Hard-stop article (YMYL/benchmark) — requires a named human reviewer, never auto-remediated."
+      ]
+    },
+    {
+      "articleId": "TC-029",
+      "groupId": "f4fd6487-e34c-420b-b3a1-83f9d0be8cbe",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 50,
+      "afterBlockCount": 35,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 43.",
+        "Converted markdown pipe-table at blocks 6-7-8-9-10-11-12-13 into a comparison-table block.",
+        "Converted markdown pipe-table at blocks 22-23-24-25-26-27-28 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 34 with a neutral CTA pointing to /services/content-marketing."
+      ]
+    },
+    {
+      "articleId": "TC-030",
+      "groupId": "2d839d77-29c8-4453-a269-548797a65019",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 50,
+      "afterBlockCount": 35,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 43.",
+        "Converted markdown pipe-table at blocks 3-4-5-6-7-8-9-10 into a comparison-table block.",
+        "Converted markdown pipe-table at blocks 22-23-24-25-26-27-28 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 34 with a neutral CTA pointing to /services/ecommerce-seo."
+      ]
+    },
+    {
+      "articleId": "TC-048",
+      "groupId": "3c987cb0-fd80-4cc7-acc7-d04860e08b01",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 43,
+      "afterBlockCount": 36,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 37.",
+        "Converted markdown pipe-table at blocks 11-12-13-14-15-16 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 35 with a neutral CTA pointing to /services/ecommerce-seo."
+      ]
+    },
+    {
+      "articleId": "TC-049",
+      "groupId": "a88daecd-43a6-4a23-823d-bbe6de6f4374",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 45,
+      "afterBlockCount": 32,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 39.",
+        "Converted markdown pipe-table at blocks 3-4-5-6-7-8-9 into a comparison-table block.",
+        "Converted markdown pipe-table at blocks 16-17-18-19-20-21 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 31 with a neutral CTA pointing to /services/ecommerce-seo."
+      ]
+    },
+    {
+      "articleId": "TC-050",
+      "groupId": "0ddb92cd-1d79-460c-8701-1c9343c95157",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 45,
+      "afterBlockCount": 37,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 39.",
+        "Converted markdown pipe-table at blocks 18-19-20-21-22-23-24 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 36 with a neutral CTA pointing to /services/ecommerce-seo."
+      ]
+    },
+    {
+      "articleId": "TC-051",
+      "groupId": "5a2e88e2-388f-476b-bb04-60a417f87166",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 44,
+      "afterBlockCount": 35,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 38.",
+        "Converted markdown pipe-table at blocks 3-4-5-6-7-8-9-10 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 34 with a neutral CTA pointing to /services/content-marketing."
+      ]
+    },
+    {
+      "articleId": "TC-052",
+      "groupId": "0d354a9e-38dd-4192-af35-40a455d3820f",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 44,
+      "afterBlockCount": 36,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 37.",
+        "Converted markdown pipe-table at blocks 7-8-9-10-11-12-13 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 35 with a neutral CTA pointing to /services/seo-agency."
+      ]
+    },
+    {
+      "articleId": "TC-053",
+      "groupId": "281f8675-a0ae-4e8d-8d31-bd013121b26f",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 40,
+      "afterBlockCount": 38,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 33.",
+        "Replaced draft-oriented CTA at block 37 with a neutral CTA pointing to /services/ppc-management."
+      ]
+    },
+    {
+      "articleId": "TC-054",
+      "groupId": "918556c8-a2ec-4e46-96d7-8a12c9e3c25e",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 48,
+      "afterBlockCount": 33,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 42.",
+        "Converted markdown pipe-table at blocks 7-8-9-10-11-12-13 into a comparison-table block.",
+        "Converted markdown pipe-table at blocks 20-21-22-23-24-25-26-27 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 32 with a neutral CTA pointing to /services/seo-mentor-service."
+      ]
+    },
+    {
+      "articleId": "TC-055",
+      "groupId": "6e959a32-64a8-4709-b5a3-66d572b6e6ae",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 40,
+      "afterBlockCount": 38,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 33.",
+        "Replaced draft-oriented CTA at block 37 with a neutral CTA pointing to /services/seo-agency."
+      ]
+    },
+    {
+      "articleId": "TC-056",
+      "groupId": "17b08d6e-35f4-4a32-8ccf-c4fada11ebc3",
+      "status": "hard-stop",
+      "workflowStatus": "published",
+      "beforeBlockCount": null,
+      "afterBlockCount": null,
+      "reasons": [
+        "Hard-stop article (YMYL/benchmark) — requires a named human reviewer, never auto-remediated."
+      ]
+    },
+    {
+      "articleId": "TC-015",
+      "groupId": "bd226496-5d3a-4c0a-b013-e3a040177c3c",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 41,
+      "afterBlockCount": 34,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 35.",
+        "Converted markdown pipe-table at blocks 14-15-16-17-18-19 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 33 with a neutral CTA pointing to /services/seo-mentor-service."
+      ]
+    },
+    {
+      "articleId": "TC-041",
+      "groupId": "17323c5f-7f6e-4170-894b-799abfa482cf",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 54,
+      "afterBlockCount": 36,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 47.",
+        "Converted markdown pipe-table at blocks 6-7-8-9-10-11-12 into a comparison-table block.",
+        "Converted markdown pipe-table at blocks 20-21-22-23-24-25 into a comparison-table block.",
+        "Converted markdown pipe-table at blocks 30-31-32-33-34-35 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 35 with a neutral CTA pointing to /services/ai-search-optimization."
+      ]
+    },
+    {
+      "articleId": "TC-042",
+      "groupId": "855ab652-9962-416b-8659-4d5ba677b942",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 63,
+      "afterBlockCount": 36,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 57.",
+        "Converted markdown pipe-table at blocks 6-7-8-9-10-11-12-13-14 into a comparison-table block.",
+        "Converted markdown pipe-table at blocks 18-19-20-21-22 into a comparison-table block.",
+        "Converted markdown pipe-table at blocks 27-28-29-30-31-32-33 into a comparison-table block.",
+        "Converted markdown pipe-table at blocks 38-39-40-41-42-43-44-45 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 35 with a neutral CTA pointing to /services/ai-search-optimization."
+      ]
+    },
+    {
+      "articleId": "TC-043",
+      "groupId": "de6a776e-5b6e-4476-befa-7a00c142f831",
+      "status": "auto-write",
+      "workflowStatus": "published",
+      "beforeBlockCount": 56,
+      "afterBlockCount": 35,
+      "reasons": [
+        "Removed duplicate opening paragraph at block 1 (repeats the Direct Answer).",
+        "Removed duplicate FAQ heading at block 50.",
+        "Converted markdown pipe-table at blocks 6-7-8-9-10-11 into a comparison-table block.",
+        "Converted markdown pipe-table at blocks 15-16-17-18-19-20-21-22 into a comparison-table block.",
+        "Converted markdown pipe-table at blocks 31-32-33-34-35-36-37-38 into a comparison-table block.",
+        "Replaced draft-oriented CTA at block 34 with a neutral CTA pointing to /services/ai-search-optimization."
+      ]
+    }
+  ],
+  "writeResults": []
+}

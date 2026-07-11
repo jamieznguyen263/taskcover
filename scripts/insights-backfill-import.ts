@@ -163,7 +163,7 @@ export async function importBackfillArticles(sql: postgres.Sql, input?: InsightA
   return { groups, localizations };
 }
 
-function tiptapDocumentFor(blocks: InsightBlock[]) {
+export function tiptapDocumentFor(blocks: InsightBlock[]) {
   return {
     type: "doc",
     content: blocks.flatMap(blockToTiptap),

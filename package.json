@@ -38,6 +38,8 @@
     "core56:claude:prompts:validate": "tsx scripts/core56-render-ready-prompts.ts --validate-only",
     "core56:claude:validate": "tsx scripts/core56-validate-claude-output.ts",
     "core56:claude:convert": "tsx scripts/core56-convert-claude-output.ts",
+    "insights:audit-core56": "tsx scripts/insights-audit-core56.ts",
+    "insights:remediate-core56": "tsx scripts/insights-remediate-core56.ts",
     "leads:process": "tsx scripts/leads-process.ts",
     "leads:smoke": "tsx scripts/leads-smoke.ts",
     "integrations:test-resend": "tsx scripts/integrations-test-resend.ts",
