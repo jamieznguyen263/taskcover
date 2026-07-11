@@ -13,19 +13,20 @@ export default async function AdminInsightEditorPage({ params, searchParams }: {
   if (!getAdminIntegrationStatus().databaseConfigured) return <AdminUnavailable />;
   const session = await requireAdminSession();
   const repo = new AdminRepository();
-  const articleGroup = await repo.getEditableArticleGroup((await params).id);
-  if (!articleGroup) notFound();
+  // Single fetch: derive the editable view from the raw group instead of querying twice.
+  const raw = await repo.getArticleGroup((await params).id);
+  const articleGroup = repo.toEditableArticleGroup(raw);
+  if (!articleGroup || !raw) notFound();
   const locale = asLocale((await searchParams).locale);
   const localization = articleGroup.localizations.find((item) => item.locale === locale) ?? articleGroup.localizations[0];
   if (!localization) notFound();
-  const raw = await repo.getArticleGroup(articleGroup.id);
-  const restoreRevisionId = raw?.revisions.find((revision) => revision.articleSnapshot)?.id;
+  const restoreRevisionId = raw.revisions.find((revision) => revision.articleSnapshot)?.id;
 
-  const [comments, workflowEvents, assignableUsers, publishedSnapshots] = await Promise.all([
+  const [comments, workflowEvents, assignableUsers, publishedArticles] = await Promise.all([
     repo.listComments(articleGroup.id),
     repo.listWorkflowEvents(articleGroup.id),
     repo.listAssignableUsers(),
-    repo.listPublishedSnapshots(localization.locale).catch(() => []),
+    repo.listPublishedLinkTargets(localization.locale).catch(() => []),
   ]);
 
   const siblings: EditorSibling[] = articleGroup.localizations.map((item) => ({
@@ -35,21 +36,20 @@ export default async function AdminInsightEditorPage({ params, searchParams }: {
     editorDocument: item.editorDocument,
   }));
 
-  const group = raw?.group;
+  const group = raw.group;
   const assignment = {
-    ownerId: group?.ownerId ?? null,
-    assigneeId: group?.assigneeId ?? null,
-    reviewerId: group?.reviewerId ?? null,
-    dueDate: group?.dueDate?.toISOString() ?? null,
-    priority: group?.priority ?? ("normal" as const),
+    ownerId: group.ownerId ?? null,
+    assigneeId: group.assigneeId ?? null,
+    reviewerId: group.reviewerId ?? null,
+    dueDate: group.dueDate?.toISOString() ?? null,
+    priority: group.priority ?? ("normal" as const),
   };
 
-  const rawLocalization = raw?.localizations.find((item) => item.id === localization.id);
+  const rawLocalization = raw.localizations.find((item) => item.id === localization.id);
   const storedQa = Array.isArray(rawLocalization?.publishQaSnapshot) ? (rawLocalization.publishQaSnapshot as PublishQaResult[]) : [];
 
-  const publishedArticles = publishedSnapshots
-    .filter((snapshot) => snapshot.id !== articleGroup.id)
-    .map((snapshot) => ({ slug: snapshot.slug, category: snapshot.category, h1: snapshot.h1, focusKeyword: snapshot.searchStrategy.focusKeyword }));
+  // Exclude the current article from its own link suggestions.
+  const linkTargets = publishedArticles.filter((target) => target.slug !== localization.article.slug || target.category !== group.categorySlug);
 
   return (
     <AdminShell session={session}>
@@ -70,7 +70,7 @@ export default async function AdminInsightEditorPage({ params, searchParams }: {
         restoreRevisionId={restoreRevisionId}
         siblings={siblings}
         publishedSlug={localization.publishedSnapshot?.slug ?? null}
-        publishedArticles={publishedArticles}
+        publishedArticles={linkTargets}
         assignment={assignment}
         assignableUsers={assignableUsers}
         comments={comments}

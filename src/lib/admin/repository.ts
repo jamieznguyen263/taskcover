@@ -341,8 +341,8 @@ export class AdminRepository {
     return { group, localizations, revisions };
   }
 
-  async getEditableArticleGroup(id: string): Promise<EditableArticleGroup | null> {
-    const value = await this.getArticleGroup(id);
+  /** Pure transform from a raw getArticleGroup result to the editable view (no DB access). */
+  toEditableArticleGroup(value: Awaited<ReturnType<AdminRepository["getArticleGroup"]>>): EditableArticleGroup | null {
     if (!value) return null;
     return {
       id: value.group.id,
@@ -360,6 +360,10 @@ export class AdminRepository {
         publishedSnapshot: localization.publishedSnapshot ? publishedArticleSnapshotSchema.parse(localization.publishedSnapshot) : null,
       })),
     };
+  }
+
+  async getEditableArticleGroup(id: string): Promise<EditableArticleGroup | null> {
+    return this.toEditableArticleGroup(await this.getArticleGroup(id));
   }
 
   async createArticleDraft(input: {
@@ -758,6 +762,31 @@ export class AdminRepository {
       .map((row) => row.snapshot)
       .filter(Boolean)
       .map((snapshot) => validateJsonPayload(publishedArticleSnapshotSchema, snapshot, "Published snapshot"));
+  }
+
+  /**
+   * Lightweight targets for internal-link suggestions. Selects only the four
+   * fields the suggestion provider needs from indexed columns plus one JSON
+   * field, instead of loading every published article's full snapshot blob.
+   */
+  async listPublishedLinkTargets(locale: Locale): Promise<{ slug: string; category: string; h1: string; focusKeyword: string }[]> {
+    const rows = await this.db
+      .select({
+        slug: insightArticleLocalizations.slug,
+        category: insightArticleGroups.categorySlug,
+        h1: insightArticleLocalizations.publicH1,
+        focusKeyword: sql<string | null>`${insightArticleLocalizations.searchStrategy} ->> 'focusKeyword'`,
+      })
+      .from(insightArticleLocalizations)
+      .innerJoin(insightArticleGroups, eq(insightArticleGroups.id, insightArticleLocalizations.articleGroupId))
+      .where(
+        and(
+          eq(insightArticleLocalizations.locale, locale),
+          isNotNull(insightArticleGroups.publishedRevisionGroupId),
+          isNull(insightArticleGroups.archivedAt)
+        )
+      );
+    return rows.map((row) => ({ slug: row.slug, category: row.category, h1: row.h1, focusKeyword: row.focusKeyword ?? "" }));
   }
 
   async createWorkflowEvent(input: {
