@@ -4,6 +4,7 @@ import { loadEnvConfig } from "@next/env";
 import postgres from "postgres";
 import type { InsightArticle, InsightStatus } from "../src/content/insights.types";
 import { articleDraftSchema } from "../src/lib/admin/validation";
+import { computeReadingTime } from "../src/lib/admin/geo-analysis";
 import { normalizeEmail } from "../src/lib/admin/crypto";
 import { hasPermission, type AdminRole } from "../src/lib/admin/permissions";
 import { hashForLog, summarizeUrl } from "../src/lib/ops/production-activation";
@@ -82,7 +83,8 @@ export function resolveWriteAuthorization(input: {
   target: string | undefined;
   confirmStagingIdentity: string | undefined;
   resolvedHost: string | null;
-  knownProductionIdentity?: string;
+  /** CORE56_PRODUCTION_HOST_FINGERPRINT — mandatory whenever a write is requested; write is refused if unset. */
+  knownProductionIdentity: string | undefined;
   source: "database" | "fixture";
 }): WriteAuthorizationResult {
   const resolvedFingerprint = input.resolvedHost ? hashForLog(input.resolvedHost) : "";
@@ -92,6 +94,13 @@ export function resolveWriteAuthorization(input: {
   }
   if (!input.requestedWrite) {
     return { authorized: false, reason: "Dry-run requested (pass --write to request a staging write).", resolvedFingerprint: resolvedFingerprint || null };
+  }
+  if (!input.knownProductionIdentity) {
+    return {
+      authorized: false,
+      reason: "Refusing: CORE56_PRODUCTION_HOST_FINGERPRINT must be set (to the known production host or its sha256 fingerprint) before --write can be requested.",
+      resolvedFingerprint: resolvedFingerprint || null,
+    };
   }
   if (input.databaseTargetEnv === "production" || input.target === "production") {
     return { authorized: false, reason: "Refusing: production is out of scope for Sprint S00.", resolvedFingerprint: resolvedFingerprint || null };
@@ -105,7 +114,7 @@ export function resolveWriteAuthorization(input: {
   if (!input.resolvedHost || !resolvedFingerprint) {
     return { authorized: false, reason: "Refusing: could not resolve the actual database host to verify identity.", resolvedFingerprint: null };
   }
-  if (input.knownProductionIdentity && (input.resolvedHost === input.knownProductionIdentity || resolvedFingerprint === input.knownProductionIdentity)) {
+  if (input.resolvedHost === input.knownProductionIdentity || resolvedFingerprint === input.knownProductionIdentity) {
     return { authorized: false, reason: "Refusing: the resolved database identity exactly matches the configured PRODUCTION identity.", resolvedFingerprint };
   }
   if (!input.confirmStagingIdentity) {
@@ -216,33 +225,28 @@ export function compareQaResults(before: PublishQaResult[], after: PublishQaResu
   };
 }
 
-const IDENTITY_FIELDS: (keyof InsightArticle)[] = [
-  "id",
-  "slug",
-  "translationGroupId",
-  "locale",
-  "category",
-  "author",
-  "expertReviewer",
-  "editor",
-  "status",
-  "publishedAt",
-  "lastFactCheckedAt",
-  "metadata",
-  "contentEvidence",
-  "searchStrategy",
-  "internalLinking",
-  "schema",
-  "localization",
-];
+/** The only fields an S00 write is allowed to change. Everything else must be byte-identical. */
+export const ALLOWED_DERIVED_FIELDS: (keyof InsightArticle)[] = ["blocks", "updatedAt", "readingTime", "publishQa"];
 
 export function verifyIdentityUnchanged(before: InsightArticle, after: InsightArticle): { ok: boolean; changedFields: string[] } {
-  const changedFields = IDENTITY_FIELDS.filter((field) => JSON.stringify(before[field]) !== JSON.stringify(after[field]));
+  const allFields = new Set([...Object.keys(before), ...Object.keys(after)]) as Set<keyof InsightArticle>;
+  const changedFields = [...allFields]
+    .filter((field) => !ALLOWED_DERIVED_FIELDS.includes(field))
+    .filter((field) => JSON.stringify(before[field]) !== JSON.stringify(after[field]));
   return { ok: changedFields.length === 0, changedFields };
 }
 
 function checksumOf(value: unknown): string {
   return hashForLog(JSON.stringify(value));
+}
+
+/** Mirrors the private summarizeQa() text format already used by AdminRepository's transitionArticle. */
+function summarizeQaText(results: PublishQaResult[]): string {
+  if (!results.length) return "Publish QA has not run.";
+  const errors = results.filter((item) => item.severity === "error").length;
+  const warnings = results.filter((item) => item.severity === "warning").length;
+  const passed = results.filter((item) => item.severity === "pass").length;
+  return `${errors} blocking errors, ${warnings} warnings, ${passed} passed checks.`;
 }
 
 // ---------------------------------------------------------------------------
@@ -281,6 +285,7 @@ async function main() {
       target: args.target,
       confirmStagingIdentity: args.confirmStagingIdentity,
       resolvedHost: null,
+      knownProductionIdentity: process.env.CORE56_PRODUCTION_HOST_FINGERPRINT,
       source: "fixture",
     });
     report(requestedMode, authorization, [], "fixture (no DATABASE_URL / --source=fixture)");
@@ -399,20 +404,30 @@ async function applyOneWrite(tx: postgres.TransactionSql, row: DbRow, plan: Arti
     return { articleId: plan.articleId, applied: false, reason: "Article changed since planning (no longer a clean auto-fix); skipped for safety." };
   }
 
-  const nextDraft: InsightArticle = { ...currentDraft, blocks: transformed.blocks, updatedAt: new Date().toISOString() };
-  const identityCheck = verifyIdentityUnchanged(currentDraft, nextDraft);
-  if (!identityCheck.ok) {
-    return { articleId: plan.articleId, applied: false, reason: `Refusing: transform unexpectedly changed identity field(s): ${identityCheck.changedFields.join(", ")}.` };
-  }
+  // One shared timestamp for every derived field and every updated_at column
+  // touched by this write, so the editor-loaded draft and the DB rows it
+  // came from can never disagree about when this happened.
+  const now = new Date();
+  const readingTime = computeReadingTime(transformed.blocks);
+  const draftWithBlocks: InsightArticle = { ...currentDraft, blocks: transformed.blocks, readingTime, updatedAt: now.toISOString() };
 
-  const afterQa = validateInsightArticle(nextDraft, [nextDraft]);
+  const afterQa = validateInsightArticle(draftWithBlocks, [draftWithBlocks]);
   const qa = compareQaResults(beforeQa, afterQa);
   if (!qa.safeToApply) {
     return { articleId: plan.articleId, applied: false, reason: `Refusing: transform introduced new Publish QA error code(s): ${qa.newErrorCodes.join(", ")}.`, qa };
   }
 
+  // The draft_snapshot's own publishQa summary must reflect the exact same
+  // QA result being written to publish_qa_snapshot below — otherwise the
+  // editor-loaded draft and the database QA column could disagree.
+  const nextDraft: InsightArticle = { ...draftWithBlocks, publishQa: { summary: summarizeQaText(afterQa), checkedAt: now.toISOString() } };
+
+  const identityCheck = verifyIdentityUnchanged(currentDraft, nextDraft);
+  if (!identityCheck.ok) {
+    return { articleId: plan.articleId, applied: false, reason: `Refusing: transform unexpectedly changed identity field(s): ${identityCheck.changedFields.join(", ")}.` };
+  }
+
   const afterChecksum = checksumOf(nextDraft.blocks);
-  const now = new Date();
 
   await tx`
     UPDATE insight_article_localizations

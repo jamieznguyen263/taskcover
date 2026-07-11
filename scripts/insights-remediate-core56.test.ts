@@ -132,6 +132,7 @@ describe("resolveWriteAuthorization — exact-match-only environment gates", () 
     target: "staging",
     confirmStagingIdentity: "staging-example-host.example.neon.tech",
     resolvedHost: "staging-example-host.example.neon.tech",
+    knownProductionIdentity: "prod-example-host.example.neon.tech" as string | undefined,
     source: "database" as const,
   };
 
@@ -163,21 +164,32 @@ describe("resolveWriteAuthorization — exact-match-only environment gates", () 
     if (!result.authorized) expect(result.reason).toMatch(/exactly/i);
   });
 
-  it("refuses when the resolved identity exactly matches a configured known-production identity, even if every other gate says staging", () => {
+  // Task 1 — CORE56_PRODUCTION_HOST_FINGERPRINT is now mandatory for --write.
+  it("refuses --write when CORE56_PRODUCTION_HOST_FINGERPRINT (knownProductionIdentity) is missing entirely", () => {
+    const result = resolveWriteAuthorization({ ...base, knownProductionIdentity: undefined });
+    expect(result.authorized).toBe(false);
+    if (!result.authorized) expect(result.reason).toMatch(/CORE56_PRODUCTION_HOST_FINGERPRINT/);
+  });
+
+  it("dry-run still works without CORE56_PRODUCTION_HOST_FINGERPRINT set", () => {
+    const result = resolveWriteAuthorization({ ...base, requestedWrite: false, knownProductionIdentity: undefined });
+    expect(result.authorized).toBe(false); // refused because it's a dry-run, not because the fingerprint is missing
+    if (!result.authorized) expect(result.reason).toMatch(/dry-run/i);
+  });
+
+  it("refuses when the resolved identity exactly equals the configured production fingerprint, even if every other gate says staging", () => {
     const result = resolveWriteAuthorization({ ...base, knownProductionIdentity: "staging-example-host.example.neon.tech" });
     expect(result.authorized).toBe(false);
     if (!result.authorized) expect(result.reason).toMatch(/production/i);
   });
 
-  it("authorizes only when every gate agrees, using the exact hostname", () => {
+  it("authorizes with a valid, distinct staging fingerprint when every gate (including the production fingerprint check) agrees", () => {
     const result = resolveWriteAuthorization(base);
     expect(result.authorized).toBe(true);
   });
 
   it("also accepts an exact sha256 fingerprint of the resolved host (not just the raw hostname)", () => {
-    const withFingerprintConfirm = { ...base };
-    // Compute what resolveWriteAuthorization itself would compute, to confirm fingerprint-based confirmation works end-to-end.
-    const first = resolveWriteAuthorization(withFingerprintConfirm);
+    const first = resolveWriteAuthorization(base);
     expect(first.authorized).toBe(true);
     const second = resolveWriteAuthorization({ ...base, confirmStagingIdentity: first.authorized ? first.resolvedFingerprint : "" });
     expect(second.authorized).toBe(true);
@@ -337,5 +349,25 @@ describe("verifyIdentityUnchanged — Task 10 identity/metadata/evidence guard",
     const result = verifyIdentityUnchanged(before, after);
     expect(result.ok).toBe(false);
     expect(result.changedFields).toContain("contentEvidence");
+  });
+
+  it("Task 2 — passes when every allowed derived field (blocks, updatedAt, readingTime, publishQa) changes together and nothing else does", () => {
+    const before = baseArticle({ blocks: [{ type: "paragraph", text: "Before." }], readingTime: 5, publishQa: { summary: "old", checkedAt: "2026-01-01T00:00:00.000Z" } });
+    const after = {
+      ...before,
+      blocks: [{ type: "paragraph", text: "After." }] as InsightBlock[],
+      updatedAt: "2026-07-12T00:00:00.000Z",
+      readingTime: 1,
+      publishQa: { summary: "0 blocking errors, 0 warnings, 1 passed checks.", checkedAt: "2026-07-12T00:00:00.000Z" },
+    };
+    expect(verifyIdentityUnchanged(before, after)).toEqual({ ok: true, changedFields: [] });
+  });
+
+  it("Task 2 — fails when any field outside the allowed derived set changes, even alongside a valid readingTime/publishQa update", () => {
+    const before = baseArticle({ readingTime: 5, h1: "Original H1" });
+    const after = { ...before, readingTime: 1, publishQa: { summary: "new", checkedAt: "2026-07-12T00:00:00.000Z" }, h1: "Unexpectedly changed H1" };
+    const result = verifyIdentityUnchanged(before, after);
+    expect(result.ok).toBe(false);
+    expect(result.changedFields).toEqual(["h1"]);
   });
 });
