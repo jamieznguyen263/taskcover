@@ -28,6 +28,8 @@
     "admin:user:verify": "tsx scripts/admin-verify.ts",
     "insights:import": "tsx scripts/insights-import.ts",
     "insights:verify-database": "tsx scripts/insights-verify-database.ts",
+    "insights:audit-core56": "tsx scripts/insights-audit-core56.ts",
+    "insights:remediate-core56": "tsx scripts/insights-remediate-core56.ts",
     "leads:process": "tsx scripts/leads-process.ts",
     "leads:smoke": "tsx scripts/leads-smoke.ts",
     "integrations:test-resend": "tsx scripts/integrations-test-resend.ts",
