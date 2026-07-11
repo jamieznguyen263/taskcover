@@ -32,6 +32,11 @@ function isValidUrlShape(url: string) {
   return /^https?:\/\/[^\s]+$/.test(url);
 }
 
+/** Accepts /insights/…, locale-prefixed /fr|/es/insights/…, or an absolute taskcover URL to either. */
+function isInsightsCanonical(canonical: string) {
+  return /^\/(?:fr\/|es\/)?insights\//.test(canonical) || /^https?:\/\/[^/]+\/(?:fr\/|es\/)?insights\//.test(canonical);
+}
+
 export function validateInsightArticle(
   article: InsightArticle,
   translations: InsightArticle[]
@@ -58,7 +63,7 @@ export function validateInsightArticle(
   if (!article.metadata.metaTitle) add("error", "missing-meta-title", "Meta title is required.", "metadata", "metadata", "Write an SEO title in Metadata & Social.");
   if (!article.metadata.metaDescription) add("error", "missing-meta-description", "Meta description is required.", "metadata", "metadata", "Write a meta description in Metadata & Social.");
   if (!slugPattern.test(article.slug)) add("error", "invalid-slug", "Slug must be lowercase kebab-case.", "seo", "metadata", "Fix the slug format in Metadata & Social.");
-  if (!article.metadata.canonical.includes("/insights/")) add("error", "invalid-canonical", "Canonical must be an insights path.", "seo", "metadata", "Point the canonical to this article's insights URL.");
+  if (!isInsightsCanonical(article.metadata.canonical)) add("error", "invalid-canonical", "Canonical must be an insights path.", "seo", "metadata", "Point the canonical to this article's insights URL.");
   if (!article.author) add("error", "missing-author", "Author is required.", "content", "metadata", "Set the author in Metadata & Social.");
   if (Number.isNaN(Date.parse(article.publishedAt))) add("error", "invalid-published-date", "Published date must be valid.", "workflow", "metadata");
   if (Number.isNaN(Date.parse(article.updatedAt))) add("error", "invalid-updated-date", "Updated date must be valid.", "workflow", "metadata");

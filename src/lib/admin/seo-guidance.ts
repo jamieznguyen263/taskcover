@@ -67,15 +67,15 @@ export function canonicalGuidance(article: InsightArticle): GuidanceResult {
 export function socialGuidance(article: InsightArticle): GuidanceResult[] {
   const { metadata } = article;
   const results: GuidanceResult[] = [];
-  const check = (value: string, fallback: string, field: string, label: string) => {
+  const check = (value: string, fallback: string, fallbackLabel: string, field: string, label: string) => {
     if (value.trim()) results.push({ status: "passed", code: `${field}-ok`, field, message: `${label} is set.` });
-    else if (fallback.trim()) results.push({ status: "optional", code: `${field}-fallback`, field, message: `${label} is empty; the ${fallback === metadata.metaTitle ? "SEO title" : "meta description"} will be reused.` });
+    else if (fallback.trim()) results.push({ status: "optional", code: `${field}-fallback`, field, message: `${label} is empty; the ${fallbackLabel} will be reused.` });
     else results.push({ status: "recommended", code: `${field}-missing`, field, message: `${label} is empty and has no fallback.` });
   };
-  check(metadata.ogTitle, metadata.metaTitle, "ogTitle", "Open Graph title");
-  check(metadata.ogDescription, metadata.metaDescription, "ogDescription", "Open Graph description");
-  check(metadata.twitterTitle, metadata.ogTitle || metadata.metaTitle, "twitterTitle", "X/Twitter title");
-  check(metadata.twitterDescription, metadata.ogDescription || metadata.metaDescription, "twitterDescription", "X/Twitter description");
+  check(metadata.ogTitle, metadata.metaTitle, "SEO title", "ogTitle", "Open Graph title");
+  check(metadata.ogDescription, metadata.metaDescription, "meta description", "ogDescription", "Open Graph description");
+  check(metadata.twitterTitle, metadata.ogTitle || metadata.metaTitle, metadata.ogTitle.trim() ? "Open Graph title" : "SEO title", "twitterTitle", "X/Twitter title");
+  check(metadata.twitterDescription, metadata.ogDescription || metadata.metaDescription, metadata.ogDescription.trim() ? "Open Graph description" : "meta description", "twitterDescription", "X/Twitter description");
   if (!metadata.ogImage.trim()) results.push({ status: "recommended", code: "ogImage-missing", field: "ogImage", message: "Social share image is empty. Link previews will have no image." });
   else results.push({ status: "passed", code: "ogImage-ok", field: "ogImage", message: "Social share image is set." });
   return results;
