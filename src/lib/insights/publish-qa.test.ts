@@ -29,6 +29,14 @@ describe("Publish QA", () => {
     expect(results.some((result) => result.code === "publishable")).toBe(true);
   });
 
+  it("treats an English-only stored group as a valid publication set", () => {
+    const article = publishable()[0]!;
+    const results = validateInsightArticle(article, [article]);
+    expect(results.filter((result) => result.severity === "error")).toEqual([]);
+    expect(results.find((result) => result.code === "publication-locales")?.message).toContain("EN");
+    expect(results.some((result) => result.code === "missing-translation")).toBe(false);
+  });
+
   it("attaches group, section, and remediation metadata to failures", () => {
     const [article, ...rest] = localizedDrafts();
     const results = validateInsightArticle(article, [article, ...rest]);
