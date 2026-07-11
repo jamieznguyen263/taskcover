@@ -1,4 +1,4 @@
-import type { InsightBlock } from "@/content/insights.types";
+import type { InsightBlock, InsightInlineMark, InsightRichText, InsightRichTextSegment } from "@/content/insights.types";
 import { insightBlockSchema, tiptapDocumentSchema } from "./validation";
 
 type TiptapNode = {
@@ -41,8 +41,49 @@ function textOf(node: TiptapNode): string {
   return (node.content ?? []).map(textOf).join("");
 }
 
-function listItems(node: TiptapNode): string[] {
-  return (node.content ?? []).map(textOf).map((item) => item.trim()).filter(Boolean);
+function isSafeHref(href: string): boolean {
+  return href.startsWith("/") || /^https?:\/\/[^\s]+$/i.test(href) || /^mailto:[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(href);
+}
+
+function marksOf(node: TiptapNode): InsightInlineMark[] | undefined {
+  const marks: InsightInlineMark[] = [];
+  for (const mark of node.marks ?? []) {
+    if (mark.type === "bold") marks.push({ type: "bold" });
+    if (mark.type === "italic") marks.push({ type: "italic" });
+    if (mark.type === "code") marks.push({ type: "code" });
+    if (mark.type === "link" && typeof mark.attrs?.href === "string" && isSafeHref(mark.attrs.href)) {
+      marks.push({ type: "link", href: mark.attrs.href });
+    }
+  }
+  return marks.length ? marks : undefined;
+}
+
+function richSegmentsOf(node: TiptapNode): InsightRichTextSegment[] {
+  if (typeof node.text === "string") return [{ text: node.text, marks: marksOf(node) }];
+  return (node.content ?? []).flatMap(richSegmentsOf);
+}
+
+function trimRichSegments(segments: InsightRichTextSegment[]): InsightRichTextSegment[] {
+  const trimmed = segments.map((segment) => ({ ...segment })).filter((segment) => segment.text.length > 0);
+  if (!trimmed.length) return [];
+  trimmed[0] = { ...trimmed[0], text: trimmed[0]!.text.trimStart() };
+  const lastIndex = trimmed.length - 1;
+  trimmed[lastIndex] = { ...trimmed[lastIndex]!, text: trimmed[lastIndex]!.text.trimEnd() };
+  return trimmed.filter((segment) => segment.text.length > 0);
+}
+
+function richTextOf(node: TiptapNode): InsightRichText {
+  const segments = trimRichSegments(richSegmentsOf(node));
+  const hasMarks = segments.some((segment) => segment.marks?.length);
+  return hasMarks ? segments : segments.map((segment) => segment.text).join("");
+}
+
+function listItems(node: TiptapNode): InsightRichText[] {
+  return (node.content ?? []).map(richTextOf).filter((item) => textFromRichText(item).trim());
+}
+
+function textFromRichText(value: InsightRichText): string {
+  return typeof value === "string" ? value : value.map((segment) => segment.text).join("");
 }
 
 function tableToComparisonTable(node: TiptapNode): InsightBlock | null {
@@ -78,7 +119,7 @@ export function normalizeTiptapToInsightBlocks(document: unknown): InsightBlock[
       }
       if (node.type === "bulletList") return { type: "bullet-list", items: listItems(node) };
       if (node.type === "orderedList") return { type: "numbered-list", items: listItems(node) };
-      if (node.type === "blockquote") return text ? { type: "quote", quote: text } : null;
+      if (node.type === "blockquote") return text ? { type: "quote", quote: richTextOf(node) } : null;
       if (node.type === "horizontalRule") return { type: "divider" };
       if (node.type === "codeBlock") {
         const language = typeof node.attrs?.language === "string" ? node.attrs.language : undefined;
@@ -86,7 +127,7 @@ export function normalizeTiptapToInsightBlocks(document: unknown): InsightBlock[
       }
       if (node.type === "table") return tableToComparisonTable(node);
       if (node.type === STRUCTURED_BLOCK_NODE) return structuredBlockToInsightBlock(node);
-      return text ? { type: "paragraph", text } : null;
+      return text ? { type: "paragraph", text: richTextOf(node) } : null;
     })
     .filter((block): block is InsightBlock => Boolean(block));
 }

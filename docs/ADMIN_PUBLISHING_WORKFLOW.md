@@ -8,7 +8,7 @@ Rules:
 
 - Editors can create, edit, preview, save, upload media, and submit for review.
 - Admins can request changes, approve, schedule, publish now, cancel schedules, archive, restore revisions, manage users, view audit logs, and trigger publishing.
-- Approval, scheduling, and publishing require complete EN/FR/ES translations.
+- Approval, scheduling, and publishing require a complete English source article. FR/ES localizations are optional and are exposed only after their own review is complete.
 - Blocking Publish QA errors prevent approval, scheduling, and publishing.
 - Editing a published article keeps the live published snapshot intact and creates draft changes.
 - Publishing creates immutable revisions and updates the published pointer transactionally.

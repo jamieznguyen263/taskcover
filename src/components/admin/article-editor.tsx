@@ -40,6 +40,7 @@ import type { SiblingLocalization } from "./editor/localization-panel";
 // out of the initial editor chunk to cut the editor route's JS and TTI.
 const panelLoading = () => <div className="p-6 text-sm text-muted">Loading section…</div>;
 const SearchStrategyForm = dynamic(() => import("./editor/search-strategy-form").then((m) => m.SearchStrategyForm), { loading: panelLoading });
+const ContentIntelligencePanel = dynamic(() => import("./editor/content-intelligence-panel").then((m) => m.ContentIntelligencePanel), { loading: panelLoading });
 const EvidenceManager = dynamic(() => import("./editor/evidence-manager").then((m) => m.EvidenceManager), { loading: panelLoading });
 const InternalLinkingPanel = dynamic(() => import("./editor/internal-linking-panel").then((m) => m.InternalLinkingPanel), { loading: panelLoading });
 const MetadataSocialForm = dynamic(() => import("./editor/metadata-social-form").then((m) => m.MetadataSocialForm), { loading: panelLoading });
@@ -49,12 +50,13 @@ const LocalizationPanel = dynamic(() => import("./editor/localization-panel").th
 const PublishQaPanel = dynamic(() => import("./editor/publish-qa-panel").then((m) => m.PublishQaPanel), { loading: panelLoading });
 const RawJsonPanel = dynamic(() => import("./editor/raw-json-panel").then((m) => m.RawJsonPanel), { loading: panelLoading });
 
-type SectionId = "document" | "strategy" | "evidence" | "linking" | "metadata" | "schema" | "geo" | "localization" | "qa" | "json";
+type SectionId = "document" | "strategy" | "intelligence" | "evidence" | "linking" | "metadata" | "schema" | "geo" | "localization" | "qa" | "json";
 type SaveState = "Saved" | "Unsaved changes" | "Saving" | "Save failed" | "Conflict detected";
 
 const sections: { id: SectionId; label: string; icon: typeof FileText; adminOnly?: boolean }[] = [
   { id: "document", label: "Document", icon: FileText },
   { id: "strategy", label: "Search Strategy", icon: Search },
+  { id: "intelligence", label: "Content Intelligence", icon: Sparkles },
   { id: "evidence", label: "Content & Evidence", icon: Landmark },
   { id: "linking", label: "Internal Linking", icon: Link2 },
   { id: "metadata", label: "Metadata & Social", icon: Tags },
@@ -416,6 +418,8 @@ export function ArticleEditor(props: {
             </div>
           ) : activeSection === "strategy" ? (
             <SearchStrategyForm article={article} editable={editable} update={updateArticle} />
+          ) : activeSection === "intelligence" ? (
+            <ContentIntelligencePanel article={article} siblings={siblingArticles} onNavigate={(section) => setActiveSection(section)} />
           ) : activeSection === "evidence" ? (
             <EvidenceManager article={article} editable={editable} update={updateArticle} />
           ) : activeSection === "linking" ? (

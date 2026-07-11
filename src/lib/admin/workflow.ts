@@ -1,5 +1,4 @@
 import type { InsightArticle, InsightStatus } from "@/content/insights.types";
-import { locales } from "@/lib/i18n";
 import { validateInsightArticle } from "@/lib/insights/publish-qa";
 import { assertCanTransition, type AdminRole } from "./permissions";
 
@@ -16,11 +15,8 @@ export function assertWorkflowDecision(decision: WorkflowDecision) {
 
   if (["approved", "scheduled", "published"].includes(decision.to)) {
     const translations = decision.translations ?? [];
-    const localeSet = new Set(translations.map((article) => article.locale));
-    for (const locale of locales) {
-      if (!localeSet.has(locale)) {
-        throw new Error(`Cannot ${decision.to}: missing ${locale} localization.`);
-      }
+    if (!translations.some((article) => article.locale === "en")) {
+      throw new Error(`Cannot ${decision.to}: missing en source localization.`);
     }
 
     const blockingErrors = decision.blockingQaErrors ?? translations.reduce((count, article) => {

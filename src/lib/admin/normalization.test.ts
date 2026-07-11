@@ -26,6 +26,60 @@ describe("Tiptap normalization", () => {
     expect(blocks).toEqual([{ type: "code", code: "const a = 1;", language: "ts" }]);
   });
 
+  it("preserves safe inline marks from editor paragraphs", () => {
+    const blocks = normalizeTiptapToInsightBlocks(
+      doc([
+        {
+          type: "paragraph",
+          content: [
+            { type: "text", text: "Use " },
+            { type: "text", text: "SEO services", marks: [{ type: "bold" }, { type: "link", attrs: { href: "/services/seo-agency" } }] },
+            { type: "text", text: " for growth." },
+          ],
+        },
+      ])
+    );
+    expect(blocks).toEqual([
+      {
+        type: "paragraph",
+        text: [
+          { text: "Use " },
+          { text: "SEO services", marks: [{ type: "bold" }, { type: "link", href: "/services/seo-agency" }] },
+          { text: " for growth." },
+        ],
+      },
+    ]);
+  });
+
+  it("drops unsafe link marks while keeping the text", () => {
+    const blocks = normalizeTiptapToInsightBlocks(
+      doc([{ type: "paragraph", content: [{ type: "text", text: "Unsafe link", marks: [{ type: "link", attrs: { href: "javascript:alert(1)" } }] }] }])
+    );
+    expect(blocks).toEqual([{ type: "paragraph", text: "Unsafe link" }]);
+  });
+
+  it("preserves inline links inside list items", () => {
+    const blocks = normalizeTiptapToInsightBlocks(
+      doc([
+        {
+          type: "bulletList",
+          content: [
+            {
+              type: "listItem",
+              content: [
+                {
+                  type: "paragraph",
+                  content: [{ type: "text", text: "Free SEO audit", marks: [{ type: "link", attrs: { href: "/free-seo-audit" } }] }],
+                },
+              ],
+            },
+          ],
+        },
+      ])
+    );
+    expect(blocks).toEqual([{ type: "bullet-list", items: [[{ text: "Free SEO audit", marks: [{ type: "link", href: "/free-seo-audit" }] }]] }]);
+  });
+
   it("normalizes editor tables into comparison tables with header row", () => {
     const cell = (text: string, type = "tableCell") => ({ type, content: [{ type: "paragraph", content: [{ type: "text", text }] }] });
     const blocks = normalizeTiptapToInsightBlocks(

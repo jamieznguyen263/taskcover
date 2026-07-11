@@ -14,6 +14,12 @@ function publishable(): InsightArticle[] {
   return localizedDrafts().map((article) => ({
     ...article,
     metadata: { ...article.metadata, metaTitle: "A good title", metaDescription: "A description that says what the reader learns." },
+    searchStrategy: {
+      ...article.searchStrategy,
+      focusKeyword: "seo guide",
+      coreQuestion: "How do you build an SEO guide?",
+      targetAudience: "Marketing leaders",
+    },
     coverImageAlt: "Cover alt",
     localization: { ...article.localization, translationStatus: "complete" as const },
     blocks: [{ type: "direct-answer" as const, title: "TL;DR", answer: "Yes." }, { type: "paragraph" as const, text: "Body." }],
@@ -79,5 +85,28 @@ describe("Publish QA", () => {
     };
     const results = validateInsightArticle(article, drafts);
     expect(results.some((result) => result.code === "claim-without-evidence" && result.severity === "error")).toBe(true);
+  });
+
+  it("allows a complete English article without placeholder translations", () => {
+    const [article] = publishable();
+    const results = validateInsightArticle(article, [article]);
+    expect(results.filter((result) => result.severity === "error")).toEqual([]);
+    expect(results.some((result) => result.code === "publishable")).toBe(true);
+  });
+
+  it("blocks required internal links that are planned but not placed in the body", () => {
+    const drafts = publishable();
+    const article = {
+      ...drafts[0],
+      internalLinking: { ...drafts[0].internalLinking, requiredInternalLinks: [{ label: "SEO services", href: "/services/seo-agency" }] },
+    };
+    const results = validateInsightArticle(article, drafts);
+    expect(results.some((result) => result.code === "required-links-missing-from-body" && result.severity === "error")).toBe(true);
+
+    const withBodyLink = {
+      ...article,
+      blocks: [{ type: "paragraph" as const, text: [{ text: "SEO services", marks: [{ type: "link" as const, href: "/services/seo-agency" }] }] }],
+    };
+    expect(validateInsightArticle(withBodyLink, drafts).some((result) => result.code === "required-links-missing-from-body")).toBe(false);
   });
 });

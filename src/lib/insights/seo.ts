@@ -6,6 +6,20 @@ export function getInsightPath(article: InsightArticle) {
   return `/insights/${article.category}/${article.slug}`;
 }
 
+export function articleLanguageAlternates(translations: InsightArticle[]) {
+  const languages = Object.fromEntries(
+    translations.map((article) => [
+      article.locale,
+      `${siteConfig.url}${localizePath(getInsightPath(article), article.locale)}`,
+    ])
+  );
+  const fallback = translations.find((article) => article.locale === "en") ?? translations[0];
+  if (fallback) {
+    languages["x-default"] = `${siteConfig.url}${localizePath(getInsightPath(fallback), fallback.locale)}`;
+  }
+  return languages;
+}
+
 function absoluteUrl(src: string) {
   return /^https?:\/\//.test(src) ? src : `${siteConfig.url}${src}`;
 }

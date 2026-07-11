@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildSitemapEntries, renderSitemapXml } from "./sitemap";
+import { buildInsightSitemapEntries, buildSitemapEntries, renderSitemapXml } from "./sitemap";
 
 const fixedLastModified = new Date("2026-07-05T00:00:00.000Z");
 
@@ -37,5 +37,23 @@ describe("Taskcover sitemap", () => {
     expect(xml).toContain('<loc>https://taskcover.com/services/website-development</loc>');
     expect(xml).toContain('hreflang="es" href="https://taskcover.com/es/services/seo-agency"');
     expect(xml).toContain("<lastmod>2026-07-05T00:00:00.000Z</lastmod>");
+  });
+
+  it("only emits hreflang alternates for published article localizations", () => {
+    const [entry] = buildInsightSitemapEntries([
+      {
+        locale: "en",
+        translationGroupId: "english-only",
+        categorySlug: "seo-guides",
+        articleSlug: "english-only-guide",
+        updatedAt: "2026-07-10T00:00:00.000Z",
+      },
+    ], fixedLastModified);
+
+    expect(entry.alternates.languages).toEqual({
+      en: "https://taskcover.com/insights/seo-guides/english-only-guide",
+      "x-default": "https://taskcover.com/insights/seo-guides/english-only-guide",
+    });
+    expect(entry.lastModified.toISOString()).toBe("2026-07-10T00:00:00.000Z");
   });
 });

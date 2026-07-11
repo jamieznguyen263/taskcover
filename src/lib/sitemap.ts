@@ -9,7 +9,7 @@ import {
   getServiceSlugs,
 } from "@/lib/content";
 import { locales, localizePath, type Locale } from "@/lib/i18n";
-import { localInsightsProvider } from "@/lib/insights/local-provider";
+import { getInsightSitemapRecords, type InsightSitemapRecord } from "@/lib/insights/content";
 import { siteConfig } from "@/lib/site";
 
 type SitemapChangeFrequency = "weekly" | "monthly";
@@ -21,6 +21,41 @@ export type SitemapEntry = {
   priority: number;
   alternates: { languages: Record<string, string> };
 };
+
+function articleLastModified(value: string, fallback: Date) {
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? fallback : parsed;
+}
+
+export function buildInsightSitemapEntries(records: InsightSitemapRecord[], fallbackLastModified: Date): SitemapEntry[] {
+  const groups = new Map<string, InsightSitemapRecord[]>();
+  for (const record of records) {
+    const group = groups.get(record.translationGroupId) ?? [];
+    group.push(record);
+    groups.set(record.translationGroupId, group);
+  }
+
+  return records.map((record) => {
+    const siblings = groups.get(record.translationGroupId) ?? [record];
+    const languages = Object.fromEntries(
+      siblings.map((sibling) => [
+        sibling.locale,
+        canonicalUrl(`/insights/${sibling.categorySlug}/${sibling.articleSlug}`, sibling.locale),
+      ])
+    );
+    const fallback = siblings.find((sibling) => sibling.locale === "en") ?? siblings[0];
+    if (fallback) {
+      languages["x-default"] = canonicalUrl(`/insights/${fallback.categorySlug}/${fallback.articleSlug}`, fallback.locale);
+    }
+    return {
+      url: canonicalUrl(`/insights/${record.categorySlug}/${record.articleSlug}`, record.locale),
+      lastModified: articleLastModified(record.updatedAt, fallbackLastModified),
+      changeFrequency: "monthly",
+      priority: 0.74,
+      alternates: { languages },
+    };
+  });
+}
 
 const canonicalOrigin = siteConfig.url.replace(/\/+$/, "");
 
@@ -54,7 +89,7 @@ function addLocalizedEntries(
   }
 }
 
-export async function buildSitemapEntries(lastModified = new Date()): Promise<SitemapEntry[]> {
+export async function buildSitemapEntries(lastModified = new Date(), insightRecords?: InsightSitemapRecord[]): Promise<SitemapEntry[]> {
   const entries: SitemapEntry[] = [];
 
   const staticBases = [
@@ -92,15 +127,7 @@ export async function buildSitemapEntries(lastModified = new Date()): Promise<Si
     });
   }
 
-  for (const item of localInsightsProvider.getArticleSlugs()) {
-    entries.push({
-      url: canonicalUrl(`/insights/${item.categorySlug}/${item.articleSlug}`, item.locale as Locale),
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.74,
-      alternates: { languages: alternatesFor(`/insights/${item.categorySlug}/${item.articleSlug}`) },
-    });
-  }
+  entries.push(...buildInsightSitemapEntries(insightRecords ?? await getInsightSitemapRecords(), lastModified));
 
   for (const slug of getServiceSlugs()) {
     addLocalizedEntries(entries, `/services/${slug}`, {

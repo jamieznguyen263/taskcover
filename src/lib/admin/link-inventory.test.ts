@@ -55,4 +55,15 @@ describe("Local internal-link inventory", () => {
     expect(warnings.length).toBe(1);
     expect(warnings[0]).toContain("seo services");
   });
+
+  it("collects hrefs embedded in rich body text", () => {
+    const article = draft();
+    article.blocks = [
+      { type: "paragraph", text: [{ text: "SEO services", marks: [{ type: "link", href: "/services/seo-agency" }] }] },
+      { type: "bullet-list", items: [[{ text: "Free SEO audit", marks: [{ type: "link", href: "/free-seo-audit" }] }]] },
+    ];
+    const hrefs = collectExistingHrefs(article);
+    expect(hrefs.has("/services/seo-agency")).toBe(true);
+    expect(hrefs.has("/free-seo-audit")).toBe(true);
+  });
 });
