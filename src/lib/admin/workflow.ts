@@ -1,6 +1,6 @@
 import type { InsightArticle, InsightStatus } from "@/content/insights.types";
-import { locales } from "@/lib/i18n";
 import { validateInsightArticle } from "@/lib/insights/publish-qa";
+import { getRequiredTranslations, resolveRequiredLocales } from "@/lib/insights/publication-policy";
 import { assertCanTransition, type AdminRole } from "./permissions";
 
 export type WorkflowDecision = {
@@ -16,15 +16,14 @@ export function assertWorkflowDecision(decision: WorkflowDecision) {
 
   if (["approved", "scheduled", "published"].includes(decision.to)) {
     const translations = decision.translations ?? [];
-    const localeSet = new Set(translations.map((article) => article.locale));
-    for (const locale of locales) {
-      if (!localeSet.has(locale)) {
-        throw new Error(`Cannot ${decision.to}: missing ${locale} localization.`);
-      }
+    const requiredLocales = resolveRequiredLocales(translations);
+    if (requiredLocales.length === 0) {
+      throw new Error(`Cannot ${decision.to}: no article localizations exist.`);
     }
 
-    const blockingErrors = decision.blockingQaErrors ?? translations.reduce((count, article) => {
-      return count + validateInsightArticle(article, translations).filter((result) => result.severity === "error").length;
+    const requiredTranslations = getRequiredTranslations(translations);
+    const blockingErrors = decision.blockingQaErrors ?? requiredTranslations.reduce((count, article) => {
+      return count + validateInsightArticle(article, requiredTranslations).filter((result) => result.severity === "error").length;
     }, 0);
 
     if (blockingErrors > 0) {
