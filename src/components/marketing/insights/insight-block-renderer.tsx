@@ -143,20 +143,36 @@ function InsightBlockView({ block, locale, priority }: { block: InsightBlock; lo
           </div>
         </figure>
       );
-    case "checklist":
+    case "checklist": {
+      const hasDetails = block.items.some((item) => item.detail.trim().length > 0);
       return (
         <section className="rounded-2xl border border-line bg-white p-5">
           <h3 className="text-lg font-semibold text-graphite">{block.title}</h3>
-          <ul className="mt-4 grid gap-3">
-            {block.items.map((item) => (
-              <li key={item.label} className="grid gap-1 rounded-xl bg-surface-soft p-4 sm:grid-cols-[13rem_1fr]">
-                <span className="font-semibold text-graphite">{item.label}</span>
-                <span className="text-sm leading-6 text-secondary">{item.detail}</span>
-              </li>
-            ))}
-          </ul>
+          {hasDetails ? (
+            <ul className="mt-4 grid gap-3">
+              {block.items.map((item) => (
+                <li key={item.label} className="grid gap-1 rounded-xl bg-surface-soft p-4 sm:grid-cols-[13rem_1fr]">
+                  <span className="font-semibold text-graphite">{item.label}</span>
+                  <span className="text-sm leading-6 text-secondary">{item.detail}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <ul className="mt-4 flex flex-wrap gap-2">
+              {block.items.map((item) => (
+                <li
+                  key={item.label}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface-soft px-3 py-1.5 text-sm font-medium leading-none text-graphite"
+                >
+                  <Check className="h-3.5 w-3.5 shrink-0 text-brand-green" aria-hidden="true" />
+                  {item.label}
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
       );
+    }
     case "steps":
       return (
         <section className="rounded-2xl border border-line bg-white p-5">
