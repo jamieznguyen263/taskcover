@@ -144,7 +144,7 @@ async function main() {
 }
 
 async function createGroup(
-  sql: postgres.Sql,
+  sql: postgres.ISql,
   payload: ReturnType<typeof contentImportPayloadSchema.parse>,
   actorId: string
 ): Promise<{ group: GroupRow; created: boolean }> {
@@ -167,7 +167,7 @@ async function createGroup(
 }
 
 async function upsertLocalization(
-  sql: postgres.Sql,
+  sql: postgres.ISql,
   groupId: string,
   localization: PreparedContentImport["localizations"][number]
 ) {
@@ -189,7 +189,7 @@ async function upsertLocalization(
     )
     VALUES (
       ${groupId}, ${localization.locale}, ${article.slug}, ${article.internalTitle}, ${article.h1}, ${article.excerpt},
-      ${sql.json(localization.editorDocument)}, ${sql.json(article.blocks)}, ${sql.json(article)}, ${sql.json(article.searchStrategy)},
+      ${sql.json(localization.editorDocument as postgres.JSONValue)}, ${sql.json(article.blocks)}, ${sql.json(article)}, ${sql.json(article.searchStrategy)},
       ${sql.json(article.contentEvidence)}, ${sql.json(article.internalLinking)}, ${sql.json(article.metadata)}, ${sql.json(socialMetadata)},
       ${sql.json(article.schema)}, ${sql.json(article.localization)}, ${sql.json(localization.qa)}, 1
     )
@@ -214,7 +214,7 @@ async function upsertLocalization(
   `;
 }
 
-async function findActiveUser(sql: postgres.Sql, email: string): Promise<ActorRow> {
+async function findActiveUser(sql: postgres.ISql, email: string): Promise<ActorRow> {
   const rows = await sql<ActorRow[]>`
     SELECT id, email, status FROM admin_users WHERE normalized_email = ${email} LIMIT 1
   `;
@@ -223,7 +223,7 @@ async function findActiveUser(sql: postgres.Sql, email: string): Promise<ActorRo
   return user;
 }
 
-async function findGroup(sql: postgres.Sql, creationKey: string): Promise<GroupRow | null> {
+async function findGroup(sql: postgres.ISql, creationKey: string): Promise<GroupRow | null> {
   const rows = await sql<GroupRow[]>`
     SELECT id, translation_group_id, shared_slug, category_slug, draft_workflow_status, lock_version
     FROM insight_article_groups WHERE creation_key = ${creationKey} LIMIT 1
@@ -231,7 +231,7 @@ async function findGroup(sql: postgres.Sql, creationKey: string): Promise<GroupR
   return rows[0] ?? null;
 }
 
-async function listLocalizations(sql: postgres.Sql, articleGroupId: string): Promise<LocalizationRow[]> {
+async function listLocalizations(sql: postgres.ISql, articleGroupId: string): Promise<LocalizationRow[]> {
   return sql<LocalizationRow[]>`
     SELECT locale, draft_snapshot, editor_document
     FROM insight_article_localizations
@@ -267,7 +267,7 @@ function assertImportScope(requested: Locale[], existing: Locale[]) {
 }
 
 async function resolveAssignment(
-  sql: postgres.Sql,
+  sql: postgres.ISql,
   assignment: ReturnType<typeof contentImportPayloadSchema.parse>["assignment"]
 ) {
   const resolve = async (email?: string) => email ? (await findActiveUser(sql, email)).id : null;
