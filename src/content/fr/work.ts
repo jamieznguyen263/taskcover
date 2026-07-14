@@ -318,7 +318,7 @@ export const work: WorkContent = {
   ],
   sampleAuditLinks: sampleOrder.map((slug) => ({ label: samples[slug].title, href: `/work/sample-audits/${slug}`, description: samples[slug].focus })),
   hub: {
-    metaTitle: "Réalisations, audits exemples et systèmes de croissance search | Taskcover Agency",
+    metaTitle: "Réalisations, audits exemples et systèmes de croissance search",
     metaDescription: "Explorez les livrables exemples, le cadre de croissance search, les standards de cas client et les règles de publication des résultats vérifiés.",
     eyebrow: "Système de travail",
     h1: "De l'intelligence search à l'exécution",
@@ -363,28 +363,28 @@ export const work: WorkContent = {
   },
   pages: {
     "case-studies": {
-      metaTitle: "Études de cas SEO vérifiées | Taskcover Agency",
+      metaTitle: "Études de cas SEO vérifiées",
       metaDescription: "Explorez 10 études de cas vérifiées de Taskcover Agency dans l'éducation, l'hospitalité, le juridique, l'eCommerce, le travel, le logiciel, l'immobilier et l'assurance.",
       eyebrow: "Bibliothèque de cas vérifiés",
       h1: "10 études de cas vérifiées de Taskcover Agency",
       intro: "Explorez des études de cas publiques détaillées avec récits, métriques, services, visuels et contexte source approuvés.",
     },
     "sample-audits": {
-      metaTitle: "Audits SEO exemples et livrables | Taskcover Agency",
+      metaTitle: "Audits SEO exemples et livrables",
       metaDescription: "Explorez huit livrables illustratifs Taskcover couvrant SEO technique, IA, contenu, local, e-commerce, international, PPC et roadmaps.",
       eyebrow: "Livrables exemples",
       h1: "Voir comment Taskcover raisonne",
       intro: "Ces audits exemples démontrent la méthode, la structure d'analyse et la traduction en exécution sans représenter une mission client réelle.",
     },
     "search-growth-frameworks": {
-      metaTitle: "Cadre opératoire de croissance search | Taskcover Agency",
+      metaTitle: "Cadre opératoire de croissance search",
       metaDescription: "Le cadre Découvrir, Diagnostiquer, Prioriser, Construire, Mesurer et Apprendre de Taskcover.",
       eyebrow: "Cadre opératoire",
       h1: "Le cadre opératoire de croissance search",
       intro: "La croissance search fonctionne comme un système : contexte, intelligence, priorisation, exécution, mesure et gouvernance.",
     },
     "client-results": {
-      metaTitle: "Standard de publication des résultats clients vérifiés | Taskcover Agency",
+      metaTitle: "Standard de publication des résultats clients vérifiés",
       metaDescription: "Cadre Taskcover pour publier des résultats uniquement avec preuve vérifiée, permission publique, baseline, période, source et contexte.",
       eyebrow: "Standard des résultats",
       h1: "Des résultats avec contexte de mesure",

@@ -1076,7 +1076,7 @@ export const services: ServicesContent = {
       summary:
         "Audit de croissance SEO axé conversion : aperçu technique, carte d'opportunités de mots-clés, écart de visibilité concurrentiel, écart d'autorité de contenu, vérification de préparation IA et feuille de route sur 90 jours.",
       outcomePromise: "De la clarté sur où agir en premier — et un plan de 90 jours pour combler les plus grands écarts.",
-      metaTitle: "Audit SEO gratuit et feuille de route de croissance | Taskcover Agency",
+      metaTitle: "Audit SEO gratuit et feuille de route de croissance",
       metaDescription:
         "Obtenez un audit de croissance SEO gratuit de Taskcover Agency. Aperçu technique, carte d'opportunités de mots-clés, écart de visibilité concurrentiel, écart d'autorité de contenu, vérification de préparation IA et feuille de route sur 90 jours.",
       problem: {

@@ -172,7 +172,7 @@ export const leads: LeadsContent = {
   },
   freeAudit: {
     meta: {
-      title: "Free SEO Audit Request | Taskcover Agency",
+      title: "Free SEO Audit Request",
       description:
         "Request a Taskcover SEO audit covering technical health, search demand, content authority, AI search readiness, and 90-day priorities.",
     },
@@ -204,7 +204,7 @@ export const leads: LeadsContent = {
   },
   bookCall: {
     meta: {
-      title: "Request a Strategy Call | Taskcover Agency",
+      title: "Request a Strategy Call",
       description:
         "Request a Taskcover strategy call for SEO, AI search, PPC, content, local, eCommerce, international, or search-growth planning.",
     },
@@ -234,7 +234,7 @@ export const leads: LeadsContent = {
     intentHelp: "Your selected intent changes the context fields below.",
   },
   thankYou: {
-    meta: { title: "Request received | Taskcover Agency", description: "Taskcover request confirmation." },
+    meta: { title: "Request received", description: "Taskcover request confirmation." },
     fallbackTitle: "Request received",
     fallbackMessage: "The request type was recorded safely.",
     nextLabel: "What happens next",

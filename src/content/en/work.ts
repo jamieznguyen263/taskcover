@@ -321,7 +321,7 @@ export const work: WorkContent = {
     description: samples[slug].focus,
   })),
   hub: {
-    metaTitle: "Work, Sample Audits, and Search Growth Systems | Taskcover Agency",
+    metaTitle: "Work, Sample Audits, and Search Growth Systems",
     metaDescription:
       "Explore Taskcover's sample deliverables, search growth framework, case-study standards, and verified client-result publication rules.",
     eyebrow: "Work system",
@@ -367,28 +367,28 @@ export const work: WorkContent = {
   },
   pages: {
     "case-studies": {
-      metaTitle: "Verified SEO Case Studies | Taskcover Agency",
+      metaTitle: "Verified SEO Case Studies",
       metaDescription: "Explore 10 verified Taskcover Agency case studies across education, hospitality, legal, eCommerce, travel, local search, software, real estate, and insurance.",
       eyebrow: "Verified case-study library",
       h1: "10 verified Taskcover Agency case studies",
       intro: "Explore detailed public case studies with approved narratives, metrics, services, visuals, and source context across EN, FR, and ES.",
     },
     "sample-audits": {
-      metaTitle: "Sample SEO Audits and Deliverables | Taskcover Agency",
+      metaTitle: "Sample SEO Audits and Deliverables",
       metaDescription: "Explore eight illustrative Taskcover sample deliverables covering technical SEO, AI search, content, local, eCommerce, international, PPC, and roadmaps.",
       eyebrow: "Sample deliverables",
       h1: "See how Taskcover thinks",
       intro: "These sample audits demonstrate methodology, analysis structure, and execution translation without representing real client engagements or results.",
     },
     "search-growth-frameworks": {
-      metaTitle: "Search Growth Operating Framework | Taskcover Agency",
+      metaTitle: "Search Growth Operating Framework",
       metaDescription: "Taskcover's Discover, Diagnose, Prioritize, Build, Measure, and Learn framework for turning search intelligence into execution.",
       eyebrow: "Operating framework",
       h1: "The search growth operating framework",
       intro: "Search growth works best as an operating system: context, intelligence, priority logic, execution architecture, measurement, and governance.",
     },
     "client-results": {
-      metaTitle: "Verified Client Results Publication Standard | Taskcover Agency",
+      metaTitle: "Verified Client Results Publication Standard",
       metaDescription: "Taskcover's framework for publishing client results only with verified evidence, public permission, baseline, timeframe, source, and context.",
       eyebrow: "Results standard",
       h1: "Results with measurement context",

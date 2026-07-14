@@ -2,7 +2,7 @@ import type { PricingContent } from "../pricing.types";
 
 export const pricing = {
   metadata: {
-    title: "Precios | Planes SEO y desarrollo web | Taskcover Agency",
+    title: "Precios | Planes SEO y desarrollo web",
     description:
       "Explora los precios de Taskcover Agency para SEO local, SEO nacional, SEO global, desarrollo web, SEO Mentor, auditorias, gestion PPC y programas de crecimiento search a medida.",
   },

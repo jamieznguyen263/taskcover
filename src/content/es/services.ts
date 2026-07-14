@@ -1055,7 +1055,7 @@ export const services: ServicesContent = {
       summary:
         "Auditoría de crecimiento SEO orientada a conversión: instantánea técnica, mapa de oportunidades de palabras clave, brecha de visibilidad competitiva, brecha de autoridad de contenido, verificación de preparación IA y hoja de ruta a 90 días.",
       outcomePromise: "Claridad sobre dónde actuar primero — y un plan de 90 días para cerrar las mayores brechas.",
-      metaTitle: "Auditoría SEO gratuita y hoja de ruta de crecimiento | Taskcover Agency",
+      metaTitle: "Auditoría SEO gratuita y hoja de ruta de crecimiento",
       metaDescription:
         "Obtenga una auditoría de crecimiento SEO gratuita de Taskcover Agency. Instantánea técnica, mapa de oportunidades de palabras clave, brecha de visibilidad competitiva, brecha de autoridad de contenido, verificación de preparación IA y hoja de ruta a 90 días.",
       problem: {

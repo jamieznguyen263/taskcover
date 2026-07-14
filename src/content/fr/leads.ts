@@ -171,7 +171,7 @@ export const leads: LeadsContent = {
     ],
   },
   freeAudit: {
-    meta: { title: "Demande d'audit SEO gratuit | Taskcover Agency", description: "Demandez un audit SEO Taskcover couvrant sante technique, demande search, autorite de contenu, preparation IA et priorites 90 jours." },
+    meta: { title: "Demande d'audit SEO gratuit", description: "Demandez un audit SEO Taskcover couvrant sante technique, demande search, autorite de contenu, preparation IA et priorites 90 jours." },
     eyebrow: "Evaluation diagnostique",
     h1: "Demander un audit SEO gratuit",
     intro: "Partagez le contexte necessaire pour diagnostiquer le systeme search de votre site, marche, contenu et priorites de croissance.",
@@ -188,7 +188,7 @@ export const leads: LeadsContent = {
     privacyBody: "Les donnees du formulaire servent uniquement a evaluer et traiter votre demande. Aucune donnee personnelle sensible, financiere, medicale ou de compte n'est demandee.",
   },
   bookCall: {
-    meta: { title: "Demander un appel strategie | Taskcover Agency", description: "Demandez un appel strategie Taskcover pour SEO, recherche IA, PPC, contenu, local, eCommerce, international ou planification search." },
+    meta: { title: "Demander un appel strategie", description: "Demandez un appel strategie Taskcover pour SEO, recherche IA, PPC, contenu, local, eCommerce, international ou planification search." },
     eyebrow: "Planificateur de session strategie",
     h1: "Demander un appel strategie",
     intro: "Partagez votre contexte de croissance et vos creneaux preferes. Taskcover confirmera la disponibilite apres acceptation par un adaptateur de livraison configure.",
@@ -208,7 +208,7 @@ export const leads: LeadsContent = {
     intentHelp: "L'intention selectionnee modifie les champs de contexte ci-dessous.",
   },
   thankYou: {
-    meta: { title: "Demande recue | Taskcover Agency", description: "Confirmation de demande Taskcover." },
+    meta: { title: "Demande recue", description: "Confirmation de demande Taskcover." },
     fallbackTitle: "Demande recue",
     fallbackMessage: "Le type de demande a ete enregistre de facon sure.",
     nextLabel: "Suite du processus",

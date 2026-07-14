@@ -228,11 +228,25 @@ function parsePage(url: string, result: Awaited<ReturnType<typeof fetchPage>>, s
   };
 }
 
+/**
+ * Insight article detail pages (/insights/[category]/[article]) may legitimately
+ * omit fr/es hreflang: getInsightAlternateLanguages() (src/lib/insights/content.ts)
+ * only advertises locales that have a published sibling in the same translation
+ * group, so English-only articles never link to a fr/es URL that would 404.
+ * Category listing pages (/insights/[category]) are unaffected and still require
+ * full locale coverage.
+ */
+function isInsightArticleDetailPath(pathname: string) {
+  const stripped = pathname.replace(/^\/(fr|es)(?=\/|$)/, "");
+  return /^\/insights\/[^/]+\/[^/]+\/?$/.test(stripped);
+}
+
 function auditPage(page: PageReport, sitemapPaths: Set<string>) {
   const findings: CrawlFinding[] = [];
   const final = new URL(page.finalUrl);
   const path = normalizedPageKey(final);
   const expectedLocale = pageLocale(final.pathname);
+  const isArticleDetail = isInsightArticleDetailPath(final.pathname);
 
   if (page.status >= 500) findings.push({ severity: "critical", url: page.url, issue: "Route returned 5xx", evidence: String(page.status) });
   if (page.status === 404 && sitemapPaths.has(path)) findings.push({ severity: "critical", url: page.url, issue: "Sitemap URL returned 404" });
@@ -243,7 +257,8 @@ function auditPage(page: PageReport, sitemapPaths: Set<string>) {
     if (!page.metaDescription) findings.push({ severity: "high", url: page.url, issue: "Indexable page is missing meta description" });
     if (!page.canonical) findings.push({ severity: "high", url: page.url, issue: "Indexable page is missing canonical" });
     if (page.h1Count !== 1) findings.push({ severity: "high", url: page.url, issue: "Indexable page should have exactly one H1", evidence: String(page.h1Count) });
-    for (const code of ["en", "fr", "es", "x-default"]) {
+    const requiredHreflang = isArticleDetail ? ["en", "x-default"] : ["en", "fr", "es", "x-default"];
+    for (const code of requiredHreflang) {
       if (!page.hreflang[code]) findings.push({ severity: "high", url: page.url, issue: `Missing hreflang ${code}` });
     }
     if (!page.openGraph.title) findings.push({ severity: "medium", url: page.url, issue: "Missing OG title" });

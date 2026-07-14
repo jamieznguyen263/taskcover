@@ -318,7 +318,7 @@ export const work: WorkContent = {
   ],
   sampleAuditLinks: sampleOrder.map((slug) => ({ label: samples[slug].title, href: `/work/sample-audits/${slug}`, description: samples[slug].focus })),
   hub: {
-    metaTitle: "Proyectos, auditorías de muestra y sistemas de crecimiento | Taskcover Agency",
+    metaTitle: "Proyectos, auditorías de muestra y sistemas de crecimiento",
     metaDescription: "Explora entregables de muestra, marco de crecimiento, estándares de casos y reglas para publicar resultados verificados.",
     eyebrow: "Sistema de trabajo",
     h1: "De inteligencia de búsqueda a ejecución",
@@ -363,28 +363,28 @@ export const work: WorkContent = {
   },
   pages: {
     "case-studies": {
-      metaTitle: "Casos de estudio SEO verificados | Taskcover Agency",
+      metaTitle: "Casos de estudio SEO verificados",
       metaDescription: "Explora 10 casos de estudio verificados de Taskcover Agency en educación, hospitalidad, legal, eCommerce, travel, software, real estate y seguros.",
       eyebrow: "Biblioteca de casos verificados",
       h1: "10 casos de estudio verificados de Taskcover Agency",
       intro: "Explora casos públicos detallados con narrativas, métricas, servicios, visuales y contexto fuente aprobados.",
     },
     "sample-audits": {
-      metaTitle: "Auditorías SEO de muestra y entregables | Taskcover Agency",
+      metaTitle: "Auditorías SEO de muestra y entregables",
       metaDescription: "Explora ocho entregables ilustrativos de Taskcover sobre SEO técnico, IA, contenido, local, eCommerce, internacional, PPC y roadmaps.",
       eyebrow: "Entregables de muestra",
       h1: "Mira cómo piensa Taskcover",
       intro: "Estas auditorías de muestra demuestran metodología, estructura de análisis y traducción a ejecución sin representar proyectos reales.",
     },
     "search-growth-frameworks": {
-      metaTitle: "Marco operativo de crecimiento en búsqueda | Taskcover Agency",
+      metaTitle: "Marco operativo de crecimiento en búsqueda",
       metaDescription: "El marco Descubrir, Diagnosticar, Priorizar, Construir, Medir y Aprender de Taskcover.",
       eyebrow: "Marco operativo",
       h1: "El marco operativo de crecimiento en búsqueda",
       intro: "El crecimiento en búsqueda funciona como sistema: contexto, inteligencia, prioridades, ejecución, medición y gobierno.",
     },
     "client-results": {
-      metaTitle: "Estándar de publicación de resultados verificados | Taskcover Agency",
+      metaTitle: "Estándar de publicación de resultados verificados",
       metaDescription: "Marco de Taskcover para publicar resultados solo con evidencia verificada, permiso público, baseline, periodo, fuente y contexto.",
       eyebrow: "Estándar de resultados",
       h1: "Resultados con contexto de medición",

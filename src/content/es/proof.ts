@@ -60,7 +60,7 @@ export const proof: ProofContent = {
     },
   ],
   hub: {
-    metaTitle: "Sistema de pruebas y autoridad | Taskcover Agency",
+    metaTitle: "Sistema de pruebas y autoridad",
     metaDescription:
       "Explora el marco de evidencia de Taskcover para experiencia de marca, reseñas de clientes, enlaces de medios, videos, referencias privadas y perfiles de portavoz.",
     eyebrow: "Pruebas + autoridad",
@@ -142,7 +142,7 @@ export const proof: ProofContent = {
     "brand-experience": {
       slug: "brand-experience",
       label: "Experiencia de marca",
-      metaTitle: "Contexto de experiencia de marca | Taskcover Agency",
+      metaTitle: "Contexto de experiencia de marca",
       metaDescription:
         "Conoce cómo Taskcover presenta experiencia seleccionada del equipo y socios de forma segura sin implicar respaldo ni relaciones directas con clientes.",
       eyebrow: "Experiencia de marca",
@@ -153,7 +153,7 @@ export const proof: ProofContent = {
     "media-features": {
       slug: "media-features",
       label: "Presencia en medios",
-      metaTitle: "Presencia en medios y comentario experto | Taskcover Agency",
+      metaTitle: "Presencia en medios y comentario experto",
       metaDescription:
         "Explora el marco de medios de Taskcover para enlaces de prensa verificados, temas de comentario y estándares de respuesta editorial.",
       eyebrow: "Presencia en medios",
@@ -164,7 +164,7 @@ export const proof: ProofContent = {
     "client-reviews": {
       slug: "client-reviews",
       label: "Reseñas de clientes",
-      metaTitle: "Reseñas de clientes verificadas | Taskcover Agency",
+      metaTitle: "Reseñas de clientes verificadas",
       metaDescription:
         "Taskcover publica feedback de clientes solo cuando identidad, permiso, verificación y divulgación cumplen los estándares.",
       eyebrow: "Reseñas de clientes",
@@ -175,7 +175,7 @@ export const proof: ProofContent = {
     "video-reviews": {
       slug: "video-reviews",
       label: "Reseñas en video",
-      metaTitle: "Reseñas en video verificadas | Taskcover Agency",
+      metaTitle: "Reseñas en video verificadas",
       metaDescription:
         "Marco de Taskcover para testimonios en video e historias de clientes aprobadas con identidad, contexto, activos fuente y permiso de publicación verificados.",
       eyebrow: "Reseñas en video",
@@ -186,7 +186,7 @@ export const proof: ProofContent = {
     spokesperson: {
       slug: "spokesperson",
       label: "Portavoz",
-      metaTitle: "Comentario de portavoz sobre búsqueda e IA | Taskcover Agency",
+      metaTitle: "Comentario de portavoz sobre búsqueda e IA",
       metaDescription:
         "Taskcover ofrece comentario experto a nivel agencia sobre búsqueda y visibilidad con IA, con estructura futura para perfiles de portavoz verificados.",
       eyebrow: "Portavoz",

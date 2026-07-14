@@ -171,7 +171,7 @@ export const leads: LeadsContent = {
     ],
   },
   freeAudit: {
-    meta: { title: "Solicitud de auditoria SEO gratis | Taskcover Agency", description: "Solicita una auditoria SEO de Taskcover sobre salud tecnica, demanda search, autoridad de contenido, preparacion IA y prioridades de 90 dias." },
+    meta: { title: "Solicitud de auditoria SEO gratis", description: "Solicita una auditoria SEO de Taskcover sobre salud tecnica, demanda search, autoridad de contenido, preparacion IA y prioridades de 90 dias." },
     eyebrow: "Evaluacion diagnostica",
     h1: "Solicita una auditoria SEO gratis",
     intro: "Comparte el contexto necesario para diagnosticar el sistema de busqueda detras de tu sitio, mercado, contenido y prioridades.",
@@ -188,7 +188,7 @@ export const leads: LeadsContent = {
     privacyBody: "Los datos del formulario se usan solo para evaluar y responder tu solicitud. No se solicitan datos personales sensibles, financieros, de salud ni de cuentas.",
   },
   bookCall: {
-    meta: { title: "Solicitar llamada estrategica | Taskcover Agency", description: "Solicita una llamada estrategica con Taskcover para SEO, busqueda IA, PPC, contenido, local, eCommerce, internacional o plan search." },
+    meta: { title: "Solicitar llamada estrategica", description: "Solicita una llamada estrategica con Taskcover para SEO, busqueda IA, PPC, contenido, local, eCommerce, internacional o plan search." },
     eyebrow: "Planificador de sesion estrategica",
     h1: "Solicita una llamada estrategica",
     intro: "Comparte tu contexto de crecimiento y ventanas preferidas. Taskcover confirmara disponibilidad despues de que un adaptador configurado acepte la solicitud.",
@@ -208,7 +208,7 @@ export const leads: LeadsContent = {
     intentHelp: "La intencion seleccionada cambia los campos de contexto abajo.",
   },
   thankYou: {
-    meta: { title: "Solicitud recibida | Taskcover Agency", description: "Confirmacion de solicitud Taskcover." },
+    meta: { title: "Solicitud recibida", description: "Confirmacion de solicitud Taskcover." },
     fallbackTitle: "Solicitud recibida",
     fallbackMessage: "El tipo de solicitud se registro de forma segura.",
     nextLabel: "Que pasa despues",
