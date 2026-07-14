@@ -3,7 +3,7 @@ import { getPublishedInsights } from "@/lib/insights/content";
 import { assertWorkflowDecision, isPublishedSnapshotLive } from "./workflow";
 
 describe("workflow", () => {
-  it("requires all EN/FR/ES localizations before approval", async () => {
+  it("allows Admin approval for an English-only publication group", async () => {
     const [article] = await getPublishedInsights("en");
     expect(() =>
       assertWorkflowDecision({
@@ -12,10 +12,21 @@ describe("workflow", () => {
         role: "admin",
         translations: article ? [article] : [],
       })
-    ).toThrow(/missing fr/);
+    ).not.toThrow();
   });
 
-  it("allows Admin approval for complete passing translations", async () => {
+  it("blocks approval when an article group has no localizations", () => {
+    expect(() =>
+      assertWorkflowDecision({
+        from: "in-review",
+        to: "approved",
+        role: "admin",
+        translations: [],
+      })
+    ).toThrow(/no article localizations/);
+  });
+
+  it("allows Admin approval for complete passing multilingual groups", async () => {
     const translations = [
       (await getPublishedInsights("en"))[0],
       (await getPublishedInsights("fr"))[0],

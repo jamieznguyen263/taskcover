@@ -27,6 +27,7 @@
     "admin:verify": "tsx scripts/admin-verify.ts",
     "admin:user:verify": "tsx scripts/admin-verify.ts",
     "insights:import": "tsx scripts/insights-import.ts",
+    "insights:import-draft": "tsx scripts/insights-import-draft.ts",
     "insights:verify-database": "tsx scripts/insights-verify-database.ts",
     "leads:process": "tsx scripts/leads-process.ts",
     "leads:smoke": "tsx scripts/leads-smoke.ts",

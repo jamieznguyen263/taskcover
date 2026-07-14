@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { breadcrumbSchema, serializeJsonLd } from "@/lib/seo";
-import { getInsightBySlug, getInsightCategory, getInsightArticleSlugs, getInsightsContent, getRelatedInsights } from "@/lib/insights/content";
+import { getInsightAlternateLanguages, getInsightBySlug, getInsightCategory, getInsightArticleSlugs, getInsightsContent, getRelatedInsights } from "@/lib/insights/content";
 import { articleJsonLd, faqJsonLd, getInsightPath } from "@/lib/insights/seo";
 import { InsightArticleView } from "@/components/marketing/insights/insights-views";
 import { siteConfig } from "@/lib/site";
@@ -22,17 +22,16 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const article = await getInsightBySlug(articleSlug, "en");
   if (!article || article.category !== categorySlug) return {};
   const path = getInsightPath(article);
+  const alternatePaths = await getInsightAlternateLanguages(article);
+  const languages = Object.fromEntries(
+    Object.entries(alternatePaths).map(([locale, href]) => [locale, `${siteConfig.url}${href}`])
+  );
   return {
     title: article.metadata.metaTitle,
     description: article.metadata.metaDescription,
     alternates: {
       canonical: `${siteConfig.url}${path}`,
-      languages: {
-        en: `${siteConfig.url}${path}`,
-        fr: `${siteConfig.url}/fr${path}`,
-        es: `${siteConfig.url}/es${path}`,
-        "x-default": `${siteConfig.url}${path}`,
-      },
+      languages,
     },
     openGraph: {
       type: "article",

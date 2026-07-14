@@ -1,5 +1,5 @@
-import { locales } from "@/lib/i18n";
 import { insightCategorySlugs, type InsightArticle } from "@/content/insights.types";
+import { resolveRequiredLocales } from "@/lib/insights/publication-policy";
 
 export type PublishQaSeverity = "pass" | "warning" | "error";
 
@@ -59,6 +59,19 @@ export function validateInsightArticle(
     section: "document",
   });
 
+  const publicationLocales = resolveRequiredLocales(translations);
+  if (publicationLocales.length === 0) {
+    add("error", "missing-publication-locales", "The article group has no localization to publish.", "localization", "localization");
+  } else {
+    results.push({
+      severity: "pass",
+      code: "publication-locales",
+      message: `Publication locales: ${publicationLocales.map((locale) => locale.toUpperCase()).join(", ")}.`,
+      group: "localization",
+      section: "localization",
+    });
+  }
+
   if (!article.h1) add("error", "missing-h1", "Article must have one H1.", "content", "document", "Set the Public H1 in the document header.");
   if (!article.metadata.metaTitle) add("error", "missing-meta-title", "Meta title is required.", "metadata", "metadata", "Write an SEO title in Metadata & Social.");
   if (!article.metadata.metaDescription) add("error", "missing-meta-description", "Meta description is required.", "metadata", "metadata", "Write a meta description in Metadata & Social.");
@@ -74,16 +87,9 @@ export function validateInsightArticle(
   if (article.blocks.length === 0) add("error", "empty-blocks", "Article blocks must not be empty.", "content", "document", "Write the article body.");
   if (article.metadata.robots.includes("noindex")) add("error", "accidental-noindex", "Published articles must not be noindex.", "seo", "metadata", "Set robots to index,follow in Metadata & Social.");
 
-  const translationLocales = new Set(translations.map((item) => item.locale));
-  for (const locale of locales) {
-    if (!translationLocales.has(locale)) {
-      add("error", "missing-translation", `Missing ${locale} translation in hreflang group.`, "localization", "localization");
-    }
-  }
-
   for (const sibling of translations) {
     if (sibling.locale !== article.locale && sibling.localization.translationStatus !== "complete") {
-      add("warning", "translation-needs-review", `The ${sibling.locale} localization is still marked needs-review.`, "localization", "localization", "Finish and mark each localization complete before publishing.");
+      add("warning", "translation-needs-review", `The ${sibling.locale} localization is still marked needs-review.`, "localization", "localization", "Finish and mark each stored localization complete before publishing.");
     }
   }
 

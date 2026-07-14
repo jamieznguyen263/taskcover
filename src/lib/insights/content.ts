@@ -1,5 +1,5 @@
-import type { Locale } from "@/lib/i18n";
-import type { InsightCategorySlug } from "@/content/insights.types";
+import { localizePath, locales, type Locale } from "@/lib/i18n";
+import type { InsightArticle, InsightCategorySlug } from "@/content/insights.types";
 import { localInsightsProvider } from "./local-provider";
 import type { ArticleSearchInput } from "./provider";
 import { rankRelatedArticles } from "./related";
@@ -52,13 +52,35 @@ export async function getRelatedInsights(slug: string, locale: Locale, limit = 3
   return rankRelatedArticles(article, await getPublishedInsights(locale), limit);
 }
 
+/**
+ * Build hreflang alternates only from published localizations that actually
+ * exist in the same translation group. This prevents English-only Core 56
+ * articles from advertising French or Spanish URLs that return 404.
+ */
+export async function getInsightAlternateLanguages(article: InsightArticle): Promise<Record<string, string>> {
+  const publishedByLocale = await Promise.all(locales.map((locale) => getPublishedInsights(locale)));
+  const siblings = publishedByLocale
+    .flat()
+    .filter((candidate) => candidate.translationGroupId === article.translationGroupId);
+  const languages: Record<string, string> = {};
+
+  for (const sibling of siblings) {
+    const path = `/insights/${sibling.category}/${sibling.slug}`;
+    languages[sibling.locale] = localizePath(path, sibling.locale);
+  }
+
+  const fallback = siblings.find((sibling) => sibling.locale === "en") ?? siblings[0] ?? article;
+  languages["x-default"] = localizePath(`/insights/${fallback.category}/${fallback.slug}`, fallback.locale);
+  return languages;
+}
+
 export async function getInsightArticleSlugs() {
   if (shouldUseDatabaseProvider()) {
-    const locales = await Promise.all((["en", "fr", "es"] as const).map(async (locale) => {
+    const localized = await Promise.all(locales.map(async (locale) => {
       const articles = await getPublishedInsights(locale);
       return articles.map((article) => ({ locale, categorySlug: article.category, articleSlug: article.slug }));
     }));
-    return locales.flat();
+    return localized.flat();
   }
   return insightsProvider.getArticleSlugs();
 }
