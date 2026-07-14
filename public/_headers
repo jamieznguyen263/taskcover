@@ -3,3 +3,12 @@
 
 /brand/*
   Cache-Control: public,max-age=86400
+
+/case-studies/*
+  Cache-Control: public,max-age=2592000
+
+/team/*
+  Cache-Control: public,max-age=2592000
+
+/brand-logos/*
+  Cache-Control: public,max-age=2592000
