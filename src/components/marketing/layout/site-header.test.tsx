@@ -64,8 +64,8 @@ describe("SiteHeader mobile navigation", () => {
 
     expect(logo).not.toBeNull();
     expect(logo?.getAttribute("alt")).toBe("Taskcover Agency logo");
-    expect(logo?.getAttribute("width")).toBe("2721");
-    expect(logo?.getAttribute("height")).toBe("1176");
+    expect(logo?.getAttribute("width")).toBe("700");
+    expect(logo?.getAttribute("height")).toBe("303");
     expect(classTokens(logo)).toContain("h-auto");
     expect(classTokens(logo)).toContain("w-[clamp(6.25rem,32vw,9rem)]");
     expect(classTokens(logo)).toContain("sm:w-[10rem]");

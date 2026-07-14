@@ -45,8 +45,8 @@ export function SiteFooter() {
               <img
                 src={siteConfig.logo.horizontal}
                 alt={`${siteConfig.name} logo`}
-                width={2721}
-                height={1176}
+                width={700}
+                height={303}
                 loading="lazy"
                 decoding="async"
                 className="h-9 w-auto max-w-[220px] object-contain sm:h-10"
