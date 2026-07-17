@@ -1,4 +1,5 @@
 import {
+  boolean,
   index,
   integer,
   jsonb,
@@ -79,6 +80,9 @@ export const leadDeliveryJobStatusEnum = pgEnum("lead_delivery_job_status", [
   "cancelled",
 ]);
 export const leadDeliveryProviderEnum = pgEnum("lead_delivery_provider", ["resend", "hubspot"]);
+export const workAccessLevelEnum = pgEnum("work_access_level", ["owner", "admin", "manager", "member"]);
+export const workMembershipStatusEnum = pgEnum("work_membership_status", ["active", "disabled"]);
+export const externalOrganizationKindEnum = pgEnum("external_organization_kind", ["freelancer", "partner"]);
 export const leadDeliveryJobTypeEnum = pgEnum("lead_delivery_job_type", [
   "resend-internal-notification",
   "resend-visitor-confirmation",
@@ -446,6 +450,82 @@ export const leadProviderLinks = pgTable(
     uniqueIndex("lead_provider_links_unique_idx").on(table.leadId, table.provider, table.linkType),
     index("lead_provider_links_provider_id_idx").on(table.provider, table.providerId),
   ]
+);
+
+/*
+ * Taskcover Flow — FLOW-002 (memberships, roles, teams).
+ * Flow extends the existing admin_users identity rather than creating a second one:
+ * every membership row references admin_users. Capability decisions are made in code
+ * (src/lib/work/capabilities.ts); role_presets exists for display and future custom
+ * presets, seeded with the four system presets in migration 0005.
+ */
+
+export const organizationMemberships = pgTable(
+  "organization_memberships",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id").notNull().references(() => adminUsers.id, { onDelete: "cascade" }),
+    accessLevel: workAccessLevelEnum("access_level").notNull().default("member"),
+    status: workMembershipStatusEnum("status").notNull().default("active"),
+    ...timestamps,
+  },
+  (table) => [
+    uniqueIndex("organization_memberships_user_idx").on(table.userId),
+    index("organization_memberships_status_idx").on(table.status),
+  ]
+);
+
+export const rolePresets = pgTable(
+  "role_presets",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    key: text("key").notNull(),
+    name: text("name").notNull(),
+    description: text("description").notNull().default(""),
+    capabilitySet: jsonb("capability_set").notNull().default([]),
+    isSystemPreset: boolean("is_system_preset").notNull().default(false),
+    ...timestamps,
+  },
+  (table) => [uniqueIndex("role_presets_key_idx").on(table.key)]
+);
+
+export const teams = pgTable(
+  "teams",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    name: text("name").notNull(),
+    description: text("description").notNull().default(""),
+    createdBy: uuid("created_by").references(() => adminUsers.id, { onDelete: "set null" }),
+    archivedAt: timestamp("archived_at", { withTimezone: true }),
+    ...timestamps,
+  },
+  (table) => [uniqueIndex("teams_name_idx").on(table.name)]
+);
+
+export const teamMemberships = pgTable(
+  "team_memberships",
+  {
+    teamId: uuid("team_id").notNull().references(() => teams.id, { onDelete: "cascade" }),
+    userId: uuid("user_id").notNull().references(() => adminUsers.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.teamId, table.userId] }),
+    index("team_memberships_user_idx").on(table.userId),
+  ]
+);
+
+// Inert in FLOW-002 (no code paths); owned by FLOW-003 external access. Created here
+// because the accepted schema doc groups it with the membership foundation.
+export const externalOrganizations = pgTable(
+  "external_organizations",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    name: text("name").notNull(),
+    kind: externalOrganizationKindEnum("kind").notNull(),
+    ...timestamps,
+  },
+  (table) => [uniqueIndex("external_organizations_name_idx").on(table.name)]
 );
 
 export const leadStatusEvents = pgTable(

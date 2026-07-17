@@ -1,7 +1,14 @@
+import { hasCapability, type WorkAccessLevel } from "./capabilities";
+
 export type FlowNavItem = {
   href: string;
   label: string;
   enabled: boolean;
+};
+
+export type FlowNavContext = {
+  accessLevel: WorkAccessLevel;
+  legacyRole: "admin" | "editor";
 };
 
 const PRIMARY_NAV: FlowNavItem[] = [
@@ -16,10 +23,18 @@ export function getFlowPrimaryNav(): FlowNavItem[] {
   return PRIMARY_NAV;
 }
 
-export function getFlowAdminNav(session: { role: "admin" | "editor" }): FlowNavItem[] {
-  if (session.role !== "admin") return [];
-  return [
-    { href: "/flow/admin", label: "Administration", enabled: false },
-    { href: "/admin", label: "Content CMS", enabled: true },
-  ];
+/**
+ * Administration is gated by the Flow capability model (FLOW-002); the Content CMS link is
+ * gated by the legacy CMS role because /admin itself still authorizes on that role. With
+ * today's backfill mapping the two coincide, but they are deliberately decoupled here.
+ */
+export function getFlowAdminNav(context: FlowNavContext): FlowNavItem[] {
+  const items: FlowNavItem[] = [];
+  if (hasCapability(context.accessLevel, "administration:view")) {
+    items.push({ href: "/flow/admin", label: "Administration", enabled: true });
+  }
+  if (context.legacyRole === "admin") {
+    items.push({ href: "/admin", label: "Content CMS", enabled: true });
+  }
+  return items;
 }

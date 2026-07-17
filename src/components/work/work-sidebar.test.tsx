@@ -35,33 +35,36 @@ function classTokens(element: Element | null | undefined) {
   return element?.className.split(/\s+/).filter(Boolean) ?? [];
 }
 
-function renderSidebar(role: "admin" | "editor") {
+function renderSidebar(navContext: Parameters<typeof WorkSidebar>[0]["navContext"]) {
   mountedContainer = document.createElement("div");
   document.body.appendChild(mountedContainer);
   mountedRoot = createRoot(mountedContainer);
   act(() => {
-    mountedRoot?.render(<WorkSidebar role={role} />);
+    mountedRoot?.render(<WorkSidebar navContext={navContext} />);
   });
   return mountedContainer;
 }
 
 describe("WorkSidebar", () => {
   it("is hidden below the lg breakpoint and persistent at lg and above", () => {
-    const container = renderSidebar("editor");
+    const container = renderSidebar({ accessLevel: "member", legacyRole: "editor" });
     const aside = container.querySelector("aside");
 
     expect(classTokens(aside)).toContain("hidden");
     expect(classTokens(aside)).toContain("lg:block");
   });
 
-  it("hides Administration and Content CMS for the editor role", () => {
-    const container = renderSidebar("editor");
+  it("hides Administration and Content CMS for a member with an editor legacy role", () => {
+    const container = renderSidebar({ accessLevel: "member", legacyRole: "editor" });
     expect(container.textContent).not.toContain("Content CMS");
+    expect(container.textContent).not.toContain("Administration");
   });
 
-  it("shows Administration and Content CMS for the admin role", () => {
-    const container = renderSidebar("admin");
+  it("shows enabled Administration and Content CMS links for an admin", () => {
+    const container = renderSidebar({ accessLevel: "admin", legacyRole: "admin" });
     expect(container.textContent).toContain("Content CMS");
     expect(container.textContent).toContain("Administration");
+    expect(container.querySelector('a[href="/flow/admin"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/admin"]')).not.toBeNull();
   });
 });

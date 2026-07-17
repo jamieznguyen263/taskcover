@@ -1,14 +1,14 @@
 import Link from "next/link";
-import { getFlowAdminNav, getFlowPrimaryNav } from "@/lib/work/nav";
+import { getFlowAdminNav, getFlowPrimaryNav, type FlowNavContext } from "@/lib/work/nav";
 import { FlowNavList } from "./flow-nav-list";
 
 /**
  * Persistent desktop sidebar. Hidden below `lg` — WorkHeader's MobileNav takes over
  * navigation on narrower screens so the main content isn't pushed below a full sidebar.
  */
-export function WorkSidebar({ role }: { role: "admin" | "editor" }) {
+export function WorkSidebar({ navContext }: { navContext: FlowNavContext }) {
   const primary = getFlowPrimaryNav();
-  const adminNav = getFlowAdminNav({ role });
+  const adminNav = getFlowAdminNav(navContext);
 
   return (
     <aside className="hidden border-r border-line bg-white lg:block">
