@@ -1,12 +1,13 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getAdminSession } from "@/lib/admin/session";
+import { isCmsRole } from "@/lib/admin/permissions";
 import { AdminRepository } from "@/lib/admin/repository";
 import { ContentConflictError, ContentStateError } from "@/lib/admin/content-model";
 import { getAdminIntegrationStatus } from "@/lib/admin/env";
 
 export async function POST(request: NextRequest) {
   const session = await getAdminSession();
-  if (!session) return NextResponse.json({ error: "Authentication required." }, { status: 401, headers: { "cache-control": "no-store" } });
+  if (!session || !isCmsRole(session.role)) return NextResponse.json({ error: "Authentication required." }, { status: 401, headers: { "cache-control": "no-store" } });
   const body = await request.json().catch(() => null) as Record<string, unknown> | null;
   if (!body) return NextResponse.json({ error: "Invalid payload." }, { status: 400 });
   try {

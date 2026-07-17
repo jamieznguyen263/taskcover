@@ -2,7 +2,7 @@ import "server-only";
 
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { AdminRepository } from "./repository";
+import { AdminRepository, type AdminCmsSession } from "./repository";
 import {
   ADMIN_SESSION_COOKIE,
   createOpaqueToken,
@@ -38,10 +38,13 @@ export async function getAdminSession() {
   }
 }
 
-export async function requireAdminSession() {
+export async function requireAdminSession(): Promise<AdminCmsSession> {
   const session = await getAdminSession();
   if (!session) redirect("/admin/login");
-  return session;
+  // External collaborators (FLOW-003) authenticate through the same login but must never
+  // reach a CMS surface — bounce them to their Taskcover Flow workspace.
+  if (session.role === "external") redirect("/flow");
+  return session as AdminCmsSession;
 }
 
 export async function clearAdminSession() {

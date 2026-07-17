@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canTransition, hasPermission, type Permission } from "./permissions";
+import { canTransition, hasPermission, isCmsRole, type Permission } from "./permissions";
 
 describe("admin permissions", () => {
   it("blocks Editors from Admin-only actions", () => {
@@ -36,5 +36,13 @@ describe("admin permissions", () => {
     expect(canTransition("editor", "published", "draft")).toBe(true);
     expect(canTransition("admin", "approved", "draft")).toBe(true);
     expect(canTransition("editor", "approved", "draft")).toBe(false);
+  });
+});
+
+describe("isCmsRole (FLOW-003 CMS isolation)", () => {
+  it("accepts CMS roles and rejects external collaborators", () => {
+    expect(isCmsRole("admin")).toBe(true);
+    expect(isCmsRole("editor")).toBe(true);
+    expect(isCmsRole("external")).toBe(false);
   });
 });

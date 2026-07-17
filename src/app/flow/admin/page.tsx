@@ -4,12 +4,20 @@ import {
   hasCapability,
   SYSTEM_ROLE_PRESETS,
 } from "@/lib/work/capabilities";
+import { evaluateExternalAccess, EXTERNAL_KIND_LABEL } from "@/lib/work/external-access";
 import { WorkRepository } from "@/lib/work/repository";
 import { resolveWorkSession } from "@/lib/work/session";
 import { AddTeamMemberForm, CreateTeamForm, RemoveTeamMemberButton } from "@/components/work/admin/team-forms";
+import { InviteExternalForm, RevokeExternalButton } from "@/components/work/admin/external-forms";
 
 const ACCESS_LEVEL_LABEL = { owner: "Owner", admin: "Admin", manager: "Manager", member: "Member" } as const;
 const MEMBERSHIP_STATUS_LABEL = { active: "Active", disabled: "Disabled" } as const;
+const EXTERNAL_STATE_LABEL = {
+  active: "Active",
+  "not-started": "Not started",
+  expired: "Expired",
+  revoked: "Revoked",
+} as const;
 
 export default async function FlowAdministrationPage() {
   // The /flow layout guarantees an active session, but authorization is never inferred from
@@ -20,7 +28,13 @@ export default async function FlowAdministrationPage() {
   }
 
   const repo = new WorkRepository();
-  const [members, teams] = await Promise.all([repo.listMembers(), repo.listTeams()]);
+  const [members, teams, externals, pendingExternalInvites] = await Promise.all([
+    repo.listMembers(),
+    repo.listTeams(),
+    repo.listExternalCollaborators(),
+    repo.listPendingExternalInvites(),
+  ]);
+  const now = new Date();
 
   return (
     <div className="mx-auto flex max-w-4xl flex-col gap-6">
@@ -116,6 +130,88 @@ export default async function FlowAdministrationPage() {
           <h3 className="text-sm font-semibold text-graphite">Create a team</h3>
           <div className="mt-2">
             <CreateTeamForm />
+          </div>
+        </div>
+      </section>
+
+      <section className="rounded-xl border border-line bg-white p-4" aria-labelledby="externals-heading">
+        <h2 id="externals-heading" className="text-lg font-semibold text-graphite">
+          External collaborators
+        </h2>
+        <p className="mt-1 text-sm text-secondary">
+          Freelancers and partners only ever see what is explicitly shared with them — never
+          other clients, internal notes, or the Content CMS. Access ends automatically at the
+          expiry date, or immediately on revoke.
+        </p>
+        {externals.length > 0 ? (
+          <div className="mt-3 overflow-x-auto">
+            <table className="w-full min-w-[640px] text-left text-sm">
+              <thead className="text-xs uppercase tracking-wide text-muted">
+                <tr>
+                  <th className="py-2">Name</th>
+                  <th>Type</th>
+                  <th>Organization</th>
+                  <th>Expires</th>
+                  <th>Status</th>
+                  <th aria-label="Actions" />
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-line-soft">
+                {externals.map((collaborator) => {
+                  const state = evaluateExternalAccess({
+                    now,
+                    accessStartAt: collaborator.accessStartAt,
+                    accessExpiryAt: collaborator.accessExpiryAt,
+                    revokedAt: collaborator.revokedAt,
+                  });
+                  return (
+                    <tr key={collaborator.id}>
+                      <td className="py-3">
+                        <p className="font-medium text-graphite">{collaborator.displayName}</p>
+                        <p className="text-xs text-muted">{collaborator.email}</p>
+                      </td>
+                      <td className="py-3 text-secondary">{EXTERNAL_KIND_LABEL[collaborator.kind]}</td>
+                      <td className="py-3 text-secondary">{collaborator.organizationName ?? "—"}</td>
+                      <td className="py-3 text-secondary">
+                        {collaborator.accessExpiryAt ? collaborator.accessExpiryAt.toLocaleDateString() : "No expiry"}
+                      </td>
+                      <td className="py-3">{EXTERNAL_STATE_LABEL[state]}</td>
+                      <td className="py-3 text-right">
+                        {state !== "revoked" ? (
+                          <RevokeExternalButton membershipId={collaborator.id} displayName={collaborator.displayName} />
+                        ) : null}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="mt-3 text-sm text-muted">No external collaborators yet.</p>
+        )}
+        {pendingExternalInvites.length > 0 ? (
+          <div className="mt-4 border-t border-line-soft pt-3">
+            <h3 className="text-sm font-semibold text-graphite">Pending invitations</h3>
+            <ul className="mt-2 grid gap-1">
+              {pendingExternalInvites.map((invite) => (
+                <li key={invite.inviteId} className="text-sm text-secondary">
+                  {invite.email} · {EXTERNAL_KIND_LABEL[invite.kind]}
+                  {invite.organizationName ? ` · ${invite.organizationName}` : ""} · expires{" "}
+                  {invite.expiresAt.toLocaleDateString()}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+        <div className="mt-4 border-t border-line-soft pt-4">
+          <h3 className="text-sm font-semibold text-graphite">Invite an external collaborator</h3>
+          <p className="mt-1 text-xs text-muted">
+            They will set a password through the standard invite link and land in their own
+            shared workspace — never the CMS or internal views.
+          </p>
+          <div className="mt-2">
+            <InviteExternalForm />
           </div>
         </div>
       </section>

@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import { getAdminSession } from "@/lib/admin/session";
-import { assertPermission } from "@/lib/admin/permissions";
+import { assertPermission, isCmsRole } from "@/lib/admin/permissions";
 import { AdminRepository } from "@/lib/admin/repository";
 
 const recordSchema = z.object({
@@ -19,7 +19,7 @@ const recordSchema = z.object({
 
 export async function GET() {
   const session = await getAdminSession();
-  if (!session) return NextResponse.json({ error: "Authentication required." }, { status: 401, headers: { "cache-control": "no-store" } });
+  if (!session || !isCmsRole(session.role)) return NextResponse.json({ error: "Authentication required." }, { status: 401, headers: { "cache-control": "no-store" } });
   const assets = await new AdminRepository().listMedia();
   return NextResponse.json(
     { assets: assets.map((a) => ({ id: a.id, url: a.deliveryUrl || a.secureUrl, altText: a.altText, width: a.width, height: a.height, format: a.format })) },
@@ -29,7 +29,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   const session = await getAdminSession();
-  if (!session) return NextResponse.json({ error: "Authentication required." }, { status: 401, headers: { "cache-control": "no-store" } });
+  if (!session || !isCmsRole(session.role)) return NextResponse.json({ error: "Authentication required." }, { status: 401, headers: { "cache-control": "no-store" } });
   try {
     assertPermission(session.role, "media:upload");
     const parsed = recordSchema.parse(await request.json());
