@@ -6,11 +6,33 @@ export function WorkShell({ session, children }: { session: WorkSession; childre
   return (
     <div data-flow-root className="min-h-screen bg-surface-soft text-graphite">
       <div className="grid min-h-screen lg:grid-cols-[16rem_1fr]">
-        <WorkSidebar role={session.role} />
+        <WorkSidebar navContext={{ accessLevel: session.accessLevel, legacyRole: session.legacyRole }} />
         <div className="min-w-0">
           <WorkHeader session={session} />
           <main className="p-4 sm:p-6">{children}</main>
         </div>
+      </div>
+    </div>
+  );
+}
+
+export function WorkAccessDisabled() {
+  return (
+    <div data-flow-root className="min-h-screen overflow-x-hidden bg-surface-soft p-4 sm:p-6">
+      <div
+        className="mx-auto mt-20 w-full max-w-2xl min-w-0 overflow-hidden rounded-xl border border-line bg-white p-5 sm:p-6"
+        style={{ width: "calc(100vw - 2rem)", maxWidth: "42rem" }}
+      >
+        <p className="break-words text-xs font-semibold uppercase tracking-[0.14em] text-brand-teal">
+          Access disabled
+        </p>
+        <h1 className="mt-3 break-words text-xl font-semibold tracking-tight text-graphite sm:text-2xl">
+          Your Taskcover Flow access is disabled
+        </h1>
+        <p className="mt-3 text-sm leading-6 text-secondary">
+          Your account is signed in, but its Taskcover Flow membership has been disabled by an
+          administrator. Contact an Owner or Admin if you believe this is a mistake.
+        </p>
       </div>
     </div>
   );

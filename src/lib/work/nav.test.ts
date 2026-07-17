@@ -10,14 +10,30 @@ describe("getFlowPrimaryNav", () => {
 });
 
 describe("getFlowAdminNav", () => {
-  it("returns no items for the editor role", () => {
-    expect(getFlowAdminNav({ role: "editor" })).toEqual([]);
+  it("returns no items for a plain member with an editor legacy role", () => {
+    expect(getFlowAdminNav({ accessLevel: "member", legacyRole: "editor" })).toEqual([]);
   });
 
-  it("returns a disabled Administration placeholder and an enabled Content CMS link for admin", () => {
-    expect(getFlowAdminNav({ role: "admin" })).toEqual([
-      { href: "/flow/admin", label: "Administration", enabled: false },
+  it("returns enabled Administration and Content CMS for an admin", () => {
+    expect(getFlowAdminNav({ accessLevel: "admin", legacyRole: "admin" })).toEqual([
+      { href: "/flow/admin", label: "Administration", enabled: true },
       { href: "/admin", label: "Content CMS", enabled: true },
+    ]);
+  });
+
+  it("treats owner like admin for Administration", () => {
+    expect(getFlowAdminNav({ accessLevel: "owner", legacyRole: "admin" })[0]).toEqual({
+      href: "/flow/admin",
+      label: "Administration",
+      enabled: true,
+    });
+  });
+
+  it("does not show Administration to managers, and decouples CMS from the capability model", () => {
+    expect(getFlowAdminNav({ accessLevel: "manager", legacyRole: "editor" })).toEqual([]);
+    // Hypothetical future state: Flow admin without legacy CMS admin sees Administration only.
+    expect(getFlowAdminNav({ accessLevel: "admin", legacyRole: "editor" })).toEqual([
+      { href: "/flow/admin", label: "Administration", enabled: true },
     ]);
   });
 });

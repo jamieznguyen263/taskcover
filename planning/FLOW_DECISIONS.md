@@ -45,3 +45,28 @@ production risk in leaving it on by default. Setting `WORK_APP_ENABLED=false` in
 environment fully disables the route (renders `notFound()`) without affecting `/admin` or
 the public site. This decision should be revisited before FLOW-004+ introduces real client
 data, at which point a stricter default may be warranted.
+
+## FLOW-002 membership decisions — 2026-07-17
+
+- **Legacy-role mapping:** CMS `admin` → Flow `admin`; CMS `editor` → Flow `member`. Nobody
+  is auto-promoted to `owner` — owner elevation is an explicit human action (a one-row
+  update an Owner/Admin performs deliberately). Disabled CMS accounts backfill as disabled
+  memberships.
+- **Backfill is belt-and-braces:** migration 0005 backfills users existing at migration
+  time; `WorkRepository.ensureMembership` lazily provisions users created afterwards (e.g.
+  via CMS invites) on first `/flow` access with the same mapping. Both paths are idempotent
+  (`ON CONFLICT (user_id) DO NOTHING`). The CMS invite flow is deliberately untouched.
+- **Capabilities live in code:** `src/lib/work/capabilities.ts` is the single authority for
+  authorization; the `role_presets` table mirrors the sets for display and future custom
+  presets. `migration-consistency.test.ts` fails if the seeded JSON drifts from code.
+- **Deny-by-default everywhere:** pages and server actions call
+  `requireWorkSession(capability)` themselves; navigation visibility is never authorization.
+  A disabled Flow membership blocks `/flow` while the CMS session and `/admin` keep working.
+- **Flow-side audit logging deferred to FLOW-007** (`activity_events`). The existing CMS
+  audit enum is not extended in FLOW-002 to avoid `ALTER TYPE ... ADD VALUE`-in-transaction
+  hazards for a nonessential write.
+- **Migrations ship in the PR, they are not run by the implementer.** `DATABASE_URL` in the
+  dev environment points at production Neon; migration 0005 must be applied via the deploy
+  pipeline (`npm run db:migrate` with its existing guard) after review.
+- **`external_organizations` is created inert** in 0005 to match the accepted schema
+  grouping; all code paths for it belong to FLOW-003.

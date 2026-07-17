@@ -1,57 +1,62 @@
 # Current Flow PR
 
-**Active slice: FLOW-001 — Work Application Shell**
+**Active slice: FLOW-002 — Memberships, roles, and teams**
+
+(FLOW-001 — Work Application Shell was accepted and merged via PR #14.)
 
 ## Scope
 
-- Canonical planning documents (this set of 5 files).
-- Authenticated internal route at **`/flow`** (see route-decision note in
-  [TASKCOVER_FLOW_BLUEPRINT.md](./TASKCOVER_FLOW_BLUEPRINT.md) — `/work` is already a public
-  marketing route and is not touched).
-- Reuse of the existing admin session (`requireAdminSession`) — no second login system.
-- Work application shell: sidebar, header, main area with a polished non-fake empty state.
-- Command-menu shell with static safe commands (`Go to Home`, `Go to Content CMS`,
-  `Sign out`) and full keyboard behavior.
-- Quick-create trigger shell with disabled "coming later" options.
-- Reusable detail-drawer primitive, demonstrated via a safe local preview on the Home page.
-- `WORK_APP_ENABLED` feature flag with a documented, production-safe default.
+- Migration `drizzle/0005_flow_memberships.sql` (additive only): `work_access_level`,
+  `work_membership_status`, `external_organization_kind` enums; `organization_memberships`,
+  `role_presets`, `teams`, `team_memberships`, `external_organizations` tables; system
+  role-preset seeds; backfill of every existing `admin_users` row into
+  `organization_memberships`.
+- Capability model in code (`src/lib/work/capabilities.ts`) — deny-by-default, strictly
+  cumulative levels (member ⊂ manager ⊂ admin = owner). `role_presets` rows are display
+  copies; authorization never reads them.
+- Legacy-role mapping (`src/lib/work/membership.ts`): admin → admin, editor → member,
+  nobody auto-promoted to owner.
+- `WorkSession` (`src/lib/work/session.ts`): existing Admin session enriched with the
+  organization membership; lazy self-healing provisioning for users created after the
+  migration; `requireWorkSession(capability)` guard for pages and server actions.
+- Access gate extended with `membership-disabled` (a disabled Flow membership blocks /flow
+  while the CMS session stays valid).
+- Administration page `/flow/admin`: members list, teams management (create team,
+  add/remove members via server actions, each re-checking `teams:manage`), system role
+  presets display. Page re-checks `administration:view` itself — nav visibility is not
+  authorization.
+- Navigation and command menu become capability-driven; the Content CMS link stays
+  legacy-role-gated because /admin authorizes on that role.
 
 ## Non-scope (do not implement in this slice)
 
-New membership/role/permission schema, teams, clients, projects, work items, inbox
-persistence, notifications, documents, file uploads, freelancer/partner invitation, smart
-rules, AI functionality, SEO tracking of any kind, a search database, fake dashboards, a
-full mobile application.
+External memberships/invitations (FLOW-003 — `external_organizations` is created but has no
+code paths), clients, projects, work items, inbox, documents, files, access-level change UI,
+audit/activity events for Flow actions (arrives with FLOW-007 `activity_events`), smart
+rules, AI functionality, SEO tracking of any kind.
 
 ## Dependencies
 
-Existing admin authentication/session (`src/lib/admin/session.ts`,
-`src/lib/admin/security.ts`), existing design tokens (`src/app/globals.css`), existing
-`AdminShell` visual pattern (`src/components/admin/admin-shell.tsx`) for brand consistency.
+FLOW-001 (merged). Existing admin auth/session, Drizzle schema + hand-run migration script
+(`scripts/db-migrate.ts`), existing design tokens and Work shell components.
 
 ## Acceptance checks
 
-1. `/flow` exists and requires authentication (redirects to `/admin/login` when signed out).
-2. Existing authentication/session is reused, not duplicated.
-3. `/admin` behavior is unchanged.
-4. Existing admin/editor accounts can access `/flow`.
-5. Shell is visually polished and responsive.
-6. Sidebar and header are reusable components.
-7. Admin role sees a working link back to Content CMS (`/admin`).
-8. Command menu keyboard behavior works (open, navigate, escape, focus trap).
-9. Detail drawer primitive is accessible (keyboard close, focus management, reduced motion,
-   no layout overflow).
-10. No fake operational data anywhere in the shell.
-11. No future business tables/migrations are created.
-12. SEO Tracking is absent from new navigation and planning docs.
-13. Canonical planning files are complete and internally consistent.
-14. Public website behavior (including the public `/work` marketing route) is unchanged.
-15–19. Lint, typecheck, tests, production build, and Cloudflare build/dry-run all pass.
-20. Full diff self-reviewed before commit.
+1. Migration 0005 is purely additive; `/admin` and the public site behave identically before
+   and after it runs.
+2. Every existing admin/editor keeps `/flow` access after the migration (backfill), and users
+   created later are provisioned lazily on first access.
+3. Authorization is deny-by-default and enforced server-side in pages **and** server actions.
+4. A disabled membership blocks `/flow` without affecting the CMS session.
+5. `/flow/admin` is reachable only with `administration:view` (404 otherwise).
+6. Teams can be created and staffed; team writes require `teams:manage`.
+7. No second identity/login system; no changes to `/admin` behavior.
+8. Lint, typecheck, tests, production build, Cloudflare build + dry-run all pass.
+9. Migration is **not** executed by the implementer against any shared database — it ships
+   in the PR and is applied through the deploy pipeline after review.
 
 ## Stop conditions specific to this slice
 
-- A migration would be required (would mean scope crept into FLOW-002+).
-- `/flow` cannot be protected without touching `/admin` auth internals in a breaking way.
-- Any of the excluded SEO functionality would need to be reintroduced to make navigation
-  make sense (it should not).
+- The migration would require destructive changes to existing tables (it must stay additive).
+- Backfill cannot be expressed idempotently (`ON CONFLICT DO NOTHING` + unique user index).
+- Authorization would need to weaken any existing /admin check.

@@ -4,8 +4,8 @@ import { connection } from "next/server";
 import { getAdminIntegrationStatus } from "@/lib/admin/env";
 import { evaluateFlowAccess } from "@/lib/work/access-gate";
 import { isWorkAppEnabled } from "@/lib/work/feature-flag";
-import { getWorkSession } from "@/lib/work/session";
-import { WorkShell, WorkUnavailable } from "@/components/work/work-shell";
+import { resolveWorkSession, type WorkSessionResolution } from "@/lib/work/session";
+import { WorkAccessDisabled, WorkShell, WorkUnavailable } from "@/components/work/work-shell";
 
 export const metadata: Metadata = {
   title: "Taskcover Flow",
@@ -17,16 +17,18 @@ export default async function FlowLayout({ children }: { children: React.ReactNo
 
   await connection();
   const databaseConfigured = getAdminIntegrationStatus().databaseConfigured;
-  const session = databaseConfigured ? await getWorkSession() : null;
+  const resolution: WorkSessionResolution = databaseConfigured ? await resolveWorkSession() : { kind: "none" };
 
   const decision = evaluateFlowAccess({
     workAppEnabled: true,
     databaseConfigured,
-    hasSession: Boolean(session),
+    hasSession: resolution.kind !== "none",
+    membershipStatus: resolution.kind === "disabled" ? "disabled" : "active",
   });
 
   if (decision.kind === "database-unavailable") return <WorkUnavailable />;
   if (decision.kind === "requires-session") redirect("/admin/login");
+  if (decision.kind === "membership-disabled" || resolution.kind !== "active") return <WorkAccessDisabled />;
 
-  return <WorkShell session={session!}>{children}</WorkShell>;
+  return <WorkShell session={resolution.session}>{children}</WorkShell>;
 }

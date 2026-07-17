@@ -28,4 +28,26 @@ describe("evaluateFlowAccess", () => {
       kind: "allow",
     });
   });
+
+  it("denies access when the organization membership is disabled, even with a valid session", () => {
+    expect(
+      evaluateFlowAccess({
+        workAppEnabled: true,
+        databaseConfigured: true,
+        hasSession: true,
+        membershipStatus: "disabled",
+      })
+    ).toEqual({ kind: "membership-disabled" });
+  });
+
+  it("allows access with an explicitly active membership", () => {
+    expect(
+      evaluateFlowAccess({
+        workAppEnabled: true,
+        databaseConfigured: true,
+        hasSession: true,
+        membershipStatus: "active",
+      })
+    ).toEqual({ kind: "allow" });
+  });
 });
