@@ -70,3 +70,32 @@ data, at which point a stricter default may be warranted.
   pipeline (`npm run db:migrate` with its existing guard) after review.
 - **`external_organizations` is created inert** in 0005 to match the accepted schema
   grouping; all code paths for it belong to FLOW-003.
+
+## FLOW-003 external-access decisions — 2026-07-17
+
+- **Externals share the single identity/login system** via a third `admin_role` value,
+  `'external'` — no second user table, no second login. The enum extension
+  (`ALTER TYPE ... ADD VALUE`) is safe inside the migration transaction on PG12+ because
+  no statement in the same transaction uses the new value.
+- **CMS isolation is enforced at every entry point,** not by navigation: `requireAdminSession`
+  bounces externals to `/flow` (and its return type narrows to `AdminCmsSession`, so the
+  compiler forces future CMS code through the gate); all `/api/admin/*` routes reject
+  external sessions via `isCmsRole`; CMS user lists, invite lists, and article-assignee
+  lists exclude externals.
+- **Invitation reuses the CMS invite machinery unchanged:** an external invitation is a
+  standard `admin_invites` row (role `external`) plus a `flow_external_invites` metadata
+  row (kind, organization, expiry, download/upload). The collaborator sets a password
+  through the existing accept-invite page; their `external_memberships` row is provisioned
+  lazily from the metadata on first `/flow` visit (idempotent). No `AdminRepository` code
+  changed for invite creation.
+- **Access-window semantics:** revoked > not-started > expired > active, evaluated on every
+  request (`evaluateExternalAccess`); expiry timestamps are inclusive ("at expiry" =
+  expired); a null expiry means manual-revoke-only. Waiting-style reminders/escalation for
+  expiring access are later-wave concerns.
+- **Managing externals requires `administration:view`** — no new capability was added in
+  FLOW-003, because adding one would desynchronize the role-preset seeds shipped in 0005
+  (still unmerged). Revisit when a dedicated `externals:manage` capability is warranted.
+- **Project-scoped sharing is deferred to FLOW-005** (projects do not exist yet). FLOW-003
+  delivers identity, invitation, expiry/revoke, the external shell, and hard isolation from
+  every internal surface; `can_download`/`can_upload` are stored now and enforced when
+  files arrive (FLOW-007).

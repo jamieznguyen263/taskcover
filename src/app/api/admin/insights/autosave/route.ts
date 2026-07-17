@@ -1,13 +1,13 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getAdminSession } from "@/lib/admin/session";
-import { assertPermission } from "@/lib/admin/permissions";
+import { assertPermission, isCmsRole } from "@/lib/admin/permissions";
 import { AdminRepository } from "@/lib/admin/repository";
 import { ContentConflictError, ContentStateError } from "@/lib/admin/content-model";
 import { saveArticleInputSchema } from "@/lib/admin/validation";
 
 export async function POST(request: NextRequest) {
   const session = await getAdminSession();
-  if (!session) return NextResponse.json({ error: "Authentication required." }, { status: 401, headers: { "cache-control": "no-store" } });
+  if (!session || !isCmsRole(session.role)) return NextResponse.json({ error: "Authentication required." }, { status: 401, headers: { "cache-control": "no-store" } });
   try {
     assertPermission(session.role, "article:edit");
     const body = await request.json().catch(() => null);
