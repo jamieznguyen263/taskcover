@@ -13,7 +13,11 @@ import {
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
-export const adminRoleEnum = pgEnum("admin_role", ["admin", "editor"]);
+// "external" (FLOW-003) marks freelancer/partner collaborators: they share the single
+// identity + login system but are hard-blocked from every CMS surface (see
+// requireAdminSession and the /api/admin route gates) and use external_memberships
+// instead of organization_memberships for Taskcover Flow access.
+export const adminRoleEnum = pgEnum("admin_role", ["admin", "editor", "external"]);
 export const adminUserStatusEnum = pgEnum("admin_user_status", ["invited", "active", "disabled"]);
 export const insightWorkflowStatusEnum = pgEnum("insight_workflow_status", [
   "draft",
@@ -83,6 +87,12 @@ export const leadDeliveryProviderEnum = pgEnum("lead_delivery_provider", ["resen
 export const workAccessLevelEnum = pgEnum("work_access_level", ["owner", "admin", "manager", "member"]);
 export const workMembershipStatusEnum = pgEnum("work_membership_status", ["active", "disabled"]);
 export const externalOrganizationKindEnum = pgEnum("external_organization_kind", ["freelancer", "partner"]);
+export const externalMembershipKindEnum = pgEnum("external_membership_kind", [
+  "freelancer",
+  "partner_manager",
+  "partner_member",
+  "read_only_guest",
+]);
 export const leadDeliveryJobTypeEnum = pgEnum("lead_delivery_job_type", [
   "resend-internal-notification",
   "resend-visitor-confirmation",
@@ -515,8 +525,6 @@ export const teamMemberships = pgTable(
   ]
 );
 
-// Inert in FLOW-002 (no code paths); owned by FLOW-003 external access. Created here
-// because the accepted schema doc groups it with the membership foundation.
 export const externalOrganizations = pgTable(
   "external_organizations",
   {
@@ -526,6 +534,57 @@ export const externalOrganizations = pgTable(
     ...timestamps,
   },
   (table) => [uniqueIndex("external_organizations_name_idx").on(table.name)]
+);
+
+/*
+ * FLOW-003 — external collaborator access. One membership per external user; access is
+ * bounded by [access_start_at, access_expiry_at] and by revoked_at, evaluated on every
+ * /flow request (src/lib/work/external-access.ts). Externals never receive an
+ * organization_memberships row.
+ */
+export const externalMemberships = pgTable(
+  "external_memberships",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id").notNull().references(() => adminUsers.id, { onDelete: "cascade" }),
+    externalOrganizationId: uuid("external_organization_id").references(() => externalOrganizations.id, {
+      onDelete: "set null",
+    }),
+    kind: externalMembershipKindEnum("kind").notNull(),
+    accessStartAt: timestamp("access_start_at", { withTimezone: true }).notNull().defaultNow(),
+    accessExpiryAt: timestamp("access_expiry_at", { withTimezone: true }),
+    canDownload: boolean("can_download").notNull().default(false),
+    canUpload: boolean("can_upload").notNull().default(false),
+    revokedAt: timestamp("revoked_at", { withTimezone: true }),
+    revokedBy: uuid("revoked_by").references(() => adminUsers.id, { onDelete: "set null" }),
+    ...timestamps,
+  },
+  (table) => [
+    uniqueIndex("external_memberships_user_idx").on(table.userId),
+    index("external_memberships_org_idx").on(table.externalOrganizationId),
+  ]
+);
+
+// External-invite metadata rides alongside the existing admin_invites row (role='external')
+// so the CMS accept-invite flow needs zero changes; the membership is provisioned lazily
+// from this metadata on the collaborator's first /flow visit.
+export const flowExternalInvites = pgTable(
+  "flow_external_invites",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    inviteId: uuid("invite_id").notNull().references(() => adminInvites.id, { onDelete: "cascade" }),
+    externalOrganizationId: uuid("external_organization_id").references(() => externalOrganizations.id, {
+      onDelete: "set null",
+    }),
+    kind: externalMembershipKindEnum("kind").notNull(),
+    accessStartAt: timestamp("access_start_at", { withTimezone: true }).notNull().defaultNow(),
+    accessExpiryAt: timestamp("access_expiry_at", { withTimezone: true }),
+    canDownload: boolean("can_download").notNull().default(false),
+    canUpload: boolean("can_upload").notNull().default(false),
+    createdBy: uuid("created_by").references(() => adminUsers.id, { onDelete: "set null" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [uniqueIndex("flow_external_invites_invite_idx").on(table.inviteId)]
 );
 
 export const leadStatusEvents = pgTable(

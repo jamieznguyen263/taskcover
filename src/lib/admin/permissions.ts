@@ -2,6 +2,16 @@ import type { InsightStatus } from "@/content/insights.types";
 
 export type AdminRole = "admin" | "editor";
 
+/**
+ * FLOW-003: external collaborators (freelancers/partners) share the identity + login
+ * system but must never reach any Content CMS surface. Every CMS entry point — page
+ * layouts via requireAdminSession and each /api/admin route — narrows the session role
+ * through this guard before doing CMS work.
+ */
+export function isCmsRole(role: "admin" | "editor" | "external"): role is AdminRole {
+  return role === "admin" || role === "editor";
+}
+
 export type Permission =
   | "article:create"
   | "article:edit"

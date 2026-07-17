@@ -1,11 +1,28 @@
 import { describe, expect, it } from "vitest";
-import { getFlowAdminNav, getFlowPrimaryNav } from "./nav";
+import { getExternalNav, getFlowAdminNav, getFlowPrimaryNav } from "./nav";
 
 describe("getFlowPrimaryNav", () => {
   it("enables only Home; future pages are disabled placeholders", () => {
     const nav = getFlowPrimaryNav();
     expect(nav.find((item) => item.href === "/flow")?.enabled).toBe(true);
     expect(nav.filter((item) => item.href !== "/flow").every((item) => !item.enabled)).toBe(true);
+  });
+});
+
+describe("getExternalNav", () => {
+  it("contains only the external destinations from the blueprint, with Home enabled", () => {
+    const nav = getExternalNav();
+    expect(nav.map((item) => item.label)).toEqual(["Home", "Inbox", "My Work", "Shared Projects", "Shared Files"]);
+    expect(nav.find((item) => item.label === "Home")?.enabled).toBe(true);
+    expect(nav.filter((item) => item.label !== "Home").every((item) => !item.enabled)).toBe(true);
+  });
+
+  it("never exposes internal destinations to externals", () => {
+    const labels = getExternalNav().map((item) => item.label);
+    for (const forbidden of ["Clients", "Projects", "Docs", "Administration", "Content CMS"]) {
+      expect(labels).not.toContain(forbidden);
+    }
+    expect(getExternalNav().every((item) => item.href !== "/admin")).toBe(true);
   });
 });
 
