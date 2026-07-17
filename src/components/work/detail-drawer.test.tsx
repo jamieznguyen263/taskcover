@@ -90,4 +90,20 @@ describe("DetailDrawer", () => {
 
     expect(onClose).not.toHaveBeenCalled();
   });
+
+  it("anchors right by default and left when side='left' (used by the mobile nav overlay)", () => {
+    mountedContainer = document.createElement("div");
+    document.body.appendChild(mountedContainer);
+    mountedRoot = createRoot(mountedContainer);
+    act(() => {
+      mountedRoot?.render(
+        <DetailDrawer open onClose={() => {}} title="Menu" side="left">
+          <span>Nav</span>
+        </DetailDrawer>
+      );
+    });
+    const panel = mountedContainer.querySelector<HTMLDivElement>("[data-drawer-panel]");
+    expect(panel?.className).toContain("left-0");
+    expect(panel?.className).not.toContain("right-0");
+  });
 });

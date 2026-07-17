@@ -13,12 +13,14 @@ export function DetailDrawer({
   title,
   description,
   children,
+  side = "right",
 }: {
   open: boolean;
   onClose: () => void;
   title: string;
   description?: string;
   children?: React.ReactNode;
+  side?: "left" | "right";
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -66,6 +68,11 @@ export function DetailDrawer({
 
   if (!open) return null;
 
+  const sideClasses =
+    side === "left"
+      ? "left-0 border-r flow-drawer-panel-left"
+      : "right-0 border-l flow-drawer-panel";
+
   return (
     <div className="fixed inset-0 z-40 overflow-hidden">
       <div className="absolute inset-0 bg-graphite/40" onClick={onClose} aria-hidden="true" data-drawer-backdrop />
@@ -75,7 +82,7 @@ export function DetailDrawer({
         aria-modal="true"
         aria-labelledby={titleId}
         data-drawer-panel
-        className="flow-drawer-panel absolute inset-y-0 right-0 flex w-full max-w-md flex-col border-l border-line bg-white shadow-xl"
+        className={`absolute inset-y-0 flex w-full max-w-md flex-col border-line bg-white shadow-xl ${sideClasses}`}
       >
         <div className="flex items-start justify-between gap-3 border-b border-line p-4">
           <div>

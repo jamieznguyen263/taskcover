@@ -21,6 +21,8 @@ export function CommandMenu({
   const router = useRouter();
   const [, startTransition] = useTransition();
   const titleId = useId();
+  const dialogId = useId();
+  const hasCommands = commands.length > 0;
 
   const openMenu = useCallback((trigger: HTMLElement | null) => {
     previouslyFocused.current = trigger;
@@ -44,14 +46,29 @@ export function CommandMenu({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [openMenu]);
 
+  // Prevent the page behind the dialog from scrolling while it's open.
   useEffect(() => {
     if (!open) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    if (!hasCommands) {
+      dialogRef.current?.focus();
+      return;
+    }
     const items = dialogRef.current?.querySelectorAll<HTMLButtonElement>("[data-command-item]");
     items?.[activeIndex]?.focus();
-  }, [open, activeIndex]);
+  }, [open, activeIndex, hasCommands]);
 
   const runCommand = useCallback(
-    (command: FlowCommand) => {
+    (command: FlowCommand | undefined) => {
+      if (!command) return;
       if (command.kind === "sign-out") {
         startTransition(() => {
           void onSignOut();
@@ -70,6 +87,7 @@ export function CommandMenu({
       close();
       return;
     }
+    if (!hasCommands) return;
     if (event.key === "ArrowDown" || (event.key === "Tab" && !event.shiftKey)) {
       event.preventDefault();
       setActiveIndex((index) => (index + 1) % commands.length);
@@ -91,6 +109,9 @@ export function CommandMenu({
       <button
         ref={triggerRef}
         type="button"
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        aria-controls={dialogId}
         onClick={() => openMenu(triggerRef.current)}
         className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-line bg-white px-3 text-sm font-medium text-secondary hover:text-brand-teal"
       >
@@ -108,9 +129,11 @@ export function CommandMenu({
         >
           <div
             ref={dialogRef}
+            id={dialogId}
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
+            tabIndex={-1}
             onClick={(event) => event.stopPropagation()}
             onKeyDown={onDialogKeyDown}
             className="w-full max-w-md rounded-xl border border-line bg-white p-2 shadow-xl"
@@ -118,26 +141,28 @@ export function CommandMenu({
             <p id={titleId} className="px-3 py-2 text-xs font-semibold uppercase tracking-wide text-muted">
               Command menu
             </p>
-            <ul role="listbox" aria-label="Commands" className="grid gap-0.5">
-              {commands.map((command, index) => (
-                <li key={command.id}>
-                  <button
-                    type="button"
-                    data-command-item
-                    role="option"
-                    aria-selected={index === activeIndex}
-                    tabIndex={index === activeIndex ? 0 : -1}
-                    onClick={() => runCommand(command)}
-                    onFocus={() => setActiveIndex(index)}
-                    className={`flex min-h-11 w-full items-center rounded-lg px-3 text-left text-sm font-medium ${
-                      index === activeIndex ? "bg-surface-tint text-brand-teal" : "text-secondary"
-                    }`}
-                  >
-                    {command.label}
-                  </button>
-                </li>
-              ))}
-            </ul>
+            {hasCommands ? (
+              <ul className="grid gap-0.5">
+                {commands.map((command, index) => (
+                  <li key={command.id}>
+                    <button
+                      type="button"
+                      data-command-item
+                      tabIndex={index === activeIndex ? 0 : -1}
+                      onClick={() => runCommand(command)}
+                      onFocus={() => setActiveIndex(index)}
+                      className={`flex min-h-11 w-full items-center rounded-lg px-3 text-left text-sm font-medium ${
+                        index === activeIndex ? "bg-surface-tint text-brand-teal" : "text-secondary"
+                      }`}
+                    >
+                      {command.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="px-3 py-6 text-center text-sm text-muted">No commands available.</p>
+            )}
           </div>
         </div>
       ) : null}

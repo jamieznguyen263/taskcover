@@ -259,11 +259,23 @@
   .flow-drawer-panel {
     animation: flow-drawer-in 150ms ease-out;
   }
+  .flow-drawer-panel-left {
+    animation: flow-drawer-in-left 150ms ease-out;
+  }
 }
 
 @keyframes flow-drawer-in {
   from {
     transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes flow-drawer-in-left {
+  from {
+    transform: translateX(-100%);
   }
   to {
     transform: translateX(0);
