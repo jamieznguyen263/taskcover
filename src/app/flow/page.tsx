@@ -30,11 +30,11 @@ export default async function FlowHomePage() {
       <EmptyState
         eyebrow="Taskcover Flow"
         title="Client context, projects, and work in one place"
-        description="Clients and Projects are live: create clients with explainable health, attach contacts, and organize delivery cycles as projects with their own members. Work items, Inbox, and Docs arrive in the next slices."
+        description="Clients, Projects, and Work are live: track client health, organize delivery cycles as projects, and run work with five statuses, one accountable owner, checklists, dependencies, and discussion attached to each item. Inbox and Docs arrive in the next slices."
         items={[
           { label: "Clients", note: "Live — client list, explainable health, contacts, and projects." },
-          { label: "Projects", note: "Live — client and internal projects with memberships." },
-          { label: "Work", note: "Five-status work items with List/Board/Calendar views arrive in FLOW-006." },
+          { label: "Projects", note: "Live — client and internal projects with members and work." },
+          { label: "Work", note: "Live — five statuses, List/Board views, checklists, dependencies, discussion." },
           { label: "Inbox", note: "Actionable notifications and Waiting reminders arrive in FLOW-009." },
           { label: "Docs", note: "Documents with TipTap editing arrive in FLOW-010." },
         ]}

@@ -9,7 +9,10 @@ export type WorkCapability =
   | "clients:view"
   | "clients:manage"
   | "projects:view"
-  | "projects:manage";
+  | "projects:manage"
+  | "work:view"
+  | "work:manage"
+  | "internal-notes:view";
 
 /**
  * Deny-by-default capability model. Code is the single source of truth for what each
@@ -25,6 +28,12 @@ const MEMBER_CAPABILITIES: readonly WorkCapability[] = [
   "teams:view",
   "clients:view",
   "projects:view",
+  // Internal staff can see and act on work company-wide; `internal-notes:view` marks the
+  // boundary that external collaborators (FLOW-003) never cross — internal comments are
+  // invisible to them (enforced in the FLOW-007 repository, not by UI).
+  "work:view",
+  "work:manage",
+  "internal-notes:view",
 ];
 const MANAGER_CAPABILITIES: readonly WorkCapability[] = [
   ...MEMBER_CAPABILITIES,

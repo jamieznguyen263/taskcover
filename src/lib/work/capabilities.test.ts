@@ -24,6 +24,14 @@ describe("capability model", () => {
     }
   });
 
+  it("gives every internal level work and internal-notes visibility (company-wide work)", () => {
+    for (const level of ALL_LEVELS) {
+      expect(hasCapability(level, "work:view")).toBe(true);
+      expect(hasCapability(level, "work:manage")).toBe(true);
+      expect(hasCapability(level, "internal-notes:view")).toBe(true);
+    }
+  });
+
   it("is strictly cumulative: member ⊆ manager ⊆ admin = owner", () => {
     const asSet = (level: WorkAccessLevel) => new Set<WorkCapability>(CAPABILITIES_BY_ACCESS_LEVEL[level]);
     const member = asSet("member");
