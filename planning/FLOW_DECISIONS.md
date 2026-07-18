@@ -127,3 +127,29 @@ per PR and per-slice commits; the full validation battery runs once per PR.
   (default work items with relative deadlines) land with FLOW-006, when work items exist.
 - **client_memberships ship as table only** — management UI waits until client scoping
   drives visibility (FLOW-006/007).
+
+## FLOW-006/007 decisions — 2026-07-17
+
+- **Work status is a free flow, not a state machine.** The five statuses allow any→any
+  transitions so non-technical staff are never blocked; the sole invariant is data
+  integrity around Waiting (a target is required to enter it, cleared on leaving) —
+  `resolveStatusChange` in src/lib/work/work-domain.ts, unit-tested.
+- **Exactly one accountable owner:** `work_items.owner_id` is NOT NULL with `ON DELETE
+  restrict` — you cannot delete a user who still owns work; reassign first. Contributors,
+  reviewer, and watchers are all optional.
+- **Comment/file/activity visibility is enforced in the repository, never the UI.**
+  `DiscussionRepository` drops internal rows from every read when `includeInternal` is
+  false; callers pass `hasCapability(level, "internal-notes:view")`, which externals never
+  hold. `resolveCommentVisibility` makes it impossible for a non-internal author to post an
+  internal comment even if the form is tampered with.
+- **activity_events uses a plain-string `event`, not a pg enum** — deliberately, so future
+  event kinds never require an `ALTER TYPE ... ADD VALUE` migration. This is the Flow-native
+  timeline; the CMS `admin_audit_logs` enum is left untouched (FLOW-002 decision holds).
+- **Calendar view deferred:** List + Board ship in FLOW-006; a calendar is low-value until
+  FLOW-008/009 add deadline surfaces (Home/Inbox). Not dropped — resequenced.
+- **Real file uploads deferred:** the `work_files`/`work_file_links` schema and repository
+  ship (visibility-enforced), but safe upload UI needs the CMS's signed-storage path and
+  belongs in its own slice. No half-built upload UI ships now.
+- **Simple dependencies only (v1):** `addDependency` guards self-dependency and direct A↔B
+  cycles; deep cycle detection is a FLOW-008 concern, matching the blueprint's "simple
+  dependencies".
