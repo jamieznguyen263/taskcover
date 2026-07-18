@@ -24,11 +24,13 @@ describe("capability model", () => {
     }
   });
 
-  it("gives every internal level work and internal-notes visibility (company-wide work)", () => {
+  it("gives every internal level work, docs, and internal-notes visibility (company-wide)", () => {
     for (const level of ALL_LEVELS) {
       expect(hasCapability(level, "work:view")).toBe(true);
       expect(hasCapability(level, "work:manage")).toBe(true);
       expect(hasCapability(level, "internal-notes:view")).toBe(true);
+      expect(hasCapability(level, "docs:view")).toBe(true);
+      expect(hasCapability(level, "docs:manage")).toBe(true);
     }
   });
 

@@ -12,7 +12,9 @@ export type WorkCapability =
   | "projects:manage"
   | "work:view"
   | "work:manage"
-  | "internal-notes:view";
+  | "internal-notes:view"
+  | "docs:view"
+  | "docs:manage";
 
 /**
  * Deny-by-default capability model. Code is the single source of truth for what each
@@ -34,6 +36,9 @@ const MEMBER_CAPABILITIES: readonly WorkCapability[] = [
   "work:view",
   "work:manage",
   "internal-notes:view",
+  // Documents (FLOW-010) are company-wide for internal staff, like work: view + author.
+  "docs:view",
+  "docs:manage",
 ];
 const MANAGER_CAPABILITIES: readonly WorkCapability[] = [
   ...MEMBER_CAPABILITIES,

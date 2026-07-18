@@ -4,11 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 
-// href set once the destination's creation flow exists (FLOW-005 enabled projects).
+// href set once the destination's creation flow exists. "New work" opens from a project,
+// so it stays a coming-soon hint until there's a global picker.
 const QUICK_CREATE_OPTIONS: { id: string; label: string; href?: string }[] = [
   { id: "work", label: "New work" },
   { id: "project", label: "New project", href: "/flow/projects" },
-  { id: "document", label: "New document" },
+  { id: "document", label: "New document", href: "/flow/docs" },
 ];
 
 export function QuickCreateMenu() {

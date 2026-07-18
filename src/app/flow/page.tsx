@@ -17,7 +17,7 @@ export default async function FlowHomePage() {
           title={`Welcome, ${resolution.session.displayName}`}
           description="This is your shared Taskcover workspace. When projects and work are shared with you, they will appear here — you only ever see what has been explicitly shared with you."
           items={[
-            { label: "Inbox", note: "Feedback and review requests will arrive here." },
+            { label: "Inbox", note: "Feedback and review requests arrive here." },
             { label: "My Work", note: "Work assigned to you, with deadlines and status." },
             { label: "Shared Projects", note: "Projects your collaboration covers." },
             { label: "Shared Files", note: "Files shared with you, within your access window." },
