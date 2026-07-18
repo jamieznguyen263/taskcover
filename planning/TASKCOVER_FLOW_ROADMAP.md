@@ -4,6 +4,23 @@ Each slice below is implemented one at a time, in order, unless a dependency for
 reordering. See [CURRENT_FLOW_PR.md](./CURRENT_FLOW_PR.md) for the slice actively in
 progress and [FLOW_DECISIONS.md](./FLOW_DECISIONS.md) for locked product decisions.
 
+## Status — 2026-07-19: all 12 slices implemented ✅
+
+| Slice | Ships in | Status |
+|-------|----------|--------|
+| FLOW-001 Work application shell | PR #14 | ✅ merged |
+| FLOW-002 Memberships, roles, teams | PR #15 | ✅ merged |
+| FLOW-003 Freelancer & partner access | PR #17 | ✅ merged |
+| FLOW-004 Clients + FLOW-005 Projects | PR #18 | ✅ merged |
+| FLOW-006 Unified Work + FLOW-007 Discussions/Files/Activity | PR #19 | ✅ merged |
+| FLOW-008 Home/Manager view + FLOW-009 Inbox/Notifications | PR #20 | ✅ merged |
+| FLOW-010 Documents + FLOW-011 Smart rules (deterministic) | PR #21 | ✅ merged |
+| FLOW-012 Hardening & rollout | this PR | 🟢 in review |
+
+From FLOW-004 on, slices shipped in pairs (one additive migration per PR, full validation
+once per PR). See [TASKCOVER_FLOW_ROLLOUT.md](./TASKCOVER_FLOW_ROLLOUT.md) for the runbook.
+The detailed slice objectives below remain the acceptance record for each.
+
 ## Wave 1 — Application foundation
 
 ### FLOW-001 — Work application shell (ACTIVE — see CURRENT_FLOW_PR.md)
