@@ -153,3 +153,28 @@ per PR and per-slice commits; the full validation battery runs once per PR.
 - **Simple dependencies only (v1):** `addDependency` guards self-dependency and direct A↔B
   cycles; deep cycle detection is a FLOW-008 concern, matching the blueprint's "simple
   dependencies".
+
+## FLOW-008/009 decisions — 2026-07-17
+
+- **Home is pure aggregation, no new tables.** HomeRepository buckets existing work_items
+  for the session user (My focus / Overdue / Needs attention / My work + a manager Review
+  queue and workload signal). This keeps FLOW-008 migration-free; the pair's only migration
+  is FLOW-009's notifications table.
+- **No new capability for Inbox/Home.** Any internal member already has work:view; reading
+  your own Home/Inbox needs no extra grant, so role_presets is untouched by 0009. Revisit
+  only if notification *administration* (e.g. broadcast) is ever added.
+- **Notification integrity rules live in `emit()`:** never notify the actor about their own
+  action, and de-dupe against an existing non-done item for the same recipient+target+kind.
+  Together these stop the Inbox from spamming on repeated saves.
+- **One pure helper set owns snooze/unread/active semantics**
+  (`src/lib/work/notification-domain.ts`): a snooze that elapses re-surfaces as unread, done
+  is always hidden, and the badge/count/list all call the same functions so they can never
+  disagree. Unit-tested.
+- **Inbox mutations are self-scoped:** `NotificationRepository.setState` filters by
+  `recipientId` (from the session), so a user can only change their own notifications even
+  if an id is guessed.
+- **Waiting reminders deferred, deliberately:** `work_items.waiting_target` is a category
+  (client/teammate/…), not a specific user, so there is no single recipient to notify. The
+  `waiting_reminder` kind exists; emission waits until waiting targets can name a person.
+  Same pattern for `deadline_warning` (needs a scheduler) and `mention` (needs comment
+  mentions, FLOW-011).
