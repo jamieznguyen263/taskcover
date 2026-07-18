@@ -1,14 +1,19 @@
+import { NotificationRepository } from "@/lib/work/notification-repository";
 import type { WorkSession } from "@/lib/work/session";
 import { WorkHeader } from "./work-header";
 import { WorkSidebar } from "./work-sidebar";
 
-export function WorkShell({ session, children }: { session: WorkSession; children: React.ReactNode }) {
+export async function WorkShell({ session, children }: { session: WorkSession; children: React.ReactNode }) {
+  const inboxUnread = await new NotificationRepository().unreadCount(session.userId);
   return (
     <div data-flow-root className="min-h-screen bg-surface-soft text-graphite">
       <div className="grid min-h-screen lg:grid-cols-[16rem_1fr]">
-        <WorkSidebar navContext={{ accessLevel: session.accessLevel, legacyRole: session.legacyRole }} />
+        <WorkSidebar
+          navContext={{ accessLevel: session.accessLevel, legacyRole: session.legacyRole }}
+          inboxUnread={inboxUnread}
+        />
         <div className="min-w-0">
-          <WorkHeader session={session} />
+          <WorkHeader session={session} inboxUnread={inboxUnread} />
           <main className="p-4 sm:p-6">{children}</main>
         </div>
       </div>

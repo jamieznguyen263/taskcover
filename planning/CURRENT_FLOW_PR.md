@@ -1,65 +1,56 @@
 # Current Flow PR
 
-**Active pair: FLOW-006 (Unified Work) + FLOW-007 (Discussions, Files, Activity)** — one PR,
-one additive migration (`0008_flow_work_discussions.sql`), base `main`.
+**Active pair: FLOW-008 (Home / Manager Control View) + FLOW-009 (Inbox / Notifications)**
+— one PR, one additive migration (`0009_flow_notifications.sql`), base `main`.
 
-History: FLOW-001 (#14), FLOW-002 (#15), FLOW-003 (#17 re-land), FLOW-004+005 (#18) all
-merged. Workflow unchanged: no stacked PRs, slice pairs, one migration per PR, full battery
-once per PR.
+History: FLOW-001–007 merged (#14, #15, #17, #18, #19). Workflow unchanged: no stacked PRs,
+slice pairs, one migration per PR, full battery once per PR.
 
-## FLOW-006 scope — Unified Work
+## FLOW-008 scope — Home & Manager Control View
 
-- Tables: `work_items` (one unified object with display `type`; five company-wide statuses;
-  exactly one accountable `owner_id` NOT NULL; optional reviewer; `waiting_target` +
-  `waiting_note`; self-referential `parent_id` for parent/child), `work_item_members`
-  (contributor/watcher), `work_dependencies` (simple finish-to-start), `work_checklist_items`.
-- Status is a **free flow** (any→any) by design — no rigid state machine blocks
-  non-technical staff. The only invariant (`resolveStatusChange`, unit-tested): entering
-  Waiting requires a target ("waiting for whom?"); leaving Waiting clears it.
-- `/flow/projects/[projectId]`: Work section with **List and Board views** (view toggle),
-  create work, and a **detail drawer** reached by a shareable URL
-  (`?work=<id>`, reusing the FLOW-001 DetailDrawer primitive). The drawer edits status,
-  details (title/type/owner/reviewer/due/description), and checklist inline.
-- Capabilities `work:view` / `work:manage` (both member+ — work is company-wide for internal
-  staff).
+- No new tables — Home aggregates the existing `work_items` for the session user
+  (`HomeRepository`). Buckets: **My focus** (owned, due within 3 days), **Overdue** (owned,
+  past due, open), **Needs attention** (owned, in review or waiting), **My work** (all open
+  owned), and a manager-only **Review queue** (items where I'm the reviewer and status =
+  review). Managers (`members:view`) also see a lightweight **workload signal** (open items
+  per owner).
+- `/flow` Home is now role-aware: internal users get the buckets above (with a friendly
+  empty state when they own nothing); external collaborators keep their own shared-workspace
+  Home; the old FLOW-001 drawer demo is removed.
 
-## FLOW-007 scope — Discussions, Files, Activity
+## FLOW-009 scope — Inbox & Notifications
 
-- Tables: `discussion_threads`, `work_comments` (visibility internal|shared),
-  `work_files` + `work_file_links` (visibility internal|shared), `activity_events` (Flow-
-  native timeline; `event` is a plain string, not an enum, so new kinds never need an
-  `ALTER TYPE`).
-- **Internal vs shared comments are visibly distinct** (amber "Internal" vs teal "Shared")
-  and **enforced in the repository, not the UI**: `DiscussionRepository` filters internal
-  rows out of every read when `includeInternal` is false. Callers derive that from
-  `internal-notes:view`, which external collaborators never hold. `resolveCommentVisibility`
-  (unit-tested) guarantees an author who can't see internal notes can never post one.
-- Work create/status changes write `activity_events`; the drawer shows the discussion and a
-  per-item activity timeline.
-- New capability `internal-notes:view` (member+, never external) marks the internal/external
-  boundary.
+- Table: `notifications` (recipient, actor, kind, state, target, project, title/body/href,
+  snoozed_until). Nine kinds; four states (unread/read/snoozed/done).
+- Notifications are emitted from work actions: **assignment** to the owner on create/update,
+  **review_request** to the reviewer when set. `emit()` never notifies the actor themselves
+  and de-dupes an existing open item, so re-saving doesn't spam the Inbox.
+- `/flow/inbox`: actionable list **grouped** into "Action required" vs "Updates"
+  (`NOTIFICATION_GROUP`), with per-item **mark read / done / snooze** (3h / tomorrow / next
+  week) and a **mark-all-read**. A snooze that elapses re-surfaces as unread — the badge, the
+  list filter, and the unread count all agree via the pure `notification-domain` helpers.
+- Inbox nav is enabled for internal and external shells, with an **unread badge** in the
+  sidebar and mobile nav; command menu gains "Go to Inbox".
 
 ## Non-scope for this pair
 
-- **Calendar view** — List + Board ship now; Calendar is deferred (a due-date calendar is
-  low-value until Inbox/Home deadline surfaces exist in FLOW-008/009).
-- **Real file uploads** — `work_files`/`work_file_links` tables and `DiscussionRepository`
-  read/write methods ship (visibility-enforced), but the upload UI is deferred: safe uploads
-  need the same signed-storage path the CMS media flow uses, which belongs in its own slice
-  rather than bolted on here. No half-built upload UI ships.
-- Project template instantiation into work items (FLOW template data exists; wiring is a
-  follow-up), deep dependency cycle detection (v1 guards self + direct A↔B only), Inbox
-  notifications from work events (FLOW-009), external project-scoped work visibility (the
-  visibility plumbing is in place; the project-sharing surface is FLOW-009+).
+- **Waiting reminders / escalation** — `waiting_target` is a *category* (client, teammate,
+  …), not a specific user, so there's no single recipient to notify yet. Deferred until
+  waiting targets can name a person; the notification kind exists for it.
+- **Deadline-warning and mention notifications** — kinds exist; emission waits for a
+  scheduler (deadline) and mentions in comments (FLOW-011 text features).
+- **Approval actions inline in the Inbox** — the Inbox deep-links to the work item where the
+  status change happens; a one-click approve-from-Inbox is a later polish.
+- Real-time updates, email/push delivery, per-project notification preferences.
 
 ## Acceptance checks
 
-1. Migration 0008 creates only new tables/enums/indexes/FKs and updates only `role_presets`
-   rows — zero changes to previously existing tables.
-2. Every work/discussion read and write re-checks capabilities server-side; internal
-   comments/files/activity are filtered for anyone without `internal-notes:view`.
-3. Waiting cannot be set without a target; leaving Waiting clears it.
-4. Work always has exactly one owner (NOT NULL + required in the form).
-5. The detail drawer is reachable and shareable by URL and closes back to the project.
-6. `/admin`, the public site, and the external shell are unchanged.
-7. Full battery passes: lint, typecheck, full vitest, `next build`, Cloudflare build, dry-run.
+1. Migration 0009 creates only the `notifications` table + enums/indexes — zero changes to
+   existing tables, no `role_presets` change (no new capability needed).
+2. Home buckets and Inbox reads are scoped to the session user; Inbox mutations only touch
+   the caller's own rows (`setState` filters by recipient).
+3. Snooze/unread/active semantics are consistent across badge, count, and list (one pure
+   helper set, unit-tested).
+4. Notifications never fire to the actor and never duplicate an open item.
+5. `/admin`, the public site, and the external shell are unchanged.
+6. Full battery passes: lint, typecheck, full vitest, `next build`, Cloudflare build, dry-run.

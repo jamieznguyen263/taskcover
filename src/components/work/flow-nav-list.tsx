@@ -26,6 +26,14 @@ export function FlowNavList({
             className="flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm font-medium text-secondary hover:bg-surface-tint hover:text-brand-teal"
           >
             {item.label}
+            {item.badge && item.badge > 0 ? (
+              <span
+                className="ml-auto inline-flex min-w-5 items-center justify-center rounded-full bg-brand-teal px-1.5 text-[10px] font-semibold text-white"
+                aria-label={`${item.badge} unread`}
+              >
+                {item.badge > 99 ? "99+" : item.badge}
+              </span>
+            ) : null}
           </Link>
         ) : (
           <span

@@ -3,11 +3,16 @@
 import { revalidatePath } from "next/cache";
 import { hasCapability } from "./capabilities";
 import { DiscussionRepository, resolveCommentVisibility } from "./discussion-repository";
+import { NotificationRepository } from "./notification-repository";
 import { requireWorkSession } from "./session";
 import { WorkItemRepository } from "./work-repository";
 import { isWorkType, resolveStatusChange, WORK_STATUS_LABEL, type WorkType } from "./work-domain";
 
 export type WorkActionState = { error?: string };
+
+function workHref(projectId: string, workItemId: string) {
+  return `/flow/projects/${projectId}?work=${workItemId}`;
+}
 
 function parseDueAt(raw: string): Date | null {
   const value = raw.trim();
@@ -33,8 +38,9 @@ export async function createWorkItemAction(_state: WorkActionState, formData: Fo
   if (!title) return { error: "Work needs a title." };
   if (title.length > 200) return { error: "Title must be at most 200 characters." };
 
+  let created: { id: string };
   try {
-    await new WorkItemRepository().createWorkItem({
+    created = await new WorkItemRepository().createWorkItem({
       projectId,
       type,
       title,
@@ -47,6 +53,18 @@ export async function createWorkItemAction(_state: WorkActionState, formData: Fo
   } catch {
     return { error: "Could not create the work item." };
   }
+  // Notify the owner they've been assigned (emit() no-ops when owner is the creator).
+  await new NotificationRepository().emit({
+    recipientId: ownerId,
+    actorId: session.userId,
+    kind: "assignment",
+    targetType: "work_item",
+    targetId: created.id,
+    projectId,
+    title: `You were assigned “${title}”`,
+    body: `${session.displayName} assigned you this work.`,
+    href: workHref(projectId, created.id),
+  });
   revalidatePath(`/flow/projects/${projectId}`);
   return {};
 }
@@ -82,7 +100,7 @@ export async function updateWorkStatusAction(_state: WorkActionState, formData: 
 }
 
 export async function updateWorkDetailsAction(_state: WorkActionState, formData: FormData): Promise<WorkActionState> {
-  await requireWorkSession("work:manage");
+  const session = await requireWorkSession("work:manage");
 
   const workItemId = String(formData.get("workItemId") ?? "");
   const projectId = String(formData.get("projectId") ?? "");
@@ -100,6 +118,33 @@ export async function updateWorkDetailsAction(_state: WorkActionState, formData:
     await new WorkItemRepository().updateDetails({ workItemId, title, description, type, ownerId, reviewerId, dueAt });
   } catch {
     return { error: "Could not save the work item." };
+  }
+  // Notify owner and reviewer. emit() de-dupes an existing open item, so re-saving without
+  // changing the assignee doesn't spam the Inbox.
+  const notifications = new NotificationRepository();
+  await notifications.emit({
+    recipientId: ownerId,
+    actorId: session.userId,
+    kind: "assignment",
+    targetType: "work_item",
+    targetId: workItemId,
+    projectId,
+    title: `You own “${title}”`,
+    body: `${session.displayName} updated this work.`,
+    href: workHref(projectId, workItemId),
+  });
+  if (reviewerId) {
+    await notifications.emit({
+      recipientId: reviewerId,
+      actorId: session.userId,
+      kind: "review_request",
+      targetType: "work_item",
+      targetId: workItemId,
+      projectId,
+      title: `Review requested: “${title}”`,
+      body: `${session.displayName} asked you to review this work.`,
+      href: workHref(projectId, workItemId),
+    });
   }
   revalidatePath(`/flow/projects/${projectId}`);
   return {};

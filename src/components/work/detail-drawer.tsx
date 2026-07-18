@@ -4,8 +4,8 @@ import { useEffect, useId, useRef } from "react";
 import { X } from "lucide-react";
 
 /**
- * Reusable right-side drawer primitive for future Work/Project/Client detail screens.
- * FLOW-001 only demonstrates it (see detail-drawer-demo.tsx) — no records are loaded here.
+ * Reusable right-side (or left-anchored) drawer primitive. Used by the work detail drawer
+ * and the mobile navigation overlay.
  */
 export function DetailDrawer({
   open,

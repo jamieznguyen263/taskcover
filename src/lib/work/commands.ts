@@ -15,7 +15,10 @@ export type FlowCommandContext = {
  * legacy CMS role, mirroring getFlowAdminNav.
  */
 export function getFlowCommands(context: FlowCommandContext): FlowCommand[] {
-  const commands: FlowCommand[] = [{ id: "go-home", label: "Go to Home", kind: "navigate", href: "/flow" }];
+  const commands: FlowCommand[] = [
+    { id: "go-home", label: "Go to Home", kind: "navigate", href: "/flow" },
+    { id: "go-inbox", label: "Go to Inbox", kind: "navigate", href: "/flow/inbox" },
+  ];
   if (hasCapability(context.accessLevel, "clients:view")) {
     commands.push({ id: "go-clients", label: "Go to Clients", kind: "navigate", href: "/flow/clients" });
   }

@@ -108,6 +108,18 @@ export const workWaitingTargetEnum = pgEnum("work_waiting_target", [
 ]);
 export const workMemberRelationEnum = pgEnum("work_member_relation", ["contributor", "watcher"]);
 export const commentVisibilityEnum = pgEnum("comment_visibility", ["internal", "shared"]);
+export const notificationStateEnum = pgEnum("notification_state", ["unread", "read", "snoozed", "done"]);
+export const notificationKindEnum = pgEnum("notification_kind", [
+  "assignment",
+  "mention",
+  "feedback",
+  "review_request",
+  "approval_request",
+  "deadline_warning",
+  "waiting_reminder",
+  "external_update",
+  "system_warning",
+]);
 export const leadDeliveryJobTypeEnum = pgEnum("lead_delivery_job_type", [
   "resend-internal-notification",
   "resend-visitor-confirmation",
@@ -824,6 +836,36 @@ export const activityEvents = pgTable(
   (table) => [
     index("activity_events_target_idx").on(table.targetType, table.targetId),
     index("activity_events_project_idx").on(table.projectId),
+  ]
+);
+
+/*
+ * FLOW-009 — Inbox notifications. One row per recipient per actionable item. `state`
+ * tracks the Inbox lifecycle (unread/read/snoozed/done); a snooze that elapses re-surfaces
+ * as unread (src/lib/work/notification-domain.ts). target_type/target_id point at the
+ * subject (e.g. a work_item) so the Inbox can deep-link and act without extra joins.
+ */
+export const notifications = pgTable(
+  "notifications",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    recipientId: uuid("recipient_id").notNull().references(() => adminUsers.id, { onDelete: "cascade" }),
+    actorId: uuid("actor_id").references(() => adminUsers.id, { onDelete: "set null" }),
+    kind: notificationKindEnum("kind").notNull(),
+    state: notificationStateEnum("state").notNull().default("unread"),
+    targetType: text("target_type").notNull(),
+    targetId: uuid("target_id").notNull(),
+    projectId: uuid("project_id").references(() => projects.id, { onDelete: "cascade" }),
+    title: text("title").notNull(),
+    body: text("body").notNull().default(""),
+    href: text("href").notNull().default(""),
+    snoozedUntil: timestamp("snoozed_until", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("notifications_recipient_state_idx").on(table.recipientId, table.state),
+    index("notifications_target_idx").on(table.targetType, table.targetId),
   ]
 );
 
