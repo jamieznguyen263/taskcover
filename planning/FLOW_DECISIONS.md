@@ -203,3 +203,24 @@ per PR and per-slice commits; the full validation battery runs once per PR.
   can't open.
 - **Markdown body, not TipTap, for v1 documents** — versioned and linkable now; a WYSIWYG
   editor is a deferred enhancement (same pattern as the FLOW-007 file-upload UI).
+
+## FLOW-012 hardening decisions — 2026-07-19 (roadmap complete)
+
+- **The permission audit found no gaps.** All 10 /flow pages and all 24 server actions
+  re-check their capability server-side; external sessions are blocked from every internal
+  mutation by requireWorkSession (kind !== "active" throws). The audited contract is encoded
+  in authorization-matrix.test.ts so a future silent downgrade fails CI.
+- **All Flow migrations are provably additive.** migration-integrity.test.ts asserts 0005–
+  0010 contain no destructive statements and never touch a pre-Flow table, so they are safe
+  against the database shared with the running CMS. This is the standing rule for any future
+  Flow migration.
+- **Rollout is reversible by design.** WORK_APP_ENABLED=false dark-launches all of /flow
+  (404) instantly without affecting /admin or the public site; additive migrations can be
+  left in place on rollback. Runbook: TASKCOVER_FLOW_ROLLOUT.md.
+- **FLOW-012 ships no schema and no features** — it is verification, accessibility/perf
+  tightening (skip links, landmark), and the rollout runbook. Deferred post-v1 items (real
+  LLM behind the existing preview UI, TipTap WYSIWYG, global new-work picker, waiting/
+  deadline/mention notification emission, Calendar view) stay deferred; they are documented,
+  not dropped.
+- **Roadmap is complete:** FLOW-001…012 implemented. Future work is enhancement on a stable,
+  audited base, not remaining scope.

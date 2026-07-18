@@ -1,59 +1,49 @@
 # Current Flow PR
 
-**Active pair: FLOW-010 (Documents) + FLOW-011 (Smart rules & limited AI)** — one PR, one
-additive migration (`0010_flow_documents.sql`), base `main`. This closes Wave 3.
+**Active slice: FLOW-012 — Hardening & Rollout** (the final slice). One PR, **no migration**
+(hardening only), base `main`. This closes the 12-slice roadmap.
 
-History: FLOW-001–009 merged (#14, #15, #17, #18, #19, #20). Workflow unchanged.
+History: FLOW-001–011 all merged (#14, #15, #17, #18, #19, #20, #21).
 
-## FLOW-010 scope — Documents
+## Scope
 
-- Tables: `documents` (title, kind, body, version, visibility internal|shared, optional
-  client/project links), `document_versions` (append-only snapshots), `document_work_links`.
-- Nine kinds (strategy / brief / meeting_note / sop / report / proposal / research /
-  decision / general). **Every save snapshots the previous body into `document_versions`
-  transactionally**, so history is complete and version numbers are sequential.
-- `/flow/docs` list + create; `/flow/docs/[id]` view/edit (edit = new version), version
-  history, related work, client/project links. Internal documents are invisible to anyone
-  without `internal-notes:view` (enforced in `DocumentRepository`, not the UI).
-- New capabilities `docs:view` / `docs:manage` (member+), with a `role_presets` UPDATE in the
-  same migration (replayed by `migration-consistency.test.ts`). Docs nav enabled;
-  quick-create "New document" and command menu "Go to Docs" wired.
+FLOW-012 adds no product features and no schema. It verifies, tightens, and documents the
+system built across the previous eleven slices.
 
-## FLOW-011 scope — Smart rules & limited AI (deterministic)
+- **Security / permission audit:** confirmed every `/flow` page (10) and every server action
+  (24) re-checks its capability server-side (deny-by-default; nav visibility is never
+  authorization) and that external sessions are blocked from all internal mutations by
+  `requireWorkSession`. Encoded the audited contract as `authorization-matrix.test.ts` so a
+  future guard downgrade fails CI.
+- **Migration verification:** `migration-integrity.test.ts` proves all six Flow migrations
+  (0005–0010) are strictly additive — no destructive statements, and no CREATE/ALTER-ADD/
+  INDEX against any pre-Flow table — so they are safe against the DB shared with the CMS.
+- **External-data isolation:** re-verified the boundary (external nav carries no internal
+  destinations; internal comments/docs/activity/search are repository-filtered behind
+  `internal-notes:view`; `/api/admin/*` reject externals). Covered by the nav-isolation and
+  visibility-resolution tests plus the rollout smoke script.
+- **Accessibility:** added a "Skip to content" link to both the internal and external shells
+  and a labelled `#flow-main` landmark; re-confirmed existing landmarks, focus management
+  (command menu, drawers), icon-button labels, and reduced-motion support.
+- **Performance:** confirmed batched queries (no N+1 in the Home/work/client repositories)
+  and that client components are limited to genuinely interactive surfaces; no state library
+  added.
+- **Rollout:** `TASKCOVER_FLOW_ROLLOUT.md` — migration apply order + verification, staging
+  and production rollout with the `WORK_APP_ENABLED` kill switch, the external-isolation
+  smoke check, staff onboarding, and rollback. Roadmap marked complete.
 
-> **Design note:** this slice deliberately ships **deterministic** assistance — no LLM, no
-> external/paid API call (per the project constraint). Every "smart" feature is transparent
-> and testable, and the **preview-before-create / no-autonomous-execution** contract from the
-> blueprint is honoured. A real LLM can slot behind the same preview UI later without
-> changing the safety model.
+## Non-scope
 
-- **Meeting-note action extraction** (`action-extraction.ts`, pure + unit-tested): parses a
-  meeting-note body for unchecked task boxes (`- [ ] …`), `ACTION:`/`TODO:`/`Follow-up`
-  markers, and `@name to …` lines; skips checked boxes; de-dupes. On a meeting-note document
-  the user **reviews the candidates and picks which become work** — creation is a separate,
-  explicit action that links the new work back to the document.
-- **Permission-aware search** (`/flow/search`, `SearchRepository`): substring match across
-  clients / projects / work / documents, **each branch gated by the caller's capability**, so
-  a result set can never contain something the user can't open; internal-only documents are
-  excluded without `internal-notes:view`. Command menu gains "Search everything".
-
-## Non-scope for this pair
-
-- **LLM-backed features** (freeform summaries, semantic search, natural-language action
-  extraction) — deferred behind the deterministic versions; the preview contract is already
-  in place for when a model is added. No paid API is called.
-- **TipTap WYSIWYG editor** — documents use a Markdown body for v1 (versioned, linkable); a
-  rich editor is a follow-up, same pattern as the deferred file-upload UI (FLOW-007).
-- Document templates as first-class records (the `project_templates` precedent stands; doc
-  templates can seed a body later), document-level comments, cross-document linking.
+No new tables, no new capabilities, no new product surfaces. LLM-backed AI, TipTap WYSIWYG,
+a global "new work" picker, waiting/deadline/mention notification emission, and Calendar view
+remain the documented post-v1 enhancements (rationale in FLOW_DECISIONS.md) — FLOW-012 does
+not implement them.
 
 ## Acceptance checks
 
-1. Migration 0010 creates only the three document tables + enum/indexes and updates only
-   `role_presets` — zero changes to previously existing tables.
-2. Editing a document creates a new version transactionally; history is never lost.
-3. Internal documents and internal search results require `internal-notes:view`.
-4. Action extraction only ever *proposes*; work is created by an explicit, separate action.
-5. Search results are capability-gated per type.
-6. `/admin`, the public site, and the external shell are unchanged.
-7. Full battery passes: lint, typecheck, full vitest, `next build`, Cloudflare build, dry-run.
+1. Permission audit is complete and encoded as a test; no gap found or introduced.
+2. Migration integrity is proven additive by test.
+3. External isolation holds across nav, repositories, and the CMS API surface.
+4. Skip links + landmarks present; no accessibility regressions.
+5. `/admin`, the public site, and the external shell behave identically.
+6. Full battery passes: lint, typecheck, full vitest, `next build`, Cloudflare build, dry-run.

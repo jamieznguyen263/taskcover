@@ -7,6 +7,12 @@ export async function WorkShell({ session, children }: { session: WorkSession; c
   const inboxUnread = await new NotificationRepository().unreadCount(session.userId);
   return (
     <div data-flow-root className="min-h-screen bg-surface-soft text-graphite">
+      <a
+        href="#flow-main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:border focus:border-line focus:bg-white focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:text-brand-teal"
+      >
+        Skip to content
+      </a>
       <div className="grid min-h-screen lg:grid-cols-[16rem_1fr]">
         <WorkSidebar
           navContext={{ accessLevel: session.accessLevel, legacyRole: session.legacyRole }}
@@ -14,7 +20,9 @@ export async function WorkShell({ session, children }: { session: WorkSession; c
         />
         <div className="min-w-0">
           <WorkHeader session={session} inboxUnread={inboxUnread} />
-          <main className="p-4 sm:p-6">{children}</main>
+          <main id="flow-main" className="p-4 sm:p-6">
+            {children}
+          </main>
         </div>
       </div>
     </div>
