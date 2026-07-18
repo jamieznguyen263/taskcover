@@ -109,6 +109,17 @@ export const workWaitingTargetEnum = pgEnum("work_waiting_target", [
 export const workMemberRelationEnum = pgEnum("work_member_relation", ["contributor", "watcher"]);
 export const commentVisibilityEnum = pgEnum("comment_visibility", ["internal", "shared"]);
 export const notificationStateEnum = pgEnum("notification_state", ["unread", "read", "snoozed", "done"]);
+export const documentKindEnum = pgEnum("document_kind", [
+  "strategy",
+  "brief",
+  "meeting_note",
+  "sop",
+  "report",
+  "proposal",
+  "research",
+  "decision",
+  "general",
+]);
 export const notificationKindEnum = pgEnum("notification_kind", [
   "assignment",
   "mention",
@@ -866,6 +877,62 @@ export const notifications = pgTable(
   (table) => [
     index("notifications_recipient_state_idx").on(table.recipientId, table.state),
     index("notifications_target_idx").on(table.targetType, table.targetId),
+  ]
+);
+
+/*
+ * FLOW-010 — Documents. The current body lives on `documents`; every save snapshots the
+ * previous body into `document_versions`, so history is append-only. `visibility` mirrors
+ * the FLOW-007 internal|shared boundary. Documents attach to a client and/or project and
+ * link to related work via `document_work_links`.
+ */
+export const documents = pgTable(
+  "documents",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    title: text("title").notNull(),
+    kind: documentKindEnum("kind").notNull().default("general"),
+    body: text("body").notNull().default(""),
+    version: integer("version").notNull().default(1),
+    visibility: commentVisibilityEnum("visibility").notNull().default("internal"),
+    clientId: uuid("client_id").references(() => clients.id, { onDelete: "set null" }),
+    projectId: uuid("project_id").references(() => projects.id, { onDelete: "set null" }),
+    createdBy: uuid("created_by").references(() => adminUsers.id, { onDelete: "set null" }),
+    updatedBy: uuid("updated_by").references(() => adminUsers.id, { onDelete: "set null" }),
+    archivedAt: timestamp("archived_at", { withTimezone: true }),
+    ...timestamps,
+  },
+  (table) => [
+    index("documents_client_idx").on(table.clientId),
+    index("documents_project_idx").on(table.projectId),
+    index("documents_kind_idx").on(table.kind),
+  ]
+);
+
+export const documentVersions = pgTable(
+  "document_versions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    documentId: uuid("document_id").notNull().references(() => documents.id, { onDelete: "cascade" }),
+    version: integer("version").notNull(),
+    title: text("title").notNull(),
+    body: text("body").notNull(),
+    createdBy: uuid("created_by").references(() => adminUsers.id, { onDelete: "set null" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [uniqueIndex("document_versions_doc_version_idx").on(table.documentId, table.version)]
+);
+
+export const documentWorkLinks = pgTable(
+  "document_work_links",
+  {
+    documentId: uuid("document_id").notNull().references(() => documents.id, { onDelete: "cascade" }),
+    workItemId: uuid("work_item_id").notNull().references(() => workItems.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.documentId, table.workItemId] }),
+    index("document_work_links_work_idx").on(table.workItemId),
   ]
 );
 

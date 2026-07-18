@@ -178,3 +178,28 @@ per PR and per-slice commits; the full validation battery runs once per PR.
   `waiting_reminder` kind exists; emission waits until waiting targets can name a person.
   Same pattern for `deadline_warning` (needs a scheduler) and `mention` (needs comment
   mentions, FLOW-011).
+
+## FLOW-010/011 decisions — 2026-07-19
+
+- **Document history is append-only and transactional:** every edit snapshots the outgoing
+  body into `document_versions` inside the same transaction that bumps the live row, so a
+  document always carries its full lineage and version numbers stay sequential.
+- **Documents reuse the internal|shared visibility boundary** (FLOW-007). Internal documents
+  and internal search hits are filtered in the repository for anyone without
+  `internal-notes:view` — never in the UI. New capabilities `docs:view`/`docs:manage`
+  (member+), shipped with a role_presets UPDATE in migration 0010.
+- **FLOW-011 ships deterministic assistance, not an LLM.** The project constraint forbids
+  paid external API calls, so "limited AI assistance" is delivered as transparent,
+  unit-tested logic: pattern-based meeting-note action extraction and capability-gated
+  substring search. This fully satisfies the blueprint's hard requirements —
+  **preview-before-create** and **no autonomous execution** — and a real model can later sit
+  behind the identical preview UI without weakening that contract. Recorded so a future slice
+  doesn't mistake "no LLM yet" for "AI was dropped".
+- **Action extraction proposes; it never creates autonomously.** `extractActions` returns
+  candidates; turning them into work is a separate user action that also links the work back
+  to the source document. Checked boxes are treated as done and skipped.
+- **Search is permission-aware by construction:** each result branch in `SearchRepository`
+  is wrapped in its own `hasCapability` check, so results can never leak a record the caller
+  can't open.
+- **Markdown body, not TipTap, for v1 documents** — versioned and linkable now; a WYSIWYG
+  editor is a deferred enhancement (same pattern as the FLOW-007 file-upload UI).

@@ -25,6 +25,10 @@ export function getFlowCommands(context: FlowCommandContext): FlowCommand[] {
   if (hasCapability(context.accessLevel, "projects:view")) {
     commands.push({ id: "go-projects", label: "Go to Projects", kind: "navigate", href: "/flow/projects" });
   }
+  if (hasCapability(context.accessLevel, "docs:view")) {
+    commands.push({ id: "go-docs", label: "Go to Docs", kind: "navigate", href: "/flow/docs" });
+    commands.push({ id: "go-search", label: "Search everything", kind: "navigate", href: "/flow/search" });
+  }
   if (hasCapability(context.accessLevel, "administration:view")) {
     commands.push({ id: "go-admin", label: "Go to Administration", kind: "navigate", href: "/flow/admin" });
   }

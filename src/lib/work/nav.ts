@@ -22,7 +22,7 @@ const PRIMARY_NAV: FlowNavItem[] = [
   { href: "/flow/inbox", label: "Inbox", enabled: true },
   { href: "/flow/clients", label: "Clients", enabled: true },
   { href: "/flow/projects", label: "Projects", enabled: true },
-  { href: "/flow/docs", label: "Docs", enabled: false },
+  { href: "/flow/docs", label: "Docs", enabled: true },
 ];
 
 export function getFlowPrimaryNav(): FlowNavItem[] {

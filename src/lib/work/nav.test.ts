@@ -2,12 +2,10 @@ import { describe, expect, it } from "vitest";
 import { getExternalNav, getFlowAdminNav, getFlowPrimaryNav, withInboxBadge } from "./nav";
 
 describe("getFlowPrimaryNav", () => {
-  it("enables Home, Inbox, Clients, and Projects; only Docs remains a placeholder", () => {
+  it("enables every primary destination now that Docs is live", () => {
     const nav = getFlowPrimaryNav();
-    const enabled = nav.filter((item) => item.enabled).map((item) => item.label);
-    const disabled = nav.filter((item) => !item.enabled).map((item) => item.label);
-    expect(enabled).toEqual(["Home", "Inbox", "Clients", "Projects"]);
-    expect(disabled).toEqual(["Docs"]);
+    expect(nav.every((item) => item.enabled)).toBe(true);
+    expect(nav.map((item) => item.label)).toEqual(["Home", "Inbox", "Clients", "Projects", "Docs"]);
   });
 });
 

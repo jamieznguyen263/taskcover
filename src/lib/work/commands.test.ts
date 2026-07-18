@@ -23,7 +23,7 @@ describe("getFlowCommands", () => {
     ).toBe(true);
   });
 
-  it("includes Inbox, Clients, and Projects navigation for every internal level", () => {
+  it("includes Inbox, Clients, Projects, Docs, and Search for every internal level", () => {
     for (const context of [
       { accessLevel: "member", legacyRole: "editor" },
       { accessLevel: "owner", legacyRole: "admin" },
@@ -32,6 +32,8 @@ describe("getFlowCommands", () => {
       expect(ids).toContain("go-inbox");
       expect(ids).toContain("go-clients");
       expect(ids).toContain("go-projects");
+      expect(ids).toContain("go-docs");
+      expect(ids).toContain("go-search");
     }
   });
 
