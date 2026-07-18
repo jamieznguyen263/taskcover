@@ -57,6 +57,13 @@
       "when": 1784351830040,
       "tag": "0007_flow_clients_projects",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1784353226449,
+      "tag": "0008_flow_work_discussions",
+      "breakpoints": true
     }
   ]
 }

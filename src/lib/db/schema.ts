@@ -1,4 +1,5 @@
 import {
+  type AnyPgColumn,
   boolean,
   index,
   integer,
@@ -95,6 +96,18 @@ export const externalMembershipKindEnum = pgEnum("external_membership_kind", [
 ]);
 export const clientHealthStateEnum = pgEnum("client_health_state", ["good", "watch", "at_risk", "unknown"]);
 export const projectKindEnum = pgEnum("project_kind", ["client", "internal"]);
+export const workStatusEnum = pgEnum("work_status", ["to_do", "in_progress", "waiting", "review", "done"]);
+export const workTypeEnum = pgEnum("work_type", ["task", "deliverable", "request", "approval", "milestone"]);
+export const workWaitingTargetEnum = pgEnum("work_waiting_target", [
+  "client",
+  "manager",
+  "teammate",
+  "freelancer",
+  "partner",
+  "external_party",
+]);
+export const workMemberRelationEnum = pgEnum("work_member_relation", ["contributor", "watcher"]);
+export const commentVisibilityEnum = pgEnum("comment_visibility", ["internal", "shared"]);
 export const leadDeliveryJobTypeEnum = pgEnum("lead_delivery_job_type", [
   "resend-internal-notification",
   "resend-visitor-confirmation",
@@ -665,6 +678,153 @@ export const projectTemplates = pgTable(
     ...timestamps,
   },
   (table) => [uniqueIndex("project_templates_name_idx").on(table.name)]
+);
+
+/*
+ * FLOW-006 — Unified Work. One work_items table with a display `type`; the five statuses
+ * are company-wide. Every item has exactly one accountable Owner (notNull). Waiting carries
+ * a target ("waiting for whom?"); the app clears it when leaving Waiting.
+ */
+export const workItems = pgTable(
+  "work_items",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    projectId: uuid("project_id").notNull().references(() => projects.id, { onDelete: "cascade" }),
+    parentId: uuid("parent_id").references((): AnyPgColumn => workItems.id, { onDelete: "cascade" }),
+    type: workTypeEnum("type").notNull().default("task"),
+    title: text("title").notNull(),
+    description: text("description").notNull().default(""),
+    status: workStatusEnum("status").notNull().default("to_do"),
+    ownerId: uuid("owner_id").notNull().references(() => adminUsers.id, { onDelete: "restrict" }),
+    reviewerId: uuid("reviewer_id").references(() => adminUsers.id, { onDelete: "set null" }),
+    waitingTarget: workWaitingTargetEnum("waiting_target"),
+    waitingNote: text("waiting_note").notNull().default(""),
+    dueAt: timestamp("due_at", { withTimezone: true }),
+    position: integer("position").notNull().default(0),
+    createdBy: uuid("created_by").references(() => adminUsers.id, { onDelete: "set null" }),
+    completedAt: timestamp("completed_at", { withTimezone: true }),
+    ...timestamps,
+  },
+  (table) => [
+    index("work_items_project_idx").on(table.projectId),
+    index("work_items_owner_idx").on(table.ownerId),
+    index("work_items_status_idx").on(table.status),
+    index("work_items_parent_idx").on(table.parentId),
+  ]
+);
+
+export const workItemMembers = pgTable(
+  "work_item_members",
+  {
+    workItemId: uuid("work_item_id").notNull().references(() => workItems.id, { onDelete: "cascade" }),
+    userId: uuid("user_id").notNull().references(() => adminUsers.id, { onDelete: "cascade" }),
+    relation: workMemberRelationEnum("relation").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.workItemId, table.userId, table.relation] }),
+    index("work_item_members_user_idx").on(table.userId),
+  ]
+);
+
+// Simple finish-to-start dependencies: work_item waits on depends_on_work_item.
+export const workDependencies = pgTable(
+  "work_dependencies",
+  {
+    workItemId: uuid("work_item_id").notNull().references(() => workItems.id, { onDelete: "cascade" }),
+    dependsOnWorkItemId: uuid("depends_on_work_item_id").notNull().references(() => workItems.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [primaryKey({ columns: [table.workItemId, table.dependsOnWorkItemId] })]
+);
+
+export const workChecklistItems = pgTable(
+  "work_checklist_items",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    workItemId: uuid("work_item_id").notNull().references(() => workItems.id, { onDelete: "cascade" }),
+    label: text("label").notNull(),
+    isDone: boolean("is_done").notNull().default(false),
+    position: integer("position").notNull().default(0),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index("work_checklist_items_work_idx").on(table.workItemId)]
+);
+
+/*
+ * FLOW-007 — Discussions, files, activity. Comments carry a visibility: `internal` comments
+ * are invisible to external collaborators; `shared` comments cross the boundary. Enforcement
+ * is in the repository (src/lib/work/discussion-repository.ts), never the UI.
+ */
+export const discussionThreads = pgTable(
+  "discussion_threads",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    workItemId: uuid("work_item_id").notNull().references(() => workItems.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [uniqueIndex("discussion_threads_work_idx").on(table.workItemId)]
+);
+
+export const workComments = pgTable(
+  "work_comments",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    threadId: uuid("thread_id").notNull().references(() => discussionThreads.id, { onDelete: "cascade" }),
+    authorId: uuid("author_id").references(() => adminUsers.id, { onDelete: "set null" }),
+    body: text("body").notNull(),
+    visibility: commentVisibilityEnum("visibility").notNull().default("internal"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index("work_comments_thread_idx").on(table.threadId)]
+);
+
+export const workFiles = pgTable(
+  "work_files",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    filename: text("filename").notNull(),
+    url: text("url").notNull(),
+    contentType: text("content_type").notNull().default(""),
+    sizeBytes: integer("size_bytes"),
+    visibility: commentVisibilityEnum("visibility").notNull().default("internal"),
+    uploadedBy: uuid("uploaded_by").references(() => adminUsers.id, { onDelete: "set null" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [index("work_files_uploader_idx").on(table.uploadedBy)]
+);
+
+export const workFileLinks = pgTable(
+  "work_file_links",
+  {
+    fileId: uuid("file_id").notNull().references(() => workFiles.id, { onDelete: "cascade" }),
+    workItemId: uuid("work_item_id").notNull().references(() => workItems.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [primaryKey({ columns: [table.fileId, table.workItemId] })]
+);
+
+// Flow-native activity timeline. Kept separate from the CMS admin_audit_logs enum so the
+// two systems evolve independently (planning/FLOW_DECISIONS.md, FLOW-002). event is a plain
+// string, not an enum, so new event kinds never need an ALTER TYPE.
+export const activityEvents = pgTable(
+  "activity_events",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    actorId: uuid("actor_id").references(() => adminUsers.id, { onDelete: "set null" }),
+    targetType: text("target_type").notNull(),
+    targetId: uuid("target_id").notNull(),
+    projectId: uuid("project_id").references(() => projects.id, { onDelete: "cascade" }),
+    event: text("event").notNull(),
+    summary: text("summary").notNull(),
+    visibility: commentVisibilityEnum("visibility").notNull().default("internal"),
+    metadata: jsonb("metadata").notNull().default({}),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    index("activity_events_target_idx").on(table.targetType, table.targetId),
+    index("activity_events_project_idx").on(table.projectId),
+  ]
 );
 
 // External-invite metadata rides alongside the existing admin_invites row (role='external')
