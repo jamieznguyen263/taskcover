@@ -1,10 +1,36 @@
 # Current Flow PR
 
-**Active slice: FLOW-002 — Memberships, roles, and teams**
+**Active slice: FLOW-003 — Freelancer and partner access** (stacked on FLOW-002, PR #15)
 
-(FLOW-001 — Work Application Shell was accepted and merged via PR #14.)
+(FLOW-001 merged via PR #14. FLOW-002 in review as PR #15 — its scope section below still
+applies to that PR.)
 
-## Scope
+## FLOW-003 scope
+
+- Migration `drizzle/0006_flow_external_access.sql` (additive; one `ALTER TYPE admin_role
+  ADD VALUE 'external'`, safe because the value is never used inside the same transaction):
+  `external_membership_kind` enum, `external_memberships` and `flow_external_invites`
+  tables.
+- **CMS isolation:** `requireAdminSession` bounces `role='external'` sessions to `/flow`
+  and now returns the narrowed `AdminCmsSession`; every `/api/admin/*` route rejects
+  external sessions via `isCmsRole`; CMS user/invite/assignee listings exclude externals.
+- External invitation workflow: `/flow/admin` creates a standard `admin_invites` row
+  (role `external`) plus Flow metadata (`flow_external_invites`) — the existing
+  accept-invite page works unchanged; the membership is provisioned lazily from the
+  metadata on first `/flow` visit.
+- Access windows: `evaluateExternalAccess` (revoked > not-started > expired > active) runs
+  on every request; expiry is automatic, revoke is immediate via `/flow/admin`.
+- External shell: own navigation (Home, Inbox, My Work, Shared Projects, Shared Files —
+  Home live, rest pending FLOW-005/006), own Home, no quick-create/Administration/CMS
+  anywhere; blocked states render explanatory screens with sign-out.
+
+## FLOW-003 non-scope
+
+Project-scoped sharing mechanics (needs projects — FLOW-005), shared files/comments
+(FLOW-007), external Inbox (FLOW-009). `external_memberships.can_download/can_upload` are
+stored now and enforced when files exist.
+
+## FLOW-002 scope (PR #15)
 
 - Migration `drizzle/0005_flow_memberships.sql` (additive only): `work_access_level`,
   `work_membership_status`, `external_organization_kind` enums; `organization_memberships`,

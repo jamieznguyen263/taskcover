@@ -1,11 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getAdminSession } from "@/lib/admin/session";
 import { getMediaProvider, validateUploadMetadata } from "@/lib/admin/media-provider";
-import { assertPermission } from "@/lib/admin/permissions";
+import { assertPermission, isCmsRole } from "@/lib/admin/permissions";
 
 export async function POST(request: NextRequest) {
   const session = await getAdminSession();
-  if (!session) return NextResponse.json({ error: "Authentication required." }, { status: 401, headers: { "cache-control": "no-store" } });
+  if (!session || !isCmsRole(session.role)) return NextResponse.json({ error: "Authentication required." }, { status: 401, headers: { "cache-control": "no-store" } });
   assertPermission(session.role, "media:upload");
   const body = (await request.json().catch(() => null)) as { mimeType?: unknown; bytes?: unknown } | null;
   try {

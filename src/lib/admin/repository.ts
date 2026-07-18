@@ -1,7 +1,7 @@
 import "server-only";
 
 import crypto from "node:crypto";
-import { and, count, desc, eq, gt, inArray, isNotNull, isNull, lt, max, sql } from "drizzle-orm";
+import { and, count, desc, eq, gt, inArray, isNotNull, isNull, lt, max, ne, sql } from "drizzle-orm";
 import type { InsightArticle, InsightCategorySlug, InsightStatus } from "@/content/insights.types";
 import { locales, type Locale } from "@/lib/i18n";
 import { getDb, type AdminDb } from "@/lib/db/client";
@@ -30,10 +30,15 @@ import { validateInsightArticle, type PublishQaResult } from "@/lib/insights/pub
 export type AdminUserSession = {
   userId: string;
   email: string;
-  role: "admin" | "editor";
+  // "external" (FLOW-003) sessions are valid for /flow only; requireAdminSession and the
+  // /api/admin routes reject them before any CMS work happens.
+  role: "admin" | "editor" | "external";
   displayName: string;
   sessionId: string;
 };
+
+/** A session that has passed the CMS gate — the only shape CMS pages/actions work with. */
+export type AdminCmsSession = AdminUserSession & { role: "admin" | "editor" };
 
 export type ArticleSummary = {
   id: string;
@@ -832,7 +837,9 @@ export class AdminRepository {
   }
 
   async listUsers() {
-    return this.db.query.adminUsers.findMany({
+    // CMS user management covers CMS accounts only; external collaborators (FLOW-003)
+    // are managed from /flow/admin and never appear here.
+    const rows = await this.db.query.adminUsers.findMany({
       columns: {
         id: true,
         email: true,
@@ -843,16 +850,25 @@ export class AdminRepository {
         createdAt: true,
         updatedAt: true,
       },
+      where: ne(adminUsers.role, "external"),
       orderBy: desc(adminUsers.createdAt),
     });
+    return rows.filter((row): row is typeof row & { role: AdminRole } => row.role !== "external");
   }
 
   async listPendingInvites() {
-    return this.db.query.adminInvites.findMany({
+    // External invites (role='external') live on /flow/admin, not in the CMS invite list.
+    const rows = await this.db.query.adminInvites.findMany({
       columns: { id: true, email: true, role: true, expiresAt: true, createdAt: true },
-      where: and(isNull(adminInvites.acceptedAt), isNull(adminInvites.revokedAt), gt(adminInvites.expiresAt, new Date())),
+      where: and(
+        isNull(adminInvites.acceptedAt),
+        isNull(adminInvites.revokedAt),
+        gt(adminInvites.expiresAt, new Date()),
+        ne(adminInvites.role, "external")
+      ),
       orderBy: desc(adminInvites.createdAt),
     });
+    return rows.filter((row): row is typeof row & { role: AdminRole } => row.role !== "external");
   }
 
   async revokeInvite(input: { inviteId: string; actorId: string }) {
@@ -1133,11 +1149,13 @@ export class AdminRepository {
   }
 
   async listAssignableUsers() {
-    return this.db.query.adminUsers.findMany({
+    // Only CMS users can own or be assigned CMS articles — never external collaborators.
+    const rows = await this.db.query.adminUsers.findMany({
       columns: { id: true, displayName: true, role: true },
-      where: eq(adminUsers.status, "active"),
+      where: and(eq(adminUsers.status, "active"), ne(adminUsers.role, "external")),
       orderBy: desc(adminUsers.createdAt),
     });
+    return rows.filter((row): row is typeof row & { role: AdminRole } => row.role !== "external");
   }
 }
 
