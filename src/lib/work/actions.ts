@@ -2,7 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { createOpaqueToken } from "@/lib/admin/security";
+import { validateClientHealthUpdate } from "./client-health";
+import { ClientsRepository } from "./clients-repository";
 import type { ExternalMembershipKind } from "./external-access";
+import { ProjectsRepository } from "./projects-repository";
 import { requireWorkSession } from "./session";
 import { WorkRepository } from "./repository";
 
@@ -135,5 +138,137 @@ export async function revokeExternalMembershipAction(
     return { error: "Could not revoke this collaborator's access." };
   }
   revalidatePath("/flow/admin");
+  return {};
+}
+
+// --- FLOW-004: clients ------------------------------------------------------------------
+
+export async function createClientAction(_state: TeamActionState, formData: FormData): Promise<TeamActionState> {
+  const session = await requireWorkSession("clients:manage");
+
+  const name = String(formData.get("name") ?? "").trim();
+  const accountManagerId = String(formData.get("accountManagerId") ?? "").trim() || null;
+  if (!name) return { error: "Client name is required." };
+  if (name.length > 120) return { error: "Client name must be at most 120 characters." };
+
+  try {
+    await new ClientsRepository().createClient({ name, accountManagerId, createdBy: session.userId });
+  } catch {
+    return { error: "Could not create the client. A client with this name may already exist." };
+  }
+  revalidatePath("/flow/clients");
+  return {};
+}
+
+export async function updateClientHealthAction(_state: TeamActionState, formData: FormData): Promise<TeamActionState> {
+  await requireWorkSession("clients:manage");
+
+  const clientId = String(formData.get("clientId") ?? "");
+  if (!clientId) return { error: "Missing client." };
+  const validated = validateClientHealthUpdate({
+    state: String(formData.get("state") ?? ""),
+    reason: String(formData.get("reason") ?? ""),
+  });
+  if (!validated.ok) return { error: validated.error };
+
+  try {
+    await new ClientsRepository().updateClientHealth({ clientId, state: validated.state, reason: validated.reason });
+  } catch {
+    return { error: "Could not update client health." };
+  }
+  revalidatePath(`/flow/clients/${clientId}`);
+  revalidatePath("/flow/clients");
+  return {};
+}
+
+export async function addClientContactAction(_state: TeamActionState, formData: FormData): Promise<TeamActionState> {
+  await requireWorkSession("clients:manage");
+
+  const clientId = String(formData.get("clientId") ?? "");
+  const name = String(formData.get("name") ?? "").trim();
+  const email = String(formData.get("email") ?? "").trim();
+  const phone = String(formData.get("phone") ?? "").trim();
+  const roleTitle = String(formData.get("roleTitle") ?? "").trim();
+  if (!clientId) return { error: "Missing client." };
+  if (!name) return { error: "Contact name is required." };
+  if (email && !/^\S+@\S+\.\S+$/.test(email)) return { error: "Contact email must be valid (or left empty)." };
+
+  try {
+    await new ClientsRepository().addContact({ clientId, name, email, phone, roleTitle });
+  } catch {
+    return { error: "Could not add the contact." };
+  }
+  revalidatePath(`/flow/clients/${clientId}`);
+  return {};
+}
+
+export async function removeClientContactAction(_state: TeamActionState, formData: FormData): Promise<TeamActionState> {
+  await requireWorkSession("clients:manage");
+
+  const clientId = String(formData.get("clientId") ?? "");
+  const contactId = String(formData.get("contactId") ?? "");
+  if (!clientId || !contactId) return { error: "Missing contact." };
+
+  try {
+    await new ClientsRepository().removeContact({ clientId, contactId });
+  } catch {
+    return { error: "Could not remove the contact." };
+  }
+  revalidatePath(`/flow/clients/${clientId}`);
+  return {};
+}
+
+// --- FLOW-005: projects -----------------------------------------------------------------
+
+export async function createProjectAction(_state: TeamActionState, formData: FormData): Promise<TeamActionState> {
+  const session = await requireWorkSession("projects:manage");
+
+  const name = String(formData.get("name") ?? "").trim();
+  const description = String(formData.get("description") ?? "").trim();
+  const kind = String(formData.get("kind") ?? "") === "internal" ? "internal" : "client";
+  const clientId = String(formData.get("clientId") ?? "").trim() || null;
+  if (!name) return { error: "Project name is required." };
+  if (name.length > 160) return { error: "Project name must be at most 160 characters." };
+  if (kind === "client" && !clientId) return { error: "Choose the client this project belongs to." };
+
+  try {
+    await new ProjectsRepository().createProject({ name, description, kind, clientId, createdBy: session.userId });
+  } catch {
+    return { error: "Could not create the project." };
+  }
+  revalidatePath("/flow/projects");
+  if (clientId) revalidatePath(`/flow/clients/${clientId}`);
+  return {};
+}
+
+export async function addProjectMemberAction(_state: TeamActionState, formData: FormData): Promise<TeamActionState> {
+  await requireWorkSession("projects:manage");
+
+  const projectId = String(formData.get("projectId") ?? "");
+  const userId = String(formData.get("userId") ?? "");
+  if (!projectId || !userId) return { error: "Choose a member to add." };
+
+  try {
+    await new ProjectsRepository().addProjectMember({ projectId, userId });
+  } catch {
+    return { error: "Could not add the member to the project." };
+  }
+  revalidatePath(`/flow/projects/${projectId}`);
+  return {};
+}
+
+export async function removeProjectMemberAction(_state: TeamActionState, formData: FormData): Promise<TeamActionState> {
+  await requireWorkSession("projects:manage");
+
+  const projectId = String(formData.get("projectId") ?? "");
+  const userId = String(formData.get("userId") ?? "");
+  if (!projectId || !userId) return { error: "Missing project or member." };
+
+  try {
+    await new ProjectsRepository().removeProjectMember({ projectId, userId });
+  } catch {
+    return { error: "Could not remove the member from the project." };
+  }
+  revalidatePath(`/flow/projects/${projectId}`);
   return {};
 }

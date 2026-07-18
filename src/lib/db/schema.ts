@@ -93,6 +93,8 @@ export const externalMembershipKindEnum = pgEnum("external_membership_kind", [
   "partner_member",
   "read_only_guest",
 ]);
+export const clientHealthStateEnum = pgEnum("client_health_state", ["good", "watch", "at_risk", "unknown"]);
+export const projectKindEnum = pgEnum("project_kind", ["client", "internal"]);
 export const leadDeliveryJobTypeEnum = pgEnum("lead_delivery_job_type", [
   "resend-internal-notification",
   "resend-visitor-confirmation",
@@ -563,6 +565,106 @@ export const externalMemberships = pgTable(
     uniqueIndex("external_memberships_user_idx").on(table.userId),
     index("external_memberships_org_idx").on(table.externalOrganizationId),
   ]
+);
+
+/*
+ * FLOW-004 — Clients. Health is explainable by design: a human-set state plus a written
+ * reason (src/lib/work/client-health.ts), never an opaque score.
+ */
+export const clients = pgTable(
+  "clients",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    name: text("name").notNull(),
+    healthState: clientHealthStateEnum("health_state").notNull().default("unknown"),
+    healthReason: text("health_reason").notNull().default(""),
+    accountManagerId: uuid("account_manager_id").references(() => adminUsers.id, { onDelete: "set null" }),
+    createdBy: uuid("created_by").references(() => adminUsers.id, { onDelete: "set null" }),
+    archivedAt: timestamp("archived_at", { withTimezone: true }),
+    ...timestamps,
+  },
+  (table) => [uniqueIndex("clients_name_idx").on(table.name)]
+);
+
+export const clientContacts = pgTable(
+  "client_contacts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    clientId: uuid("client_id").notNull().references(() => clients.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    email: text("email").notNull().default(""),
+    phone: text("phone").notNull().default(""),
+    roleTitle: text("role_title").notNull().default(""),
+    ...timestamps,
+  },
+  (table) => [index("client_contacts_client_idx").on(table.clientId)]
+);
+
+// Which internal users are attached to a client (beyond the single Account Manager).
+// Table ships with FLOW-004 per the accepted schema; management UI arrives when client
+// scoping starts mattering for visibility (FLOW-006/007).
+export const clientMemberships = pgTable(
+  "client_memberships",
+  {
+    clientId: uuid("client_id").notNull().references(() => clients.id, { onDelete: "cascade" }),
+    userId: uuid("user_id").notNull().references(() => adminUsers.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.clientId, table.userId] }),
+    index("client_memberships_user_idx").on(table.userId),
+  ]
+);
+
+/*
+ * FLOW-005 — Projects. A project is a specific goal or delivery cycle; kind 'client'
+ * projects reference a client, 'internal' ones do not (enforced in code, not by
+ * constraint, so archived clients can be detached without losing history).
+ */
+export const projects = pgTable(
+  "projects",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    clientId: uuid("client_id").references(() => clients.id, { onDelete: "set null" }),
+    kind: projectKindEnum("kind").notNull(),
+    name: text("name").notNull(),
+    description: text("description").notNull().default(""),
+    templateId: uuid("template_id").references(() => projectTemplates.id, { onDelete: "set null" }),
+    createdBy: uuid("created_by").references(() => adminUsers.id, { onDelete: "set null" }),
+    archivedAt: timestamp("archived_at", { withTimezone: true }),
+    ...timestamps,
+  },
+  (table) => [index("projects_client_idx").on(table.clientId)]
+);
+
+export const projectMemberships = pgTable(
+  "project_memberships",
+  {
+    projectId: uuid("project_id").notNull().references(() => projects.id, { onDelete: "cascade" }),
+    userId: uuid("user_id").notNull().references(() => adminUsers.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.projectId, table.userId] }),
+    index("project_memberships_user_idx").on(table.userId),
+  ]
+);
+
+// Template shape: default_work_items = [{ title, type, offsetDays }] with deadlines
+// relative to project creation. Instantiation into real work items lands with FLOW-006;
+// until then templates are schema + repository only (no UI), per planning/FLOW_DECISIONS.md.
+export const projectTemplates = pgTable(
+  "project_templates",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    name: text("name").notNull(),
+    description: text("description").notNull().default(""),
+    defaultWorkItems: jsonb("default_work_items").notNull().default([]),
+    relativeDeadlines: jsonb("relative_deadlines").notNull().default([]),
+    createdBy: uuid("created_by").references(() => adminUsers.id, { onDelete: "set null" }),
+    ...timestamps,
+  },
+  (table) => [uniqueIndex("project_templates_name_idx").on(table.name)]
 );
 
 // External-invite metadata rides alongside the existing admin_invites row (role='external')

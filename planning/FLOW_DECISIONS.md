@@ -99,3 +99,31 @@ data, at which point a stricter default may be warranted.
   delivers identity, invitation, expiry/revoke, the external shell, and hard isolation from
   every internal surface; `can_download`/`can_upload` are stored now and enforced when
   files arrive (FLOW-007).
+
+## Delivery-workflow revision — 2026-07-17 (after the FLOW-003 stacked-PR incident)
+
+PR #16 (FLOW-003) was stacked on the FLOW-002 branch; both were merged within seconds and
+the FLOW-003 merge landed on the already-squashed base branch instead of `main`, requiring
+re-land PR #17. Locked going forward: **no stacked PRs — every FLOW PR bases on `main`**;
+slices ship in pairs (004+005, 006+007, 008+009, 010+011, 012) with one additive migration
+per PR and per-slice commits; the full validation battery runs once per PR.
+
+## FLOW-004/005 decisions — 2026-07-17
+
+- **Client health is explainable by construction:** a human-set state plus a written
+  reason. Watch/At-risk require a reason; Not-assessed clears it. No scores, no automation
+  (deterministic signals may inform it in FLOW-011, still preview-first).
+- **Capability changes ship with a role_presets UPDATE in the same migration**, and
+  `migration-consistency.test.ts` now replays INSERT + UPDATE statements across all
+  migrations so the final DB state must match code. New: `clients:view`/`projects:view`
+  (member+ — client context is company-wide for internal staff), `clients:manage`/
+  `projects:manage` (manager+).
+- **Internal projects have no client** (`kind = 'internal'`, `client_id` null); client
+  projects keep history if their client is later detached (`ON DELETE set null`, enforced
+  in code rather than a CHECK constraint).
+- **Project creation is transactional** — the creator's membership is written with the
+  project so no project is ever ownerless.
+- **project_templates ship as schema + repository only.** Template UI and instantiation
+  (default work items with relative deadlines) land with FLOW-006, when work items exist.
+- **client_memberships ship as table only** — management UI waits until client scoping
+  drives visibility (FLOW-006/007).
