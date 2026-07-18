@@ -16,6 +16,12 @@ export type FlowCommandContext = {
  */
 export function getFlowCommands(context: FlowCommandContext): FlowCommand[] {
   const commands: FlowCommand[] = [{ id: "go-home", label: "Go to Home", kind: "navigate", href: "/flow" }];
+  if (hasCapability(context.accessLevel, "clients:view")) {
+    commands.push({ id: "go-clients", label: "Go to Clients", kind: "navigate", href: "/flow/clients" });
+  }
+  if (hasCapability(context.accessLevel, "projects:view")) {
+    commands.push({ id: "go-projects", label: "Go to Projects", kind: "navigate", href: "/flow/projects" });
+  }
   if (hasCapability(context.accessLevel, "administration:view")) {
     commands.push({ id: "go-admin", label: "Go to Administration", kind: "navigate", href: "/flow/admin" });
   }

@@ -50,6 +50,13 @@
       "when": 1784266947472,
       "tag": "0006_flow_external_access",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1784351830040,
+      "tag": "0007_flow_clients_projects",
+      "breakpoints": true
     }
   ]
 }

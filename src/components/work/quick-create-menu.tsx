@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { Plus } from "lucide-react";
 
-const QUICK_CREATE_OPTIONS = [
+// href set once the destination's creation flow exists (FLOW-005 enabled projects).
+const QUICK_CREATE_OPTIONS: { id: string; label: string; href?: string }[] = [
   { id: "work", label: "New work" },
-  { id: "project", label: "New project" },
+  { id: "project", label: "New project", href: "/flow/projects" },
   { id: "document", label: "New document" },
 ];
 
@@ -49,17 +51,29 @@ export function QuickCreateMenu() {
           aria-label="Quick create"
           className="absolute right-0 z-30 mt-2 w-56 rounded-xl border border-line bg-white p-2 shadow-xl"
         >
-          {QUICK_CREATE_OPTIONS.map((option) => (
-            <div
-              key={option.id}
-              role="menuitem"
-              aria-disabled="true"
-              className="flex min-h-11 cursor-not-allowed items-center justify-between rounded-lg px-3 text-sm font-medium text-muted"
-            >
-              <span>{option.label}</span>
-              <span className="text-xs text-muted">Coming in a later slice</span>
-            </div>
-          ))}
+          {QUICK_CREATE_OPTIONS.map((option) =>
+            option.href ? (
+              <Link
+                key={option.id}
+                role="menuitem"
+                href={option.href}
+                onClick={() => setOpen(false)}
+                className="flex min-h-11 items-center rounded-lg px-3 text-sm font-medium text-secondary hover:bg-surface-tint hover:text-brand-teal"
+              >
+                {option.label}
+              </Link>
+            ) : (
+              <div
+                key={option.id}
+                role="menuitem"
+                aria-disabled="true"
+                className="flex min-h-11 cursor-not-allowed items-center justify-between rounded-lg px-3 text-sm font-medium text-muted"
+              >
+                <span>{option.label}</span>
+                <span className="text-xs text-muted">Coming in a later slice</span>
+              </div>
+            )
+          )}
         </div>
       ) : null}
     </div>

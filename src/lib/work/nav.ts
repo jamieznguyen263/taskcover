@@ -14,8 +14,8 @@ export type FlowNavContext = {
 const PRIMARY_NAV: FlowNavItem[] = [
   { href: "/flow", label: "Home", enabled: true },
   { href: "/flow/inbox", label: "Inbox", enabled: false },
-  { href: "/flow/clients", label: "Clients", enabled: false },
-  { href: "/flow/projects", label: "Projects", enabled: false },
+  { href: "/flow/clients", label: "Clients", enabled: true },
+  { href: "/flow/projects", label: "Projects", enabled: true },
   { href: "/flow/docs", label: "Docs", enabled: false },
 ];
 

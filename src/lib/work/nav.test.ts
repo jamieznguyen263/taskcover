@@ -2,10 +2,12 @@ import { describe, expect, it } from "vitest";
 import { getExternalNav, getFlowAdminNav, getFlowPrimaryNav } from "./nav";
 
 describe("getFlowPrimaryNav", () => {
-  it("enables only Home; future pages are disabled placeholders", () => {
+  it("enables Home, Clients, and Projects; Inbox and Docs remain placeholders", () => {
     const nav = getFlowPrimaryNav();
-    expect(nav.find((item) => item.href === "/flow")?.enabled).toBe(true);
-    expect(nav.filter((item) => item.href !== "/flow").every((item) => !item.enabled)).toBe(true);
+    const enabled = nav.filter((item) => item.enabled).map((item) => item.label);
+    const disabled = nav.filter((item) => !item.enabled).map((item) => item.label);
+    expect(enabled).toEqual(["Home", "Clients", "Projects"]);
+    expect(disabled).toEqual(["Inbox", "Docs"]);
   });
 });
 

@@ -5,16 +5,33 @@ export type WorkCapability =
   | "teams:view"
   | "members:view"
   | "teams:manage"
-  | "administration:view";
+  | "administration:view"
+  | "clients:view"
+  | "clients:manage"
+  | "projects:view"
+  | "projects:manage";
 
 /**
  * Deny-by-default capability model. Code is the single source of truth for what each
  * access level may do — the role_presets table mirrors these sets for display and future
- * custom presets (seeded in migration 0005), but authorization decisions never read the
- * database. Levels are strictly cumulative: member ⊂ manager ⊂ admin = owner.
+ * custom presets (seeded in migration 0005, updated by later migrations), but
+ * authorization decisions never read the database. Levels are strictly cumulative:
+ * member ⊂ manager ⊂ admin = owner. Client/project *visibility* is company-wide for
+ * internal staff (client context is the point of the product); *managing* them is
+ * manager+. External collaborators never hold any of these capabilities.
  */
-const MEMBER_CAPABILITIES: readonly WorkCapability[] = ["flow:access", "teams:view"];
-const MANAGER_CAPABILITIES: readonly WorkCapability[] = [...MEMBER_CAPABILITIES, "members:view"];
+const MEMBER_CAPABILITIES: readonly WorkCapability[] = [
+  "flow:access",
+  "teams:view",
+  "clients:view",
+  "projects:view",
+];
+const MANAGER_CAPABILITIES: readonly WorkCapability[] = [
+  ...MEMBER_CAPABILITIES,
+  "members:view",
+  "clients:manage",
+  "projects:manage",
+];
 const ADMIN_CAPABILITIES: readonly WorkCapability[] = [
   ...MANAGER_CAPABILITIES,
   "teams:manage",
