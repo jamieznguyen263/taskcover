@@ -1,6 +1,6 @@
 import { LogOut } from "lucide-react";
 import { logoutAction } from "@/lib/admin/actions";
-import { getFlowAdminNav, getFlowPrimaryNav } from "@/lib/work/nav";
+import { getFlowAdminNav, getFlowPrimaryNav, withInboxBadge } from "@/lib/work/nav";
 import { getFlowCommands } from "@/lib/work/commands";
 import type { WorkAccessLevel } from "@/lib/work/capabilities";
 import type { WorkSession } from "@/lib/work/session";
@@ -15,10 +15,10 @@ const ACCESS_LEVEL_LABEL: Record<WorkAccessLevel, string> = {
   member: "Member",
 };
 
-export function WorkHeader({ session }: { session: WorkSession }) {
+export function WorkHeader({ session, inboxUnread }: { session: WorkSession; inboxUnread: number }) {
   const navContext = { accessLevel: session.accessLevel, legacyRole: session.legacyRole };
   const commands = getFlowCommands(navContext);
-  const primaryNav = getFlowPrimaryNav();
+  const primaryNav = withInboxBadge(getFlowPrimaryNav(), inboxUnread);
   const adminNav = getFlowAdminNav(navContext);
 
   return (

@@ -1,22 +1,35 @@
 import { describe, expect, it } from "vitest";
-import { getExternalNav, getFlowAdminNav, getFlowPrimaryNav } from "./nav";
+import { getExternalNav, getFlowAdminNav, getFlowPrimaryNav, withInboxBadge } from "./nav";
 
 describe("getFlowPrimaryNav", () => {
-  it("enables Home, Clients, and Projects; Inbox and Docs remain placeholders", () => {
+  it("enables Home, Inbox, Clients, and Projects; only Docs remains a placeholder", () => {
     const nav = getFlowPrimaryNav();
     const enabled = nav.filter((item) => item.enabled).map((item) => item.label);
     const disabled = nav.filter((item) => !item.enabled).map((item) => item.label);
-    expect(enabled).toEqual(["Home", "Clients", "Projects"]);
-    expect(disabled).toEqual(["Inbox", "Docs"]);
+    expect(enabled).toEqual(["Home", "Inbox", "Clients", "Projects"]);
+    expect(disabled).toEqual(["Docs"]);
+  });
+});
+
+describe("withInboxBadge", () => {
+  it("sets the badge only on the Inbox item", () => {
+    const nav = withInboxBadge(getFlowPrimaryNav(), 5);
+    expect(nav.find((item) => item.href === "/flow/inbox")?.badge).toBe(5);
+    expect(nav.filter((item) => item.href !== "/flow/inbox").every((item) => item.badge === undefined)).toBe(true);
+  });
+
+  it("carries a zero through so the badge component can hide it", () => {
+    const nav = withInboxBadge(getFlowPrimaryNav(), 0);
+    expect(nav.find((item) => item.href === "/flow/inbox")?.badge).toBe(0);
   });
 });
 
 describe("getExternalNav", () => {
-  it("contains only the external destinations from the blueprint, with Home enabled", () => {
+  it("contains only the external destinations from the blueprint; Home and Inbox are live", () => {
     const nav = getExternalNav();
     expect(nav.map((item) => item.label)).toEqual(["Home", "Inbox", "My Work", "Shared Projects", "Shared Files"]);
-    expect(nav.find((item) => item.label === "Home")?.enabled).toBe(true);
-    expect(nav.filter((item) => item.label !== "Home").every((item) => !item.enabled)).toBe(true);
+    const enabled = nav.filter((item) => item.enabled).map((item) => item.label);
+    expect(enabled).toEqual(["Home", "Inbox"]);
   });
 
   it("never exposes internal destinations to externals", () => {

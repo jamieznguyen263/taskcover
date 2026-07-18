@@ -40,7 +40,7 @@ function renderSidebar(navContext: Parameters<typeof WorkSidebar>[0]["navContext
   document.body.appendChild(mountedContainer);
   mountedRoot = createRoot(mountedContainer);
   act(() => {
-    mountedRoot?.render(<WorkSidebar navContext={navContext} />);
+    mountedRoot?.render(<WorkSidebar navContext={navContext} inboxUnread={0} />);
   });
   return mountedContainer;
 }

@@ -1,13 +1,13 @@
 import Link from "next/link";
-import { getFlowAdminNav, getFlowPrimaryNav, type FlowNavContext } from "@/lib/work/nav";
+import { getFlowAdminNav, getFlowPrimaryNav, withInboxBadge, type FlowNavContext } from "@/lib/work/nav";
 import { FlowNavList } from "./flow-nav-list";
 
 /**
  * Persistent desktop sidebar. Hidden below `lg` — WorkHeader's MobileNav takes over
  * navigation on narrower screens so the main content isn't pushed below a full sidebar.
  */
-export function WorkSidebar({ navContext }: { navContext: FlowNavContext }) {
-  const primary = getFlowPrimaryNav();
+export function WorkSidebar({ navContext, inboxUnread }: { navContext: FlowNavContext; inboxUnread: number }) {
+  const primary = withInboxBadge(getFlowPrimaryNav(), inboxUnread);
   const adminNav = getFlowAdminNav(navContext);
 
   return (

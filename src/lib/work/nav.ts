@@ -4,7 +4,13 @@ export type FlowNavItem = {
   href: string;
   label: string;
   enabled: boolean;
+  badge?: number;
 };
+
+/** Returns a copy of the nav with the Inbox item's unread badge set (0 hides it). */
+export function withInboxBadge(items: FlowNavItem[], unread: number): FlowNavItem[] {
+  return items.map((item) => (item.href === "/flow/inbox" ? { ...item, badge: unread } : item));
+}
 
 export type FlowNavContext = {
   accessLevel: WorkAccessLevel;
@@ -13,7 +19,7 @@ export type FlowNavContext = {
 
 const PRIMARY_NAV: FlowNavItem[] = [
   { href: "/flow", label: "Home", enabled: true },
-  { href: "/flow/inbox", label: "Inbox", enabled: false },
+  { href: "/flow/inbox", label: "Inbox", enabled: true },
   { href: "/flow/clients", label: "Clients", enabled: true },
   { href: "/flow/projects", label: "Projects", enabled: true },
   { href: "/flow/docs", label: "Docs", enabled: false },
@@ -30,7 +36,7 @@ export function getFlowPrimaryNav(): FlowNavItem[] {
  */
 const EXTERNAL_NAV: FlowNavItem[] = [
   { href: "/flow", label: "Home", enabled: true },
-  { href: "/flow/inbox", label: "Inbox", enabled: false },
+  { href: "/flow/inbox", label: "Inbox", enabled: true },
   { href: "/flow/my-work", label: "My Work", enabled: false },
   { href: "/flow/shared-projects", label: "Shared Projects", enabled: false },
   { href: "/flow/shared-files", label: "Shared Files", enabled: false },
