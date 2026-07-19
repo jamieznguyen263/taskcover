@@ -3,7 +3,7 @@
 import { useOptimistic, useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import type { WorkItemSummary } from "@/lib/work/work-repository";
-import { moveWorkStatusAction, quickAddWorkAction } from "@/lib/work/work-actions";
+import { moveWorkStatusAction, quickAddWorkAction, renameWorkItemAction } from "@/lib/work/work-actions";
 import {
   WAITING_TARGET_LABEL,
   WAITING_TARGETS,
@@ -154,26 +154,75 @@ function BoardCard({
   onDragEnd: () => void;
   isDragging: boolean;
 }) {
+  const [editing, setEditing] = useState(false);
+  const [title, setTitle] = useState(item.title);
+  const [, startRename] = useTransition();
+
+  function saveRename() {
+    const next = title.trim();
+    setEditing(false);
+    if (!next || next === item.title) {
+      setTitle(item.title);
+      return;
+    }
+    startRename(async () => {
+      const result = await renameWorkItemAction({ workItemId: item.id, projectId, title: next });
+      if (!result.ok) setTitle(item.title);
+    });
+  }
+
   return (
     <div
-      draggable={draggable}
+      draggable={draggable && !editing}
       onDragStart={(event) => {
         event.dataTransfer.effectAllowed = "move";
         event.dataTransfer.setData("text/plain", item.id);
         onDragStart();
       }}
       onDragEnd={onDragEnd}
-      className={`rounded-lg border border-line bg-white p-3 ${draggable ? "cursor-grab active:cursor-grabbing" : ""} ${
-        isDragging ? "opacity-50" : ""
-      }`}
+      className={`card-lift rounded-lg border border-line bg-white p-3 ${
+        draggable && !editing ? "cursor-grab active:cursor-grabbing" : ""
+      } ${isDragging ? "opacity-50" : ""}`}
     >
-      <Link
-        href={`/flow/projects/${projectId}?work=${item.id}`}
-        scroll={false}
-        className="block text-sm font-medium text-graphite hover:text-brand-teal"
-      >
-        {item.title}
-      </Link>
+      {editing ? (
+        <input
+          autoFocus
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+          onBlur={saveRename}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              saveRename();
+            } else if (event.key === "Escape") {
+              event.preventDefault();
+              setTitle(item.title);
+              setEditing(false);
+            }
+          }}
+          maxLength={200}
+          aria-label="Rename work item"
+          className="w-full rounded border border-brand-teal bg-white px-1 text-sm font-medium text-graphite outline-none"
+        />
+      ) : (
+        <Link
+          href={`/flow/projects/${projectId}?work=${item.id}`}
+          scroll={false}
+          onDoubleClick={
+            draggable
+              ? (event) => {
+                  event.preventDefault();
+                  setTitle(item.title);
+                  setEditing(true);
+                }
+              : undefined
+          }
+          title={draggable ? "Double-click to rename" : undefined}
+          className="block text-sm font-medium text-graphite hover:text-brand-teal"
+        >
+          {item.title}
+        </Link>
+      )}
       <p className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted">
         <span>{WORK_TYPE_LABEL[item.type]}</span>
         <span aria-hidden="true">·</span>

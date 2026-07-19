@@ -40,7 +40,7 @@ export function HomeWorkList({
               <li key={row.id}>
                 <Link
                   href={homeWorkHref(row)}
-                  className="block rounded-lg border border-line-soft bg-surface-soft p-3 hover:border-brand-teal"
+                  className="card-lift block rounded-lg border border-line-soft bg-surface-soft p-3 hover:border-brand-teal"
                 >
                   <p className="text-sm font-medium text-graphite">{row.title}</p>
                   <p className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted">
