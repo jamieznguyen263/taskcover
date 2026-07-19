@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { hasCapability } from "./capabilities";
 import { DiscussionRepository, resolveCommentVisibility } from "./discussion-repository";
+import { validateFlowFileUpload } from "./file-upload";
 import { NotificationRepository } from "./notification-repository";
 import { requireWorkSession } from "./session";
 import { WorkItemRepository } from "./work-repository";
@@ -280,5 +281,48 @@ export async function addWorkCommentAction(_state: WorkActionState, formData: Fo
     return { error: "Could not post the comment." };
   }
   revalidatePath(`/flow/projects/${projectId}`);
+  return {};
+}
+
+/**
+ * Records a file the browser already uploaded to Cloudinary (via the signed
+ * /api/flow/upload-signature). Re-validates size/type server-side so a tampered client can't
+ * record something the signature endpoint would have rejected, and applies the same
+ * internal|shared visibility rule as comments.
+ */
+export async function attachWorkFileAction(input: {
+  workItemId: string;
+  projectId: string;
+  filename: string;
+  url: string;
+  contentType: string;
+  sizeBytes: number;
+  wantsInternal: boolean;
+}): Promise<WorkActionState> {
+  const session = await requireWorkSession("work:manage");
+  if (!input.workItemId || !input.projectId) return { error: "Missing work item." };
+  if (!input.url || !input.filename) return { error: "Missing uploaded file." };
+  const fileCheck = validateFlowFileUpload({ mimeType: input.contentType, bytes: input.sizeBytes });
+  if (fileCheck.error) return { error: fileCheck.error };
+
+  const visibility = resolveCommentVisibility({
+    wantsInternal: input.wantsInternal,
+    canViewInternal: hasCapability(session.accessLevel, "internal-notes:view"),
+  });
+
+  try {
+    await new DiscussionRepository().attachFile({
+      workItemId: input.workItemId,
+      filename: input.filename.slice(0, 255),
+      url: input.url,
+      contentType: input.contentType,
+      sizeBytes: input.sizeBytes,
+      visibility,
+      uploadedBy: session.userId,
+    });
+  } catch {
+    return { error: "Could not attach the file." };
+  }
+  revalidatePath(`/flow/projects/${input.projectId}`);
   return {};
 }
