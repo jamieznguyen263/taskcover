@@ -145,6 +145,7 @@ export class WorkItemRepository {
     dueAt: Date | null;
     parentId: string | null;
     createdBy: string;
+    status?: WorkStatus;
   }) {
     const [item] = await this.db
       .insert(workItems)
@@ -157,6 +158,9 @@ export class WorkItemRepository {
         dueAt: input.dueAt,
         parentId: input.parentId,
         createdBy: input.createdBy,
+        // Board quick-add creates directly into a column's status (never `waiting`, which
+        // needs a target — the action layer enforces that).
+        status: input.status ?? "to_do",
       })
       .returning({ id: workItems.id });
     await this.logActivity({

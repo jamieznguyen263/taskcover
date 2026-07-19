@@ -6,9 +6,85 @@ import { DiscussionRepository, resolveCommentVisibility } from "./discussion-rep
 import { NotificationRepository } from "./notification-repository";
 import { requireWorkSession } from "./session";
 import { WorkItemRepository } from "./work-repository";
-import { isWorkType, resolveStatusChange, WORK_STATUS_LABEL, type WorkType } from "./work-domain";
+import {
+  isWorkStatus,
+  isWorkType,
+  resolveStatusChange,
+  WORK_STATUS_LABEL,
+  type WorkStatus,
+  type WorkType,
+} from "./work-domain";
 
 export type WorkActionState = { error?: string };
+export type MoveResult = { ok: true } | { ok: false; error: string };
+
+/**
+ * Direct-call action for the board (drag-and-drop and inline quick-add) — invoked from a
+ * transition with an object argument rather than a <form>, so the UI can update optimistically
+ * and roll back on `{ ok: false }`. Still fully guarded: work:manage + the Waiting invariant.
+ */
+export async function moveWorkStatusAction(input: {
+  workItemId: string;
+  projectId: string;
+  status: string;
+  waitingTarget?: string | null;
+}): Promise<MoveResult> {
+  const session = await requireWorkSession("work:manage");
+  const resolved = resolveStatusChange({
+    nextStatus: input.status,
+    waitingTarget: input.waitingTarget ?? null,
+  });
+  if (!resolved.ok) return { ok: false, error: resolved.error };
+  if (!input.workItemId || !input.projectId) return { ok: false, error: "Missing work item." };
+
+  try {
+    await new WorkItemRepository().updateStatus({
+      workItemId: input.workItemId,
+      projectId: input.projectId,
+      status: resolved.status,
+      waitingTarget: resolved.waitingTarget,
+      waitingNote: "",
+      actorId: session.userId,
+      summary: `moved to ${WORK_STATUS_LABEL[resolved.status]}`,
+    });
+  } catch {
+    return { ok: false, error: "Could not move the work item." };
+  }
+  revalidatePath(`/flow/projects/${input.projectId}`);
+  return { ok: true };
+}
+
+export async function quickAddWorkAction(input: {
+  projectId: string;
+  title: string;
+  status: string;
+}): Promise<MoveResult> {
+  const session = await requireWorkSession("work:manage");
+  const title = input.title.trim();
+  if (!input.projectId) return { ok: false, error: "Missing project." };
+  if (!title) return { ok: false, error: "Work needs a title." };
+  if (title.length > 200) return { ok: false, error: "Title must be at most 200 characters." };
+  // Quick-add never creates directly into Waiting (that needs a target); fall back to To do.
+  const status: WorkStatus = isWorkStatus(input.status) && input.status !== "waiting" ? input.status : "to_do";
+
+  try {
+    await new WorkItemRepository().createWorkItem({
+      projectId: input.projectId,
+      type: "task",
+      title,
+      description: "",
+      ownerId: session.userId,
+      dueAt: null,
+      parentId: null,
+      createdBy: session.userId,
+      status,
+    });
+  } catch {
+    return { ok: false, error: "Could not add the work item." };
+  }
+  revalidatePath(`/flow/projects/${input.projectId}`);
+  return { ok: true };
+}
 
 function workHref(projectId: string, workItemId: string) {
   return `/flow/projects/${projectId}?work=${workItemId}`;
