@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { motion, useReducedMotion, AnimatePresence } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { ArrowRight, AlertTriangle, Sparkles, CheckCircle2 } from "lucide-react";
 import { Container } from "@/components/marketing/shared/container";
@@ -118,12 +118,10 @@ export function IndustriesRail({
 
         {/* Detail panel */}
         <div className="relative min-h-[360px] overflow-hidden rounded-2xl border border-line bg-surface-tint p-6 sm:p-8">
-          <AnimatePresence mode="wait">
             <motion.div
               key={active}
               initial={{ opacity: 0, x: reduceMotion ? 0 : 12 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: reduceMotion ? 0 : -12 }}
               transition={{ duration: 0.25 }}
               className="flex h-full flex-col gap-5"
             >
@@ -205,7 +203,6 @@ export function IndustriesRail({
                 </Link>
               </div>
             </motion.div>
-          </AnimatePresence>
         </div>
       </div>
     </Container>

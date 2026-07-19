@@ -199,7 +199,7 @@ export const leads: LeadsContent = {
     boundary: "Esta ruta recoge una solicitud de llamada estrategica. No confirma una cita de calendario hasta que exista un futuro adaptador de calendario.",
   },
   contact: {
-    meta: { title: "Contactar a Taskcover Agency | Solicitudes search", description: "Contacta a Taskcover por servicios SEO, PPC, SEO Mentor, medios, referencias privadas, partnerships o preguntas generales." },
+    meta: { title: "Contáctanos | Solicitudes search", description: "Contacta a Taskcover por servicios SEO, PPC, SEO Mentor, medios, referencias privadas, partnerships o preguntas generales." },
     eyebrow: "Mesa inteligente de solicitudes",
     h1: "Envia la solicitud correcta a Taskcover",
     intro: "Elige la intencion que mejor describa tu solicitud para evaluarla con el contexto adecuado.",

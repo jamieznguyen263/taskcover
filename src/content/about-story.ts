@@ -402,7 +402,7 @@ const capabilitiesEs: AboutStoryCapability[] = [
 export const aboutStoryContent = {
   en: {
     meta: {
-      title: "About Taskcover Agency: Story, Leadership, and Search Growth Systems",
+      title: "About Us: Story, Leadership, and Search Growth Systems",
       description:
         "Learn how Taskcover grew from a Southeast Asia white-label search execution team into Taskcover Agency by Stoa Global Corporation, serving the USA, Canada, and Australia.",
     },
@@ -562,7 +562,7 @@ export const aboutStoryContent = {
   },
   fr: {
     meta: {
-      title: "À propos de Taskcover Agency : histoire, direction et systèmes search",
+      title: "À propos de nous : histoire, direction et systèmes search",
       description:
         "Découvrez comment Taskcover est passée d'une équipe white-label d'exécution search en Asie du Sud-Est à Taskcover Agency by Stoa Global Corporation, au service des États-Unis, du Canada et de l'Australie.",
     },
@@ -722,7 +722,7 @@ export const aboutStoryContent = {
   },
   es: {
     meta: {
-      title: "Acerca de Taskcover Agency: historia, liderazgo y sistemas search",
+      title: "Sobre nosotros: historia, liderazgo y sistemas search",
       description:
         "Conoce cómo Taskcover pasó de ser un equipo white-label de ejecución search en el Sudeste Asiático a Taskcover Agency by Stoa Global Corporation, sirviendo a Estados Unidos, Canadá y Australia.",
     },

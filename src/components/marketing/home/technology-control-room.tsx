@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { motion, useReducedMotion, AnimatePresence } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { CheckCircle2, Monitor, Target } from "lucide-react";
 import { Container } from "@/components/marketing/shared/container";
 import { cn } from "@/lib/utils";
@@ -235,12 +235,10 @@ export function TechnologyControlRoom({
 
         {/* Detail panel — two-column: content + mini visual */}
         <div className="relative min-h-[280px] rounded-xl border border-line bg-white p-6">
-          <AnimatePresence mode="wait">
             <motion.div
               key={active}
               initial={{ opacity: 0, y: reduceMotion ? 0 : 8 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: reduceMotion ? 0 : -8 }}
               transition={{ duration: 0.25 }}
               className="grid h-full gap-6 sm:grid-cols-[1.3fr_1fr]"
             >
@@ -305,7 +303,6 @@ export function TechnologyControlRoom({
                 </div>
               </div>
             </motion.div>
-          </AnimatePresence>
         </div>
       </div>
     </Container>

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { motion, useReducedMotion, AnimatePresence } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import Link from "next/link";
 import { ArrowRight, AlertTriangle, CheckCircle2, Target, Workflow } from "lucide-react";
 import { Container } from "@/components/marketing/shared/container";
@@ -124,12 +124,10 @@ export function GrowthPlaybook({
         {/* Featured play panel */}
         <div className="relative rounded-2xl bg-brand-gradient p-px shadow-sm">
           <div className="h-full w-full rounded-[15px] bg-white p-6 sm:p-8">
-            <AnimatePresence mode="wait">
               <motion.div
                 key={active}
                 initial={{ opacity: 0, y: reduceMotion ? 0 : 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: reduceMotion ? 0 : -12 }}
                 transition={{ duration: 0.25 }}
                 className="flex h-full flex-col gap-5"
               >
@@ -206,7 +204,6 @@ export function GrowthPlaybook({
                   </Link>
                 </div>
               </motion.div>
-            </AnimatePresence>
           </div>
         </div>
       </div>

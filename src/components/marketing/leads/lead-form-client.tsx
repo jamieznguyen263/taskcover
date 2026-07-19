@@ -9,6 +9,7 @@ import type { LeadRequestType, LeadSubmissionResult } from "@/lib/leads/types";
 import { trackAcceptedLeadSuccess, trackLeadEvent } from "@/lib/leads/analytics";
 import { attributionToLeadUtm } from "@/lib/analytics/attribution";
 import { getConsentPreferences } from "@/lib/consent/preferences";
+import { maxLengths } from "@/lib/leads/schema";
 import { cn } from "@/lib/utils";
 
 type FormState = Record<string, string | string[] | boolean | undefined>;
@@ -326,6 +327,12 @@ function clientValidate(content: LeadsContent, state: FormState, fields: string[
     const value = state[field];
     const empty = Array.isArray(value) ? value.length === 0 : value === undefined || value === "";
     if (empty) errors[field] = ["required"];
+  }
+  for (const [field, max] of Object.entries(maxLengths)) {
+    const value = state[field];
+    if (typeof value === "string" && value.length > max) {
+      errors[field] = [...(errors[field] ?? []), "length"];
+    }
   }
   if (fields.includes("workEmail")) {
     const email = String(state.workEmail ?? "");

@@ -35,7 +35,9 @@
     "RATE_LIMIT_NAMESPACE": "taskcover-leads",
     "AUTH_RATE_LIMIT_NAMESPACE": "taskcover-admin-auth",
     "CLOUDINARY_UPLOAD_FOLDER": "taskcover/insights",
-    "CALCOM_BOOKING_URL": "https://cal.com/business-taskcover.com/30min"
+    "CALCOM_BOOKING_URL": "https://cal.com/business-taskcover.com/30min",
+    "NEXT_PUBLIC_GTM_ID": "GTM-PWDTXBZW",
+    "NEXT_PUBLIC_GTM_ENABLED": "true"
   },
   "triggers": {
     "crons": ["*/5 * * * *"]

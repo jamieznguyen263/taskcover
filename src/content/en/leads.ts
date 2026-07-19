@@ -221,7 +221,7 @@ export const leads: LeadsContent = {
   },
   contact: {
     meta: {
-      title: "Contact Taskcover Agency | Search Growth Requests",
+      title: "Contact Us | Search Growth Requests",
       description:
         "Contact Taskcover for SEO services, PPC management, SEO Mentor Service, media inquiries, private references, partnerships, or general questions.",
     },

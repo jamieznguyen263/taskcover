@@ -96,7 +96,7 @@ const allowedKeys = new Set([
   "requestDetail",
 ]);
 
-const maxLengths: Record<string, number> = {
+export const maxLengths: Record<string, number> = {
   name: 100,
   workEmail: 160,
   company: 120,
