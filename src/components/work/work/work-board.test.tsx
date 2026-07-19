@@ -14,6 +14,7 @@ import { WorkBoard } from "./work-board";
 vi.mock("@/lib/work/work-actions", () => ({
   moveWorkStatusAction: vi.fn().mockResolvedValue({ ok: true }),
   quickAddWorkAction: vi.fn().mockResolvedValue({ ok: true }),
+  renameWorkItemAction: vi.fn().mockResolvedValue({ ok: true }),
 }));
 
 vi.mock("next/link", async () => {
@@ -84,6 +85,22 @@ describe("WorkBoard", () => {
     // 5 statuses minus Waiting = 4.
     expect(quickAdds.length).toBe(4);
     expect(el.querySelector('input[aria-label="Add work to Waiting"]')).toBeNull();
+  });
+
+  it("opens an inline rename input on double-click for managers", () => {
+    const el = render(true);
+    const titleLink = el.querySelector<HTMLAnchorElement>('a[href="/flow/projects/p1?work=a"]')!;
+    act(() => titleLink.dispatchEvent(new MouseEvent("dblclick", { bubbles: true })));
+    const input = el.querySelector<HTMLInputElement>('input[aria-label="Rename work item"]');
+    expect(input).not.toBeNull();
+    expect(input?.value).toBe("Draft brief");
+  });
+
+  it("does not allow inline rename for read-only members", () => {
+    const el = render(false);
+    const titleLink = el.querySelector<HTMLAnchorElement>('a[href="/flow/projects/p1?work=a"]')!;
+    act(() => titleLink.dispatchEvent(new MouseEvent("dblclick", { bubbles: true })));
+    expect(el.querySelector('input[aria-label="Rename work item"]')).toBeNull();
   });
 
   it("makes cards draggable for managers and hides quick-add for read-only members", () => {

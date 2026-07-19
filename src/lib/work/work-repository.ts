@@ -224,6 +224,13 @@ export class WorkItemRepository {
       .where(eq(workItems.id, input.workItemId));
   }
 
+  async renameWorkItem(input: { workItemId: string; title: string }) {
+    await this.db
+      .update(workItems)
+      .set({ title: input.title, updatedAt: new Date() })
+      .where(eq(workItems.id, input.workItemId));
+  }
+
   async addMember(input: { workItemId: string; userId: string; relation: "contributor" | "watcher" }) {
     await this.db.insert(workItemMembers).values(input).onConflictDoNothing();
   }

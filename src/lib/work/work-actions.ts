@@ -55,6 +55,27 @@ export async function moveWorkStatusAction(input: {
   return { ok: true };
 }
 
+/** Inline rename from the board card (double-click) — direct-call, guarded by work:manage. */
+export async function renameWorkItemAction(input: {
+  workItemId: string;
+  projectId: string;
+  title: string;
+}): Promise<MoveResult> {
+  await requireWorkSession("work:manage");
+  const title = input.title.trim();
+  if (!input.workItemId || !input.projectId) return { ok: false, error: "Missing work item." };
+  if (!title) return { ok: false, error: "Title can't be empty." };
+  if (title.length > 200) return { ok: false, error: "Title must be at most 200 characters." };
+
+  try {
+    await new WorkItemRepository().renameWorkItem({ workItemId: input.workItemId, title });
+  } catch {
+    return { ok: false, error: "Could not rename the work item." };
+  }
+  revalidatePath(`/flow/projects/${input.projectId}`);
+  return { ok: true };
+}
+
 export async function quickAddWorkAction(input: {
   projectId: string;
   title: string;
