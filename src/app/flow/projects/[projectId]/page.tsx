@@ -90,7 +90,7 @@ export default async function FlowProjectDetailPage({
             Work
           </h2>
           <div className="mt-3">
-            <WorkViews projectId={projectId} items={workItems} />
+            <WorkViews projectId={projectId} items={workItems} canManage={canManageWork} />
           </div>
           {canManageWork ? (
             <div className="mt-4 border-t border-line-soft pt-4">
