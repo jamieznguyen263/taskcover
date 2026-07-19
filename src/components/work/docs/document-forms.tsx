@@ -9,6 +9,7 @@ import {
 } from "@/lib/work/document-actions";
 import type { DocumentKind } from "@/lib/work/document-repository";
 import type { ExtractedAction } from "@/lib/work/action-extraction";
+import { RichTextEditor } from "./rich-text-editor";
 
 const INITIAL: DocumentActionState = {};
 
@@ -103,14 +104,10 @@ export function CreateDocumentForm({
           </select>
         </label>
       </div>
-      <label className="grid gap-1 text-sm font-medium text-graphite">
-        Body <span className="font-normal text-muted">(Markdown)</span>
-        <textarea
-          name="body"
-          rows={6}
-          className="rounded-lg border border-line bg-white px-3 py-2 font-mono text-sm text-graphite"
-        />
-      </label>
+      <div className="grid gap-1 text-sm font-medium text-graphite">
+        Body
+        <RichTextEditor name="body" defaultValue="" placeholder="Write the document…" />
+      </div>
       <VisibilityField canInternal={canInternal} defaultInternal />
       {state.error ? (
         <p role="alert" className="text-sm text-red-600">
@@ -165,15 +162,10 @@ export function EditDocumentForm({
           <KindSelect name="kind" defaultValue={kind} />
         </label>
       </div>
-      <label className="grid gap-1 text-sm font-medium text-graphite">
-        Body <span className="font-normal text-muted">(Markdown · saving creates a new version)</span>
-        <textarea
-          name="body"
-          defaultValue={body}
-          rows={12}
-          className="rounded-lg border border-line bg-white px-3 py-2 font-mono text-sm text-graphite"
-        />
-      </label>
+      <div className="grid gap-1 text-sm font-medium text-graphite">
+        Body <span className="font-normal text-muted">(saving creates a new version)</span>
+        <RichTextEditor name="body" defaultValue={body} placeholder="Write the document…" />
+      </div>
       <VisibilityField canInternal={canInternal} defaultInternal={isInternal} />
       {state.error ? (
         <p role="alert" className="text-sm text-red-600">
