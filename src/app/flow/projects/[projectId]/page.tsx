@@ -48,12 +48,13 @@ export default async function FlowProjectDetailPage({
   // Detail drawer: only load when a valid work id for THIS project is requested.
   const openItem = openWorkId ? await workRepo.getById(openWorkId) : null;
   const drawerItem = openItem && openItem.projectId === projectId ? openItem : null;
-  const [drawerComments, drawerActivity] = drawerItem
+  const [drawerComments, drawerFiles, drawerActivity] = drawerItem
     ? await Promise.all([
         new DiscussionRepository().listComments({ workItemId: drawerItem.id, includeInternal: canViewInternal }),
+        new DiscussionRepository().listFiles({ workItemId: drawerItem.id, includeInternal: canViewInternal }),
         new DiscussionRepository().listActivity({ workItemId: drawerItem.id, includeInternal: canViewInternal }),
       ])
-    : [[], []];
+    : [[], [], []];
 
   return (
     <div className="mx-auto flex max-w-4xl flex-col gap-6">
@@ -137,6 +138,7 @@ export default async function FlowProjectDetailPage({
           projectId={projectId}
           item={drawerItem}
           comments={drawerComments}
+          files={drawerFiles}
           activity={drawerActivity}
           members={activeMembers}
           canManage={canManageWork}

@@ -145,6 +145,8 @@ export class DiscussionRepository {
     workItemId: string;
     filename: string;
     url: string;
+    contentType?: string;
+    sizeBytes?: number | null;
     visibility: CommentVisibility;
     uploadedBy: string;
   }) {
@@ -154,6 +156,8 @@ export class DiscussionRepository {
         .values({
           filename: input.filename,
           url: input.url,
+          contentType: input.contentType ?? "",
+          sizeBytes: input.sizeBytes ?? null,
           visibility: input.visibility,
           uploadedBy: input.uploadedBy,
         })

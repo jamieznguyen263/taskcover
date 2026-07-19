@@ -3,8 +3,9 @@
 import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 import { DetailDrawer } from "@/components/work/detail-drawer";
+import { WorkFileUploader } from "./work-file-uploader";
 import type { WorkItemDetail } from "@/lib/work/work-repository";
-import type { ActivityEntry, WorkComment } from "@/lib/work/discussion-repository";
+import type { ActivityEntry, WorkComment, WorkFile } from "@/lib/work/discussion-repository";
 import {
   addChecklistItemAction,
   addWorkCommentAction,
@@ -28,6 +29,7 @@ export function WorkDetailDrawer({
   projectId,
   item,
   comments,
+  files,
   activity,
   members,
   canManage,
@@ -36,6 +38,7 @@ export function WorkDetailDrawer({
   projectId: string;
   item: WorkItemDetail;
   comments: WorkComment[];
+  files: WorkFile[];
   activity: ActivityEntry[];
   members: { userId: string; displayName: string }[];
   canManage: boolean;
@@ -65,6 +68,14 @@ export function WorkDetailDrawer({
             </p>
           </section>
         ) : null}
+
+        <FilesSection
+          projectId={projectId}
+          workItemId={item.id}
+          files={files}
+          canManage={canManage}
+          canPostInternal={canPostInternal}
+        />
 
         <CommentsSection
           projectId={projectId}
@@ -352,6 +363,53 @@ function ChecklistSection({
         <p role="alert" className="mt-1 text-sm text-red-600">
           {addState.error}
         </p>
+      ) : null}
+    </section>
+  );
+}
+
+function FilesSection({
+  projectId,
+  workItemId,
+  files,
+  canManage,
+  canPostInternal,
+}: {
+  projectId: string;
+  workItemId: string;
+  files: WorkFile[];
+  canManage: boolean;
+  canPostInternal: boolean;
+}) {
+  return (
+    <section>
+      <h3 className="text-sm font-semibold text-graphite">Files</h3>
+      <ul className="mt-2 grid gap-1">
+        {files.map((file) => (
+          <li key={file.id} className="flex items-center justify-between gap-2 text-sm">
+            <a
+              href={file.url}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="truncate font-medium text-graphite hover:text-brand-teal"
+            >
+              {file.filename}
+            </a>
+            <span
+              className={`shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-semibold uppercase ${
+                file.visibility === "internal" ? "bg-amber-200 text-amber-800" : "bg-surface-tint text-brand-teal"
+              }`}
+            >
+              {file.visibility === "internal" ? "Internal" : "Shared"}
+            </span>
+          </li>
+        ))}
+        {files.length === 0 ? <li className="text-sm text-muted">No files attached.</li> : null}
+      </ul>
+      {canManage ? (
+        <div className="mt-3">
+          <WorkFileUploader workItemId={workItemId} projectId={projectId} canPostInternal={canPostInternal} />
+        </div>
       ) : null}
     </section>
   );
