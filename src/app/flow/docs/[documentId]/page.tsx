@@ -3,9 +3,11 @@ import { notFound } from "next/navigation";
 import { extractActions } from "@/lib/work/action-extraction";
 import { hasCapability } from "@/lib/work/capabilities";
 import { DocumentRepository } from "@/lib/work/document-repository";
+import { htmlToText } from "@/lib/work/html-text";
 import { ProjectsRepository } from "@/lib/work/projects-repository";
 import { resolveWorkSession } from "@/lib/work/session";
 import { ActionPreviewForm, EditDocumentForm } from "@/components/work/docs/document-forms";
+import { RichTextView } from "@/components/work/docs/rich-text-editor";
 
 const KIND_LABEL: Record<string, string> = {
   strategy: "Strategy",
@@ -34,7 +36,7 @@ export default async function FlowDocumentDetailPage({ params }: { params: Promi
   if (!doc) notFound();
 
   // Action extraction runs only for meeting notes and only for users who can create work.
-  const actions = doc.kind === "meeting_note" && canManageWork ? extractActions(doc.body) : [];
+  const actions = doc.kind === "meeting_note" && canManageWork ? extractActions(htmlToText(doc.body)) : [];
   const projectList = actions.length > 0 ? await new ProjectsRepository().listProjects() : [];
 
   return (
@@ -87,7 +89,9 @@ export default async function FlowDocumentDetailPage({ params }: { params: Promi
       ) : (
         <section className="rounded-xl border border-line bg-white p-4">
           <h2 className="text-lg font-semibold text-graphite">Content</h2>
-          <pre className="mt-2 whitespace-pre-wrap font-sans text-sm text-graphite">{doc.body || "Empty document."}</pre>
+          <div className="mt-2">
+            {htmlToText(doc.body) ? <RichTextView html={doc.body} /> : <p className="text-sm text-muted">Empty document.</p>}
+          </div>
         </section>
       )}
 
