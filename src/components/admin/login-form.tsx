@@ -3,10 +3,12 @@
 import { useActionState } from "react";
 import { loginAction, type LoginState, acceptInviteAction } from "@/lib/admin/actions";
 
-export function LoginForm() {
+export function LoginForm({ next }: { next?: string }) {
   const [state, action, pending] = useActionState<LoginState, FormData>(loginAction, {});
   return (
     <form action={action} className="grid gap-4" noValidate>
+      {/* Where to land after sign-in (e.g. /flow). Server-side validated to same-origin. */}
+      {next ? <input type="hidden" name="next" value={next} /> : null}
       <div className="grid gap-2">
         <label className="text-sm font-medium text-graphite" htmlFor="email">Email</label>
         <input id="email" name="email" type="email" autoComplete="email" required className="min-h-11 rounded-lg border border-line bg-white px-3 text-sm" />

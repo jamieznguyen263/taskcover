@@ -15,6 +15,7 @@ import {
   verifyPassword,
 } from "./security";
 import { assertPermission } from "./permissions";
+import { resolveSafeRedirect } from "./safe-redirect";
 import { revalidatePath } from "next/cache";
 
 export type LoginState = { error?: string };
@@ -62,7 +63,9 @@ export async function loginAction(_state: LoginState, formData: FormData): Promi
     ipHash,
     userAgentSummary: summarizeUserAgent(headerStore.get("user-agent")),
   });
-  redirect("/admin");
+  // Return the user where they were headed (e.g. /flow), defaulting to the CMS. The value is
+  // untrusted form input, so it is validated to same-origin paths only.
+  redirect(resolveSafeRedirect(String(formData.get("next") ?? "")));
 }
 
 export async function logoutAction() {

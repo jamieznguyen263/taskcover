@@ -1,10 +1,13 @@
 import Link from "next/link";
-import { BarChart3, FileText, Image, ListChecks, LogOut, Settings, Shield, Users } from "lucide-react";
+import { BarChart3, FileText, Image, LayoutGrid, ListChecks, LogOut, Settings, Shield, Users } from "lucide-react";
 import { logoutAction } from "@/lib/admin/actions";
 import type { AdminUserSession } from "@/lib/admin/repository";
 
 const nav = [
   { href: "/admin", label: "Dashboard", icon: BarChart3 },
+  // Entry point into Taskcover Flow (FLOW-001+) — the CMS and Flow share one login, so this
+  // is a plain link; Flow does its own capability checks on arrival.
+  { href: "/flow", label: "Taskcover Flow", icon: LayoutGrid },
   { href: "/admin/insights", label: "Insights", icon: FileText },
   { href: "/admin/media", label: "Media", icon: Image },
   { href: "/admin/users", label: "Users", icon: Users, adminOnly: true },
