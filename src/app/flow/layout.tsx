@@ -28,7 +28,8 @@ export default async function FlowLayout({ children }: { children: React.ReactNo
   });
 
   if (decision.kind === "database-unavailable") return <WorkUnavailable />;
-  if (decision.kind === "requires-session") redirect("/admin/login");
+  // Carry the destination so signing in returns the visitor to Flow, not the CMS dashboard.
+  if (decision.kind === "requires-session") redirect("/admin/login?next=/flow");
   if (resolution.kind === "external-blocked") return <ExternalAccessBlocked state={resolution.state} />;
   if (resolution.kind === "external") return <ExternalWorkShell session={resolution.session}>{children}</ExternalWorkShell>;
   if (decision.kind === "membership-disabled" || resolution.kind !== "active") return <WorkAccessDisabled />;
