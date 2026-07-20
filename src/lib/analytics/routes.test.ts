@@ -8,6 +8,12 @@ describe("analytics route safety", () => {
     }
   });
 
+  it("excludes Taskcover Flow — staff using the internal PM app are not marketing traffic", () => {
+    for (const path of ["/flow", "/flow/projects", "/flow/clients/abc", "/fr/flow/inbox"]) {
+      expect(isTrackingExcludedPath(path)).toBe(true);
+    }
+  });
+
   it("allows public and supporting thank-you routes without query leakage", () => {
     expect(isTrackingExcludedPath("/thank-you?type=seo-audit")).toBe(false);
     expect(sanitizePathOnly("/pricing?tab=mentor&gclid=secret")).toBe("/pricing");
