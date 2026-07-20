@@ -113,12 +113,6 @@
     border-radius: 4px;
   }
 
-  body:has([data-admin-root]) > header,
-  body:has([data-admin-root]) > footer,
-  body:has([data-flow-root]) > header,
-  body:has([data-flow-root]) > footer {
-    display: none;
-  }
 }
 
 @layer utilities {

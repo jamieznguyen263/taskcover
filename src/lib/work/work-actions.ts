@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { reportActionFailure } from "./action-error";
 import { hasCapability } from "./capabilities";
 import { DiscussionRepository, resolveCommentVisibility } from "./discussion-repository";
 import { validateFlowFileUpload } from "./file-upload";
@@ -48,7 +49,8 @@ export async function moveWorkStatusAction(input: {
       actorId: session.userId,
       summary: `moved to ${WORK_STATUS_LABEL[resolved.status]}`,
     });
-  } catch {
+  } catch (error) {
+    reportActionFailure("moveWorkStatusAction", error);
     return { ok: false, error: "Could not move the work item." };
   }
   revalidatePath(`/flow/projects/${input.projectId}`);
@@ -69,7 +71,8 @@ export async function renameWorkItemAction(input: {
 
   try {
     await new WorkItemRepository().renameWorkItem({ workItemId: input.workItemId, title });
-  } catch {
+  } catch (error) {
+    reportActionFailure("renameWorkItemAction", error);
     return { ok: false, error: "Could not rename the work item." };
   }
   revalidatePath(`/flow/projects/${input.projectId}`);
@@ -101,7 +104,8 @@ export async function quickAddWorkAction(input: {
       createdBy: session.userId,
       status,
     });
-  } catch {
+  } catch (error) {
+    reportActionFailure("quickAddWorkAction", error);
     return { ok: false, error: "Could not add the work item." };
   }
   revalidatePath(`/flow/projects/${input.projectId}`);
@@ -148,7 +152,8 @@ export async function createWorkItemAction(_state: WorkActionState, formData: Fo
       parentId: null,
       createdBy: session.userId,
     });
-  } catch {
+  } catch (error) {
+    reportActionFailure("createWorkItemAction", error, { projectId, type, ownerId, actorId: session.userId });
     return { error: "Could not create the work item." };
   }
   // Notify the owner they've been assigned (emit() no-ops when owner is the creator).
@@ -190,7 +195,8 @@ export async function updateWorkStatusAction(_state: WorkActionState, formData: 
       actorId: session.userId,
       summary: `moved to ${WORK_STATUS_LABEL[resolved.status]}`,
     });
-  } catch {
+  } catch (error) {
+    reportActionFailure("updateWorkStatusAction", error);
     return { error: "Could not update the status." };
   }
   revalidatePath(`/flow/projects/${projectId}`);
@@ -214,7 +220,8 @@ export async function updateWorkDetailsAction(_state: WorkActionState, formData:
 
   try {
     await new WorkItemRepository().updateDetails({ workItemId, title, description, type, ownerId, reviewerId, dueAt });
-  } catch {
+  } catch (error) {
+    reportActionFailure("updateWorkDetailsAction", error);
     return { error: "Could not save the work item." };
   }
   // Notify owner and reviewer. emit() de-dupes an existing open item, so re-saving without
@@ -259,7 +266,8 @@ export async function addChecklistItemAction(_state: WorkActionState, formData: 
 
   try {
     await new WorkItemRepository().addChecklistItem({ workItemId, label });
-  } catch {
+  } catch (error) {
+    reportActionFailure("addChecklistItemAction", error);
     return { error: "Could not add the checklist item." };
   }
   revalidatePath(`/flow/projects/${projectId}`);
@@ -298,7 +306,8 @@ export async function addWorkCommentAction(_state: WorkActionState, formData: Fo
 
   try {
     await new DiscussionRepository().addComment({ workItemId, authorId: session.userId, body, visibility });
-  } catch {
+  } catch (error) {
+    reportActionFailure("addWorkCommentAction", error);
     return { error: "Could not post the comment." };
   }
   revalidatePath(`/flow/projects/${projectId}`);
@@ -341,7 +350,8 @@ export async function attachWorkFileAction(input: {
       visibility,
       uploadedBy: session.userId,
     });
-  } catch {
+  } catch (error) {
+    reportActionFailure("attachWorkFileAction", error);
     return { error: "Could not attach the file." };
   }
   revalidatePath(`/flow/projects/${input.projectId}`);

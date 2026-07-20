@@ -18,7 +18,7 @@ export default async function AdminLoginPage({ searchParams }: { searchParams: P
   if (session) redirect(destination);
 
   return (
-    <div data-admin-root className="min-h-screen bg-surface-soft px-5 py-12">
+    <main data-admin-root className="min-h-screen bg-surface-soft px-5 py-12">
       <div className="mx-auto max-w-md rounded-xl border border-line bg-white p-6 shadow-sm">
         <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand-teal">Taskcover Admin</p>
         <h1 className="mt-3 text-2xl font-semibold tracking-tight text-graphite">Sign in</h1>
@@ -27,6 +27,6 @@ export default async function AdminLoginPage({ searchParams }: { searchParams: P
           <LoginForm next={destination} />
         </div>
       </div>
-    </div>
+    </main>
   );
 }

@@ -45,7 +45,8 @@ export default async function FlowAdministrationPage() {
         </h1>
         <p className="mt-2 max-w-3xl text-sm leading-6 text-secondary">
           Every CMS account automatically has a Taskcover Flow membership. Access levels follow
-          the four system role presets below; freelancer and partner access arrives in FLOW-003.
+          the four system role presets below. Freelancers and partners are invited separately and
+          never receive internal access.
         </p>
       </div>
 

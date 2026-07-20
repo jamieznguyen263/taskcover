@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import { hasCapability } from "@/lib/work/capabilities";
 import { CLIENT_HEALTH_LABEL } from "@/lib/work/client-health";
 import { ClientsRepository } from "@/lib/work/clients-repository";
+import { DOCUMENT_KIND_LABEL } from "@/lib/work/document-repository";
 import { resolveWorkSession } from "@/lib/work/session";
+import { WORK_STATUS_LABEL, WORK_TYPE_LABEL } from "@/lib/work/work-domain";
 import {
   AddContactForm,
   RemoveContactButton,
@@ -117,12 +119,88 @@ export default async function FlowClientDetailPage({ params }: { params: Promise
         )}
       </section>
 
-      <section className="rounded-xl border border-line bg-white p-4">
-        <h2 className="text-lg font-semibold text-graphite">Work, documents &amp; activity</h2>
-        <p className="mt-2 text-sm text-muted">
-          Work items arrive with FLOW-006, documents with FLOW-010, and the activity timeline
-          with FLOW-007 — they will all attach to this client automatically.
-        </p>
+      <section className="rounded-xl border border-line bg-white p-4" aria-labelledby="work-heading">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 id="work-heading" className="text-lg font-semibold text-graphite">
+            Open work
+          </h2>
+          <p className="text-xs text-muted">
+            {client.openWork.length} open · {client.doneWorkCount} done
+          </p>
+        </div>
+        {client.openWork.length === 0 ? (
+          <p className="mt-2 text-sm text-muted">
+            {client.projects.length === 0
+              ? "No projects for this client yet, so there is no work to show."
+              : "Nothing open for this client — every work item is done."}
+          </p>
+        ) : (
+          <ul className="mt-3 grid gap-2">
+            {client.openWork.map((item) => (
+              <li key={item.id} className="rounded-lg border border-line-soft bg-surface-soft p-3">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <Link
+                    href={`/flow/projects/${item.projectId}?work=${item.id}`}
+                    className="text-sm font-medium text-graphite hover:text-brand-teal"
+                  >
+                    {item.title}
+                  </Link>
+                  <span className="text-xs text-muted">{WORK_STATUS_LABEL[item.status]}</span>
+                </div>
+                <p className="mt-1 text-xs text-muted">
+                  {WORK_TYPE_LABEL[item.type]} · {item.projectName} · {item.ownerName ?? "Unassigned"}
+                  {item.dueAt ? ` · due ${item.dueAt.toLocaleDateString()}` : ""}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <section className="rounded-xl border border-line bg-white p-4" aria-labelledby="documents-heading">
+        <h2 id="documents-heading" className="text-lg font-semibold text-graphite">
+          Documents
+        </h2>
+        {client.documents.length === 0 ? (
+          <p className="mt-2 text-sm text-muted">
+            No documents linked to this client yet — create one from the Docs page.
+          </p>
+        ) : (
+          <ul className="mt-3 grid gap-2">
+            {client.documents.map((doc) => (
+              <li key={doc.id} className="flex flex-wrap items-center justify-between gap-2">
+                <Link
+                  href={`/flow/docs/${doc.id}`}
+                  className="text-sm font-medium text-graphite hover:text-brand-teal"
+                >
+                  {doc.title}
+                </Link>
+                <span className="text-xs text-muted">
+                  {DOCUMENT_KIND_LABEL[doc.kind]} · updated {doc.updatedAt.toLocaleDateString()}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <section className="rounded-xl border border-line bg-white p-4" aria-labelledby="activity-heading">
+        <h2 id="activity-heading" className="text-lg font-semibold text-graphite">
+          Recent activity
+        </h2>
+        {client.activity.length === 0 ? (
+          <p className="mt-2 text-sm text-muted">Nothing has happened for this client yet.</p>
+        ) : (
+          <ol className="mt-3 grid gap-2">
+            {client.activity.map((entry) => (
+              <li key={entry.id} className="border-l-2 border-line-soft pl-3 text-sm text-secondary">
+                <span className="font-medium text-graphite">{entry.actorName ?? "Someone"}</span>{" "}
+                {entry.summary}
+                <span className="ml-2 text-xs text-muted">{entry.createdAt.toLocaleDateString()}</span>
+              </li>
+            ))}
+          </ol>
+        )}
       </section>
     </div>
   );

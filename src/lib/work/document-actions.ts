@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { reportActionFailure } from "./action-error";
 import { hasCapability } from "./capabilities";
 import { DocumentRepository, type DocumentKind } from "./document-repository";
 import { resolveCommentVisibility, type CommentVisibility } from "./discussion-repository";
@@ -50,7 +51,8 @@ export async function createDocumentAction(
 
   try {
     await new DocumentRepository().create({ title, kind, body, visibility, clientId, projectId, createdBy: session.userId });
-  } catch {
+  } catch (error) {
+    reportActionFailure("createDocumentAction", error);
     return { error: "Could not create the document." };
   }
   revalidatePath("/flow/docs");
@@ -119,7 +121,8 @@ export async function createWorkFromActionsAction(
       });
       await docRepo.linkWork({ documentId, workItemId: item.id });
     }
-  } catch {
+  } catch (error) {
+    reportActionFailure("createWorkFromActionsAction", error);
     return { error: "Could not create work from the selected actions." };
   }
   // The creator owns the new work, so no assignment notification is needed (emit() no-ops

@@ -2,22 +2,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { hasCapability } from "@/lib/work/capabilities";
 import { ClientsRepository } from "@/lib/work/clients-repository";
-import { DocumentRepository } from "@/lib/work/document-repository";
+import { DOCUMENT_KIND_LABEL, DocumentRepository } from "@/lib/work/document-repository";
 import { ProjectsRepository } from "@/lib/work/projects-repository";
 import { resolveWorkSession } from "@/lib/work/session";
 import { CreateDocumentForm } from "@/components/work/docs/document-forms";
-
-const KIND_LABEL: Record<string, string> = {
-  strategy: "Strategy",
-  brief: "Brief",
-  meeting_note: "Meeting note",
-  sop: "SOP",
-  report: "Report",
-  proposal: "Proposal",
-  research: "Research",
-  decision: "Decision",
-  general: "General",
-};
 
 export default async function FlowDocsPage() {
   const resolution = await resolveWorkSession();
@@ -57,7 +45,7 @@ export default async function FlowDocsPage() {
                     {doc.title}
                   </Link>
                   <span className="text-xs text-muted">
-                    {KIND_LABEL[doc.kind]}
+                    {DOCUMENT_KIND_LABEL[doc.kind]}
                     {doc.visibility === "internal" ? " · Internal" : " · Shared"}
                   </span>
                 </div>

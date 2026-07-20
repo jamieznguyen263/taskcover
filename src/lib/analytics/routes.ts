@@ -7,6 +7,9 @@ export function isTrackingExcludedPath(pathname: string | null | undefined): boo
   const base = stripLocaleFromPath(path);
   return (
     base.startsWith("/admin") ||
+    // Taskcover Flow is an internal, noindex application — staff using the PM tool are not
+    // marketing traffic, and loading GTM there would track colleagues, not prospects.
+    base.startsWith("/flow") ||
     base.startsWith("/api") ||
     base.startsWith("/internal") ||
     base.startsWith("/invite") ||

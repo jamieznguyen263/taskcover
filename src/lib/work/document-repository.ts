@@ -24,6 +24,18 @@ export type DocumentKind =
   | "decision"
   | "general";
 
+export const DOCUMENT_KIND_LABEL: Record<DocumentKind, string> = {
+  strategy: "Strategy",
+  brief: "Brief",
+  meeting_note: "Meeting note",
+  sop: "SOP",
+  report: "Report",
+  proposal: "Proposal",
+  research: "Research",
+  decision: "Decision",
+  general: "General",
+};
+
 export type DocumentSummary = {
   id: string;
   title: string;
