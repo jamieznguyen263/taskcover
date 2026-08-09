@@ -1,6 +1,7 @@
 import { buildInsightArticle } from "../insights.helpers";
 import { getSharedSources } from "../insights.registry";
 import type { InsightsContent } from "../insights.types";
+import { applyTechnicalSeoBatch1Audit } from "./technical-seo-batch-1";
 
 const ctaAudit = { label: "Get a free SEO audit", href: "/free-seo-audit" };
 const ctaCall = { label: "Book a strategy call", href: "/book-a-call" };
@@ -224,7 +225,7 @@ export const insights: InsightsContent = {
       cta: { title: "Build stronger in-house SEO judgment.", body: "Use mentor support to review strategy, roadmaps, and execution quality.", primary: { label: "Explore SEO Mentor", href: "/services/seo-mentor-service" } },
     },
   },
-  articles: [
+  articles: applyTechnicalSeoBatch1Audit([
     buildInsightArticle({
       id: "insight-en-seo-2026",
       slug: "seo-2026-google-ai-search-revenue-growth",
@@ -6127,5 +6128,5 @@ export const insights: InsightsContent = {
       ],
     }),
 
-  ],
+  ]),
 };
