@@ -31,7 +31,7 @@ export async function WorkShell({ session, children }: { session: WorkSession; c
 
 export function WorkAccessDisabled() {
   return (
-    <div data-flow-root className="min-h-screen overflow-x-hidden bg-surface-soft p-4 sm:p-6">
+    <main data-flow-root className="min-h-screen overflow-x-hidden bg-surface-soft p-4 sm:p-6">
       <div
         className="mx-auto mt-20 w-full max-w-2xl min-w-0 overflow-hidden rounded-xl border border-line bg-white p-5 sm:p-6"
         style={{ width: "calc(100vw - 2rem)", maxWidth: "42rem" }}
@@ -47,13 +47,13 @@ export function WorkAccessDisabled() {
           administrator. Contact an Owner or Admin if you believe this is a mistake.
         </p>
       </div>
-    </div>
+    </main>
   );
 }
 
 export function WorkUnavailable() {
   return (
-    <div data-flow-root className="min-h-screen overflow-x-hidden bg-surface-soft p-4 sm:p-6">
+    <main data-flow-root className="min-h-screen overflow-x-hidden bg-surface-soft p-4 sm:p-6">
       <div
         className="mx-auto mt-20 w-full max-w-2xl min-w-0 overflow-hidden rounded-xl border border-line bg-white p-5 sm:p-6"
         style={{ width: "calc(100vw - 2rem)", maxWidth: "42rem" }}
@@ -69,6 +69,6 @@ export function WorkUnavailable() {
           account to use Taskcover Flow. The public site and Content CMS are unaffected.
         </p>
       </div>
-    </div>
+    </main>
   );
 }

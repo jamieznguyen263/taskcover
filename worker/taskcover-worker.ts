@@ -4,6 +4,7 @@
 import { DurableObject } from "cloudflare:workers";
 import handler from "../.open-next/worker.js";
 import { runScheduledTasks } from "../src/lib/cloudflare/scheduled";
+import { FLOW_PATHNAME_HEADER, isFlowPathname } from "../src/lib/work/flow-pathname-header";
 
 export class RateLimitCoordinator extends DurableObject {
   constructor(ctx, env) {
@@ -58,12 +59,31 @@ export default {
     if (redirect) return redirect;
     const previewStaticResponse = await previewPrerenderedStaticResponse(request, env);
     if (previewStaticResponse) return previewStaticResponse;
-    return handler.fetch(request, env, ctx);
+    return handler.fetch(withFlowPathname(request), env, ctx);
   },
   async scheduled(event, env, ctx) {
     ctx.waitUntil(runScheduledTasks(env, event.scheduledTime));
   },
 };
+
+/**
+ * Forwards the requested /flow path to the app as a header so the Flow layout can send a
+ * signed-out visitor back to the page they asked for after login. A layout cannot read the
+ * pathname itself, and Next 16 Proxy (middleware) is Node-runtime only, which OpenNext
+ * Cloudflare cannot deploy — so the Worker entry is the supported place to do this.
+ *
+ * Only /flow requests are touched. Any inbound value of the header is overwritten, so a
+ * client cannot forge a destination; the layout additionally passes it through
+ * resolveSafeRedirect(). Local `next dev` does not run this Worker, so the layout falls back
+ * to /flow there.
+ */
+function withFlowPathname(request) {
+  const { pathname } = new URL(request.url);
+  if (!isFlowPathname(pathname)) return request;
+  const headers = new Headers(request.headers);
+  headers.set(FLOW_PATHNAME_HEADER, pathname);
+  return new Request(request, { headers });
+}
 
 function canonicalRedirect(request, env) {
   const appUrl = env.APP_URL || env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";

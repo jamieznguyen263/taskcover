@@ -26,8 +26,8 @@ export default async function FlowProjectsPage() {
           Goals and delivery cycles
         </h1>
         <p className="mt-2 max-w-3xl text-sm leading-6 text-secondary">
-          A project is a specific goal, delivery cycle, or internal initiative. Work items and
-          List/Board/Calendar views attach here with FLOW-006.
+          A project is a specific goal, delivery cycle, or internal initiative. Open one to plan
+          its work in List or Board view.
         </p>
       </div>
 

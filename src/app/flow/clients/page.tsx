@@ -34,7 +34,7 @@ export default async function FlowClientsPage() {
         <h1 className="mt-2 text-2xl font-semibold tracking-tight text-graphite sm:text-3xl">Client context</h1>
         <p className="mt-2 max-w-3xl text-sm leading-6 text-secondary">
           Every client carries explainable health — a state plus a written reason, never an
-          opaque score. Projects, work, documents, and activity attach here in later slices.
+          opaque score. Open a client to see its projects, work, documents, and activity in one place.
         </p>
       </div>
 

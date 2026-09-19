@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { createOpaqueToken } from "@/lib/admin/security";
+import { reportActionFailure } from "./action-error";
+import { hasCapability } from "./capabilities";
 import { validateClientHealthUpdate } from "./client-health";
 import { ClientsRepository } from "./clients-repository";
 import type { ExternalMembershipKind } from "./external-access";
@@ -11,6 +13,39 @@ import { WorkRepository } from "./repository";
 
 export type TeamActionState = { error?: string };
 export type ExternalInviteState = { error?: string; inviteUrl?: string };
+
+export type QuickCreateOptions = {
+  projects: { id: string; name: string }[];
+  clients: { id: string; name: string }[];
+  members: { userId: string; displayName: string }[];
+  canManageProjects: boolean;
+  canManageDocs: boolean;
+};
+
+/**
+ * Options for the global Quick create panel, fetched on open rather than rendered into every
+ * page's shell — the panel is used occasionally, so paying three queries on every Flow page
+ * load would be the wrong trade. Capability flags travel with the data so the panel can hide
+ * modes the viewer may not use; the actions themselves still re-check server-side.
+ */
+export async function loadQuickCreateOptionsAction(): Promise<QuickCreateOptions> {
+  const session = await requireWorkSession("work:manage");
+  const [projects, clients, members] = await Promise.all([
+    new ProjectsRepository().listProjects(),
+    new ClientsRepository().listClients(),
+    new WorkRepository().listMembers(),
+  ]);
+
+  return {
+    projects: projects.map((project) => ({ id: project.id, name: project.name })),
+    clients: clients.map((client) => ({ id: client.id, name: client.name })),
+    members: members
+      .filter((member) => member.status === "active")
+      .map((member) => ({ userId: member.userId, displayName: member.displayName })),
+    canManageProjects: hasCapability(session.accessLevel, "projects:manage"),
+    canManageDocs: hasCapability(session.accessLevel, "docs:manage"),
+  };
+}
 
 const TEAM_NAME_MAX = 80;
 const TEAM_DESCRIPTION_MAX = 280;
@@ -28,7 +63,8 @@ export async function createTeamAction(_state: TeamActionState, formData: FormDa
 
   try {
     await new WorkRepository().createTeam({ name, description, createdBy: session.userId });
-  } catch {
+  } catch (error) {
+    reportActionFailure("createTeamAction", error);
     return { error: "Could not create the team. A team with this name may already exist." };
   }
   revalidatePath("/flow/admin");
@@ -44,7 +80,8 @@ export async function addTeamMemberAction(_state: TeamActionState, formData: For
 
   try {
     await new WorkRepository().addTeamMember({ teamId, userId });
-  } catch {
+  } catch (error) {
+    reportActionFailure("addTeamMemberAction", error);
     return { error: "Could not add the member to the team." };
   }
   revalidatePath("/flow/admin");
@@ -60,7 +97,8 @@ export async function removeTeamMemberAction(_state: TeamActionState, formData: 
 
   try {
     await new WorkRepository().removeTeamMember({ teamId, userId });
-  } catch {
+  } catch (error) {
+    reportActionFailure("removeTeamMemberAction", error);
     return { error: "Could not remove the member from the team." };
   }
   revalidatePath("/flow/admin");
@@ -115,7 +153,8 @@ export async function createExternalInviteAction(
       expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
       invitedBy: session.userId,
     });
-  } catch {
+  } catch (error) {
+    reportActionFailure("createExternalInviteAction", error);
     return { error: "The invitation could not be created." };
   }
   revalidatePath("/flow/admin");
@@ -134,7 +173,8 @@ export async function revokeExternalMembershipAction(
 
   try {
     await new WorkRepository().revokeExternalMembership({ membershipId, revokedBy: session.userId });
-  } catch {
+  } catch (error) {
+    reportActionFailure("revokeExternalMembershipAction", error);
     return { error: "Could not revoke this collaborator's access." };
   }
   revalidatePath("/flow/admin");
@@ -153,7 +193,8 @@ export async function createClientAction(_state: TeamActionState, formData: Form
 
   try {
     await new ClientsRepository().createClient({ name, accountManagerId, createdBy: session.userId });
-  } catch {
+  } catch (error) {
+    reportActionFailure("createClientAction", error, { actorId: session.userId });
     return { error: "Could not create the client. A client with this name may already exist." };
   }
   revalidatePath("/flow/clients");
@@ -173,7 +214,8 @@ export async function updateClientHealthAction(_state: TeamActionState, formData
 
   try {
     await new ClientsRepository().updateClientHealth({ clientId, state: validated.state, reason: validated.reason });
-  } catch {
+  } catch (error) {
+    reportActionFailure("updateClientHealthAction", error);
     return { error: "Could not update client health." };
   }
   revalidatePath(`/flow/clients/${clientId}`);
@@ -195,7 +237,8 @@ export async function addClientContactAction(_state: TeamActionState, formData: 
 
   try {
     await new ClientsRepository().addContact({ clientId, name, email, phone, roleTitle });
-  } catch {
+  } catch (error) {
+    reportActionFailure("addClientContactAction", error);
     return { error: "Could not add the contact." };
   }
   revalidatePath(`/flow/clients/${clientId}`);
@@ -211,7 +254,8 @@ export async function removeClientContactAction(_state: TeamActionState, formDat
 
   try {
     await new ClientsRepository().removeContact({ clientId, contactId });
-  } catch {
+  } catch (error) {
+    reportActionFailure("removeClientContactAction", error);
     return { error: "Could not remove the contact." };
   }
   revalidatePath(`/flow/clients/${clientId}`);
@@ -233,7 +277,8 @@ export async function createProjectAction(_state: TeamActionState, formData: For
 
   try {
     await new ProjectsRepository().createProject({ name, description, kind, clientId, createdBy: session.userId });
-  } catch {
+  } catch (error) {
+    reportActionFailure("createProjectAction", error, { kind, clientId, actorId: session.userId });
     return { error: "Could not create the project." };
   }
   revalidatePath("/flow/projects");
@@ -250,7 +295,8 @@ export async function addProjectMemberAction(_state: TeamActionState, formData: 
 
   try {
     await new ProjectsRepository().addProjectMember({ projectId, userId });
-  } catch {
+  } catch (error) {
+    reportActionFailure("addProjectMemberAction", error);
     return { error: "Could not add the member to the project." };
   }
   revalidatePath(`/flow/projects/${projectId}`);
@@ -266,7 +312,8 @@ export async function removeProjectMemberAction(_state: TeamActionState, formDat
 
   try {
     await new ProjectsRepository().removeProjectMember({ projectId, userId });
-  } catch {
+  } catch (error) {
+    reportActionFailure("removeProjectMemberAction", error);
     return { error: "Could not remove the member from the project." };
   }
   revalidatePath(`/flow/projects/${projectId}`);

@@ -9,7 +9,7 @@ export default async function AcceptInvitePage({ searchParams }: { searchParams:
   const token = (await searchParams).token ?? "";
 
   return (
-    <div data-admin-root className="min-h-screen bg-surface-soft px-5 py-12">
+    <main data-admin-root className="min-h-screen bg-surface-soft px-5 py-12">
       <div className="mx-auto max-w-md rounded-xl border border-line bg-white p-6 shadow-sm">
         <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand-teal">Invitation</p>
         <h1 className="mt-3 text-2xl font-semibold tracking-tight text-graphite">Create your Admin account</h1>
@@ -18,6 +18,6 @@ export default async function AcceptInvitePage({ searchParams }: { searchParams:
           <AcceptInviteForm token={token} />
         </div>
       </div>
-    </div>
+    </main>
   );
 }

@@ -100,7 +100,7 @@ export function ExternalAccessBlocked({ state }: { state: "not-started" | "expir
   const content = copy[state];
 
   return (
-    <div data-flow-root className="min-h-screen overflow-x-hidden bg-surface-soft p-4 sm:p-6">
+    <main data-flow-root className="min-h-screen overflow-x-hidden bg-surface-soft p-4 sm:p-6">
       <div
         className="mx-auto mt-20 w-full max-w-2xl min-w-0 overflow-hidden rounded-xl border border-line bg-white p-5 sm:p-6"
         style={{ width: "calc(100vw - 2rem)", maxWidth: "42rem" }}
@@ -122,6 +122,6 @@ export function ExternalAccessBlocked({ state }: { state: "not-started" | "expir
           </button>
         </form>
       </div>
-    </div>
+    </main>
   );
 }
