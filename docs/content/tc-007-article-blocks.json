@@ -1,0 +1,540 @@
+[
+  {
+    "type": "direct-answer",
+    "title": "Direct answer",
+    "answer": "Generative engine optimization (GEO) is the practice of making a brand's evidence — its web content, entity data, and third-party corroboration — easy for AI answer engines such as ChatGPT, Google's AI Overviews and AI Mode, Gemini, and Perplexity to find, retrieve, and cite accurately. It builds on existing SEO, entity, and earned-media work rather than replacing it: Google states plainly that optimizing for its generative AI features is still SEO, rooted in the same crawlability and content-quality fundamentals. GEO cannot guarantee that any assistant will mention a brand, because generative outputs are probabilistic and vary between runs, models, and dates — so measure it as coverage and accuracy over repeated, sampled runs, never as a fixed position you can lock in."
+  },
+  {
+    "type": "paragraph",
+    "text": "This guide gives you the operating model, not just the theory: a six-layer framework with acceptance tests, a 0–3 maturity score, a 90-day roadmap, and worked examples of the two techniques — query fan-out and source-gap analysis — that most GEO advice describes without ever showing."
+  },
+  {
+    "type": "key-takeaways",
+    "title": "Key takeaways",
+    "items": [
+      "Google's own documentation states there is no special markup, file, or technique that guarantees inclusion in AI Overviews or AI Mode — eligibility depends on the same indexing and snippet requirements as classic Search.",
+      "AI answer systems typically decompose one question into several sub-queries (a Google spokesperson has described AI Mode as running roughly a dozen searches per question) and retrieve from multiple sources, so being one of several corroborating sources is a more realistic goal than being 'the' answer.",
+      "Independent, peer-reviewed research finds most deliberate 'conversational SEO' manipulation tactics are ineffective or actively backfire — traditional relevance and authority signals still dominate.",
+      "AI search engines lean more heavily on earned, third-party media than brand-owned content, and engines differ meaningfully from each other in sourcing behavior — a technique that works for one engine won't necessarily transfer to another.",
+      "Because AI outputs are non-deterministic, a single-run screenshot is not a measurement. Use repeated sampling with confidence intervals, the same way the underlying research on citation variability does."
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "SEO vs. AEO vs. GEO: what's actually different"
+  },
+  {
+    "type": "paragraph",
+    "text": "Terminology here is unsettled, and Google itself pushes back on treating these as separate disciplines. It's still useful to know what each term commonly refers to in the industry before you build a program around them."
+  },
+  {
+    "type": "comparison-table",
+    "caption": "How the three terms are commonly used",
+    "columns": [
+      "Term",
+      "What it optimizes for",
+      "Typical surface"
+    ],
+    "rows": [
+      [
+        "SEO",
+        "Ranking position in a list of results",
+        "Classic search engine results pages"
+      ],
+      [
+        "AEO (answer engine optimization)",
+        "Being extracted as a direct, structured answer",
+        "Featured snippets, AI Overviews, voice answers"
+      ],
+      [
+        "GEO (generative engine optimization)",
+        "Being cited, summarized, or recommended inside a generated response",
+        "Chat-style AI answers: ChatGPT, Gemini, Perplexity, Google AI Mode"
+      ]
+    ]
+  },
+  {
+    "type": "callout",
+    "tone": "blue",
+    "title": "Google's own position",
+    "body": "Google's Search Central documentation states: “From Google Search's perspective, optimizing for generative AI search is optimizing for the search experience, and thus still SEO,” and that its generative AI features are “rooted in our core Search ranking and quality systems.” Treat AEO and GEO as useful ways to talk about new surfaces, not as separate rule sets that override SEO fundamentals."
+  },
+  {
+    "type": "evidence",
+    "claimId": "google-geo-is-seo",
+    "summary": "Google's official AI-optimization guidance states that optimizing for generative AI search is, from Google's perspective, still SEO, rooted in the same core ranking and quality systems as classic Search — and separately warns site owners to scrutinize third-party 'AEO' or 'GEO' advice the same way they'd scrutinize any SEO advice.",
+    "sourceIds": [
+      "gaiopt"
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "What GEO is — and what it is not"
+  },
+  {
+    "type": "paragraph",
+    "text": "GEO is the discipline of preparing web-accessible evidence so generative engines can retrieve and cite a brand accurately. It overlaps heavily with SEO (crawlability, useful content, entities, authority) and with AEO (structuring content so it can be lifted as a direct answer). The paper that coined the term frames it as optimizing content for inclusion and prominence in generative responses rather than for a ranked list of links."
+  },
+  {
+    "type": "bullet-list",
+    "items": [
+      "It is not a guarantee of inclusion. No schema type, llms.txt file, or prompt-stuffing technique forces an AI engine to mention a brand.",
+      "It is not manipulation. Controlled benchmark research on 'conversational SEO' tactics found most are ineffective and some measurably hurt a document's standing — traditional relevance and authority signals still dominate.",
+      "It is not a replacement for SEO. The same indexable, trustworthy, crawlable content that helps classic search is also what generative engines retrieve from."
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "How generative engines discover and assemble evidence"
+  },
+  {
+    "type": "paragraph",
+    "text": "Most consumer AI answers combine a model's trained 'memory' with live retrieval from the indexable web. In practice, the sources that show up are usually pages and entities that are already crawlable, clearly written, and corroborated elsewhere — the same foundation this guide's companion technical SEO audit checks for."
+  },
+  {
+    "type": "heading",
+    "level": 3,
+    "text": "Query fan-out: a worked example"
+  },
+  {
+    "type": "paragraph",
+    "text": "Instead of answering a single query directly, AI search systems typically expand it into several related sub-queries, retrieve results for each, and synthesize the findings into one response. Google has publicly described its AI Mode as running roughly a dozen searches in the time a single search would normally take, powered by its Gemini models."
+  },
+  {
+    "type": "steps",
+    "title": "How query fan-out works, and how to think about it for a real prompt",
+    "steps": [
+      {
+        "title": "Decomposition",
+        "body": "The engine analyzes the user's question to identify the core topic and any implied sub-questions. Example prompt: 'best CRM for a 20-person sales team.' Implied sub-questions include price at that seat count, integrations, and ease of onboarding."
+      },
+      {
+        "title": "Expansion",
+        "body": "The engine generates multiple sub-queries covering different facets: comparison queries ('CRM comparison for small teams'), specification queries ('CRM pricing 20 users'), and clarification queries ('best CRM for sales team' broken out by industry)."
+      },
+      {
+        "title": "Execution",
+        "body": "Each sub-query runs against the indexable web roughly in parallel, pulling candidate passages rather than whole pages."
+      },
+      {
+        "title": "Synthesis",
+        "body": "The model reviews retrieved passages for agreement and contradiction across sources, favoring claims corroborated by more than one credible source."
+      },
+      {
+        "title": "What this means for content",
+        "body": "A single page rarely 'wins' fan-out. The realistic goal is having a passage-level, directly quotable answer for each of the sub-query angles your buyers actually ask about — which is why a documented prompt universe (layer 1 below) comes before any content work."
+      }
+    ]
+  },
+  {
+    "type": "evidence",
+    "claimId": "query-fan-out-mechanism",
+    "summary": "Independent industry analysis and Google's own public statements describe AI search as decomposing a single query into multiple sub-queries executed in parallel, then synthesizing the results — Google has characterized this as effectively running about a dozen searches per user question.",
+    "sourceIds": [
+      "sel-fanout",
+      "google-blog-fanout"
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 3,
+    "text": "Source-gap analysis: a worked example"
+  },
+  {
+    "type": "paragraph",
+    "text": "Source-gap analysis is how you find out why a competitor gets cited on a prompt and you don't. It's a comparison exercise, not a one-time lookup."
+  },
+  {
+    "type": "steps",
+    "title": "How to run a source-gap analysis",
+    "steps": [
+      {
+        "title": "1. Pick a prompt where a competitor is cited and you are not",
+        "body": "Use a real buyer question from your documented prompt universe, run it on the engine(s) that matter to you, and note every cited source."
+      },
+      {
+        "title": "2. Classify each cited source",
+        "body": "For each citation, note the source type (comparison page, product documentation, independent review, forum thread, press coverage) and whether it's owned by the competitor or a third party."
+      },
+      {
+        "title": "3. Map your own coverage against each cited source type",
+        "body": "For every source type that appears in the citations, check whether you have an equivalent page or third-party mention. A missing type — for example, no independent comparison coverage — is a specific, actionable gap."
+      },
+      {
+        "title": "4. Prioritize by how often the gap recurs",
+        "body": "A source-type gap that shows up across many prompts (for example, no third-party comparison coverage anywhere) is higher priority than a gap that appears once."
+      },
+      {
+        "title": "5. Close the gap with the matching content or outreach type",
+        "body": "An owned-content gap gets a new or improved page; a third-party gap gets digital PR or outreach — don't try to solve an earned-media gap with more owned content alone."
+      }
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "The six-layer GEO operating model"
+  },
+  {
+    "type": "image",
+    "src": "/resources/tc-007-geo-operating-model.svg",
+    "alt": "The six-layer GEO operating model diagram: prompt demand, technical eligibility, answer-ready content, entity consistency, third-party authority, and measurement, with a quarterly re-measurement loop back to prompt demand.",
+    "caption": "The six-layer GEO operating model. Each layer has an acceptance test and a 0-3 maturity score; measurement feeds back into prompt demand on a recurring cadence.",
+    "width": 960,
+    "height": 620
+  },
+  {
+    "type": "paragraph",
+    "text": "Use this as the backbone of a GEO program. Each layer has an owner and an acceptance test, and each is scored on a 0–3 maturity scale."
+  },
+  {
+    "type": "comparison-table",
+    "caption": "The six layers, what they answer, and how to test them",
+    "columns": [
+      "Layer",
+      "Question it answers",
+      "Acceptance test"
+    ],
+    "rows": [
+      [
+        "1. Prompt demand",
+        "Which real buyer questions matter, per market?",
+        "A documented prompt universe exists per market and is reviewed quarterly"
+      ],
+      [
+        "2. Technical eligibility",
+        "Can engines fetch, render, and read the page?",
+        "Indexed, renderable, and text available without required interaction"
+      ],
+      [
+        "3. Answer-ready content",
+        "Is the key claim extractable in one to three sentences?",
+        "A direct answer sits near the top of the page, with a cited source"
+      ],
+      [
+        "4. Entity consistency",
+        "Is the brand described the same way everywhere?",
+        "Name, category, and facts match across owned and third-party sources"
+      ],
+      [
+        "5. Third-party authority",
+        "Do independent sources corroborate the brand?",
+        "Relevant mentions, reviews, and editorial coverage exist and are current"
+      ],
+      [
+        "6. Measurement",
+        "Are we improving over time, under uncertainty?",
+        "Repeated prompt sampling with confidence bands, not single-run screenshots"
+      ]
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "0–3 maturity scoring"
+  },
+  {
+    "type": "checklist",
+    "title": "Score each layer from 0 (absent) to 3 (systematic)",
+    "items": [
+      {
+        "label": "0 — Absent",
+        "detail": "No documented work exists for this layer; it hasn't been assessed."
+      },
+      {
+        "label": "1 — Ad hoc",
+        "detail": "Some work has happened, but it's undocumented, inconsistent across pages or markets, or driven by a single person's memory."
+      },
+      {
+        "label": "2 — Documented",
+        "detail": "A defined process exists and is followed for new content, but historical gaps haven't been fully closed and there's no recurring review cadence."
+      },
+      {
+        "label": "3 — Systematic",
+        "detail": "A defined process is followed consistently, historical gaps are closed, and there's a recurring review cadence with a named owner."
+      }
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Worked sample scorecard"
+  },
+  {
+    "type": "paragraph",
+    "text": "The table below is an illustrative example of how a completed scorecard reads for a hypothetical mid-market SaaS company — it is not a real client's data. Use it as a template, not a benchmark to match."
+  },
+  {
+    "type": "comparison-table",
+    "caption": "Illustrative example scorecard (hypothetical company, for template purposes only)",
+    "columns": [
+      "Layer",
+      "Maturity (0–3)",
+      "Evidence note"
+    ],
+    "rows": [
+      [
+        "1. Prompt demand",
+        "2",
+        "Prompt universe documented for the US market; Canada and Australia not yet built"
+      ],
+      [
+        "2. Technical eligibility",
+        "3",
+        "All priority pages indexed and render correctly; verified via URL Inspection"
+      ],
+      [
+        "3. Answer-ready content",
+        "1",
+        "Most pages lack a direct-answer block near the top; retrofitted on 3 of 40 priority pages"
+      ],
+      [
+        "4. Entity consistency",
+        "2",
+        "Core facts consistent on owned pages; two third-party directories show outdated pricing"
+      ],
+      [
+        "5. Third-party authority",
+        "1",
+        "Two independent comparison mentions found; no recent editorial coverage"
+      ],
+      [
+        "6. Measurement",
+        "0",
+        "No repeated-run measurement process in place yet"
+      ]
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Repeated-run measurement methodology"
+  },
+  {
+    "type": "paragraph",
+    "text": "Because generative answers vary between runs, models, and dates, a single query-and-screenshot is an anecdote, not a measurement. Academic work modeling AI citation behavior finds that citation counts follow a highly variable, power-law-like distribution, and recommends treating any single measurement as a sample from an underlying distribution rather than a fixed value."
+  },
+  {
+    "type": "steps",
+    "title": "A defensible measurement method",
+    "steps": [
+      {
+        "title": "Define the prompt universe",
+        "body": "Use the real buyer questions documented in layer 1, per market and per engine you care about."
+      },
+      {
+        "title": "Run each prompt multiple times",
+        "body": "Repeat the same prompt across separate sessions (not just separate tabs) to capture run-to-run variation, not a single lucky or unlucky result."
+      },
+      {
+        "title": "Record mention rate, citation rate, and accuracy separately",
+        "body": "A brand can be mentioned without being cited as a source, and cited without being described accurately — track these as distinct numbers."
+      },
+      {
+        "title": "Report with a confidence range, not a point estimate",
+        "body": "State results as 'cited in roughly 30–45% of sampled runs' rather than a single precise percentage, and note the sample size and date range."
+      },
+      {
+        "title": "Re-run on a fixed cadence and log model/version changes",
+        "body": "Re-measure quarterly at minimum, and note if the underlying model version changed between runs — that alone can move results independent of any work you did."
+      }
+    ]
+  },
+  {
+    "type": "evidence",
+    "claimId": "measurement-uncertainty",
+    "summary": "Peer-reviewed statistical modeling of AI citation behavior across multiple generative search platforms found that citation-visibility metrics follow a highly variable, power-law-type distribution and that single-run measurements give a misleadingly precise picture of performance — the researchers recommend bootstrap confidence-interval methods over point estimates.",
+    "sourceIds": [
+      "geo26u"
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Confidence and uncertainty, explained"
+  },
+  {
+    "type": "paragraph",
+    "text": "Treat every GEO metric as an estimate with a margin of error, not a fact. A citation rate measured from 10 runs of one prompt on one day is a much less reliable number than the same rate measured from 50 runs across two weeks — report the second, not the first, and say how many runs and over what period a number represents whenever you share it."
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Engine-by-engine limitations"
+  },
+  {
+    "type": "paragraph",
+    "text": "Independent research comparing generative search platforms found they differ meaningfully in domain diversity, content freshness, cross-language stability, and sensitivity to how a query is phrased — and that AI search systems as a category lean more heavily on earned, third-party media than on brand-owned or social content, in contrast to classic search's more balanced sourcing. Practical implications:"
+  },
+  {
+    "type": "bullet-list",
+    "items": [
+      "A technique or source that gets cited on one engine is not guaranteed to transfer to another — track results per engine, not as one blended number.",
+      "Because third-party media is weighted heavily across AI search platforms, earned coverage and independent mentions carry outsized importance compared to their role in classic SEO.",
+      "Phrasing sensitivity means a near-identical prompt can produce a different citation set — this is a reason to sample multiple prompt phrasings per intent, not just one.",
+      "Engine behavior and citation patterns change as models are updated; treat any specific engine mechanic described in this guide as time-bound and re-verify against current primary sources before making a claim to a client or stakeholder."
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Prioritize GEO by business type"
+  },
+  {
+    "type": "bullet-list",
+    "items": [
+      "Local business: entity consistency (name, address, category) and reviews matter most; validate any local recommendation against local, current sources rather than assuming national guidance applies unchanged.",
+      "SaaS: comparison, alternatives, and integration pages, plus documentation an engine can quote directly, tend to matter most — this is also where the source-gap method above pays off fastest.",
+      "Ecommerce: accurate, current product facts, availability, and category clarity matter most; never let a static page assert a price or availability an engine could contradict against a live feed.",
+      "Healthcare and legal: these are YMYL (your-money-or-your-life) topics. Require qualified human review, avoid direct medical or legal advice, and never assert jurisdiction-specific claims without a cited, current source.",
+      "International brands: track prompts, sources, and results separately per market. Terminology, competitor sets, and even which engine dominates can differ by country even when the underlying service is global."
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "USA, Canada, and Australia market treatment"
+  },
+  {
+    "type": "paragraph",
+    "text": "Run a separate prompt universe and source-gap analysis for each of the USA, Canada, and Australia rather than assuming a US-validated result transfers. Practical differences worth tracking: local competitor sets and review platforms differ by country; Canadian and Australian buyers may phrase the same intent differently (spelling, terminology, and local brand names commonly cited alongside global ones); and engine usage share is not identical across these three markets, so a program weighted entirely toward one engine may under-serve one of the three countries. None of this changes the six-layer model itself — it changes what you measure and which sources you pursue within each layer, per market."
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "A 90-day GEO roadmap"
+  },
+  {
+    "type": "steps",
+    "title": "Implementation plan",
+    "steps": [
+      {
+        "title": "Weeks 1–2: Baseline",
+        "body": "Owner: SEO/GEO lead. Define the prompt universe per market and engine, then run each prompt several times to record mention rate, citation rate, and accuracy. This is your control, not a target."
+      },
+      {
+        "title": "Weeks 3–4: Source-gap analysis",
+        "body": "Owner: SEO/GEO lead with content input. For prompts where competitors are cited and you're not, run the five-step source-gap method above and document the specific missing source types."
+      },
+      {
+        "title": "Weeks 5–8: Content and entity upgrades",
+        "body": "Owner: content team + developer. Add answer-ready passages, fix entity inconsistencies across owned and third-party listings, and confirm technical eligibility per layer 2."
+      },
+      {
+        "title": "Weeks 6–10: Earned media",
+        "body": "Owner: digital PR / content marketing. Pursue genuinely editorial coverage and relevant third-party listings identified in the source-gap analysis; avoid paid placements presented as independent evidence."
+      },
+      {
+        "title": "Weeks 9–12: Re-measure",
+        "body": "Owner: analytics. Re-run the same prompt universe under the same method, compare with confidence bands against the week 1–2 baseline, and note any model or version changes."
+      }
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Measurement, limitations, and common failure modes"
+  },
+  {
+    "type": "comparison-table",
+    "caption": "What each metric shows, and what it can't prove",
+    "columns": [
+      "Metric",
+      "What it shows",
+      "What it cannot prove"
+    ],
+    "rows": [
+      [
+        "Mention rate",
+        "How often a brand appears across sampled runs",
+        "That any specific user saw it"
+      ],
+      [
+        "Citation rate",
+        "How often a brand is cited as a source",
+        "Causation with revenue"
+      ],
+      [
+        "Accuracy",
+        "Whether the engine describes the brand correctly",
+        "Stability across future model updates"
+      ]
+    ]
+  },
+  {
+    "type": "callout",
+    "tone": "amber",
+    "title": "Limitations",
+    "body": "GEO measurement is sampling under uncertainty. Results vary by engine, market, model version, and date. No method can prove that a single AI answer caused a purchase, and no technique, schema type, or file can force an engine to include a brand. Treat every claim in this guide about how a specific engine behaves as time-bound, and re-verify against current primary sources before repeating it to a client or stakeholder."
+  },
+  {
+    "type": "bullet-list",
+    "items": [
+      "Common failure mode: measuring once and reporting the result as a stable fact.",
+      "Common failure mode: averaging results from different markets or engines into one blended score, hiding real per-market or per-engine gaps.",
+      "Common failure mode: chasing schema or 'llms.txt' tactics instead of the underlying content and authority work those tactics can't substitute for.",
+      "Common failure mode: confusing a single screenshot of an AI answer with a trend."
+    ]
+  },
+  {
+    "id": "faq",
+    "type": "heading",
+    "level": 2,
+    "text": "Frequently asked questions"
+  },
+  {
+    "type": "faq",
+    "items": [
+      {
+        "question": "What's the single most common mistake companies make when starting GEO?",
+        "answer": "Skipping straight to content or schema changes without first building layer 1 — a documented prompt universe. Without knowing which real buyer questions matter per market, there's no way to know which content or entity gaps are actually worth closing, and no baseline to measure against later."
+      },
+      {
+        "question": "Is there a tool that can guarantee my brand gets cited by ChatGPT or Gemini?",
+        "answer": "No, and treat any vendor claiming otherwise with skepticism. Independent benchmark research on deliberate 'conversational SEO' manipulation tactics found most are ineffective and some actively hurt standing. Tools can help you sample prompts and measure citation rates over time — measurement and monitoring are legitimate uses; a guarantee of inclusion is not."
+      },
+      {
+        "question": "How is GEO different from just doing more digital PR?",
+        "answer": "Digital PR is one input into layer 5 (third-party authority), which research shows AI search weights especially heavily — but GEO also requires technical eligibility, answer-ready on-page content, and entity consistency across owned and third-party sources. Earned coverage alone won't help if the underlying page isn't crawlable or the brand's facts are inconsistent across the web."
+      },
+      {
+        "question": "Should every business run a full GEO program right now?",
+        "answer": "Prioritize by exposure: SaaS, ecommerce, and any category where buyers commonly research via AI chat interfaces see the clearest case for early investment. YMYL categories like healthcare and legal should move more cautiously and with named human review at every stage, given the accuracy stakes involved."
+      }
+    ]
+  },
+  {
+    "href": "/services/ai-search-optimization",
+    "type": "related-service",
+    "title": "AI Search Optimization service",
+    "summary": "A named strategist and a documented method for building AI-search visibility."
+  },
+  {
+    "href": "/services/content-marketing",
+    "type": "related-service",
+    "title": "Content Marketing service",
+    "summary": "Answer-ready content and topic authority built for both classic and AI search."
+  },
+  {
+    "href": "/services/digital-pr-link-building",
+    "type": "related-service",
+    "title": "Digital PR and Link Building service",
+    "summary": "Earned, third-party coverage — the source type AI search weights most heavily."
+  },
+  {
+    "type": "cta",
+    "title": "Build a GEO program with honest measurement",
+    "body": "Taskcover's AI Search Optimization team can run the six-layer assessment, close the highest-priority source gaps, and report results with confidence bands instead of screenshots.",
+    "primary": {
+      "href": "/services/ai-search-optimization",
+      "label": "Explore AI Search Optimization"
+    },
+    "secondary": {
+      "href": "/book-a-call",
+      "label": "Book a strategy call"
+    }
+  }
+]

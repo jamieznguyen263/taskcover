@@ -1,0 +1,635 @@
+[
+  {
+    "type": "direct-answer",
+    "title": "Direct answer",
+    "answer": "A technical SEO audit tests whether search engines can crawl, render, index, and trust a site, and whether those foundations translate into revenue rather than just a clean tool score. Run it in four stages: collect evidence (crawl data, Search Console, logs), work through crawlability/indexation, then architecture/rendering/Core Web Vitals/structured data, then convert findings into a backlog ranked by revenue risk, affected URL count, and effort. A technical audit removes barriers to being found; it cannot promise rankings, traffic, or AI-search mentions, because those also depend on content quality, competition, and factors outside the audit's scope."
+  },
+  {
+    "type": "paragraph",
+    "text": "This guide is written for the person who has to run that audit and defend the resulting backlog to a founder, CMO, or dev lead — not just list warnings. It works the same way across SaaS, service, multi-location, and ecommerce sites, but the specific checks and priorities shift by page template, so audit by template, not only by domain."
+  },
+  {
+    "type": "key-takeaways",
+    "title": "Key takeaways",
+    "items": [
+      "Audit by page template (home, category, product/service, article, location) — domain-wide averages hide template-specific blockers.",
+      "Sequence fixes crawl/index blockers first, then architecture and internal discovery, then rendering and Core Web Vitals polish — in that order, regardless of tool severity color.",
+      "Score every finding by revenue risk and affected URL count, not just technical severity, before it enters a backlog.",
+      "Core Web Vitals thresholds are LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1, measured at the 75th percentile on mobile field data.",
+      "Google states there is no special markup or file that forces inclusion in AI Overviews or AI Mode — the same crawlable, indexable, well-linked foundation this audit checks is what those features also depend on."
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "What a technical SEO audit covers, and what it doesn't"
+  },
+  {
+    "type": "definition",
+    "term": "Technical SEO audit",
+    "definition": "A structured review of whether a website's infrastructure — crawlability, indexation, architecture, JavaScript rendering, Core Web Vitals, and structured data — lets search engines discover, render, and trust its pages, backed by evidence rather than a single tool's opinion."
+  },
+  {
+    "type": "paragraph",
+    "text": "It does not cover keyword strategy, content quality, or link acquisition directly — those are content and authority work. It also does not, on its own, predict rankings: it removes barriers and creates eligibility, which is a precondition for performance, not a guarantee of it."
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Stage 1 — Define scope and collect evidence"
+  },
+  {
+    "type": "bullet-list",
+    "items": [
+      "Environment: confirm you are auditing production, not staging — verify via response headers or a robots.txt diff.",
+      "Templates: identify every page type (home, category, product/service, article, location) and pull a representative URL sample from each.",
+      "Baseline: record current index coverage, impressions, clicks, and Core Web Vitals status, dated, before any fix ships.",
+      "Sources: combine a site crawler, Search Console (index coverage, Enhancements, crawl stats), and server logs where available — don't rely on a single tool.",
+      "Sample size: for large sites, audit a representative sample per template rather than attempting full-domain coverage in one pass."
+    ]
+  },
+  {
+    "type": "callout",
+    "tone": "blue",
+    "title": "Evidence first, opinions second",
+    "body": "Every finding in this audit — and every row in the workbook below — should point to a URL, a screenshot, or a report line. A finding without evidence is a guess, and guesses don't survive a developer asking 'show me.'"
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Stage 2 — Crawlability and indexation"
+  },
+  {
+    "type": "paragraph",
+    "text": "This is the foundation. If a search engine cannot fetch and index a page, nothing else in this audit matters for that URL."
+  },
+  {
+    "type": "bullet-list",
+    "items": [
+      "robots.txt does not block CSS, JS, or sections search engines need to render or index the page.",
+      "HTTP status codes are correct: 200 for live pages, 301 for moved pages, 404/410 for removed pages, with no soft-404s.",
+      "XML sitemaps list only canonical, indexable, 200-status URLs and are referenced from robots.txt.",
+      "Canonical tags are self-referencing on indexable pages or point to the correct preferred URL on duplicates.",
+      "noindex is applied only where intended — check it against revenue pages specifically, not just filters and thin pages.",
+      "No important page is orphaned: every revenue-relevant URL has at least one real internal link pointing to it."
+    ]
+  },
+  {
+    "type": "evidence",
+    "claimId": "gai-crawlable-foundation",
+    "summary": "Google's own guidance for AI features on Search states there are no additional technical requirements to appear in AI Overviews or AI Mode beyond standard indexing and snippet eligibility — the same crawlability and indexation work in this section is the foundation for both classic and AI-powered results.",
+    "sourceIds": [
+      "gai"
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Stage 3 — Site architecture and internal discovery"
+  },
+  {
+    "type": "paragraph",
+    "text": "Architecture determines what gets discovered and how authority and crawl budget flow through the site."
+  },
+  {
+    "type": "bullet-list",
+    "items": [
+      "Revenue-critical pages sit within a shallow click depth of the homepage or another high-authority entry point.",
+      "Hub and category pages link down to their children and across to sibling categories, not just up to a parent.",
+      "Breadcrumbs are present, accurate, and reflect the site's real hierarchy, with BreadcrumbList schema attached.",
+      "Primary navigation exists in the initial HTML response, not only after client-side JavaScript runs.",
+      "Internal links use real, crawlable <a href> anchors — not JavaScript click handlers with no underlying href."
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Stage 3 continued — JavaScript rendering"
+  },
+  {
+    "type": "paragraph",
+    "text": "A page can look complete in a browser and still be functionally invisible to a crawler if the content only exists after client-side JavaScript executes. Test the rendered output, not the raw source."
+  },
+  {
+    "type": "steps",
+    "title": "How to check whether a template renders correctly for search engines",
+    "steps": [
+      {
+        "title": "Fetch the rendered HTML",
+        "body": "Use Google Search Console's URL Inspection tool (or an equivalent rendering tool) to view the page after JavaScript execution, not the raw view-source."
+      },
+      {
+        "title": "Confirm primary content and headings are present",
+        "body": "Check that the main heading, body copy, and any structured data your template relies on actually appear in the rendered HTML output."
+      },
+      {
+        "title": "Confirm links are real anchors in the rendered DOM",
+        "body": "Inspect the rendered DOM for <a href> elements on navigation and key internal links — links generated only on click or hover won't be discovered by a standard crawl."
+      },
+      {
+        "title": "Test without user interaction",
+        "body": "Re-fetch with no simulated scroll or click. If content only appears after interaction (infinite scroll, click-to-reveal), provide a crawlable fallback such as real paginated URLs."
+      }
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Stage 3 continued — Core Web Vitals and performance"
+  },
+  {
+    "type": "paragraph",
+    "text": "Core Web Vitals measure loading, interactivity, and visual stability from real users. Assess them with field data at the 75th percentile, on mobile as the primary device class."
+  },
+  {
+    "type": "comparison-table",
+    "caption": "Core Web Vitals thresholds",
+    "columns": [
+      "Metric",
+      "What it measures",
+      "Recommended threshold (75th percentile)"
+    ],
+    "rows": [
+      [
+        "Largest Contentful Paint (LCP)",
+        "Loading performance — when the largest visible element renders",
+        "2.5 seconds or less"
+      ],
+      [
+        "Interaction to Next Paint (INP)",
+        "Responsiveness — delay between a user interaction and the next visual update",
+        "200 milliseconds or less"
+      ],
+      [
+        "Cumulative Layout Shift (CLS)",
+        "Visual stability — how much visible content shifts unexpectedly",
+        "0.1 or less"
+      ]
+    ]
+  },
+  {
+    "type": "statistic",
+    "value": "≤ 200ms",
+    "label": "Interaction to Next Paint (INP) threshold at the 75th percentile",
+    "sourceId": "gvitals",
+    "note": "INP replaced First Input Delay (FID) as a Core Web Vital in March 2024."
+  },
+  {
+    "type": "bullet-list",
+    "items": [
+      "Field data (Chrome UX Report, Search Console's Core Web Vitals report) is the primary reference; lab data (PageSpeed Insights, Lighthouse) is for diagnosis, not final scoring.",
+      "Render-blocking CSS/JS on the critical path is minimized for high-traffic templates.",
+      "Images are served in modern formats, correctly sized, and compressed for their rendered dimensions.",
+      "Third-party scripts (tags, widgets, ad units) are audited and any with disproportionate cost are deferred or removed."
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Stage 3 continued — Structured data"
+  },
+  {
+    "type": "paragraph",
+    "text": "Structured data should describe what's actually on the page — no more, no less — using currently supported schema.org types. It supports eligibility and clarity; it is not a lever that forces a specific search result to appear."
+  },
+  {
+    "type": "comparison-table",
+    "caption": "Recommended Article/BlogPosting structured data properties",
+    "columns": [
+      "Property",
+      "Purpose",
+      "Note"
+    ],
+    "rows": [
+      [
+        "headline",
+        "Article title",
+        "Keep concise — long titles may be truncated in results"
+      ],
+      [
+        "datePublished / dateModified",
+        "First publish and most recent update timestamps",
+        "Use ISO 8601 format with timezone"
+      ],
+      [
+        "author",
+        "Content creator",
+        "Prefer a Person or Organization entity with a name and profile URL, not a name string alone"
+      ],
+      [
+        "image",
+        "Representative image",
+        "Crawlable, indexable, and genuinely relevant to the content"
+      ]
+    ]
+  },
+  {
+    "type": "callout",
+    "tone": "amber",
+    "title": "FAQPage schema no longer produces a Google rich result",
+    "body": "As of May 7, 2026, Google no longer shows the FAQ rich result feature in Search for general sites — and even before that change, it was restricted to well-known, authoritative government and health websites. Keep a visible FAQ section for users and for AI-answer extraction, and it is still reasonable to include FAQPage schema for other consumers of structured data, but do not describe FAQ schema as something that will produce a Google rich result."
+  },
+  {
+    "type": "evidence",
+    "claimId": "faqpage-deprecated",
+    "summary": "Google's official Search Central changelog recorded a deprecation notice for the FAQ rich result feature on May 8, 2026 (effective May 7, 2026), followed by removal of the feature's documentation on June 15, 2026 — corroborated by Google's FAQPage structured data reference page, which also confirms the feature was restricted to well-known, authoritative government and health sites even before that date.",
+    "sourceIds": [
+      "gupdates",
+      "gfaq"
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Site migrations and replatforms"
+  },
+  {
+    "type": "paragraph",
+    "text": "A migration (domain change, CMS replatform, or URL-structure change) is where technical SEO risk concentrates hardest, because many of the checks above can fail simultaneously on launch day."
+  },
+  {
+    "type": "checklist",
+    "title": "Pre-launch, cutover, and post-launch migration checklist",
+    "items": [
+      {
+        "label": "Full redirect map",
+        "detail": "Built from a complete crawl of the legacy site, not from memory or a partial URL list, and tested in staging before cutover."
+      },
+      {
+        "label": "robots.txt verified on the new environment",
+        "detail": "Confirmed to allow crawling before DNS cutover — a common and easily-missed failure point."
+      },
+      {
+        "label": "Canonical tags point to new URLs",
+        "detail": "Not leftover legacy or staging URLs, verified by crawling the new environment before launch."
+      },
+      {
+        "label": "Documented rollback plan",
+        "detail": "Written down before cutover, with explicit numeric triggers (for example, an indexation or traffic drop threshold) for when to roll back."
+      },
+      {
+        "label": "New Search Console property live",
+        "detail": "Verified at or before cutover, with a Change of Address submitted if the domain changed."
+      },
+      {
+        "label": "Daily post-launch monitoring",
+        "detail": "Index coverage, crawl errors, and organic traffic tracked against baseline for the first one to two weeks, with a named owner."
+      },
+      {
+        "label": "30- and 90-day re-audit scheduled",
+        "detail": "Using this same workbook, booked at migration sign-off rather than left informal."
+      }
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Ecommerce and faceted navigation"
+  },
+  {
+    "type": "paragraph",
+    "text": "Faceted navigation is where crawl budget and indexation control matter most for catalog sites — the goal is to make high-demand filter combinations indexable while keeping low-value combinations out of the index."
+  },
+  {
+    "type": "bullet-list",
+    "items": [
+      "Facet combinations with no independent search demand are excluded from indexation (noindex or parameter handling), not crawled and indexed by default.",
+      "High-demand facet combinations with real search volume are deliberately made indexable and linked to — don't let the default block them too.",
+      "Out-of-stock products return an accurate status rather than a silent 404, and follow a documented policy (redirect to category, or remain live with clear messaging).",
+      "Merchant feed and product structured data reflect live price and availability, not a cached or manually maintained value.",
+      "Internal site search result pages are excluded from indexation by default unless deliberately optimized as landing pages."
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Market considerations: USA, Canada, and Australia"
+  },
+  {
+    "type": "paragraph",
+    "text": "For a single-language, single-currency site, most of this checklist applies identically across the USA, Canada, and Australia — crawlability, rendering, and Core Web Vitals thresholds are not market-specific. The differences that are material: confirm CDN edge coverage and server response time for the specific markets you serve (a site hosted and tuned for US traffic can show a materially worse Core Web Vitals result for Australian visitors); apply hreflang and locale-specific canonical rules correctly if you run separate en-CA, en-AU, or en-US sections or pricing pages (see the internal links on hreflang and international architecture below); and confirm structured data and metadata use the correct currency, date format, and locale where the template renders one. Treat any other claimed regional difference in core technical mechanics with skepticism — Google's crawling, rendering, and Core Web Vitals systems are not region-specific by default."
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Stage 4 — Prioritize findings into a delivery roadmap"
+  },
+  {
+    "type": "image",
+    "src": "/resources/tc-003-technical-seo-audit-framework.svg",
+    "alt": "Technical SEO audit framework diagram showing four stages: evidence collection, crawlability and indexation, architecture and rendering, and prioritization, with a monitoring loop back to evidence.",
+    "caption": "The four-stage technical SEO audit framework: evidence feeds crawlability/indexation and architecture/rendering, both feed prioritization, and a recurring monitoring loop returns to evidence.",
+    "width": 960,
+    "height": 460
+  },
+  {
+    "type": "paragraph",
+    "text": "Convert the audit into a ranked backlog, not a dump of tool warnings. Sequence by category first, then within each category by revenue risk and affected URL count."
+  },
+  {
+    "type": "decision-framework",
+    "title": "Sequencing rule",
+    "criteria": [
+      {
+        "signal": "Any crawl or indexation blocker is open",
+        "action": "Fix it first — it prevents eligibility entirely, regardless of tool-assigned severity color."
+      },
+      {
+        "signal": "Architecture or internal-discovery issue with no active crawl/index blocker",
+        "action": "Fix next — this affects what gets found and how authority flows."
+      },
+      {
+        "signal": "Rendering, Core Web Vitals, or structured-data issue with no upstream blocker",
+        "action": "Fix third, as performance and clarity polish on an already-eligible page."
+      },
+      {
+        "signal": "Two findings of equal category rank",
+        "action": "Sequence by revenue risk first, then by affected URL count, then by effort."
+      }
+    ]
+  },
+  {
+    "type": "comparison-table",
+    "caption": "Backlog fields and why they matter",
+    "columns": [
+      "Field",
+      "Example values",
+      "Why it matters"
+    ],
+    "rows": [
+      [
+        "Revenue risk",
+        "High / Medium / Low",
+        "Focuses effort on what actually affects money, not just tool severity"
+      ],
+      [
+        "Affected URL count",
+        "Single count or template-level estimate",
+        "Scopes the blast radius of a fix"
+      ],
+      [
+        "Effort",
+        "S / M / L",
+        "Drives sequencing and sprint capacity planning"
+      ],
+      [
+        "Owner",
+        "A named individual, not a team name",
+        "Creates accountability"
+      ],
+      [
+        "Validation method",
+        "How the fix will be confirmed after it ships",
+        "Prevents a fix from being marked done without proof"
+      ],
+      [
+        "Rollback requirement",
+        "Yes / No / Conditional, with a note",
+        "Protects against a fix that causes a worse regression"
+      ]
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Implementation ownership"
+  },
+  {
+    "type": "comparison-table",
+    "caption": "Typical ownership by audit category",
+    "columns": [
+      "Category",
+      "Primary owner",
+      "Supporting role"
+    ],
+    "rows": [
+      [
+        "Crawlability and indexation",
+        "SEO lead",
+        "Developer for robots.txt/sitemap changes"
+      ],
+      [
+        "Architecture and internal linking",
+        "SEO lead",
+        "Content/editorial for anchor text and hub pages"
+      ],
+      [
+        "JavaScript rendering",
+        "Developer",
+        "SEO lead to define acceptance criteria"
+      ],
+      [
+        "Core Web Vitals and performance",
+        "Developer / performance engineer",
+        "SEO lead to prioritize by template traffic"
+      ],
+      [
+        "Structured data",
+        "Developer or CMS owner",
+        "SEO lead to define required properties per template"
+      ],
+      [
+        "Migrations",
+        "Developer / DevOps",
+        "SEO lead owns the redirect map and rollback triggers"
+      ],
+      [
+        "Ecommerce and faceted navigation",
+        "Developer / ecommerce platform owner",
+        "SEO lead to define which facets should be indexable"
+      ]
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "The 100-point technical SEO audit workbook"
+  },
+  {
+    "type": "paragraph",
+    "text": "This article's companion asset is a 100-point workbook covering every category above: evidence and scope, crawlability, indexation, architecture and internal linking, JavaScript rendering, Core Web Vitals and performance, structured data, migrations, ecommerce and faceted navigation, prioritization and governance, and monitoring. Each row carries an audit category, check ID, the check itself, page/template scope, an evidence field, a Pass/Partial/Fail/Not Applicable result, severity, revenue risk, affected URL count, owner, effort, dependency, recommended fix, validation method, rollback requirement, due date, status, and reviewer notes."
+  },
+  {
+    "type": "callout",
+    "tone": "green",
+    "title": "What's in the full workbook",
+    "body": "The complete 100-row workbook spans eleven categories: evidence and scope, crawlability, indexation, architecture and internal linking, JavaScript rendering, Core Web Vitals and performance, structured data, migrations, ecommerce and faceted navigation, prioritization and governance, and monitoring — with an evidence field and a named owner on every row."
+  },
+  {
+    "type": "sample-audit-reference",
+    "title": "Download the 100-point technical SEO audit workbook (XLSX)",
+    "href": "/resources/taskcover-technical-seo-audit-workbook.xlsx",
+    "summary": "The full workbook as a branded, ready-to-use spreadsheet — an Instructions sheet plus all 100 checks with filters, a frozen header, dropdown status fields, and conditional formatting. A plain CSV version is also available at /resources/taskcover-technical-seo-audit-workbook.csv."
+  },
+  {
+    "type": "checklist",
+    "title": "Sample of 10 workbook rows (of 100)",
+    "items": [
+      {
+        "label": "TSA-006 — Crawlability — robots.txt does not block CSS, JS, or sections required for rendering or indexing.",
+        "detail": "Scope: site-wide. Severity: Critical. Revenue risk: High. Evidence: robots.txt + URL Inspection rendered view."
+      },
+      {
+        "label": "TSA-009 — Crawlability — XML sitemap(s) list only canonical, indexable, 200-status URLs.",
+        "detail": "Scope: site-wide. Severity: High. Revenue risk: High. Evidence: sitemap file + Search Console sitemap report."
+      },
+      {
+        "label": "TSA-013 — Indexation — Canonical tags are self-referencing or point to the correct preferred URL.",
+        "detail": "Scope: all templates. Severity: Critical. Revenue risk: High. Evidence: crawler canonical report."
+      },
+      {
+        "label": "TSA-041 — JavaScript rendering — Primary content and headings are present in the rendered HTML.",
+        "detail": "Scope: all templates. Severity: Critical. Revenue risk: High. Evidence: URL Inspection rendered HTML."
+      },
+      {
+        "label": "TSA-049 — Core Web Vitals — LCP is at or under 2.5 seconds at the 75th percentile.",
+        "detail": "Scope: all templates. Severity: Critical. Revenue risk: High. Evidence: PageSpeed Insights / CrUX report."
+      },
+      {
+        "label": "TSA-062 — Structured data — Structured data reflects content actually visible on the page.",
+        "detail": "Scope: all templates using schema. Severity: Critical. Revenue risk: High. Evidence: Rich Results Test vs. rendered page."
+      },
+      {
+        "label": "TSA-071 — Migrations — A complete, tested redirect plan exists before cutover.",
+        "detail": "Scope: site-wide migration. Severity: Critical. Revenue risk: High. Evidence: redirect map file."
+      },
+      {
+        "label": "TSA-081 — Ecommerce — Low-value facet combinations are excluded from indexation.",
+        "detail": "Scope: category/listing templates. Severity: High. Revenue risk: High. Evidence: crawler URL-parameter + index-status report."
+      },
+      {
+        "label": "TSA-089 — Governance — Every finding is scored for revenue risk and affected URL count.",
+        "detail": "Scope: site-wide. Severity: High. Revenue risk: Medium. Evidence: this workbook, columns populated."
+      },
+      {
+        "label": "TSA-095 — Monitoring — Index coverage, crawl stats, and CWV reports are reviewed on a recurring cadence.",
+        "detail": "Scope: site-wide. Severity: Medium. Revenue risk: Medium. Evidence: monitoring calendar/dashboard."
+      }
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "Validation and monitoring"
+  },
+  {
+    "type": "paragraph",
+    "text": "Leading indicators tell you whether the fix worked technically. Lagging indicators tell you whether it mattered — but they're correlational, not proof of causation."
+  },
+  {
+    "type": "comparison-table",
+    "caption": "What each metric shows, and what it can't prove",
+    "columns": [
+      "Metric",
+      "What it shows",
+      "What it cannot prove"
+    ],
+    "rows": [
+      [
+        "Index coverage",
+        "Eligibility to appear in search results",
+        "That rankings or traffic will follow"
+      ],
+      [
+        "Core Web Vitals",
+        "Real-user experience quality",
+        "A fixed or guaranteed ranking effect"
+      ],
+      [
+        "Crawl stats",
+        "Bot access and crawl efficiency",
+        "A commercial outcome"
+      ]
+    ]
+  },
+  {
+    "type": "callout",
+    "tone": "amber",
+    "title": "Limitations",
+    "body": "A technical audit removes barriers and improves eligibility. It cannot promise rankings, traffic, or AI-search mentions. Tool scores are proxies, not outcomes — cross-check them against real index coverage and traffic. Rendering and Core Web Vitals guidance changes over time; re-verify this checklist against current Google Search Central and web.dev documentation at each recurring audit."
+  },
+  {
+    "type": "bullet-list",
+    "items": [
+      "Common failure mode: auditing the whole domain without breaking findings down by template.",
+      "Common failure mode: fixing low-impact warnings first because a tool colored them red, instead of sequencing by revenue risk.",
+      "Common failure mode: trusting a single tool's crawl instead of corroborating with Search Console and, where available, server logs.",
+      "Common failure mode: shipping a fix with no validation step, so a regression goes undetected."
+    ]
+  },
+  {
+    "type": "heading",
+    "level": 2,
+    "text": "A 30/60/90-day action plan"
+  },
+  {
+    "type": "steps",
+    "title": "Implementation plan",
+    "steps": [
+      {
+        "title": "Days 0–30: Foundations",
+        "body": "Owner: SEO lead + developer. Collect evidence and clear all crawl/indexation blockers. Acceptance: no High-severity crawl or index issue remains open."
+      },
+      {
+        "title": "Days 31–60: Architecture and rendering",
+        "body": "Owner: developer, with SEO lead defining acceptance criteria. Fix architecture and JavaScript-rendering issues. Acceptance: key templates render the expected content and links in the rendered HTML."
+      },
+      {
+        "title": "Days 61–90: Validate and monitor",
+        "body": "Owner: SEO lead + analytics. Validate fixes, monitor index coverage and Core Web Vitals, and schedule the next biannual re-audit. Acceptance: a monitoring cadence with a named owner is in place and catching regressions."
+      }
+    ]
+  },
+  {
+    "id": "faq",
+    "type": "heading",
+    "level": 2,
+    "text": "Frequently asked questions"
+  },
+  {
+    "type": "faq",
+    "items": [
+      {
+        "question": "How is this workbook different from what Ahrefs' or Semrush's site-audit tools already check?",
+        "answer": "Those tools are strong at automated technical scanning across 140+ signals. This workbook adds the governance layer they don't provide by default: revenue risk, affected URL count, a named owner, a dependency field, and an explicit rollback requirement per check — so a technical finding becomes an accountable backlog item, not just a dashboard warning."
+      },
+      {
+        "question": "Do I need a developer to run this audit, or can an SEO generalist do it alone?",
+        "answer": "An SEO generalist can complete the evidence-collection, crawlability, indexation, and architecture sections independently. JavaScript rendering, Core Web Vitals remediation, structured data implementation, and migration cutover steps typically need developer involvement — this workbook flags the owner for each category so that handoff is planned, not improvised."
+      },
+      {
+        "question": "Does fixing every item in this checklist guarantee better rankings or AI-search visibility?",
+        "answer": "No. A technical audit removes barriers to being crawled, indexed, and rendered correctly — Google is explicit that there's no special markup or technical trick that forces inclusion in AI Overviews or AI Mode beyond meeting standard indexing and snippet eligibility. Rankings and AI visibility also depend on content quality, competition, and factors this audit doesn't cover."
+      },
+      {
+        "question": "How often should the full workbook be re-run?",
+        "answer": "Twice a year for most growing sites, with lightweight monitoring in between, plus an extra full pass 30 and 90 days after any major redesign, replatform, or domain migration. Fast-changing or very large sites may warrant a shorter cycle."
+      }
+    ]
+  },
+  {
+    "href": "/services/technical-seo",
+    "type": "related-service",
+    "title": "Technical SEO service",
+    "summary": "Ongoing technical SEO implementation and monitoring for growing sites."
+  },
+  {
+    "href": "/services/seo-audit",
+    "type": "related-service",
+    "title": "SEO Audit service",
+    "summary": "A full-scope, evidence-backed SEO audit delivered with a prioritized roadmap."
+  },
+  {
+    "type": "cta",
+    "title": "Turn this checklist into a prioritized roadmap",
+    "body": "Taskcover's technical SEO team can run this audit end to end, own the workbook, and deliver a backlog your developers can act on the same week.",
+    "primary": {
+      "href": "/services/technical-seo",
+      "label": "Explore Technical SEO service"
+    },
+    "secondary": {
+      "href": "/book-a-call",
+      "label": "Book a strategy call"
+    }
+  }
+]

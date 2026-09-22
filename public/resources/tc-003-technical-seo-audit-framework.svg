@@ -1,0 +1,53 @@
+<svg viewBox="0 0 960 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="tsa-title tsa-desc">
+  <title id="tsa-title">Technical SEO audit framework: evidence, crawlability and indexation, architecture and rendering, prioritization</title>
+  <desc id="tsa-desc">A four-stage flow. Stage one, collect evidence, feeds stage two, crawlability and indexation, and stage three, architecture, rendering, Core Web Vitals and structured data. Both feed stage four, prioritize by revenue risk and effort. A monitoring loop returns from stage four back to stage one.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569" />
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="960" height="460" fill="#ffffff" />
+
+  <!-- Stage 1: Evidence -->
+  <rect x="30" y="180" width="180" height="100" rx="12" fill="#f4f8fb" stroke="#188aac" stroke-width="2" />
+  <text x="120" y="220" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="#0f172a">1. Evidence</text>
+  <text x="120" y="242" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#475569">Crawl + Search Console</text>
+  <text x="120" y="258" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#475569">+ logs, by template</text>
+
+  <!-- Stage 2: Crawlability & Indexation -->
+  <rect x="280" y="90" width="200" height="110" rx="12" fill="#f4f8fb" stroke="#10e66a" stroke-width="2" />
+  <text x="380" y="128" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="#0f172a">2. Crawlability</text>
+  <text x="380" y="148" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="#0f172a">&amp; indexation</text>
+  <text x="380" y="172" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#475569">robots, status codes,</text>
+  <text x="380" y="188" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#475569">sitemaps, canonicals</text>
+
+  <!-- Stage 3: Architecture, rendering, CWV, schema -->
+  <rect x="280" y="270" width="200" height="130" rx="12" fill="#f4f8fb" stroke="#197db4" stroke-width="2" />
+  <text x="380" y="300" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="#0f172a">3. Architecture &amp;</text>
+  <text x="380" y="320" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="#0f172a">rendering</text>
+  <text x="380" y="344" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#475569">internal links, JS render,</text>
+  <text x="380" y="360" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#475569">Core Web Vitals, schema</text>
+  <text x="380" y="380" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#475569">(+ migration / ecommerce)</text>
+
+  <!-- Stage 4: Prioritize -->
+  <rect x="560" y="180" width="200" height="100" rx="12" fill="#f4f8fb" stroke="#12c679" stroke-width="2" />
+  <text x="660" y="215" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="#0f172a">4. Prioritize</text>
+  <text x="660" y="237" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#475569">revenue risk × affected</text>
+  <text x="660" y="253" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#475569">URLs × effort × owner</text>
+
+  <!-- Output -->
+  <rect x="810" y="185" width="130" height="90" rx="12" fill="#0f172a" />
+  <text x="875" y="222" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#ffffff">Ranked</text>
+  <text x="875" y="242" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#ffffff">backlog</text>
+
+  <!-- Arrows -->
+  <path d="M210,215 L275,150" stroke="#475569" stroke-width="2" fill="none" marker-end="url(#arrow)" />
+  <path d="M210,245 L275,335" stroke="#475569" stroke-width="2" fill="none" marker-end="url(#arrow)" />
+  <path d="M480,150 L558,215" stroke="#475569" stroke-width="2" fill="none" marker-end="url(#arrow)" />
+  <path d="M480,335 L558,245" stroke="#475569" stroke-width="2" fill="none" marker-end="url(#arrow)" />
+  <path d="M760,230 L807,230" stroke="#475569" stroke-width="2" fill="none" marker-end="url(#arrow)" />
+
+  <!-- Monitoring loop -->
+  <path d="M875,278 C 875,420 120,420 120,283" stroke="#188aac" stroke-width="2" stroke-dasharray="6 5" fill="none" marker-end="url(#arrow)" />
+  <text x="497" y="440" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" fill="#188aac">Re-audit twice yearly + after major changes (monitoring loop)</text>
+</svg>
