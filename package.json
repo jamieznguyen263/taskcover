@@ -22,6 +22,7 @@
     "db:migrate": "tsx scripts/db-migrate.ts",
     "db:status": "tsx scripts/db-status.ts",
     "db:verify": "tsx scripts/db-verify.ts",
+    "flow:verify": "tsx scripts/flow-verify.ts",
     "admin:create": "tsx scripts/admin-create.ts",
     "admin:user:create": "tsx scripts/admin-user-create.ts",
     "admin:verify": "tsx scripts/admin-verify.ts",
