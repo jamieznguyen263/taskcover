@@ -18,6 +18,10 @@
 .qa-search-motion/
 .qa-visual-13c/
 
+# Sprint S00 raw audit/remediation exports (contain database group/revision IDs;
+# the sanitized, committed summary lives in docs/CORE56_S00_REMEDIATION.md)
+.artifacts/core56-s00/
+
 # next.js
 /.next/
 /out/
