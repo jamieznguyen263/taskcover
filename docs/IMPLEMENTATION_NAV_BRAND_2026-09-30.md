@@ -33,8 +33,8 @@ Architecture: [Sitemap v1.1](https://chatgpt.com/space/page_477d89a6a0188191afdd
 2. Run npm run typecheck, focused tests for site-navigation and site-header, then npm run build using the existing lockfile.
 3. Verify navigation and footer at 375, 768, 1280 and 1440 widths, plus 200% zoom, for EN/FR/ES. Test touch, Tab, Escape, outside click, route transitions and language switching.
 4. Inspect shared CTA consumers for custom classes that override the new semantic colors.
-5. Integrate the approved local homepage v3, including its hero/Decision Studio. The prototype is not present on the remote main branch and was not reconstructed.
+5. Homepage v3 has since been recovered and ported on this branch. See IMPLEMENTATION_HOMEPAGE_V3_2026-09-30.md for the implementation and outstanding validation.
 6. Add Engagements links only when that route is implemented. This branch deliberately links only existing routes.
-7. Complete the remaining homepage sections and verify real forms/booking before publishing.
+7. Verify the new English homepage sections and real forms/booking before publishing; translate v3 for FR/ES.
 
-This slice changes shared navigation and CTA styling, so the existing remote homepage also picks up those shared elements. It does not claim to complete the v3 hero or fix every color in every page. Admin, Flow, APIs, prices, redirects, schemas and deployment configuration are untouched.
+This slice changes shared navigation and CTA styling, so the existing remote homepage also picks up those shared elements. The subsequent homepage integration covers the v3 hero and experience; this foundation document does not claim to fix every color in every page. Admin, Flow, APIs, prices, redirects, schemas and deployment configuration are untouched.
