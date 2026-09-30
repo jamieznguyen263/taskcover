@@ -11,7 +11,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowRight, ChevronDown, Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import type { MegaMenuItem } from "@/content/en/site";
 import { siteConfig } from "@/lib/site";
 import { getLocalizedSite } from "@/lib/content";
@@ -21,29 +21,6 @@ import { Container } from "@/components/marketing/shared/container";
 import { CTAButton } from "@/components/marketing/shared/cta-button";
 import { useLocale } from "./use-locale";
 import { LanguageSwitcher, LanguageSwitcherList } from "./language-switcher";
-
-function chipToneClass(link: MegaMenuItem["groups"][number]["links"][number]) {
-  const key = `${link.href} ${link.chip ?? ""}`.toLowerCase();
-  if (key.includes("technical-seo") || key.includes("foundation") || key.includes("fondation") || key.includes("base")) {
-    return "border-emerald-200 bg-emerald-50 text-emerald-700";
-  }
-  if (key.includes("ai-search") || key.includes(" ai") || key.includes(" ia") || key.includes("geo")) {
-    return "border-violet-200 bg-violet-50 text-violet-700";
-  }
-  if (key.includes("content-marketing") || key.includes("authority") || key.includes("autorite") || key.includes("autoridad")) {
-    return "border-amber-200 bg-amber-50 text-amber-700";
-  }
-  if (key.includes("international-seo") || key.includes("local") || key.includes("markets") || key.includes("marches") || key.includes("mercados")) {
-    return "border-cyan-200 bg-cyan-50 text-cyan-700";
-  }
-  if (key.includes("ppc") || key.includes("paid")) {
-    return "border-blue-200 bg-blue-50 text-blue-700";
-  }
-  if (key.includes("mentor") || key.includes("advisory") || key.includes("conseil") || key.includes("asesoria")) {
-    return "border-teal-200 bg-teal-50 text-teal-700";
-  }
-  return "border-indigo-200 bg-indigo-50 text-indigo-700";
-}
 
 function MenuLink({
   link,
@@ -56,18 +33,18 @@ function MenuLink({
     <Link
       href={link.href}
       onClick={onClick}
-      className="group relative block overflow-hidden rounded-xl border border-transparent px-3 py-3 transition hover:border-brand-teal/20 hover:bg-brand-teal/[0.045] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal"
+      className="group relative block overflow-hidden rounded-xl border border-transparent px-3 py-3 transition hover:border-brand-teal/20 hover:bg-brand-teal/[0.045] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-focus"
     >
       <span
         aria-hidden="true"
         className="absolute left-0 top-3 h-7 w-1 rounded-r-full bg-brand-gradient opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
       />
       <span className="flex items-center justify-between gap-3">
-        <span className="pl-1 text-sm font-semibold text-graphite transition group-hover:text-brand-teal">
+        <span className="pl-1 text-sm font-semibold text-graphite transition group-hover:text-brand-link">
           {link.label}
         </span>
         {link.chip && (
-          <span className={cn("shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase", chipToneClass(link))}>
+          <span className={cn("shrink-0 rounded-full border px-2 py-0.5 text-xs font-semibold uppercase", "border-brand-selected/20 bg-brand-selected-bg text-brand-selected")}>
             {link.chip}
           </span>
         )}
@@ -100,7 +77,11 @@ export function SiteHeader() {
   const headerRef = React.useRef<HTMLElement>(null);
   const mobileTriggerRef = React.useRef<HTMLButtonElement>(null);
   const firstMobileGroupRef = React.useRef<HTMLButtonElement>(null);
-  const pointerFocusRef = React.useRef(false);
+  const desktopTriggerRefs = React.useRef<Partial<Record<MegaMenuItem["id"], HTMLButtonElement | null>>>({});
+
+  function isActive(href: string) {
+    return Boolean(href) && (pathname === href || Boolean(pathname?.startsWith(href + "/")));
+  }
 
   const openMenuId = openMenuState.pathname === pathname ? openMenuState.id : null;
   const mobileOpen = mobileMenuState.pathname === pathname ? mobileMenuState.open : false;
@@ -122,19 +103,23 @@ export function SiteHeader() {
     }
 
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key !== "Escape") return;
+      if (event.key !== "Escape" || (!mobileOpen && !openMenuId)) return;
+      // Do not steal Escape from another dialog or widget outside this header.
+      if (!headerRef.current?.contains(document.activeElement)) return;
+      event.preventDefault();
       setOpenMenuState({ pathname, id: null });
       setMobileMenuState({ pathname, open: false });
-      mobileTriggerRef.current?.focus();
+      if (mobileOpen) mobileTriggerRef.current?.focus();
+      else if (openMenuId) desktopTriggerRefs.current[openMenuId]?.focus();
     }
 
-    document.addEventListener("mousedown", onPointerDown);
+    document.addEventListener("pointerdown", onPointerDown);
     document.addEventListener("keydown", onKeyDown);
     return () => {
-      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("pointerdown", onPointerDown);
       document.removeEventListener("keydown", onKeyDown);
     };
-  }, [pathname]);
+  }, [pathname, mobileOpen, openMenuId]);
 
   function toggleMobileGroup(id: MegaMenuItem["id"]) {
     setExpandedIds((current) => {
@@ -156,12 +141,18 @@ export function SiteHeader() {
   return (
     <header
       ref={headerRef}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+          setOpenMenuState({ pathname, id: null });
+          setMobileMenuState({ pathname, open: false });
+        }
+      }}
       className="sticky top-0 z-50 border-b border-line bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/75"
     >
       <Container className="flex h-16 items-center justify-between gap-4 lg:h-[4.25rem] lg:px-6 xl:h-[4.5rem] xl:px-8">
         <Link
           href={homeHref}
-          className="inline-flex shrink-0 items-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-teal"
+          className="inline-flex shrink-0 items-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-focus"
           aria-label={`${siteConfig.name} ${content.ui.home}`}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -187,21 +178,12 @@ export function SiteHeader() {
                     aria-expanded={expanded}
                     aria-controls={`mega-menu-${item.id}`}
                     onClick={() => setOpenMenuState({ pathname, id: expanded ? null : item.id })}
-                    onPointerDown={() => {
-                      pointerFocusRef.current = true;
-                    }}
-                    onFocus={() => {
-                      if (pointerFocusRef.current) {
-                        pointerFocusRef.current = false;
-                        return;
-                      }
-                      setOpenMenuState({ pathname, id: item.id });
-                    }}
-                    onMouseEnter={() => setOpenMenuState({ pathname, id: item.id })}
+                    ref={(node) => { desktopTriggerRefs.current[item.id] = node; }}
+                    aria-current={isActive(content.navigation.find((nav) => nav.label === item.label)?.href ?? "") ? "location" : undefined}
                     className={cn(
-                      "inline-flex items-center gap-1.5 rounded-full px-2.5 py-2 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal xl:px-3",
+                      "brand-navigation-link inline-flex items-center gap-1.5 rounded-full px-2.5 py-2 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-focus xl:px-3",
                       expanded
-                        ? "bg-surface-tint text-graphite"
+                        ? "bg-brand-selected-bg text-brand-selected"
                         : "text-secondary hover:bg-surface-tint hover:text-graphite"
                     )}
                   >
@@ -218,10 +200,12 @@ export function SiteHeader() {
               <li key={item.href}>
                 <Link
                   href={item.href}
+                  aria-current={pathname === item.href ? "page" : isActive(item.href) ? "location" : undefined}
+                  onClick={() => setOpenMenuState({ pathname, id: null })}
                   className={cn(
-                    "inline-flex items-center rounded-full px-2.5 py-2 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal xl:px-3",
-                    pathname === item.href
-                      ? "bg-surface-tint text-graphite"
+                    "brand-navigation-link inline-flex items-center rounded-full px-2.5 py-2 text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-focus xl:px-3",
+                    isActive(item.href)
+                      ? "bg-brand-selected-bg text-brand-selected"
                       : "text-secondary hover:bg-surface-tint hover:text-graphite"
                   )}
                 >
@@ -248,7 +232,7 @@ export function SiteHeader() {
           <button
             ref={mobileTriggerRef}
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-graphite focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal xl:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-graphite focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-focus xl:hidden"
             aria-label={mobileOpen ? content.ui.closeMenu : content.ui.openMenu}
             aria-expanded={mobileOpen}
             aria-controls="mobile-primary-menu"
@@ -272,8 +256,6 @@ export function SiteHeader() {
         <div
           id={`mega-menu-${openMenu.id}`}
           className="hidden border-t border-line bg-white shadow-[0_24px_60px_rgba(20,31,36,0.12)] xl:block"
-          onMouseEnter={() => setOpenMenuState({ pathname, id: openMenu.id })}
-          onMouseLeave={() => setOpenMenuState({ pathname, id: null })}
         >
           <Container className="py-6">
             <div className="grid gap-8 lg:grid-cols-[0.85fr_2.15fr]">
@@ -290,20 +272,14 @@ export function SiteHeader() {
                   <Link
                     href={openMenu.cta.href}
                     onClick={() => setOpenMenuState({ pathname, id: null })}
-                    className="group relative overflow-hidden rounded-2xl bg-brand-gradient p-px shadow-[0_20px_55px_-28px_rgba(24,138,172,0.9)] transition hover:-translate-y-0.5 hover:shadow-[0_28px_65px_-30px_rgba(16,230,106,0.55)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal"
+                    className="group relative overflow-hidden rounded-2xl bg-brand-gradient p-px shadow-[0_20px_55px_-28px_rgba(24,138,172,0.9)] transition hover:-translate-y-0.5 hover:shadow-[0_28px_65px_-30px_rgba(16,230,106,0.55)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-focus"
                   >
                     <span className="block rounded-[calc(1rem-1px)] bg-[linear-gradient(135deg,rgba(255,255,255,0.98),rgba(239,253,248,0.96))] p-4">
-                      <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-teal">
+                      <span className="text-xs font-semibold uppercase tracking-[0.14em] text-brand-link">
                         {content.ui.recommendedFirstStep}
                       </span>
                       <span className="mt-2 flex items-center justify-between gap-3 text-sm font-semibold text-graphite">
                         {openMenu.cta.label}
-                        <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-gradient text-white shadow-[0_10px_24px_-12px_rgba(24,138,172,0.9)]">
-                          <ArrowRight
-                            className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
-                            aria-hidden="true"
-                          />
-                        </span>
                       </span>
                       <span className="mt-2 block text-xs leading-relaxed text-secondary">
                         {openMenu.cta.description}
@@ -371,7 +347,7 @@ export function SiteHeader() {
                     aria-expanded={expanded}
                     aria-controls={`mobile-menu-${item.id}`}
                     onClick={() => toggleMobileGroup(item.id)}
-                    className="flex w-full items-center justify-between gap-3 px-4 py-4 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-brand-teal"
+                    className="flex w-full items-center justify-between gap-3 px-4 py-4 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-brand-focus"
                   >
                     <span>
                       <span className="block text-sm font-semibold text-graphite">
@@ -392,7 +368,7 @@ export function SiteHeader() {
                       <div className="grid gap-4">
                         {item.groups.map((group) => (
                           <div key={group.title}>
-                            <p className="px-1 text-[10px] font-semibold uppercase tracking-wide text-muted">
+                            <p className="px-1 text-xs font-semibold uppercase tracking-wide text-muted">
                               {group.title}
                             </p>
                             <div className="mt-1 grid gap-1">
@@ -410,17 +386,14 @@ export function SiteHeader() {
                           <Link
                             href={item.cta.href}
                             onClick={closeMobileMenu}
-                            className="group rounded-2xl bg-brand-gradient p-px text-sm font-semibold text-graphite shadow-[0_18px_44px_-28px_rgba(24,138,172,0.85)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-teal"
+                            className="group rounded-2xl bg-brand-gradient p-px text-sm font-semibold text-graphite shadow-[0_18px_44px_-28px_rgba(24,138,172,0.85)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-focus"
                           >
                             <span className="block rounded-[calc(1rem-1px)] bg-[linear-gradient(135deg,rgba(255,255,255,0.98),rgba(239,253,248,0.96))] px-3 py-3">
-                              <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-teal">
+                              <span className="text-xs font-semibold uppercase tracking-[0.14em] text-brand-link">
                                 {content.ui.recommendedFirstStep}
                               </span>
                               <span className="mt-1 flex items-center justify-between gap-3">
                                 {item.cta.label}
-                                <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-gradient text-white">
-                                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                                </span>
                               </span>
                               <span className="mt-1 block text-xs font-normal leading-relaxed text-secondary">
                                 {item.cta.description}
@@ -442,7 +415,8 @@ export function SiteHeader() {
                       key={item.href}
                       href={item.href}
                       onClick={closeMobileMenu}
-                      className="block rounded-xl px-3 py-3 text-sm font-semibold text-graphite transition hover:bg-surface-tint focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-brand-teal"
+                      aria-current={pathname === item.href ? "page" : isActive(item.href) ? "location" : undefined}
+                      className="brand-navigation-link block rounded-xl px-3 py-3 text-sm font-semibold transition hover:bg-surface-tint focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-brand-focus"
                     >
                       {item.label}
                     </Link>

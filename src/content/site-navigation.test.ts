@@ -23,26 +23,31 @@ function pathnameOnly(path: string): string {
 }
 
 describe("global site navigation IA", () => {
-  it("uses the Task 13B top-level IA instead of the old flat header", () => {
+  it("uses the approved buyer journey navigation", () => {
     const site = getLocalizedSite("en");
     expect(site.navigation.map((item) => item.label)).toEqual([
       "Services",
-      "Solutions",
-      "Work",
+      "Our Work",
+      "How We Work",
       "Insights",
-      "Company",
-      "Pricing",
+      "About",
     ]);
     expect(site.megaMenu.map((item) => item.id)).toEqual([
       "services",
-      "solutions",
       "work",
-      "insights",
-      "company",
     ]);
     expect(site.navigation.map((item) => item.label)).not.toContain("Industries");
     expect(site.navigation.map((item) => item.label)).not.toContain("Markets");
     expect(site.navigation.map((item) => item.label)).not.toContain("Proof");
+    expect(site.primaryCta.href).toBe("/contact");
+    const servicesMenu = site.megaMenu.find((menu) => menu.id === "services");
+    expect(servicesMenu?.groups[0].links.map((link) => link.href)).toEqual([
+      "/services/seo-agency",
+      "/services/technical-seo",
+      "/services/content-marketing",
+      "/services/ai-search-optimization",
+      "/services/website-development",
+    ]);
   });
 
   it("localizes nested mega-menu, CTA, and footer hrefs with English slugs", () => {

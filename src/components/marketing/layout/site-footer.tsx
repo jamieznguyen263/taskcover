@@ -15,7 +15,6 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { siteConfig } from "@/lib/site";
 import { companyAddressLine, companyDetails } from "@/lib/company";
 import { getLocalizedSite } from "@/lib/content";
@@ -33,13 +32,13 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-line bg-surface-soft">
       <Container className="py-16">
-        <div className="grid gap-12 lg:grid-cols-[1.2fr_2fr]">
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] xl:gap-20">
           <div className="flex flex-col gap-5">
-            {/* Logo card — light pill surface for clear brand presence */}
+            {/* Preserve the original logo on an open, light surface. */}
             <Link
               href={homeHref}
               aria-label={`${siteConfig.name} ${content.ui.home}`}
-              className="inline-flex w-fit items-center rounded-2xl border border-line bg-white px-5 py-3 shadow-sm"
+              className="inline-flex w-fit items-center"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -62,17 +61,16 @@ export function SiteFooter() {
             <address className="not-italic text-sm leading-relaxed text-secondary">
               <span className="block font-semibold text-graphite">{companyDetails.formalName}</span>
               <span className="block">{companyAddressLine()}</span>
-              <a className="block hover:text-brand-teal" href={`tel:${companyDetails.phone.replace(/[^\d+]/g, "")}`}>
+              <a className="block hover:text-brand-link" href={`tel:${companyDetails.phone.replace(/[^\d+]/g, "")}`}>
                 {companyDetails.phone}
               </a>
-              <a className="block hover:text-brand-teal" href={`mailto:${companyDetails.email}`}>
+              <a className="block hover:text-brand-link" href={`mailto:${companyDetails.email}`}>
                 {companyDetails.email}
               </a>
             </address>
-            <div className="mt-1 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-1 flex flex-wrap gap-3">
               <CTAButton size="md" href={content.primaryCta.href}>
                 {content.primaryCta.label}
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </CTAButton>
               <CTAButton variant="secondary" size="md" href={content.secondaryCta.href}>
                 {content.secondaryCta.label}
@@ -85,10 +83,10 @@ export function SiteFooter() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-6">
+          <div className="grid min-w-0 grid-cols-1 gap-x-8 gap-y-10 min-[400px]:grid-cols-2 xl:grid-cols-3">
             {content.footer.groups.map((group) => (
               <nav key={group.title} aria-label={group.title}>
-                <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+                <p className="text-sm font-semibold text-graphite">
                   {group.title}
                 </p>
                 <ul className="mt-4 flex flex-col gap-2">
@@ -96,7 +94,7 @@ export function SiteFooter() {
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="text-sm text-secondary transition-colors hover:text-brand-teal"
+                        className="inline-flex min-h-9 items-center py-1 text-sm leading-relaxed text-secondary transition-colors hover:text-brand-link"
                       >
                         {link.label}
                       </Link>

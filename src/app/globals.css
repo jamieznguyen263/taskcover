@@ -12,6 +12,16 @@
   --taskcover-teal: #188aac;
   --taskcover-blue: #197db4;
 
+  /* Semantic interaction colors; raw logo colors above remain unchanged. */
+  --taskcover-action-ink: #0f172a;
+  --taskcover-action-start: #10e66a;
+  --taskcover-action-end: #12c679;
+  --taskcover-link: #116d91;
+  --taskcover-link-hover: #0b526e;
+  --taskcover-selected: #087443;
+  --taskcover-selected-bg: #ecfbf3;
+  --taskcover-focus: #197db4;
+
   /* Text */
   --taskcover-graphite: #0f172a;
   --taskcover-ink: #111827;
@@ -58,6 +68,12 @@
   --color-brand-teal: #188aac;
   --color-brand-blue: #197db4;
 
+  --color-brand-link: var(--taskcover-link);
+  --color-brand-link-hover: var(--taskcover-link-hover);
+  --color-brand-selected: var(--taskcover-selected);
+  --color-brand-selected-bg: var(--taskcover-selected-bg);
+  --color-brand-focus: var(--taskcover-focus);
+
   --color-graphite: #0f172a;
   --color-ink: #111827;
   --color-secondary: #475569;
@@ -82,7 +98,7 @@
 
   html {
     scroll-behavior: smooth;
-    color-scheme: light;
+    color-scheme: only light;
   }
 
   body {
@@ -108,7 +124,7 @@
 
   /* Accessible focus ring using brand color */
   :focus-visible {
-    outline: 2px solid var(--taskcover-teal);
+    outline: 2px solid var(--taskcover-focus);
     outline-offset: 2px;
     border-radius: 4px;
   }
@@ -122,6 +138,31 @@
 }
 
 @layer utilities {
+  /* Green/emerald action fill supports dark labels across the full gradient. */
+  .cta-primary {
+    background-color: var(--taskcover-action-end);
+    background-image: linear-gradient(135deg, var(--taskcover-action-start), var(--taskcover-action-end));
+    color: var(--taskcover-action-ink);
+    box-shadow: 0 8px 24px -14px rgba(8, 116, 67, 0.42);
+  }
+  .cta-primary:hover {
+    background-image: linear-gradient(135deg, #0fdb65, #10b970);
+    box-shadow: 0 10px 28px -14px rgba(8, 116, 67, 0.48);
+  }
+  .cta-primary:active {
+    background-image: linear-gradient(135deg, #0dcc5d, #0fa866);
+  }
+  .brand-navigation-link {
+    color: var(--taskcover-secondary);
+  }
+  .brand-navigation-link:hover,
+  .brand-navigation-link[aria-current="page"],
+  .brand-navigation-link[aria-current="location"],
+  .brand-navigation-link[aria-expanded="true"] {
+    color: var(--taskcover-selected);
+    background-color: var(--taskcover-selected-bg);
+  }
+
   /* Controlled brand gradient surfaces */
   .bg-brand-gradient {
     background-image: var(--taskcover-gradient);

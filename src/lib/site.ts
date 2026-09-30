@@ -1,3 +1,5 @@
+import { sharedNav } from "@/content/en/site";
+
 /**
  * Central site configuration.
  * Used for metadata, schema, navigation, and footer.
@@ -36,16 +38,8 @@ export const siteConfig = {
     horizontal: "/brand/taskcover-horizontal.png",
     icon: "/brand/taskcover-icon.png",
   },
-  navigation: [
-    { label: "Services", href: "/services" },
-    { label: "Industries", href: "/industries" },
-    { label: "Markets", href: "/markets" },
-    { label: "Work", href: "/work" },
-    { label: "Proof", href: "/proof" },
-    { label: "Insights", href: "/insights" },
-    { label: "About", href: "/about" },
-  ],
-  primaryCta: { label: "Get Free SEO Audit", href: "/free-seo-audit" },
+  navigation: sharedNav,
+  primaryCta: { label: "Let’s Talk", href: "/contact" },
   secondaryCta: { label: "Book Strategy Call", href: "/book-a-call" },
 } as const;
 
