@@ -1,14 +1,13 @@
 name: Website checks
 
 on:
-  pull_request:
-    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: website-checks-${{ github.event.pull_request.number }}
+  group: website-checks-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
