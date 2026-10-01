@@ -38,3 +38,9 @@ Architecture: [Sitemap v1.1](https://chatgpt.com/space/page_477d89a6a0188191afdd
 7. Verify the new English homepage sections and real forms/booking before publishing; translate v3 for FR/ES.
 
 This slice changes shared navigation and CTA styling, so the existing remote homepage also picks up those shared elements. The subsequent homepage integration covers the v3 hero and experience; this foundation document does not claim to fix every color in every page. Admin, Flow, APIs, prices, redirects, schemas and deployment configuration are untouched.
+
+## Validation follow-up on 2026-10-01
+
+The initial sandbox blocker was repaired and the user approved Windows local validation. Locked installation and route type generation completed. The homepage/navigation suite passes 22 tests; final typecheck, lint and production build all passed after the reduced-motion hydration repair. See IMPLEMENTATION_HOMEPAGE_V3_2026-09-30.md for the completed browser checks and playback limitation.
+
+Desktop/mobile disclosures, Escape focus restoration, native outside clicks, localized routing and EN/FR/ES switching were exercised. The header, footer and home layouts were inspected at 375, 768, 1280 and 1440 widths and a 200% zoom-equivalent reflow viewport. Screenshots are provided in the Codex chat for review. No design, navigation destination, dependency, workflow or deployment configuration was added by this validation follow-up.

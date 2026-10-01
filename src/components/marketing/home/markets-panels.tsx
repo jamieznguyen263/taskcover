@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useReducedMotion } from "./use-reduced-motion";
 import Link from "next/link";
 import { CheckCircle2, Globe2, ArrowRight } from "lucide-react";
 import { Container } from "@/components/marketing/shared/container";

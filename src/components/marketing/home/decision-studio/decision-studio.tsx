@@ -78,7 +78,7 @@ export function DecisionStudio() {
     const url = URL.createObjectURL(new Blob([brief], { type: "text/plain;charset=utf-8" }));
     const anchor = document.createElement("a");
     anchor.href = url; anchor.download = "Taskcover-Conversation-Brief.txt";
-    document.body.append(anchor); anchor.click(); anchor.remove();
+    document.body.appendChild(anchor); anchor.click(); anchor.remove();
     window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     setCopyStatus("Your brief is ready to download.");
   }
@@ -216,7 +216,7 @@ export function DecisionStudio() {
         <p className="illustrative-label">Illustrative experience</p>
       </div>
       <div className="sr-only" role="status" aria-live="polite">{scenario.label}, {state.stage}, {label}. {view === "before" ? "Starting point" : "Improved example"} shown.</div>
-      <noscript><p className="noscript-note">Enable JavaScript to explore more situations and prepare a brief. <a href="/contact">You can contact Taskcover directly.</a></p></noscript>
+      <noscript><p className="noscript-note">Enable JavaScript to explore more situations and prepare a brief. <Link href="/contact">You can contact Taskcover directly.</Link></p></noscript>
     </section>
     <div className="page-footer"><span>Built around the way your customers decide.</span><button className="text-button" onClick={restart}><RefreshCw aria-hidden="true" /> Explore from the beginning</button></div>
     {dialog && <DetailDialog onClose={() => setDialog(null)}>

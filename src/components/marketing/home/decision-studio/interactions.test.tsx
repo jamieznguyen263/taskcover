@@ -17,9 +17,9 @@ vi.mock("next/image", async () => {
 let root: Root;
 let host: HTMLDivElement;
 beforeEach(() => {
-  host = document.createElement("div"); document.body.append(host); root = createRoot(host);
-  vi.spyOn(HTMLDialogElement.prototype, "showModal").mockImplementation(function(this: HTMLDialogElement) { this.setAttribute("open", ""); });
-  vi.spyOn(HTMLDialogElement.prototype, "close").mockImplementation(function(this: HTMLDialogElement) { this.removeAttribute("open"); });
+  host = document.createElement("div"); document.body.appendChild(host); root = createRoot(host);
+  Object.defineProperty(HTMLDialogElement.prototype, "showModal", { configurable: true, value: vi.fn(function(this: HTMLDialogElement) { this.setAttribute("open", ""); }) });
+  Object.defineProperty(HTMLDialogElement.prototype, "close", { configurable: true, value: vi.fn(function(this: HTMLDialogElement) { this.removeAttribute("open"); }) });
 });
 afterEach(() => { act(() => root.unmount()); host.remove(); vi.restoreAllMocks(); });
 
@@ -31,7 +31,7 @@ function button(text: string) {
 }
 function click(element: HTMLElement) { act(() => { element.focus(); element.click(); }); }
 function changeScenario(value: string) {
-  const select = host.querySelector<HTMLSelectElement>("#scenario-select")!;
+  const select = host.querySelector("select")!;
   act(() => { select.value = value; select.dispatchEvent(new Event("change", { bubbles: true })); });
 }
 function setText(element: HTMLInputElement | HTMLTextAreaElement, value: string) {

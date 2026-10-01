@@ -31,15 +31,28 @@ The Skyscanner technical case remains distinct from portfolio performance. Taskc
 - Checked CSS scoping, React state ownership, generated-content escaping, modal cleanup, no eager video iframe, local asset references and absence of new dependencies.
 - Added focused model and React interaction tests for all journey paths, cross-audience question retention, escaped brief text, clipboard failure, practice reset, modal focus, video teardown and keyboard evidence tabs.
 
-## Validation still blocked
+## Validation follow-up on 2026-10-01
 
-The local process tool reports sandbox provisioning failed. npm typecheck, Vitest, ESLint, Next build, Cloudflare build and browser visual checks have NOT run. Source review and the executable model comparison are not a substitute for those gates.
+The user approved the Windows local fallback after the requested cloud environment was unavailable. Validation used Windows 11, Node 24.16.0, npm 11.13.0 and Chrome. GitHub Actions was not used.
 
-Before merging, run the existing install workflow with the lockfile, then:
+- `npm ci` and `npx next typegen` completed successfully.
+- The original 18 homepage/navigation tests passed. The expanded homepage/navigation run passes 22 tests, including the existing ecosystem-map checks and a new SSR/hydration regression test.
+- Executed checks found and repaired DOM type conflicts with Cloudflare declarations, Windows/space-safe Vitest aliases, missing jsdom dialog methods, and the Next Link lint error in the no-JavaScript fallback.
+- Browser checks exposed reduced-motion hydration mismatches in the existing FR/ES homepage. A small homepage hook now keeps the first client render consistent with SSR before applying the browser preference. The regression test failed before the fix and passes afterward. Fresh FR/ES browser sessions report zero JavaScript exceptions and zero console errors with reduced motion enabled.
+- `npm run typecheck`, `npm run lint` and the final production `npm run build` all passed; the build generated 329 static pages.
+- All 27 browser journeys passed before/after comparison, working notes, measurement plans, question retention across audiences, removal, escaped brief output, manual clipboard fallback and email-draft content. Playwright confirmed a downloaded text brief matches the entered content. Sample completion/reset, dialog Escape, focus restoration, native modal background focus blocking, evidence keyboard tabs, client pause/inert duplication, and reduced motion were exercised.
+- Inspected 375, 768, 1280 and 1440 CSS-pixel widths for EN/FR/ES, plus 720x500 at DPR 2 as the reflow equivalent of a 1440x1000 desktop at 200% zoom. No horizontal page overflow was found. Tested language switching, localized contact routing and navigation away/back with visit-only state reset.
+- Desktop/mobile and full-page screenshots are stored outside the checkout in the local `../pr33-qa/` directory and supplied in the Codex chat for design review. They are local preview evidence, not deployment screenshots.
+
+The introduction player is created on explicit play and removed on close. Cloudflare Stream rejects the local `127.0.0.1` origin with an allowed-domain message, so actual playback remains unverified here; verify it on an approved domain before publishing. Provider allowlists were not changed. Real lead submission and Cloudflare packaging/deployment were not part of this local validation.
+
+Commands for repeatable validation (the broader homepage filter includes the hydration regression):
 
 ```sh
+npm ci
+npx next typegen
 npm run typecheck
-npm run test -- src/components/marketing/home/decision-studio src/components/marketing/layout/site-header.test.tsx src/content/site-navigation.test.ts
+npm run test -- src/components/marketing/home src/components/marketing/layout/site-header.test.tsx src/content/site-navigation.test.ts
 npm run lint
 npm run build
 ```
