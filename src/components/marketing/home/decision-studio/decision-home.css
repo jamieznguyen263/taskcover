@@ -400,10 +400,23 @@
 .taskcover-home .quiet-control svg{width:15px;height:15px}
 .taskcover-home .client-marquee{overflow:hidden;margin-top:52px;border-top:1px solid #e0eaee;border-bottom:1px solid #e0eaee;padding:32px 0 29px}
 .taskcover-home .client-track{display:flex;width:max-content;animation:tc-client-move 65s linear infinite}
-.taskcover-home .client-group{display:flex;align-items:center;flex-shrink:0;gap:62px;padding-right:62px}
+.taskcover-home .client-group{display:flex;align-items:center;flex-shrink:0;gap:24px;padding-right:24px}
 .taskcover-home .client-group button,
-.taskcover-home .client-repeat>span{font-size:36px;font-weight:650;letter-spacing:-1.3px;white-space:nowrap;padding:10px 0;text-align:left;display:block}
-.taskcover-home .client-group button>span{display:block;color:#607787;font-size:10px;font-weight:400;letter-spacing:0;margin-top:14px}
+.taskcover-home .client-repeat>span{width:244px;font-size:20px;font-weight:600;letter-spacing:-.4px;white-space:nowrap;padding:4px 0;text-align:center;display:block}
+.taskcover-home .client-logo-mark{display:grid;place-items:center;width:100%;height:136px;overflow:hidden;border:1px solid var(--line);border-radius:16px;transition:transform .2s,border-color .2s}
+.taskcover-home .client-logo-dark{background:#000;border-color:#000}
+.taskcover-home .client-logo-light{background:#fff}
+.taskcover-home .client-logo-mark img{width:100%;height:100%;object-fit:contain}
+.taskcover-home .client-logo-agoda img{transform:scale(1.3)}
+.taskcover-home .client-logo-ccleaner img{transform:scale(1.8)}
+.taskcover-home .client-logo-fwd img{transform:scale(1.8)}
+.taskcover-home .client-logo-buv img{transform:scale(1.6)}
+.taskcover-home .client-logo-nova img{transform:scale(1.15)}
+.taskcover-home .client-logo-light img{max-width:180px;height:70px}
+.taskcover-home .client-logo-fallback{display:grid;place-items:center;height:136px}
+.taskcover-home .client-name{display:block;font-size:16px;font-weight:600;line-height:1.4;margin-top:16px;letter-spacing:-.2px}
+.taskcover-home .client-context{display:block;color:var(--secondary);font-size:12px;font-weight:400;line-height:1.5;letter-spacing:0;margin-top:6px}
+.taskcover-home .client-group button:hover .client-logo-mark{transform:translateY(-3px);border-color:var(--blue)}
 .taskcover-home .client-group button:hover,
 .taskcover-home .client-group button:focus-visible{color:var(--blue)}
 .taskcover-home .client-repeat>span{align-self:flex-start}
@@ -502,10 +515,13 @@
 .taskcover-home .section-side>p{font-size:15px}
 .taskcover-home .quiet-control{margin-top:9px}
 .taskcover-home .client-marquee{margin-top:25px;padding:21px 0}
-.taskcover-home .client-group{gap:35px;padding-right:35px}
+.taskcover-home .client-group{gap:20px;padding-right:20px}
 .taskcover-home .client-group button,
-.taskcover-home .client-repeat>span{font-size:29px}
-.taskcover-home .client-group button>span{font-size:9px;margin-top:10px}
+.taskcover-home .client-repeat>span{width:204px}
+.taskcover-home .client-logo-mark{height:114px;border-radius:14px}
+.taskcover-home .client-logo-light img{max-width:155px;height:60px}
+.taskcover-home .client-name{font-size:15px;margin-top:12px}
+.taskcover-home .client-context{font-size:11px}
 .taskcover-home .client-caption{font-size:10px}
 .taskcover-home .video-section{padding:30px 0 60px}
 .taskcover-home .video-intro{margin-bottom:23px;gap:15px}
@@ -556,10 +572,12 @@
 }
 @media(prefers-reduced-motion:reduce){
 .taskcover-home .client-track{animation:none;transform:none;width:100%}
-.taskcover-home .client-group{flex-wrap:wrap;gap:25px 35px;padding:0}
+.taskcover-home .client-group{width:100%;flex-shrink:1;flex-wrap:wrap;gap:25px 35px;padding:0}
 .taskcover-home .client-repeat{display:none}
 .taskcover-home .client-group button{font-size:27px}
 .taskcover-home .quiet-control{display:none}
+.taskcover-home .client-logo-mark{transition:none}
+.taskcover-home .client-group button:hover .client-logo-mark{transform:none}
 }
 
 

@@ -3,10 +3,12 @@ import type { CaseStudySlug } from "./work.types";
 
 export type ClientLogoPermissionStatus =
   | "approved-case-study"
+  | "user-approved"
   | "permission-review";
 
 export type ClientLogoSourceType =
   | "approved-case-study-asset"
+  | "official-website-asset"
   | "official-brand-hub"
   | "official-media-assets";
 
@@ -42,7 +44,7 @@ export type PublicClientLogoAsset = ClientLogoAsset & {
   publicUsage: true;
 };
 
-export const clientLogoAssets = [
+export const clientLogoAssets: readonly ClientLogoAsset[] = [
   {
     id: "buv",
     name: "British University Vietnam",
@@ -229,30 +231,38 @@ export const clientLogoAssets = [
   {
     id: "british-council",
     name: "British Council",
+    logoPath: "/brand-logos/british-council.png",
+    format: "png",
+    width: 249,
+    height: 78,
     preferredBackground: "light",
-    permissionStatus: "permission-review",
-    sourceType: "official-brand-hub",
-    sourceLabel: "British Council Brand Hub",
+    permissionStatus: "user-approved",
+    sourceType: "official-website-asset",
+    sourceLabel: "Logo asset displayed on the official British Council website",
     sourceUrl: "https://www.britishcouncil.org/",
     alt: "British Council logo",
-    publicUsage: false,
-    usageLocations: ["asset inventory only"],
-    notes: "Permission and a local official logo file are required before public proof-strip usage.",
+    publicUsage: true,
+    usageLocations: ["English homepage client showcase"],
+    notes: "Homepage usage explicitly approved by the user on 2026-10-01. Original PNG from the official website's cookie-brand asset; this approval does not claim independent verification of a client endorsement.",
   },
   {
     id: "skyscanner",
     name: "Skyscanner",
+    logoPath: "/brand-logos/skyscanner.svg",
+    format: "svg",
+    width: 910,
+    height: 149,
     preferredBackground: "light",
-    permissionStatus: "permission-review",
-    sourceType: "official-media-assets",
-    sourceLabel: "Skyscanner media assets",
+    permissionStatus: "user-approved",
+    sourceType: "official-website-asset",
+    sourceLabel: "Logo SVG displayed on the official Skyscanner website",
     sourceUrl: "https://www.skyscanner.net/media/media-assets",
     alt: "Skyscanner logo",
-    publicUsage: false,
-    usageLocations: ["asset inventory only"],
-    notes: "Permission and a local official logo file are required before public proof-strip usage; do not imply sponsorship or endorsement.",
+    publicUsage: true,
+    usageLocations: ["English homepage client showcase"],
+    notes: "Homepage usage explicitly approved by the user on 2026-10-01. Original inline SVG and its computed blue fill from the official site's access-check header; no CAPTCHA was solved. Does not imply sponsorship or endorsement.",
   },
-] as const satisfies readonly ClientLogoAsset[];
+];
 
 export function isPublicClientLogoAsset(
   asset: ClientLogoAsset
@@ -268,9 +278,7 @@ export function isPublicClientLogoAsset(
   );
 }
 
-export const publicClientLogoAssets: PublicClientLogoAsset[] = (
-  clientLogoAssets as readonly ClientLogoAsset[]
-).filter(isPublicClientLogoAsset);
+export const publicClientLogoAssets: PublicClientLogoAsset[] = clientLogoAssets.filter(isPublicClientLogoAsset);
 
 export function getClientLogoAsset(id: string): ClientLogoAsset | undefined {
   return clientLogoAssets.find((asset) => asset.id === id);

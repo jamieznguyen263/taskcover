@@ -2,8 +2,10 @@
 
 import { useRef, useState, type KeyboardEvent } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, ExternalLink, Pause, Play } from "lucide-react";
 import clients from "@/content/en/home-client-context.json";
+import { getClientLogoAsset } from "@/content/client-logo-assets";
 import { DetailDialog } from "./detail-dialog";
 
 type ClientKey = keyof typeof clients;
@@ -24,6 +26,21 @@ const clientMeta: { id: ClientKey; name: string; label: string; href?: string }[
   { id: "buv", name: "BUV", label: "Education · Search consulting", href: "/work/case-studies/british-university-vietnam" },
   { id: "nova", name: "NovaWorld", label: "Property · Search consulting", href: "/work/case-studies/novaworld" },
 ];
+const clientLogoIds: Record<ClientKey, string> = {
+  british: "british-council", sky: "skyscanner", agoda: "agoda", ccleaner: "ccleaner",
+  fwd: "fwd-insurance", buv: "buv", nova: "novaworld",
+};
+function ClientMark({ id, name, label }: typeof clientMeta[number]) {
+  const asset = getClientLogoAsset(clientLogoIds[id]);
+  return <>
+    {asset?.publicUsage && asset.logoPath && asset.width && asset.height
+      ? <span className={"client-logo-mark client-logo-" + id + " " + (asset.preferredBackground === "light" ? "client-logo-light" : "client-logo-dark")}>
+        <Image src={asset.logoPath} alt="" width={asset.width} height={asset.height} sizes="244px" />
+      </span>
+      : <span className="client-logo-fallback">{name}</span>}
+    <span className="client-name">{name}</span><span className="client-context">{label}</span>
+  </>;
+}
 
 export function HomeEvidence() {
   const [paused, setPaused] = useState(false);
@@ -60,8 +77,8 @@ export function HomeEvidence() {
       </div>
       <div className={"client-marquee" + (paused ? " is-paused" : "")}>
         <div className="client-track">
-          <div className="client-group">{clientMeta.map((item) => <button key={item.id} onClick={() => openClient(item.id)}>{item.name}<span>{item.label}</span></button>)}</div>
-          <div className="client-group client-repeat" aria-hidden="true" inert>{clientMeta.map((item) => <button key={item.id} tabIndex={-1}>{item.name}<span>{item.label}</span></button>)}</div>
+          <div className="client-group">{clientMeta.map((item) => <button key={item.id} onClick={() => openClient(item.id)} aria-label={item.name + ": " + item.label}><ClientMark {...item} /></button>)}</div>
+          <div className="client-group client-repeat" aria-hidden="true" inert>{clientMeta.map((item) => <button key={item.id} tabIndex={-1}><ClientMark {...item} /></button>)}</div>
         </div>
       </div>
       <p className="client-caption">Work delivered under Taskcover. Select a name to explore the available project context.</p>

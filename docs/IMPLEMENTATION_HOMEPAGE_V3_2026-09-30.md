@@ -59,6 +59,45 @@ npm run build
 
 Inspect 375, 768, 1280 and 1440 widths and 200% zoom. Verify all 27 journeys, question removal, sample reset, clipboard fallback/download/email draft, video playback and close, reduced motion, keyboard dialogs/tabs, route navigation away and back, and FR/ES language switching. Validate the real contact flow independently before publishing.
 
+## Client-logo follow-up on 2026-10-02
+
+The existing English v3 client showcase now renders logos for all seven clients,
+with the same project-context buttons, pause/resume state and inert duplicate
+track. British Council and Skyscanner use local official-source files after the
+user explicitly authorized their display. The other five use the existing
+approved case-study assets. Visible names and accessible button labels remain;
+decorative image alt text avoids announcing a client twice. Logo proportions
+are preserved, with optical sizing that removes excess black source-card space.
+
+The registry distinguishes this `user-approved` homepage scope from
+`approved-case-study` assets. Existing localized case-study proof helpers still
+return ten real case-study assets; no British Council or Skyscanner case route,
+result or endorsement was added. Source URLs and approval scope are documented
+in `docs/CLIENT_LOGO_ASSET_AUDIT.md`.
+
+- Route type generation, typecheck, lint and production build pass.
+- Expanded homepage/navigation and related registry/SEO readiness tests pass:
+  42 tests in nine files. The prior permission expectation was updated to check
+  the two authorized homepage assets without inventing a case-study slug.
+- In-app browser checks at 375, 768, 1280 and 1440 CSS-pixel widths found no
+  horizontal page overflow; all seven original logo images loaded.
+- British Council still selects and focuses the priority panel. Skyscanner
+  opens the existing context dialog and restores focus to its client button
+  after close. Pause/resume and inert duplicates were checked in the browser;
+  captured console errors were empty.
+- Reduced-motion CSS constrains the original group to the available width so
+  the static layout can wrap. The media preference was not emulated in this
+  follow-up; the earlier broader reduced-motion validation is recorded above.
+- Full-page and showcase desktop/mobile screenshots are saved locally in
+  `../pr33-qa/logos-20261002/`. They show the production preview, not ImageGen
+  concepts or a deployment.
+
+This follow-up applies the authorized logo change in place. The broader hero,
+case-study background and full-page visual proposals remain design-review
+work; their generated appearance has not been copied into the implementation.
+No new dependency, infrastructure, merge or deployment. GitHub Actions was not
+used for validation; the logo follow-up commit skips push/pull-request CI runs.
+
 ## Remaining website work
 
 - Translate and review the v3 experience for FR/ES.

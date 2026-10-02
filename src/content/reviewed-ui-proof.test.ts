@@ -15,11 +15,14 @@ describe("Task 13C reviewed UI proof data", () => {
   it("uses local verified logo assets for the homepage brand strip", () => {
     expect(clientLogoAssets).toHaveLength(12);
     expect(publicClientLogoAssets).toHaveLength(10);
-    expect(
-      clientLogoAssets
-        .filter((asset) => asset.permissionStatus === "permission-review")
-        .map((asset) => asset.id)
-    ).toEqual(["british-council", "skyscanner"]);
+    const homepageApproved = clientLogoAssets.filter((asset) => asset.permissionStatus === "user-approved");
+    expect(homepageApproved.map((asset) => asset.id)).toEqual(["british-council", "skyscanner"]);
+    for (const asset of homepageApproved) {
+      expect(asset.publicUsage).toBe(true);
+      expect(asset.usageLocations).toEqual(["English homepage client showcase"]);
+      expect(asset.caseStudySlug).toBeUndefined();
+      expect(existsSync(path.join(process.cwd(), "public", asset.logoPath!.replace(/^\//, "")))).toBe(true);
+    }
 
     for (const locale of locales) {
       const home = getHomeContent(locale);
