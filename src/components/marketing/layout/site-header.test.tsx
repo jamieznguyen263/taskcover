@@ -108,19 +108,19 @@ describe("SiteHeader mobile navigation", () => {
     const servicesGroup = container.querySelector<HTMLButtonElement>(
       'button[aria-controls="mobile-menu-services"]'
     );
-    const solutionsGroup = container.querySelector<HTMLButtonElement>(
-      'button[aria-controls="mobile-menu-solutions"]'
+    const workGroup = container.querySelector<HTMLButtonElement>(
+      'button[aria-controls="mobile-menu-work"]'
     );
 
     expect(trigger).not.toBeNull();
     expect(menu).not.toBeNull();
     expect(servicesGroup).not.toBeNull();
-    expect(solutionsGroup).not.toBeNull();
+    expect(workGroup).not.toBeNull();
     expect(trigger?.getAttribute("aria-expanded")).toBe("false");
     expect(classTokens(menu)).toContain("hidden");
     expect(classTokens(menu)).toContain("xl:hidden");
     expect(servicesGroup?.getAttribute("aria-expanded")).toBe("true");
-    expect(solutionsGroup?.getAttribute("aria-expanded")).toBe("false");
+    expect(workGroup?.getAttribute("aria-expanded")).toBe("false");
 
     act(() => {
       trigger?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
@@ -158,4 +158,38 @@ describe("SiteHeader mobile navigation", () => {
     expect(rerenderedTrigger?.getAttribute("aria-expanded")).toBe("false");
     expect(classTokens(rerenderedMenu)).toContain("hidden");
   });
+  it("returns Escape focus to the desktop disclosure without reopening it", () => {
+    const container = renderHeader();
+    const trigger = container.querySelector<HTMLButtonElement>(
+      'button[aria-controls="mega-menu-services"]'
+    );
+    act(() => { trigger?.focus(); trigger?.click(); });
+    const firstLink = container.querySelector<HTMLAnchorElement>("#mega-menu-services a");
+    expect(firstLink).not.toBeNull();
+    act(() => { firstLink?.focus(); });
+    act(() => {
+      document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+    });
+    expect(trigger?.getAttribute("aria-expanded")).toBe("false");
+    expect(document.activeElement).toBe(trigger);
+    expect(container.querySelector("#mega-menu-services")).toBeNull();
+  });
+
+  it("closes a disclosure when keyboard focus leaves the header", () => {
+    const container = renderHeader();
+    const trigger = container.querySelector<HTMLButtonElement>(
+      'button[aria-controls="mega-menu-services"]'
+    );
+    const outside = document.createElement("button");
+    document.body.appendChild(outside);
+    try {
+      act(() => { trigger?.focus(); trigger?.click(); });
+      act(() => { outside.focus(); });
+      expect(trigger?.getAttribute("aria-expanded")).toBe("false");
+      expect(document.activeElement).toBe(outside);
+    } finally {
+      outside.remove();
+    }
+  });
+
 });

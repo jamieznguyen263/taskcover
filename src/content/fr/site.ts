@@ -6,404 +6,398 @@
 import type { SiteContent } from "../en/site";
 
 export const site: SiteContent = {
-  brand: {
-    name: "Taskcover Agency",
-    tagline: "Agence de croissance par la recherche pour Google, la recherche IA et le chiffre d'affaires.",
-    marketsLine: "Au service de clients aux Etats-Unis, au Canada et en Australie.",
+  "brand": {
+    "name": "Taskcover Agency",
+    "tagline": "Agence de croissance par la recherche pour Google, la recherche IA et le chiffre d'affaires.",
+    "marketsLine": "Au service de clients aux Etats-Unis, au Canada et en Australie."
   },
-  navigation: [
-    { label: "Services", href: "/services" },
-    { label: "Solutions", href: "/industries" },
-    { label: "Realisations", href: "/work" },
-    { label: "Analyses", href: "/insights" },
-    { label: "Entreprise", href: "/about" },
-    { label: "Tarifs", href: "/pricing" },
+  "navigation": [
+    {
+      "label": "Services",
+      "href": "/services"
+    },
+    {
+      "label": "Nos réalisations",
+      "href": "/work"
+    },
+    {
+      "label": "Notre collaboration",
+      "href": "/how-we-work"
+    },
+    {
+      "label": "Analyses",
+      "href": "/insights"
+    },
+    {
+      "label": "À propos",
+      "href": "/about"
+    }
   ],
-  megaMenu: [
+  "megaMenu": [
     {
-      id: "services",
-      label: "Services",
-      description: "Choisir la capacite de croissance search adaptee au probleme commercial.",
-      groups: [
+      "id": "services",
+      "label": "Services",
+      "description": "Choisir la capacite de croissance search adaptee au probleme commercial.",
+      "groups": [
         {
-          title: "Services principaux",
-          links: [
+          "title": "Services principaux",
+          "links": [
             {
-              label: "Strategie SEO et audit",
-              href: "/services/seo-agency",
-              description: "Feuilles de route, diagnostic, priorisation et plan de croissance search.",
-              chip: "Strategie",
+              "label": "Stratégie et conseil SEO",
+              "href": "/services/seo-agency",
+              "description": "Feuilles de route, diagnostic, priorisation et plan de croissance search."
             },
             {
-              label: "SEO technique",
-              href: "/services/technical-seo",
-              description: "Exploration, indexation, rendu, performance et architecture de site.",
-              chip: "Fondation",
+              "label": "SEO technique",
+              "href": "/services/technical-seo",
+              "description": "Exploration, indexation, rendu, performance et architecture de site."
             },
             {
-              label: "Recherche IA / GEO",
-              href: "/services/ai-search-optimization",
-              description: "Preparation aux surfaces de reponse, entites, citations et qualite des sources.",
-              chip: "IA",
+              "label": "Stratégie de contenu",
+              "href": "/services/content-marketing",
+              "description": "Systemes de contenu experts relies a l'intention de revenu."
             },
             {
-              label: "Autorite de contenu",
-              href: "/services/content-marketing",
-              description: "Systemes de contenu experts relies a l'intention de revenu.",
-              chip: "Autorite",
+              "label": "Recherche IA — GEO et AEO",
+              "href": "/services/ai-search-optimization",
+              "description": "Preparation aux surfaces de reponse, entites, citations et qualite des sources."
             },
             {
-              label: "Developpement de site web",
-              href: "/services/website-development",
-              description: "Sites prets pour la recherche, construits pour le SEO, la visibilite IA et la generation de leads.",
-              chip: "Sites web",
-            },
-          ],
+              "label": "Conception et développement web",
+              "href": "/services/website-development",
+              "description": "Sites prets pour la recherche, construits pour le SEO, la visibilite IA et la generation de leads."
+            }
+          ]
         },
         {
-          title: "Canaux de croissance",
-          links: [
+          "title": "Explorer nos services",
+          "links": [
             {
-              label: "SEO local et international",
-              href: "/services/international-seo",
-              description: "Architecture multi-marche, visibilite locale et expansion hreflang fiable.",
-              chip: "Marches",
+              "label": "Tous les services",
+              "href": "/services",
+              "description": "Comparez nos douze services et trouvez le périmètre adapté."
             },
             {
-              label: "Gestion PPC",
-              href: "/services/ppc-management",
-              description: "Capture de demande payante alignee sur l'intelligence organique.",
-              chip: "Paid",
+              "label": "Notre collaboration",
+              "href": "/how-we-work",
+              "description": "Votre rôle, le nôtre et les prochaines étapes."
             },
             {
-              label: "Mentorat SEO",
-              href: "/services/seo-mentor-service",
-              description: "Conseil, accompagnement fondateur et montee en competence des equipes.",
-              chip: "Conseil",
-            },
-          ],
-        },
+              "label": "Tarifs",
+              "href": "/pricing",
+              "description": "Investissement initial, prestations et limites du périmètre."
+            }
+          ]
+        }
       ],
-      cta: {
-        label: "Commencer par un audit SEO gratuit",
-        href: "/free-seo-audit",
-        description: "Vous hesitez sur le besoin prioritaire ? Demandez d'abord un diagnostic.",
-      },
+      "cta": {
+        "label": "Parlons-en",
+        "href": "/contact",
+        "description": "Présentez votre site et ce que vous souhaitez améliorer."
+      }
     },
     {
-      id: "solutions",
-      label: "Solutions",
-      description: "Explorer les systemes de croissance search par secteur et par marche.",
-      groups: [
+      "id": "work",
+      "label": "Nos réalisations",
+      "description": "Découvrez les questions étudiées, le travail livré et les éléments de preuve.",
+      "groups": [
         {
-          title: "Par secteur",
-          links: [
+          "title": "Explorer nos réalisations",
+          "links": [
             {
-              label: "Voyage et hotellerie",
-              href: "/industries/travel-seo",
-              description: "Demandes destination, hotel, restaurant et reservation.",
+              "label": "Réalisations sélectionnées",
+              "href": "/work",
+              "description": "Comment Taskcover transforme la methode en livrables."
             },
             {
-              label: "Education",
-              href: "/industries/education-seo",
-              description: "Parcours de recherche autour des programmes, institutions et inscriptions.",
+              "label": "Études de cas",
+              "href": "/work/case-studies",
+              "description": "Etudes de cas publiques de croissance search verifiee."
             },
             {
-              label: "Sante et bien-etre",
-              href: "/industries/healthcare-seo",
-              description: "Recherche locale et autorite de contenu pour les secteurs sensibles.",
-            },
-            {
-              label: "Juridique et immigration",
-              href: "/industries/legal-immigration-seo",
-              description: "Reputation, juridiction et demandes a forte intention.",
-            },
-            {
-              label: "SaaS et technologie",
-              href: "/industries/saas-seo",
-              description: "Categories, alternatives, integrations et visibilite IA.",
-            },
-            {
-              label: "eCommerce",
-              href: "/industries/ecommerce-seo",
-              description: "Architecture search par categories, produits et transactions.",
-            },
-            {
-              label: "Franchise et multi-sites",
-              href: "/industries/franchise-local-seo",
-              description: "Systemes de recherche a l'echelle locale sans pages satellite.",
-            },
-          ],
-        },
-        {
-          title: "Par marche",
-          links: [
-            {
-              label: "Etats-Unis",
-              href: "/markets/usa-seo-agency",
-              description: "Concurrence nationale, locale, avis, PPC et recherche IA.",
-            },
-            {
-              label: "Canada",
-              href: "/markets/canada-seo-agency",
-              description: "Comportements de recherche bilingues et provinciaux EN/FR.",
-            },
-            {
-              label: "Australie",
-              href: "/markets/australia-seo-agency",
-              description: "Demande metropolitaine, local packs, reputation et paid search.",
-            },
-            {
-              label: "SEO international / recherche multi-marche",
-              href: "/services/international-seo",
-              description: "Architecture de croissance cross-market sans duplication de contenu.",
-            },
-          ],
-        },
+              "label": "Exemples de livrables",
+              "href": "/work/sample-audits",
+              "description": "Livrables illustratifs qui montrent la methode."
+            }
+          ]
+        }
       ],
-    },
-    {
-      id: "work",
-      label: "Realisations",
-      description: "Consulter les cas clients verifies, exemples de livrables et standards de preuve.",
-      groups: [
-        {
-          title: "Realisations et preuves",
-          links: [
-            {
-              label: "Hub realisations",
-              href: "/work",
-              description: "Comment Taskcover transforme la methode en livrables.",
-            },
-            {
-              label: "Cas clients",
-              href: "/work/case-studies",
-              description: "Etudes de cas publiques de croissance search verifiee.",
-            },
-            {
-              label: "Audits exemples",
-              href: "/work/sample-audits",
-              description: "Livrables illustratifs qui montrent la methode.",
-            },
-            {
-              label: "Resultats clients",
-              href: "/work/client-results",
-              description: "Standards de publication et gestion des resultats verifies.",
-            },
-            {
-              label: "Systeme de preuve",
-              href: "/proof",
-              description: "Regles d'evidence, standards d'autorite et parcours de confiance.",
-            },
-            {
-              label: "Cadres de croissance search",
-              href: "/work/search-growth-frameworks",
-              description: "Modeles operationnels et cadres strategiques.",
-            },
-          ],
-        },
-      ],
-      cta: {
-        label: "Demander une reference privee",
-        href: "/contact?intent=private-reference",
-        description: "Les references privees qualifiees sont traitees au cas par cas.",
-      },
-    },
-    {
-      id: "insights",
-      label: "Analyses",
-      description: "Lire des guides pratiques par sujet de croissance search.",
-      groups: [
-        {
-          title: "Categories editoriales",
-          links: [
-            {
-              label: "Guides SEO",
-              href: "/insights/seo-guides",
-              description: "Strategie search, croissance du revenu et SEO moderne.",
-            },
-            {
-              label: "Recherche IA et GEO",
-              href: "/insights/ai-search",
-              description: "Visibilite IA, citations, surfaces de reponse et mesure.",
-            },
-            {
-              label: "SEO technique",
-              href: "/insights/technical-seo",
-              description: "Exploration, rendu, performance et indexation.",
-            },
-            {
-              label: "Autorite de contenu",
-              href: "/insights/content-authority",
-              description: "Information gain, autorite thematique et citations.",
-            },
-            {
-              label: "SEO local et international",
-              href: "/insights/local-international-seo",
-              description: "Expansion de marche, recherche locale et structure multilingue.",
-            },
-            {
-              label: "PPC et intelligence search",
-              href: "/insights/ppc-search-intelligence",
-              description: "Alignement des signaux payants et organiques.",
-            },
-            {
-              label: "Mentorat SEO",
-              href: "/insights/seo-mentor",
-              description: "Conseil, formation et leadership search.",
-            },
-          ],
-        },
-      ],
-      cta: {
-        label: "Explorer le hub Analyses",
-        href: "/insights",
-        description: "Les articles soutiennent la bonne page commerciale sans la remplacer.",
-      },
-    },
-    {
-      id: "company",
-      label: "Entreprise",
-      description: "Comprendre le modele operationnel, les standards de confiance et les contacts.",
-      groups: [
-        {
-          title: "Entreprise",
-          links: [
-            {
-              label: "A propos",
-              href: "/about",
-              description: "Identite, principes operationnels et regles de preuve.",
-            },
-            {
-              label: "Methodologie",
-              href: "/methodology",
-              description: "Search Growth Operating System et approche diagnostique.",
-            },
-            {
-              label: "Comment nous travaillons",
-              href: "/how-we-work",
-              description: "Flux d'engagement, entrees, validations et rythme de collaboration.",
-            },
-            {
-              label: "Contact",
-              href: "/contact",
-              description: "Routage vente, media, partenariat et demandes generales.",
-            },
-            {
-              label: "Accessibilite",
-              href: "/accessibility",
-              description: "Approche accessibilite et canal de retour.",
-            },
-            {
-              label: "Demande de donnees",
-              href: "/data-request",
-              description: "Parcours privacy et demande de donnees.",
-            },
-          ],
-        },
-      ],
-    },
+      "cta": {
+        "label": "Parlons-en",
+        "href": "/contact",
+        "description": "Présentez votre site et ce que vous souhaitez améliorer."
+      }
+    }
   ],
-  primaryCta: { label: "Audit SEO gratuit", href: "/free-seo-audit" },
-  secondaryCta: { label: "Reserver un appel", href: "/book-a-call" },
-  footer: {
-    groups: [
+  "primaryCta": {
+    "label": "Parlons-en",
+    "href": "/contact"
+  },
+  "secondaryCta": {
+    "label": "Reserver un appel",
+    "href": "/book-a-call"
+  },
+  "footer": {
+    "groups": [
       {
-        title: "Services",
-        links: [
-          { label: "Strategie SEO", href: "/services/seo-agency" },
-          { label: "SEO technique", href: "/services/technical-seo" },
-          { label: "Optimisation recherche IA", href: "/services/ai-search-optimization" },
-          { label: "Marketing de contenu", href: "/services/content-marketing" },
-          { label: "Developpement de site web", href: "/services/website-development" },
-          { label: "RP numeriques et liens", href: "/services/digital-pr-link-building" },
-          { label: "Gestion PPC", href: "/services/ppc-management" },
-          { label: "SEO local", href: "/services/local-seo" },
-          { label: "SEO e-commerce", href: "/services/ecommerce-seo" },
-          { label: "SEO international", href: "/services/international-seo" },
-          { label: "Audit SEO", href: "/services/seo-audit" },
-          { label: "Mentorat SEO", href: "/services/seo-mentor-service" },
-        ],
+        "title": "Services",
+        "links": [
+          {
+            "label": "Tous les services",
+            "href": "/services"
+          },
+          {
+            "label": "Stratégie et conseil SEO",
+            "href": "/services/seo-agency"
+          },
+          {
+            "label": "SEO technique",
+            "href": "/services/technical-seo"
+          },
+          {
+            "label": "Recherche IA — GEO et AEO",
+            "href": "/services/ai-search-optimization"
+          },
+          {
+            "label": "Stratégie de contenu",
+            "href": "/services/content-marketing"
+          },
+          {
+            "label": "Conception et développement web",
+            "href": "/services/website-development"
+          },
+          {
+            "label": "RP numeriques et liens",
+            "href": "/services/digital-pr-link-building"
+          },
+          {
+            "label": "Gestion PPC",
+            "href": "/services/ppc-management"
+          },
+          {
+            "label": "SEO local",
+            "href": "/services/local-seo"
+          },
+          {
+            "label": "SEO e-commerce",
+            "href": "/services/ecommerce-seo"
+          },
+          {
+            "label": "SEO international",
+            "href": "/services/international-seo"
+          },
+          {
+            "label": "Audit SEO",
+            "href": "/services/seo-audit"
+          },
+          {
+            "label": "Mentorat SEO",
+            "href": "/services/seo-mentor-service"
+          }
+        ]
       },
       {
-        title: "Solutions",
-        links: [
-          { label: "SEO voyage", href: "/industries/travel-seo" },
-          { label: "SEO education", href: "/industries/education-seo" },
-          { label: "SEO sante", href: "/industries/healthcare-seo" },
-          { label: "SEO juridique et immigration", href: "/industries/legal-immigration-seo" },
-          { label: "SEO SaaS", href: "/industries/saas-seo" },
-          { label: "SEO e-commerce", href: "/industries/ecommerce-seo" },
-          { label: "SEO franchise et local", href: "/industries/franchise-local-seo" },
-          { label: "Agence SEO Etats-Unis", href: "/markets/usa-seo-agency" },
-          { label: "Agence SEO Canada", href: "/markets/canada-seo-agency" },
-          { label: "Agence SEO Australie", href: "/markets/australia-seo-agency" },
-        ],
+        "title": "Réalisations",
+        "links": [
+          {
+            "label": "Realisations",
+            "href": "/work"
+          },
+          {
+            "label": "Cas clients",
+            "href": "/work/case-studies"
+          },
+          {
+            "label": "Audits exemples",
+            "href": "/work/sample-audits"
+          },
+          {
+            "label": "Cadres de croissance search",
+            "href": "/work/search-growth-frameworks"
+          },
+          {
+            "label": "Resultats clients",
+            "href": "/work/client-results"
+          },
+          {
+            "label": "Preuves",
+            "href": "/proof"
+          },
+          {
+            "label": "Reference privee",
+            "href": "/contact?intent=private-reference"
+          }
+        ]
       },
       {
-        title: "Realisations",
-        links: [
-          { label: "Realisations", href: "/work" },
-          { label: "Cas clients", href: "/work/case-studies" },
-          { label: "Audits exemples", href: "/work/sample-audits" },
-          { label: "Cadres de croissance search", href: "/work/search-growth-frameworks" },
-          { label: "Resultats clients", href: "/work/client-results" },
-          { label: "Preuves", href: "/proof" },
-          { label: "Reference privee", href: "/contact?intent=private-reference" },
-        ],
+        "title": "Entreprise et collaboration",
+        "links": [
+          {
+            "label": "A propos",
+            "href": "/about"
+          },
+          {
+            "label": "Methodologie",
+            "href": "/methodology"
+          },
+          {
+            "label": "Comment nous travaillons",
+            "href": "/how-we-work"
+          },
+          {
+            "label": "Tarifs",
+            "href": "/pricing"
+          },
+          {
+            "label": "Audit SEO gratuit",
+            "href": "/free-seo-audit"
+          },
+          {
+            "label": "Prendre rendez-vous",
+            "href": "/book-a-call"
+          },
+          {
+            "label": "Contact",
+            "href": "/contact"
+          }
+        ]
       },
       {
-        title: "Analyses",
-        links: [
-          { label: "Guides SEO", href: "/insights/seo-guides" },
-          { label: "Recherche IA et GEO", href: "/insights/ai-search" },
-          { label: "SEO technique", href: "/insights/technical-seo" },
-          { label: "Autorite de contenu", href: "/insights/content-authority" },
-          { label: "SEO local et international", href: "/insights/local-international-seo" },
-          { label: "PPC et intelligence search", href: "/insights/ppc-search-intelligence" },
-        ],
+        "title": "Secteurs et marchés",
+        "links": [
+          {
+            "label": "Tous les secteurs",
+            "href": "/industries"
+          },
+          {
+            "label": "Tous les marchés",
+            "href": "/markets"
+          },
+          {
+            "label": "SEO voyage",
+            "href": "/industries/travel-seo"
+          },
+          {
+            "label": "SEO education",
+            "href": "/industries/education-seo"
+          },
+          {
+            "label": "SEO sante",
+            "href": "/industries/healthcare-seo"
+          },
+          {
+            "label": "SEO juridique et immigration",
+            "href": "/industries/legal-immigration-seo"
+          },
+          {
+            "label": "SEO SaaS",
+            "href": "/industries/saas-seo"
+          },
+          {
+            "label": "SEO e-commerce",
+            "href": "/industries/ecommerce-seo"
+          },
+          {
+            "label": "SEO franchise et local",
+            "href": "/industries/franchise-local-seo"
+          },
+          {
+            "label": "Agence SEO Etats-Unis",
+            "href": "/markets/usa-seo-agency"
+          },
+          {
+            "label": "Agence SEO Canada",
+            "href": "/markets/canada-seo-agency"
+          },
+          {
+            "label": "Agence SEO Australie",
+            "href": "/markets/australia-seo-agency"
+          }
+        ]
       },
       {
-        title: "Entreprise",
-        links: [
-          { label: "A propos", href: "/about" },
-          { label: "Methodologie", href: "/methodology" },
-          { label: "Comment nous travaillons", href: "/how-we-work" },
-          { label: "Tarifs", href: "/pricing" },
-          { label: "Audit SEO gratuit", href: "/free-seo-audit" },
-          { label: "Prendre rendez-vous", href: "/book-a-call" },
-          { label: "Contact", href: "/contact" },
-        ],
+        "title": "Analyses",
+        "links": [
+          {
+            "label": "Analyses",
+            "href": "/insights"
+          },
+          {
+            "label": "Guides SEO",
+            "href": "/insights/seo-guides"
+          },
+          {
+            "label": "Recherche IA et GEO",
+            "href": "/insights/ai-search"
+          },
+          {
+            "label": "SEO technique",
+            "href": "/insights/technical-seo"
+          },
+          {
+            "label": "Autorite de contenu",
+            "href": "/insights/content-authority"
+          },
+          {
+            "label": "SEO local et international",
+            "href": "/insights/local-international-seo"
+          },
+          {
+            "label": "PPC et intelligence search",
+            "href": "/insights/ppc-search-intelligence"
+          },
+          {
+            "label": "Mentorat SEO",
+            "href": "/insights/seo-mentor"
+          }
+        ]
       },
       {
-        title: "Legal",
-        links: [
-          { label: "Confidentialite", href: "/privacy-policy" },
-          { label: "Politique cookies", href: "/cookie-policy" },
-          { label: "Preferences cookies", href: "/cookie-preferences" },
-          { label: "Conditions", href: "/terms" },
-          { label: "Accessibilite", href: "/accessibility" },
-          { label: "Demande de donnees", href: "/data-request" },
-        ],
-      },
+        "title": "Politiques",
+        "links": [
+          {
+            "label": "Confidentialite",
+            "href": "/privacy-policy"
+          },
+          {
+            "label": "Politique cookies",
+            "href": "/cookie-policy"
+          },
+          {
+            "label": "Preferences cookies",
+            "href": "/cookie-preferences"
+          },
+          {
+            "label": "Conditions",
+            "href": "/terms"
+          },
+          {
+            "label": "Accessibilite",
+            "href": "/accessibility"
+          },
+          {
+            "label": "Demande de donnees",
+            "href": "/data-request"
+          }
+        ]
+      }
     ],
-    footnote:
-      "L'experience selectionnee de l'equipe et des partenaires inclut des marques mondiales et des partenaires. Les noms de marque sont mentionnes a titre indicatif uniquement et n'impliquent aucune approbation sauf mention explicite.",
-    rights: "Tous droits reserves.",
+    "footnote": "L'experience selectionnee de l'equipe et des partenaires inclut des marques mondiales et des partenaires. Les noms de marque sont mentionnes a titre indicatif uniquement et n'impliquent aucune approbation sauf mention explicite.",
+    "rights": "Tous droits reserves."
   },
-  ui: {
-    bookCallLabel: "Reserver un appel",
-    exploreService: "Decouvrir le service",
-    openMenu: "Ouvrir le menu",
-    closeMenu: "Fermer le menu",
-    auditPreview: "Apercu de l'audit",
-    reportFormat: "Format du rapport",
-    auditIncludes: "L'audit comprend",
-    module: "Module",
-    outcome: "Resultat",
-    languageLabel: "Langue",
-    home: "Accueil",
-    services: "Services",
-    recommendedFirstStep: "Premiere etape recommandee",
-  },
+  "ui": {
+    "bookCallLabel": "Reserver un appel",
+    "exploreService": "Decouvrir le service",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "auditPreview": "Apercu de l'audit",
+    "reportFormat": "Format du rapport",
+    "auditIncludes": "L'audit comprend",
+    "module": "Module",
+    "outcome": "Resultat",
+    "languageLabel": "Langue",
+    "home": "Accueil",
+    "services": "Services",
+    "recommendedFirstStep": "Premiere etape recommandee"
+  }
 };

@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { useReducedMotion } from "motion/react";
+import { useReducedMotion } from "./use-reduced-motion";
 import { Container } from "@/components/marketing/shared/container";
 import { ClientLogoTile } from "@/components/marketing/shared/client-logo-tile";
 import type { ClientLogoProof, CtaItem } from "@/content/home.types";

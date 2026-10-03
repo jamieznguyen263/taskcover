@@ -1,0 +1,425 @@
+{
+  "scenarios": {
+    "services": {
+      "label": "Services & Consulting",
+      "brand": "Northline",
+      "category": "Accounting",
+      "domain": "northline.example",
+      "buyer": "A business owner choosing accounting support.",
+      "hero": "Clear advice for your next stage.",
+      "sub": "Accounting and tax support for growing businesses.",
+      "queries": [
+        "How much does small business accounting cost?",
+        "Accounting firm for small businesses",
+        "How do I choose an accounting firm?"
+      ],
+      "result": [
+        "Small business accounting costs: what affects your quote",
+        "Accounting support for growing service businesses",
+        "A practical guide to choosing accounting support"
+      ],
+      "guide": [
+        "Service scope: bookkeeping, reporting, or tax preparation",
+        "Complexity: records, systems, and transaction types",
+        "Working relationship: responsibilities and review cadence"
+      ],
+      "proof": [
+        "Discovery",
+        "Agree the scope",
+        "Monthly reporting",
+        "Review together"
+      ],
+      "trust": {
+        "work": [
+          "What will working together actually look like?",
+          "A broad promise of expertise leaves the buyer unable to judge the working relationship.",
+          "Show a sample reporting pack and explain who prepares, reviews, and discusses it.",
+          "A monthly view you can understand.",
+          "Example deliverable: a report structure, review agenda, and responsibilities—not invented client results.",
+          [
+            [
+              "Deliverable",
+              "Monthly reporting pack"
+            ],
+            [
+              "Your input",
+              "Records and questions"
+            ],
+            [
+              "Team responsibility",
+              "Prepare, explain, agree next steps"
+            ]
+          ],
+          "A relevant example makes the promise easier to evaluate."
+        ],
+        "scope": [
+          "What is included—and what will still fall to me?",
+          "A list of services does not tell the buyer where responsibilities begin and end.",
+          "State the included work, client inputs, and work requiring a separate scope.",
+          "A clear scope. Shared expectations.",
+          "An example scope that makes the working relationship concrete.",
+          [
+            [
+              "Included",
+              "Reconciliations and monthly reporting"
+            ],
+            [
+              "Client provides",
+              "Access to complete records"
+            ],
+            [
+              "Scoped separately",
+              "Additional advisory or complex projects"
+            ]
+          ],
+          "Scope clarity helps both sides recognise a suitable engagement."
+        ],
+        "next": [
+          "What happens after I get in touch?",
+          "An unexplained contact button asks the visitor to accept an unknown process.",
+          "Describe the first conversation, what to bring, and what decision follows.",
+          "Start with your business, not a form.",
+          "We discuss your current setup and goals, then agree whether a scoped proposal is a useful next step.",
+          [
+            [
+              "First conversation",
+              "Current setup and goals"
+            ],
+            [
+              "Helpful context",
+              "Your business and main challenge"
+            ],
+            [
+              "Next decision",
+              "Whether to explore a scoped engagement"
+            ]
+          ],
+          "Knowing what happens next makes the invitation easier to evaluate."
+        ]
+      },
+      "briefGoal": "What would you like clearer accounting support to help with?",
+      "events": [
+        "Relevant-work view",
+        "Enquiry started",
+        "Enquiry completed",
+        "Qualified conversation"
+      ],
+      "success": "An enquiry fits the service and leads to a useful conversation."
+    },
+    "b2b": {
+      "label": "B2B Software",
+      "brand": "Northline",
+      "category": "Inventory",
+      "domain": "northline-inventory.example",
+      "buyer": "An operations lead comparing inventory software for several warehouses.",
+      "hero": "One view across your warehouses.",
+      "sub": "Evaluate inventory workflows, integrations, and implementation before a demo.",
+      "queries": [
+        "How to manage inventory across multiple warehouses",
+        "Multi-warehouse inventory software",
+        "What should I compare in inventory software?"
+      ],
+      "result": [
+        "A practical guide to multi-warehouse inventory",
+        "Inventory software for multi-site operations",
+        "An inventory software evaluation checklist"
+      ],
+      "guide": [
+        "Use case: transfers, available stock, and reorder decisions",
+        "Integration: systems, data ownership, and synchronisation",
+        "Implementation: migration, responsibilities, and support"
+      ],
+      "proof": [
+        "Map the workflow",
+        "Check integrations",
+        "Plan the migration",
+        "Validate the setup"
+      ],
+      "trust": {
+        "work": [
+          "Can it handle the workflow my team actually uses?",
+          "A feature list does not show how a warehouse team completes a real task.",
+          "Walk through a stock transfer: request, reserve, dispatch, receive, and reconcile.",
+          "See the workflow before the demo.",
+          "Illustrative workflow, not an assertion that a real product supports these features.",
+          [
+            [
+              "Request",
+              "Choose source and destination"
+            ],
+            [
+              "In transit",
+              "Make the transfer status explicit"
+            ],
+            [
+              "Receipt",
+              "Confirm quantities and reconcile exceptions"
+            ]
+          ],
+          "A concrete workflow gives the buyer a way to assess functional fit."
+        ],
+        "scope": [
+          "Will this fit our systems and implementation capacity?",
+          "Unqualified claims such as “integrates with everything” hide important evaluation questions.",
+          "Publish a compatibility matrix with supported workflows, limitations, and validation steps.",
+          "Know what connects. And what to check.",
+          "Example evaluation matrix; every integration would need product-team confirmation before publication.",
+          [
+            [
+              "Data ownership",
+              "Which system is the source of truth?"
+            ],
+            [
+              "Sync behaviour",
+              "What moves, when, and in which direction?"
+            ],
+            [
+              "Exceptions",
+              "Who resolves failures or mismatched records?"
+            ]
+          ],
+          "Technical boundaries give a buying team something concrete to validate."
+        ],
+        "next": [
+          "Will the demo address our use case?",
+          "A generic demo may leave the buyer’s operational questions unanswered.",
+          "Ask for a small amount of workflow context and explain what the tailored discussion will cover.",
+          "Bring a workflow. Leave with clarity.",
+          "Discuss warehouses, existing systems, and one important workflow before deciding on a technical evaluation.",
+          [
+            [
+              "Bring",
+              "One workflow and your existing systems"
+            ],
+            [
+              "Discuss",
+              "Fit, boundaries, and implementation questions"
+            ],
+            [
+              "Next decision",
+              "Whether a technical evaluation is warranted"
+            ]
+          ],
+          "A use-case-led invitation makes the demo more relevant to the buying team."
+        ]
+      },
+      "briefGoal": "Which inventory workflow would your team want to evaluate?",
+      "events": [
+        "Workflow example viewed",
+        "Demo brief started",
+        "Demo request completed",
+        "Qualified evaluation"
+      ],
+      "success": "The buying team has an applicable use case and agrees a relevant evaluation."
+    },
+    "ecommerce": {
+      "label": "Ecommerce",
+      "brand": "Fieldwork",
+      "category": "Workspace",
+      "domain": "fieldwork.example",
+      "buyer": "A home-office buyer checking whether a desk will fit their room and routine.",
+      "hero": "Make room for a better workday.",
+      "sub": "Choose your desk with clear dimensions, delivery details, and care information.",
+      "queries": [
+        "How to choose a desk for a small home office",
+        "Compact desk for a home office",
+        "What should I check before buying a home-office desk?"
+      ],
+      "result": [
+        "Measure your space before choosing a desk",
+        "Compact desks: compare dimensions and finishes",
+        "A practical home-office desk buying checklist"
+      ],
+      "guide": [
+        "Fit: available width, depth, clearance, and equipment",
+        "Product: dimensions, materials, and assembly information",
+        "Order: delivery availability, returns, and support"
+      ],
+      "proof": [
+        "Measure the room",
+        "Compare options",
+        "Check delivery",
+        "Review the order"
+      ],
+      "trust": {
+        "work": [
+          "Will this fit my room and the way I work?",
+          "Lifestyle photography alone does not answer practical questions about fit.",
+          "Put dimension guidance, usable space, and assembly information next to the product choice.",
+          "Picture the fit. Check the details.",
+          "Example product information structure. Real dimensions must come from verified product specifications.",
+          [
+            [
+              "Your space",
+              "Measure available width, depth, and clearance"
+            ],
+            [
+              "Your equipment",
+              "Check usable surface and cable needs"
+            ],
+            [
+              "Assembly",
+              "Review the supplied assembly instructions"
+            ]
+          ],
+          "Useful product evidence helps a buyer check fit before ordering."
+        ],
+        "scope": [
+          "What exactly am I ordering?",
+          "A product title may leave materials, variant differences, or included parts ambiguous.",
+          "Explain the selected variant, materials, included components, and relevant limitations.",
+          "Know what arrives at your door.",
+          "Example specification structure; values and policies require the merchant’s verified source data.",
+          [
+            [
+              "Selected variant",
+              "Confirm size and finish"
+            ],
+            [
+              "Included",
+              "List the components in the package"
+            ],
+            [
+              "Before ordering",
+              "Review verified material and care details"
+            ]
+          ],
+          "Specific product information reduces uncertainty about the purchase."
+        ],
+        "next": [
+          "Can it arrive where I need it, and what if it is not right?",
+          "Delivery and returns information discovered late can change the purchase decision.",
+          "Make delivery availability, cost timing, and return conditions accessible before checkout.",
+          "Check the order before you commit.",
+          "This demonstration does not quote delivery promises, prices, or return entitlements.",
+          [
+            [
+              "Delivery",
+              "Check destination availability and cost"
+            ],
+            [
+              "Returns",
+              "Read the merchant’s actual conditions"
+            ],
+            [
+              "Next step",
+              "Review the selected product and order details"
+            ]
+          ],
+          "Order information belongs close to the purchase decision."
+        ]
+      },
+      "briefGoal": "What would you need to check before ordering this desk?",
+      "events": [
+        "Product details explored",
+        "Add to cart",
+        "Checkout started",
+        "Confirmed purchase"
+      ],
+      "success": "A confirmed paid order for a suitable product, reviewed alongside cancellations and returns."
+    }
+  },
+  "journey": {
+    "find": {
+      "title": "Every decision starts with a question.",
+      "subtitle": "Choose a search. Discover why the destination changes.",
+      "next": "Explore what builds trust",
+      "choices": [
+        {
+          "id": "costs"
+        },
+        {
+          "id": "specialist"
+        },
+        {
+          "id": "ai"
+        }
+      ]
+    },
+    "trust": {
+      "title": "What would help you choose?",
+      "subtitle": "Try one change. See the difference it makes.",
+      "next": "Continue to the next step",
+      "choices": [
+        {
+          "id": "work"
+        },
+        {
+          "id": "scope"
+        },
+        {
+          "id": "next"
+        }
+      ]
+    },
+    "choose": {
+      "title": "Make the next step feel clear.",
+      "subtitle": "Explore three invitations. Notice what each one tells you.",
+      "next": "Bring this back to your business",
+      "choices": [
+        {
+          "id": "clear"
+        },
+        {
+          "id": "open"
+        },
+        {
+          "id": "brief"
+        }
+      ]
+    }
+  },
+  "audience": {
+    "services": {
+      "find": [
+        "Understand the costs",
+        "Find the right specialist",
+        "Explore an AI answer"
+      ],
+      "trust": [
+        "See relevant work",
+        "Understand the service",
+        "Know the next step"
+      ],
+      "choose": [
+        "A clear first step",
+        "An open invitation",
+        "A short project brief"
+      ]
+    },
+    "b2b": {
+      "find": [
+        "Explore the workflow",
+        "Compare a solution",
+        "Explore an AI answer"
+      ],
+      "trust": [
+        "See a real workflow",
+        "Check the technical fit",
+        "Know what the demo covers"
+      ],
+      "choose": [
+        "A relevant evaluation",
+        "An open invitation",
+        "A focused demo brief"
+      ]
+    },
+    "ecommerce": {
+      "find": [
+        "Research the right fit",
+        "Find the right product",
+        "Explore an AI answer"
+      ],
+      "trust": [
+        "Check the product fit",
+        "Understand what is included",
+        "Check delivery and returns"
+      ],
+      "choose": [
+        "A clear purchase path",
+        "An open invitation",
+        "An order checklist"
+      ]
+    }
+  }
+}

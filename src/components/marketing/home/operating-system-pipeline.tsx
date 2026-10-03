@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useReducedMotion } from "./use-reduced-motion";
 import { ArrowRight, CheckCircle2, Database, RotateCw, Zap } from "lucide-react";
 import { Container } from "@/components/marketing/shared/container";
 import { Eyebrow } from "@/components/marketing/shared/section-header";

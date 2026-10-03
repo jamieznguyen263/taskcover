@@ -330,7 +330,9 @@ Current launch standards:
 - Hreflang alternates must include `en`, `fr`, `es`, and `x-default`.
 - Organization schema uses verified fields only and must not add Review,
   AggregateRating, LocalBusiness, fake social, fake office, or fake rating data.
-- British Council and Skyscanner remain hidden while in `permission-review`.
+- Logos in `permission-review` remain hidden. British Council and Skyscanner
+  now have explicitly user-approved local assets for the v3 homepage showcase;
+  this does not create case-study routes or imply endorsement.
 
 See the Task 14 audit set:
 

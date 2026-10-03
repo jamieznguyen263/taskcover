@@ -1,0 +1,37 @@
+{
+  "british": {
+    "name": "British Council",
+    "context": "Search strategy and an AI visibility framework spanning B2C and B2B journeys.",
+    "body": "Taskcover analysed 21,323 query–page relationships across 995 URLs. From 989 identified opportunities, the work established 32 high-priority and 26 medium-priority actions. A separate 288-prompt framework covered AI visibility."
+  },
+  "sky": {
+    "name": "Skyscanner Vietnam",
+    "context": "Search performance analysis and a separate technical investigation.",
+    "body": "The analysed portfolio represented 20.6M impressions and 398.5K clicks. In a separate technical case, Taskcover traced stale prices in search results to Edge CDN caching, defined requirements for the Platform team, and validated the fix with server evidence and GSC Live URL testing."
+  },
+  "agoda": {
+    "name": "Agoda",
+    "context": "Connecting destination demand with travel discovery across Southeast Asia.",
+    "body": "The work connected destination intent, international keyword strategy, content planning, and landing-page alignment. Deliverables included a travel keyword map and SEO content plan. SEO consulting led by Jamiez Nguyen."
+  },
+  "ccleaner": {
+    "name": "CCleaner",
+    "context": "Making software discovery relevant to the Vietnam market.",
+    "body": "The work combined a Vietnam keyword map, technical SEO review, and localised content planning. The focus was on connecting local search demand with the information people need to evaluate software."
+  },
+  "fwd": {
+    "name": "FWD",
+    "context": "Making insurance information easier to discover and understand.",
+    "body": "The work connected search visibility, clearer content, and the path from awareness to action. Deliverables included an insurance search map, content planning, and a review of conversion paths."
+  },
+  "buv": {
+    "name": "British University Vietnam",
+    "context": "Connecting education search with programme discovery.",
+    "body": "The work addressed international education intent, technical access, content, and website navigation. Deliverables included an SEO keyword map, technical and UX recommendations, and a content refresh plan."
+  },
+  "nova": {
+    "name": "NovaWorld",
+    "context": "Building discoverability around a property destination.",
+    "body": "The work connected SEO foundations, content architecture, and buyer-journey messaging. The focus was on making a complex destination offering easier to discover and explore."
+  }
+}

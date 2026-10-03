@@ -1,0 +1,38 @@
+name: Website checks
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: website-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Generate route types
+        run: npx next typegen
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Homepage and navigation tests
+        run: npm run test -- src/components/marketing/home/decision-studio src/components/marketing/layout/site-header.test.tsx src/content/site-navigation.test.ts
+      - name: Lint
+        run: npm run lint
+      - name: Build
+        run: npm run build
