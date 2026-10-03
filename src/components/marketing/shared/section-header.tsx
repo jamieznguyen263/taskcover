@@ -13,16 +13,11 @@ export function Eyebrow({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-2 rounded-full border border-line bg-surface-tint px-3 py-1",
-        "text-xs font-semibold uppercase tracking-[0.14em] text-brand-teal",
+        "inline-flex items-center gap-2 font-mono text-[13px] uppercase tracking-[0.08em] text-[color:var(--tc-eyebrow-color,var(--tc-accent))]",
         className
       )}
       {...props}
     >
-      <span
-        aria-hidden="true"
-        className="h-1.5 w-1.5 rounded-full bg-brand-gradient"
-      />
       {children}
     </span>
   );
@@ -64,12 +59,12 @@ export function SectionHeader({
       {eyebrow ? <Eyebrow>{eyebrow}</Eyebrow> : null}
       <h2
         id={titleId}
-        className="max-w-3xl text-balance text-3xl font-semibold tracking-tight text-graphite sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1]"
+        className="max-w-3xl text-balance text-[clamp(32px,4vw,48px)] leading-[1.1] font-semibold tracking-[-0.03em] text-[color:var(--tc-heading-color,var(--tc-ink))]"
       >
         {title}
       </h2>
       {description ? (
-        <p className="max-w-2xl text-pretty text-base leading-relaxed text-secondary sm:text-lg">
+        <p className="max-w-2xl text-pretty text-base leading-relaxed text-[color:var(--tc-description-color,var(--tc-ink-2))] sm:text-lg">
           {description}
         </p>
       ) : null}

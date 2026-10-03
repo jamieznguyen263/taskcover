@@ -21,8 +21,7 @@ export function ProofCard({
   return (
     <figure
       className={cn(
-        "flex h-full flex-col justify-between rounded-2xl border border-line bg-white p-6",
-        "transition-colors hover:border-brand-teal/30",
+        "flex h-full flex-col justify-between rounded-tc-lg border border-tc-line bg-tc-surface p-6",
         className
       )}
       {...props}

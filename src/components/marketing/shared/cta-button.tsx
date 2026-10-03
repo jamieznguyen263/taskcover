@@ -6,29 +6,29 @@ import { cn } from "@/lib/utils";
  * Taskcover call-to-action button. Renders as an anchor (native <a>).
  *
  * Variants:
- *  - primary:   brand-gradient fill, premium CTA
- *  - secondary: white surface with line border
- *  - ghost:     text-only with brand-teal underline on hover
- *  - outline:   controlled gradient border (premium accent)
+ *  - primary:   accent fill with white text
+ *  - secondary: ink fill with white text
+ *  - ghost:     underlined ink text
+ *  - outline:   strong line border with ink text
  *
  * Pass `href` for navigation. Children render inside (icon + label is fine).
  */
 const ctaButtonVariants = cva(
-  "inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-tc-md font-semibold transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-tc-accent focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
         primary:
-          "bg-brand-gradient text-white shadow-[0_10px_30px_-12px_rgba(24,138,172,0.6)] hover:brightness-[1.03] hover:shadow-[0_14px_36px_-12px_rgba(24,138,172,0.7)]",
+          "bg-tc-accent text-white hover:bg-tc-accent/95",
         secondary:
-          "bg-white text-graphite border border-line hover:border-brand-teal/40 hover:bg-surface-tint",
+          "bg-tc-ink text-white hover:bg-tc-ink-2",
         outline:
-          "relative text-graphite border border-transparent hover:bg-surface-tint",
+          "border border-tc-line-strong bg-tc-surface text-tc-ink hover:bg-tc-surface-muted",
         ghost:
-          "text-brand-teal hover:underline underline-offset-4 decoration-brand-teal/50",
+          "text-tc-ink underline underline-offset-4 hover:decoration-tc-accent",
       },
       size: {
-        sm: "h-9 px-4 text-sm",
+        sm: "h-11 px-4 text-sm",
         md: "h-11 px-5 text-sm",
         lg: "h-12 px-6 text-base",
         xl: "h-13 px-7 text-base",
@@ -48,29 +48,7 @@ export function CTAButton({
   children,
   ...props
 }: CTAButtonProps) {
-  const isOutline = variant === "outline";
   const analyticsProvider = typeof props.href === "string" && props.href.includes("cal.com") ? "calcom" : undefined;
-
-  // Outline variant wraps the anchor with a gradient ring for a premium border.
-  if (isOutline) {
-    return (
-      <span className="relative inline-flex rounded-full bg-brand-gradient p-px">
-        <a
-          className={cn(
-            ctaButtonVariants({ variant: "primary", size }),
-            "bg-white text-graphite shadow-none hover:bg-surface-tint",
-            "rounded-full",
-            className
-          )}
-          data-analytics="cta"
-          data-analytics-provider={analyticsProvider}
-          {...props}
-        >
-          {children}
-        </a>
-      </span>
-    );
-  }
 
   return (
     <a

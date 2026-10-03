@@ -12,7 +12,7 @@ const metricToneVariants = cva("text-3xl font-semibold tracking-tight sm:text-4x
   variants: {
     tone: {
       default: "text-graphite",
-      brand: "text-brand-gradient",
+      brand: "text-tc-accent",
       teal: "text-brand-teal",
     },
   },
@@ -40,7 +40,7 @@ export function MetricCard({
   return (
     <div
       className={cn(
-        "rounded-xl border border-line bg-white p-4",
+        "rounded-tc-lg border border-tc-line bg-tc-surface p-4",
         className
       )}
       {...props}
@@ -53,8 +53,8 @@ export function MetricCard({
         <p
           className={cn(
             "mt-1 inline-flex items-center gap-1 text-xs font-medium",
-            delta.trend === "up" && "text-brand-emerald",
-            delta.trend === "down" && "text-rose-500",
+            delta.trend === "up" && "text-tc-positive",
+            delta.trend === "down" && "text-tc-ink-2",
             (!delta.trend || delta.trend === "flat") && "text-muted"
           )}
         >

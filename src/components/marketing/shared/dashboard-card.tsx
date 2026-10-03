@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * Container for mock dashboard / command-center surfaces.
- * White card with a subtle brand-tinted glow and an optional header slot.
+ * Flat surface with an optional header slot.
  */
 export function DashboardCard({
   className,
@@ -20,7 +20,7 @@ export function DashboardCard({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-2xl border border-line bg-white shadow-[0_1px_0_0_rgba(15,23,42,0.02)] ring-brand-glow",
+        "relative overflow-hidden rounded-tc-lg border border-tc-line bg-tc-surface text-tc-ink",
         className
       )}
       {...props}

@@ -2,8 +2,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Premium card with a controlled brand-gradient border.
- * Used sparingly for emphasis (per design system: do not overuse gradients).
+ * Legacy export retained as a plain bordered card.
  */
 export function GradientBorderCard({
   className,
@@ -16,14 +15,12 @@ export function GradientBorderCard({
   return (
     <Tag
       className={cn(
-        "relative rounded-2xl bg-brand-gradient p-px shadow-sm",
+        "relative rounded-tc-lg border border-tc-line bg-tc-surface p-6 text-tc-ink",
         className
       )}
       {...props}
     >
-      <div className="h-full w-full rounded-[15px] bg-white p-6">
-        {children}
-      </div>
+      {children}
     </Tag>
   );
 }
