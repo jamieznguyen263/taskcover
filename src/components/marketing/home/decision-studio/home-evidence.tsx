@@ -1,12 +1,13 @@
 "use client";
 
-import { useRef, useState, type KeyboardEvent } from "react";
+import { useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, ExternalLink, Pause, Play } from "lucide-react";
 import clients from "@/content/en/home-client-context.json";
 import { getClientLogoAsset } from "@/content/client-logo-assets";
 import { DetailDialog } from "./detail-dialog";
+import { AnswerPartners } from "../answer-partners";
 
 type ClientKey = keyof typeof clients;
 type CaseView = "scope" | "priorities" | "ai";
@@ -42,7 +43,7 @@ function ClientMark({ id, name, label }: typeof clientMeta[number]) {
   </>;
 }
 
-export function HomeEvidence() {
+export function HomeEvidence({ opening }: { opening?: ReactNode } = {}) {
   const [paused, setPaused] = useState(false);
   const [caseView, setCaseView] = useState<CaseView>("priorities");
   const [audience, setAudience] = useState<"b2c" | "b2b">("b2c");
@@ -68,7 +69,10 @@ export function HomeEvidence() {
   const clientHref = modal?.kind === "client" ? clientMeta.find((item) => item.id === modal.key)?.href : undefined;
 
   return <>
-    <section className="client-section continuation-section" id="selected-work" aria-labelledby="client-title">
+    {opening ? <AnswerPartners items={clientMeta.map(item => {
+      const asset = getClientLogoAsset(clientLogoIds[item.id])!;
+      return { ...item, src: asset.lightVariant?.path ?? asset.logoPath!, width: asset.lightVariant?.width ?? asset.width!, height: asset.lightVariant?.height ?? asset.height!, dark: !asset.lightVariant && asset.preferredBackground === "dark" };
+    })} onSelect={openClient} /> : <section className="client-section continuation-section" id="selected-work" aria-labelledby="client-title">
       <div className="section-lead">
         <div><p className="eyebrow">Selected client work</p><h2 id="client-title">Different markets.<br />The same depth of thinking.</h2></div>
         <div className="section-side"><p>Travel, education, software and beyond. Explore the work behind the names.</p>
@@ -82,7 +86,8 @@ export function HomeEvidence() {
         </div>
       </div>
       <p className="client-caption">Work delivered under Taskcover. Select a name to explore the available project context.</p>
-    </section>
+    </section>}
+    {opening}
     <section className="video-section continuation-section" aria-labelledby="video-title">
       <div className="video-intro"><p className="eyebrow">Meet Taskcover</p><h2 id="video-title">Before the first call,<br />meet the people behind the work.</h2><p>A short introduction to Taskcover, in our own words.</p></div>
       <button className="video-poster" aria-label="Play the Taskcover introduction video" onClick={() => setModal({ kind: "video" })}>

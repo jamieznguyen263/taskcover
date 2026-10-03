@@ -19,6 +19,7 @@ export type ClientLogoAsset = {
   name: string;
   shortName?: string;
   logoPath?: string;
+  lightVariant?: { path: string; width: number; height: number; sourceUrl: string };
   format?: "svg" | "png" | "webp";
   width?: number;
   height?: number;
@@ -50,6 +51,7 @@ export const clientLogoAssets: readonly ClientLogoAsset[] = [
     name: "British University Vietnam",
     shortName: "BUV",
     logoPath: "/brand-logos/buv.webp",
+    lightVariant: { path: "/brand-logos/buv-light.svg", width: 124, height: 72, sourceUrl: "https://elegant-festival-ee8c9e0b43.media.strapiapp.com/buv_logo_d2192b288a.svg?v=1790295546" },
     format: "webp",
     width: 1080,
     height: 600,
@@ -142,6 +144,7 @@ export const clientLogoAssets: readonly ClientLogoAsset[] = [
     id: "agoda",
     name: "Agoda",
     logoPath: "/brand-logos/agoda.webp",
+    lightVariant: { path: "/brand-logos/agoda-light.png", width: 89, height: 37, sourceUrl: "https://cdn6.agoda.net/images/MVC/default/agoda-logo-v2.png" },
     format: "webp",
     width: 1400,
     height: 788,
@@ -195,6 +198,7 @@ export const clientLogoAssets: readonly ClientLogoAsset[] = [
     id: "ccleaner",
     name: "CCleaner",
     logoPath: "/brand-logos/ccleaner.webp",
+    lightVariant: { path: "/brand-logos/ccleaner-light.svg", width: 407, height: 100, sourceUrl: "https://cdn-uat.ccleaner.com/site/dwyjyifw/ccleaner.svg" },
     format: "webp",
     width: 1080,
     height: 600,
@@ -214,6 +218,7 @@ export const clientLogoAssets: readonly ClientLogoAsset[] = [
     name: "FWD Insurance",
     shortName: "FWD",
     logoPath: "/brand-logos/fwd-insurance.webp",
+    lightVariant: { path: "/brand-logos/fwd-light.webp", width: 450, height: 145, sourceUrl: "https://images.contentstack.io/v3/assets/bltca0b25cb8321936d/blt4e7226357204ad68/65768c7681874cc515e1e482/FWD_logo_without_descriptor_450x145.webp" },
     format: "webp",
     width: 1080,
     height: 600,
