@@ -12,18 +12,21 @@ export function Section({
   ...props
 }: React.HTMLAttributes<HTMLElement> & {
   as?: React.ElementType;
-  background?: "default" | "soft" | "tint";
+  background?: "default" | "soft" | "tint" | "surface" | "inverse";
 }) {
   const backgrounds = {
-    default: "bg-white",
-    soft: "bg-surface-soft",
-    tint: "bg-surface-tint",
+    default: "bg-tc-bg text-tc-ink",
+    surface: "bg-tc-surface text-tc-ink",
+    inverse: "tc-section-inverse bg-tc-inverse text-tc-surface",
+    // Retain existing callers while adopting the semantic palette.
+    soft: "bg-tc-bg text-tc-ink",
+    tint: "bg-tc-bg text-tc-ink",
   } as const;
 
   return (
     <Tag
       className={cn(
-        "py-20 sm:py-24 lg:py-28",
+        "py-16 lg:py-24",
         backgrounds[background],
         className
       )}

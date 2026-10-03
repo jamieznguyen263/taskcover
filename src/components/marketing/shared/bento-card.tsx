@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
  * Bento grid tile. Supports span variants for asymmetric grids.
  */
 const bentoCardVariants = cva(
-  "group relative overflow-hidden rounded-2xl border border-line bg-white p-6 transition-all duration-300 hover:border-brand-teal/40 hover:shadow-[0_18px_40px_-24px_rgba(24,138,172,0.35)]",
+  "group relative overflow-hidden rounded-tc-lg border border-tc-line bg-tc-surface p-6 text-tc-ink",
   {
     variants: {
       span: {
@@ -17,8 +17,8 @@ const bentoCardVariants = cva(
       },
       tone: {
         default: "",
-        tint: "bg-surface-tint",
-        soft: "bg-surface-soft",
+        tint: "bg-tc-bg",
+        soft: "bg-tc-surface-muted",
       },
     },
     defaultVariants: { span: "default", tone: "default" },

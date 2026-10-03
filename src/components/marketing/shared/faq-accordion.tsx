@@ -27,7 +27,7 @@ export function FAQAccordion({
         <AccordionPrimitive.Item
           key={item.q}
           value={`faq-${index}`}
-          className="overflow-hidden rounded-2xl border border-line bg-white"
+          className="overflow-hidden rounded-tc-lg border border-tc-line bg-tc-surface"
         >
           <AccordionPrimitive.Header>
             <AccordionPrimitive.Trigger className="group flex w-full items-center justify-between gap-4 px-5 py-4 text-left text-base font-semibold text-graphite transition-colors hover:bg-surface-tint">
@@ -38,7 +38,8 @@ export function FAQAccordion({
               />
             </AccordionPrimitive.Trigger>
           </AccordionPrimitive.Header>
-          <AccordionPrimitive.Content className="overflow-hidden data-[state=closed]:animate-[accordion-up_0.2s_ease] data-[state=open]:animate-[accordion-down_0.2s_ease]">
+          {/* Keep answers in server HTML; display:none also hides closed content from assistive tech. */}
+          <AccordionPrimitive.Content forceMount className="overflow-hidden data-[state=closed]:hidden">
             <div className="px-5 pb-5 text-sm leading-relaxed text-secondary">
               {item.a}
             </div>

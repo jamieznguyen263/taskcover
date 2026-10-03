@@ -2,73 +2,121 @@
 
 /*
  * Taskcover Agency — Design Tokens
- * Bright-only theme. No dark mode.
- * See docs/DESIGN_SYSTEM.md for full guidelines.
+ * Sprint 1 semantic foundation. Inverse sections are explicit, not a dark mode.
  */
 :root {
-  /* Brand gradient stops (green -> emerald -> teal -> blue) */
-  --taskcover-green: #10e66a;
-  --taskcover-emerald: #12c679;
-  --taskcover-teal: #188aac;
-  --taskcover-blue: #197db4;
+  --tc-bg: #FAFAF9;
+  --tc-surface: #FFFFFF;
+  --tc-surface-muted: #F4F4F2;
+  --tc-ink: #0A0A0B;
+  --tc-ink-2: #45454B;
+  --tc-ink-3: #6B6B72;
+  --tc-line: #E7E6E2;
+  --tc-line-strong: #D4D3CE;
+  --tc-accent: #2546F0;
+  --tc-accent-soft: #E8ECFF;
+  --tc-accent-on-dark: #9DB0FF;
+  --tc-positive: #0E6B4D;
+  --tc-positive-soft: #E3F4EC;
+  --tc-inverse: #0A0A0B;
+  --tc-inverse-line: #2A2A30;
+  --tc-inverse-ink-2: #C9C9CE;
+  --tc-radius-sm: 8px;
+  --tc-radius-md: 12px;
+  --tc-radius-lg: 16px;
+  --tc-radius-xl: 20px;
+  --tc-type-sm: 0.875rem;
+  --tc-type-base: 1rem;
+  --tc-type-lg: 1.125rem;
+  --tc-type-xl: 1.5rem;
+  --tc-type-2xl: 2rem;
+  --tc-type-3xl: 3rem;
+  --tc-type-4xl: 4rem;
+  --tc-type-5xl: 5rem;
+  --tc-tracking-display: -0.035em;
+
+  /* LEGACY ALIASES — remove in Sprint 6 */
+  --taskcover-green: var(--tc-accent);
+  --taskcover-emerald: var(--tc-accent);
+  --taskcover-teal: var(--tc-accent);
+  --taskcover-blue: var(--tc-accent);
 
   /* Text */
-  --taskcover-graphite: #0f172a;
-  --taskcover-ink: #111827;
-  --taskcover-secondary: #475569;
-  --taskcover-muted: #64748b;
+  --taskcover-graphite: var(--tc-ink);
+  --taskcover-ink: var(--tc-ink);
+  --taskcover-secondary: var(--tc-ink-2);
+  --taskcover-muted: var(--tc-ink-3);
 
   /* Surfaces */
-  --taskcover-bg: #ffffff;
-  --taskcover-bg-soft: #f8fafc;
-  --taskcover-bg-tint: #f4f8fb;
+  --taskcover-bg: var(--tc-surface);
+  --taskcover-bg-soft: var(--tc-bg);
+  --taskcover-bg-tint: var(--tc-bg);
 
   /* Borders */
-  --taskcover-border: #ddeaf0;
-  --taskcover-border-soft: #e5eef3;
+  --taskcover-border: var(--tc-line);
+  --taskcover-border-soft: var(--tc-line);
 
   /* Gradients */
-  --taskcover-gradient: linear-gradient(
-    135deg,
-    #10e66a 0%,
-    #12c679 28%,
-    #188aac 66%,
-    #197db4 100%
-  );
-  --taskcover-gradient-soft: linear-gradient(
-    135deg,
-    rgba(16, 230, 106, 0.12) 0%,
-    rgba(18, 198, 121, 0.1) 30%,
-    rgba(24, 138, 172, 0.1) 70%,
-    rgba(25, 125, 180, 0.12) 100%
-  );
+  --taskcover-gradient: linear-gradient(var(--tc-accent), var(--tc-accent));
+  --taskcover-gradient-soft: var(--tc-accent-soft);
 
   /* Baseline */
-  --background: var(--taskcover-bg);
+  --background: var(--tc-bg);
   --foreground: var(--taskcover-graphite);
 }
 
 @theme inline {
+  --color-tc-bg: var(--tc-bg);
+  --color-tc-surface: var(--tc-surface);
+  --color-tc-surface-muted: var(--tc-surface-muted);
+  --color-tc-ink: var(--tc-ink);
+  --color-tc-ink-2: var(--tc-ink-2);
+  --color-tc-ink-3: var(--tc-ink-3);
+  --color-tc-line: var(--tc-line);
+  --color-tc-line-strong: var(--tc-line-strong);
+  --color-tc-accent: var(--tc-accent);
+  --color-tc-accent-soft: var(--tc-accent-soft);
+  --color-tc-accent-on-dark: var(--tc-accent-on-dark);
+  --color-tc-positive: var(--tc-positive);
+  --color-tc-positive-soft: var(--tc-positive-soft);
+  --color-tc-inverse: var(--tc-inverse);
+  --color-tc-inverse-line: var(--tc-inverse-line);
+  --color-tc-inverse-ink-2: var(--tc-inverse-ink-2);
+  --radius-tc-sm: var(--tc-radius-sm);
+  --radius-tc-md: var(--tc-radius-md);
+  --radius-tc-lg: var(--tc-radius-lg);
+  --radius-tc-xl: var(--tc-radius-xl);
+  --text-tc-sm: var(--tc-type-sm);
+  --text-tc-base: var(--tc-type-base);
+  --text-tc-lg: var(--tc-type-lg);
+  --text-tc-xl: var(--tc-type-xl);
+  --text-tc-2xl: var(--tc-type-2xl);
+  --text-tc-3xl: var(--tc-type-3xl);
+  --text-tc-4xl: var(--tc-type-4xl);
+  --text-tc-5xl: var(--tc-type-5xl);
+  --tracking-tc-display: var(--tc-tracking-display);
+
+  /* LEGACY ALIASES — remove in Sprint 6 */
   /* Brand colors mapped to Tailwind tokens */
   --color-background: var(--taskcover-bg);
   --color-foreground: var(--taskcover-graphite);
 
-  --color-brand-green: #10e66a;
-  --color-brand-emerald: #12c679;
-  --color-brand-teal: #188aac;
-  --color-brand-blue: #197db4;
+  --color-brand-green: var(--tc-accent);
+  --color-brand-emerald: var(--tc-accent);
+  --color-brand-teal: var(--tc-accent);
+  --color-brand-blue: var(--tc-accent);
 
-  --color-graphite: #0f172a;
-  --color-ink: #111827;
-  --color-secondary: #475569;
-  --color-muted: #64748b;
+  --color-graphite: var(--tc-ink);
+  --color-ink: var(--tc-ink);
+  --color-secondary: var(--tc-ink-2);
+  --color-muted: var(--tc-ink-3);
 
-  --color-surface: #ffffff;
-  --color-surface-soft: #f8fafc;
-  --color-surface-tint: #f4f8fb;
+  --color-surface: var(--tc-surface);
+  --color-surface-soft: var(--tc-bg);
+  --color-surface-tint: var(--tc-bg);
 
-  --color-line: #ddeaf0;
-  --color-line-soft: #e5eef3;
+  --color-line: var(--tc-line);
+  --color-line-soft: var(--tc-line);
 
   /* Fonts */
   --font-sans: var(--font-geist-sans);
@@ -86,7 +134,7 @@
   }
 
   body {
-    background: var(--taskcover-bg);
+    background: var(--tc-bg);
     color: var(--taskcover-graphite);
     font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -102,7 +150,7 @@
   }
 
   ::selection {
-    background: rgba(16, 230, 106, 0.22);
+    background: var(--tc-accent-soft);
     color: var(--taskcover-graphite);
   }
 
@@ -127,7 +175,7 @@
     background-image: var(--taskcover-gradient);
   }
   .bg-brand-gradient-soft {
-    background-image: var(--taskcover-gradient-soft);
+    background: var(--taskcover-gradient-soft);
   }
   .text-brand-gradient {
     background-image: var(--taskcover-gradient);
@@ -306,6 +354,18 @@
     height: 0;
     pointer-events: none;
   }
+}
+
+/* Override the existing layout's bg-white without changing its font/metadata setup. */
+body {
+  background-color: var(--tc-bg);
+}
+
+/* Inverse sections supply readable inherited typography to shared headers. */
+.tc-section-inverse {
+  --tc-heading-color: var(--tc-surface);
+  --tc-description-color: var(--tc-inverse-ink-2);
+  --tc-eyebrow-color: var(--tc-accent-on-dark);
 }
 
 @keyframes flow-drawer-in {
